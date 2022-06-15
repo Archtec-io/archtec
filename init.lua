@@ -14,13 +14,13 @@ minetest.register_chatcommand("spawn", {
 
 local path = minetest.get_modpath("archtec")
 
---dofile(path .. "/scripts/notifyTeam.lua")
+dofile(path .. "/scripts/notifyTeam.lua")
 dofile(path .. "/scripts/userlimit.lua")
 dofile(path .. "/scripts/inv_move.lua")
 dofile(path .. "/scripts/stats.lua")
 dofile(path .. "/scripts/shutdown.lua")
 dofile(path .. "/scripts/mapfix.lua")
---dofile(path .. "/scripts/prejoin.lua")
+dofile(path .. "/scripts/prejoin.lua")
 dofile(path .. "/scripts/disallow_new_players.lua")
 dofile(path .. "/scripts/unknown.lua")
 dofile(path .. "/scripts/unregister.lua")

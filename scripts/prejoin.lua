@@ -1,6 +1,5 @@
-minetest.register_on_prejoinplayer (function name, ip)
-	local logMessage = 0
+minetest.register_on_prejoinplayer(function(name, ip)
 	minetest.log("action", "Player " .. name .. " prejoins from " .. ip)
 	logMessage = ("Player: "..name.." prejoins")
-	function notifyTeam(logMessage)
-end
+	notifyTeam("[Server] " .. name .. " prejoins from " .. ip)
+end)
