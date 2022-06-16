@@ -25,3 +25,5 @@ dofile(path .. "/scripts/disallow_new_players.lua")
 dofile(path .. "/scripts/unknown.lua")
 dofile(path .. "/scripts/unregister.lua")
 dofile(path .. "/scripts/rezepte.lua")
+
+minetest.register_alias("myblocks:brick", "graystone:brick")
