@@ -3,7 +3,7 @@ local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."userlimit.lua")
-dofile(scriptsPath.."inv_move.lua")
+dofile(scriptsPath.."anti_cheat.lua")
 dofile(scriptsPath.."stats.lua")
 dofile(scriptsPath.."shutdown.lua")
 dofile(scriptsPath.."mapfix.lua")
