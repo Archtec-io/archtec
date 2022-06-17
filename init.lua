@@ -1,17 +1,3 @@
-minetest.register_privilege("spawn", {
-    description = "Allows to teleport players to spawn"
-})
-
-minetest.register_chatcommand("spawn", {
-    privs = {spawn=true},  
-    func = function(name, param)
-        local player = minetest.get_player_by_name(name)
-        if player ~= nil then
-            player:set_pos({x=-194,y=10,z=482})
-        end
-    end
-})
-
 local path = minetest.get_modpath("archtec")
 
 dofile(path .. "/scripts/notifyTeam.lua")
@@ -25,5 +11,6 @@ dofile(path .. "/scripts/disallow_new_players.lua")
 dofile(path .. "/scripts/unknown.lua")
 dofile(path .. "/scripts/unregister.lua")
 dofile(path .. "/scripts/rezepte.lua")
+dofile(path .. "/scripts/spawn.lua")
 
 minetest.register_alias("myblocks:brick", "graystone:brick")
