@@ -59,22 +59,22 @@ minetest.register_on_dieplayer(function(player)
     if node.groups.lava ~= nil then
         msg = player_name .. get_message("lava")
         minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: 'msg)
+        discord.send(':skull_crossbones: '..msg)
     -- Death by drowning
     elseif player:get_breath() == 0 then
         msg = player_name .. get_message("water")
         minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: 'msg)
+        discord.send(':skull_crossbones: '..msg)
     -- Death by fire
     elseif node.name == "fire:basic_flame" then
         msg = player_name .. get_message("fire")
         minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: 'msg)
+        discord.send(':skull_crossbones: '..msg)
     -- Death by something else
     else
         msg = player_name .. get_message("other")
         minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: 'msg)
+        discord.send(':skull_crossbones: '..msg)
     end
 
 end)
