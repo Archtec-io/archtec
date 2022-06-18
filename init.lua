@@ -1,29 +1,15 @@
-minetest.register_privilege("spawn", {
-    description = "Allows to teleport players to spawn"
-})
+local modPath = minetest.get_modpath(minetest.get_current_modname())
+local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
-minetest.register_chatcommand("spawn", {
-    privs = {spawn=true},  
-    func = function(name, param)
-        local player = minetest.get_player_by_name(name)
-        if player ~= nil then
-            player:set_pos({x=-194,y=10,z=482})
-        end
-    end
-})
-
-local path = minetest.get_modpath("archtec")
-
-dofile(path .. "/scripts/notifyTeam.lua")
-dofile(path .. "/scripts/userlimit.lua")
-dofile(path .. "/scripts/inv_move.lua")
-dofile(path .. "/scripts/stats.lua")
-dofile(path .. "/scripts/shutdown.lua")
-dofile(path .. "/scripts/mapfix.lua")
-dofile(path .. "/scripts/prejoin.lua")
-dofile(path .. "/scripts/disallow_new_players.lua")
-dofile(path .. "/scripts/unknown.lua")
-dofile(path .. "/scripts/unregister.lua")
-dofile(path .. "/scripts/rezepte.lua")
-
-minetest.register_alias("myblocks:brick", "graystone:brick")
+dofile(scriptsPath.."notifyTeam.lua")
+dofile(scriptsPath.."userlimit.lua")
+dofile(scriptsPath.."anti_cheat.lua")
+dofile(scriptsPath.."stats.lua")
+dofile(scriptsPath.."shutdown.lua")
+dofile(scriptsPath.."mapfix.lua")
+dofile(scriptsPath.."prejoin.lua")
+dofile(scriptsPath.."disallow_new_players.lua")
+dofile(scriptsPath.."aliases.lua")
+dofile(scriptsPath.."unregister.lua")
+dofile(scriptsPath.."rezepte.lua")
+dofile(scriptsPath.."spawn.lua")
