@@ -6,7 +6,7 @@ local function tableLength(T)
 	return count
 end
 
-minetest.after(0, function()
+minetest.after(5, function()
 	minetest.log("action", "Registered privileges: "..tableLength(minetest.registered_privileges))
 	minetest.log("action", "Registered chat commands: "..tableLength(minetest.registered_chatcommands))
 	minetest.log("action", "Registered nodes: "..tableLength(minetest.registered_nodes))
