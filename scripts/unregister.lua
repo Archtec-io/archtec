@@ -10,3 +10,7 @@ end
 
 minetest.unregister_chatcommand("ban")
 minetest.unregister_chatcommand("unban")
+
+if minetest.get_modpath("abriglass") then
+    minetest.unregister_item("abriglass:ghost_crystal")
+end
