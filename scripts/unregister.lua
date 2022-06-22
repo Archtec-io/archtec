@@ -14,3 +14,8 @@ minetest.unregister_chatcommand("unban")
 if minetest.get_modpath("abriglass") then
     minetest.unregister_item("abriglass:ghost_crystal")
 end
+
+if minetest.get_modpath("currency") then
+    minetest.unregister_item("currency:minegeld_bundle")
+    minetest.unregister_item("currency:shop")
+end
