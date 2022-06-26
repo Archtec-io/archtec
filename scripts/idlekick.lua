@@ -1,8 +1,6 @@
 local modname = minetest.get_current_modname()
 
-local invert = false
 local timeout = 600
-local reason = "idle kick"
 
 local times = {}
 
@@ -43,7 +41,7 @@ minetest.register_globalstep(function()
 		if times[pname] < now() - timeout then
 			minetest.kick_player(pname, reason)
 			minetest.chat_send_all(pname.." got kicked! Reason: Too long inactive")
-            discord.send(":bangbang: "..pname.." got kicked! Reason: Too long inactive")
+        	discord.send(":bangbang: "..pname.." got kicked! Reason: Too long inactive")
 		end
 	end
 end)
