@@ -17,6 +17,7 @@ dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."vote_api.lua")
 dofile(scriptsPath.."vote.lua")
 dofile(scriptsPath.."idlekick.lua")
+dofile(scriptsPath.."skybox.lua")
 
 if minetest.get_modpath("homedecor_wardrobe") then
     dofile(scriptsPath.."homedecor_wardrobe.lua")

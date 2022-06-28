@@ -39,7 +39,7 @@ minetest.register_globalstep(function()
 	for _, player in pairs(minetest.get_connected_players()) do
 		local pname = checkplayer(player)
 		if times[pname] < now() - timeout then
-			minetest.kick_player(pname, reason)
+			minetest.kick_player(pname, "Too long inactive")
 			minetest.chat_send_all(pname.." got kicked! Reason: Too long inactive")
         	discord.send(":bangbang: "..pname.." got kicked! Reason: Too long inactive")
 		end
