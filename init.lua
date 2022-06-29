@@ -12,12 +12,16 @@ dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."rezepte.lua")
 dofile(scriptsPath.."spawn.lua")
-dofile(scriptsPath.."death_messages.lua")
 dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."vote_api.lua")
-dofile(scriptsPath.."vote.lua")
-dofile(scriptsPath.."idlekick.lua")
 dofile(scriptsPath.."skybox.lua")
+
+if minetest.get_modpath("chatplus_discord") then
+    dofile(scriptsPath.."death_messages.lua")
+    dofile(scriptsPath.."idlekick.lua")
+    dofile(scriptsPath.."shutdown.lua")
+    dofile(scriptsPath.."vote.lua")
+end
 
 if minetest.get_modpath("homedecor_wardrobe") then
     dofile(scriptsPath.."homedecor_wardrobe.lua")
