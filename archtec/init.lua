@@ -14,6 +14,11 @@ dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."skybox.lua")
 
+local http = minetest.request_http_api()
+if http then
+    assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
+end
+
 if minetest.get_modpath("chatplus_discord") then
     dofile(scriptsPath.."death_messages.lua")
     dofile(scriptsPath.."idlekick.lua")
