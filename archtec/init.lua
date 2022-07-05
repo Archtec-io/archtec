@@ -13,6 +13,7 @@ dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."skybox.lua")
+dofile(scriptsPath.."lua_mem.lua")
 
 local http = minetest.request_http_api()
 if http then
