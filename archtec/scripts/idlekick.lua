@@ -21,7 +21,7 @@ end)
 minetest.register_on_dignode(function(_, _, player) return bump(player) end)
 minetest.register_on_punchnode(function(_, _, player) return bump(player) end)
 minetest.register_on_chat_message(function(pname) bumpn(pname) end)
-minetest.register_on_craft(function(_, player) return bump(player) end)
+minetest.register_on_craft(function(_, player) bump(player) end)
 minetest.register_on_player_inventory_action(function(player) return bump(player) end)
 
 local looks = {}
