@@ -18,7 +18,7 @@ minetest.register_chatcommand("mapfix", {
 	params = "<size>",
 	description = "Recalculate the flowing liquids and the light of a chunk",
 	func = function(name, param)
-		local pos = vector.round(minetest.get_player_by_name(name):getpos())
+		local pos = vector.round(minetest.get_player_by_name(name):get_pos())
 		local size = tonumber(param) or default_size
 
 		if size >= 121 then
