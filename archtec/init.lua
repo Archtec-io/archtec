@@ -29,3 +29,7 @@ end
 if minetest.get_modpath("homedecor_wardrobe") then
     dofile(scriptsPath.."homedecor_wardrobe.lua")
 end
+
+if minetest.get_modpath("mesecons_mvps") then
+    dofile(scriptsPath.."mvps_stopper.lua")
+end
