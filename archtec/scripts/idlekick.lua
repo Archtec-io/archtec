@@ -14,10 +14,7 @@ local function bump(player)
 end
 
 minetest.register_on_joinplayer(function(player) return bump(player) end)
-minetest.register_on_placenode(function(_, _, player)
-	--do not return
-	bump(player)
-end)
+minetest.register_on_placenode(function(_, _, player) bump(player) end)
 minetest.register_on_dignode(function(_, _, player) return bump(player) end)
 minetest.register_on_punchnode(function(_, _, player) return bump(player) end)
 minetest.register_on_chat_message(function(pname) bumpn(pname) end)
