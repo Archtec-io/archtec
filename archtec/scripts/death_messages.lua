@@ -2,11 +2,10 @@
 death_messages - A Minetest mod which sends a chat message when a player dies.
 Copyright (C) 2016  EvergreenTree
 GNU General Public License v3
-Modified by Niklp
+Modified by Niklp and debagos (Juri)
 --]]
 
 local messages = {}
-local msg
 
 -- Lava death messages
 messages.lava = {
@@ -47,34 +46,31 @@ messages.other = {
 }
 
 function get_message(mtype)
-    return messages[mtype][math.random(1, #messages[mtype])]
+	return messages[mtype][math.random(1, #messages[mtype])]
 end
 
 minetest.register_on_dieplayer(function(player)
     local player_name = player:get_player_name()
-    local node = minetest.registered_nodes[
-        minetest.get_node(player:get_pos()).name
-    ]
+    local node = minetest.registered_nodes[minetest.get_node(player:get_pos()).name]
     -- Death by lava
     if node.groups.lava ~= nil then
-        msg = player_name .. get_message("lava")
+        local msg = player_name .. get_message("lava")
         minetest.chat_send_all(msg)
         discord.send(':skull_crossbones: '..msg)
     -- Death by drowning
     elseif player:get_breath() == 0 then
-        msg = player_name .. get_message("water")
+        local msg = player_name .. get_message("water")
         minetest.chat_send_all(msg)
         discord.send(':skull_crossbones: '..msg)
     -- Death by fire
     elseif node.name == "fire:basic_flame" then
-        msg = player_name .. get_message("fire")
+        local msg = player_name .. get_message("fire")
         minetest.chat_send_all(msg)
         discord.send(':skull_crossbones: '..msg)
     -- Death by something else
     else
-        msg = player_name .. get_message("other")
+        local msg = player_name .. get_message("other")
         minetest.chat_send_all(msg)
         discord.send(':skull_crossbones: '..msg)
     end
-
 end)
