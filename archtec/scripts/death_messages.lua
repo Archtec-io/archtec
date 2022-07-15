@@ -45,7 +45,7 @@ messages.other = {
     " passed out -permanently."
 }
 
-function get_message(mtype)
+local function get_message(mtype)
 	return messages[mtype][math.random(1, #messages[mtype])]
 end
 
