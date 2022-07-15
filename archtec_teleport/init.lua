@@ -5,7 +5,7 @@ local MP = minetest.get_modpath(minetest.get_current_modname())
 
 tp = {
 	tpr_list = {},
-	tphr_list = {},
+	tp2me_list = {},
     tpc_list = {},
 	tpn_list = {}
 }
@@ -17,8 +17,8 @@ minetest.register_on_leaveplayer(function(name)
 		return
 	end
 
-	if tp.tphr_list[name] then
-		tp.tphr_list[name] = nil
+	if tp.tp2me_list[name] then
+		tp.tp2me_list[name] = nil
 		return
 	end
 
@@ -33,9 +33,6 @@ tp.timeout_delay = 60
 
 -- Message color
 tp.message_color = "#FF8800"
-
--- Spam prevention
-tp.spam_prevention = true
 
 dofile(MP.."/privileges.lua")
 dofile(MP.."/functions.lua")

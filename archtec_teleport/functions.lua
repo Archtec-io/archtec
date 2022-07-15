@@ -1,10 +1,8 @@
 local S = minetest.get_translator(minetest.get_current_modname())
 
 -- Placeholders
-local chatmsg, source, target, name2,
-target_coords, tpc_target_coords, old_tpc_target_coords
+local chatmsg, source, target, name2, target_coords
 
-local spam_prevention = {}
 local band = false
 
 local message_color = tp.message_color
@@ -30,7 +28,7 @@ local function send_message(player, message)
 	minetest.chat_send_player(player, minetest.colorize(message_color, message))
 end
 
--- Teleport player to a player (used in "/tpr" and in "/tphr" command).
+-- Teleport player to a player (used in "/tpr" command).
 function tp.tpr_teleport_player()
 	target_coords = source:get_pos()
 	local target_sound = target:get_pos()
@@ -89,74 +87,12 @@ function tp.tpr_send(sender, receiver)
 		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"))
 		return
 	end
-
-	-- Spam prevention
-	if spam_prevention[receiver] == sender and not minetest.check_player_privs(sender, {tp_admin = true}) then
-		send_message(sender, S("Wait @1 seconds before you can send teleport requests to @2 again.", tp.timeout_delay, receiver))
-
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			spam_prevention[receiver_name] = nil
-			if band == true then return end
-
-			if spam_prevention[receiver_name] == nil then
-				send_message(sender_name, S("You can now send teleport requests to @1.", receiver_name))
-				band = true
-			end
-		end, sender, receiver)
-
-	else
-
-		if minetest.check_player_privs(sender, {tp_admin = true}) and tp.enable_immediate_teleport then
-			if receiver == "" then
-				send_message(sender, S("Usage: /tpr <Player name>"))
-				return
-			end
-
-			if not minetest.get_player_by_name(receiver) then
-				send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"))
-				return
-			end
-
-			tp.tpr_list[receiver] = sender
-			tp.tpr_accept(receiver)
-			send_message(sender, S("You are teleporting to @1.", receiver))
-			return
-		end
-
-		if receiver == "" then
-			send_message(sender, S("Usage: /tpr <Player name>"))
-			return
-		end
-
-		if not minetest.get_player_by_name(receiver) then
-			send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"))
-			return
-		end
-
-		send_message(receiver, S("@1 is requesting to teleport to you. /ok to accept.", sender))
-		send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
-
-		-- Write name values to list and clear old values.
-		tp.tpr_list[receiver] = sender
-		tp.tpn_list[sender] = receiver
-
-		-- Teleport timeout delay
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			if tp.tpr_list[receiver_name] and tp.tpn_list[sender_name] then
-				tp.tpr_list[receiver_name] = nil
-
-				send_message(sender_name, S("Request timed-out."))
-				send_message(receiver_name, S("Request timed-out."))
-				return
-			end
-		end, sender, receiver)
-	end
 end
 
-function tp.tphr_send(sender, receiver)
+function tp.tp2me_send(sender, receiver)
 
 	if receiver == "" then
-		send_message(sender, S("Usage: /tphr <Player name>"))
+		send_message(sender, S("Usage: /tp2me <Player name>"))
 		return
 	end
 
@@ -164,75 +100,12 @@ function tp.tphr_send(sender, receiver)
 		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online."))
 		return
 	end
-
-	-- Spam prevention
-	if spam_prevention[receiver] == sender and not minetest.check_player_privs(sender, {tp_admin = true}) then
-		send_message(sender, S("Wait @1 seconds before you can send teleport requests to @2 again.", tp.timeout_delay, receiver))
-
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			spam_prevention[receiver_name] = nil
-			if band == true then return end
-
-			if spam_prevention[receiver_name] == nil then
-				send_message(sender_name, S("You can now send teleport requests to @1.", receiver_name))
-				band = true
-			end
-		end, sender, receiver)
-
-	else
-
-		if minetest.check_player_privs(sender, {tp_admin = true}) and tp.enable_immediate_teleport then
-			if receiver == "" then
-				send_message(sender, S("Usage: /tphr <Player name>"))
-				return
-			end
-
-			if not minetest.get_player_by_name(receiver) then
-				send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online."))
-				return
-			end
-
-			tp.tphr_list[receiver] = sender
-			tp.tpr_accept(receiver)
-			send_message(sender, S("@1 is teleporting to you.", receiver))
-			return
-		end
-
-		if receiver == "" then
-			send_message(sender, S("Usage: /tphr <Player name>"))
-			return
-		end
-
-		if not minetest.get_player_by_name(receiver) then
-			send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online."))
-			return
-		end
-
-		send_message(receiver, S("@1 is requesting that you teleport to them. /ok to accept; /tpn to deny.", sender))
-		send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
-
-		-- Write name values to list and clear old values.
-		tp.tphr_list[receiver] = sender
-
-		-- Teleport timeout delay
-
-		minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
-			if tp.tphr_list[receiver_name] and tp.tpn_list[sender_name] then
-				tp.tphr_list[receiver_name] = nil
-				tp.tpn_list[sender_name] = nil
-
-				send_message(sender_name, S("Request timed-out."))
-				send_message(receiver_name, S("Request timed-out."))
-				return
-			end
-		end, sender, receiver)
-	end
 end
 
 -- Teleport Accept Systems
 function tp.tpr_accept(name)
 	-- Check to prevent constant teleporting
-	if not tp.tpr_list[name] and not tp.tphr_list[name]
+	if not tp.tpr_list[name] and not tp.tp2me_list[name]
 	and not tp.tpc_list[name] then
 		send_message(name, S("Usage: /ok allows you to accept teleport/area requests sent to you by other players."))
 		return
@@ -246,12 +119,12 @@ function tp.tpr_accept(name)
 		chatmsg = S("@1 is teleporting to you.", name2)
 		tp.tpr_list[name] = nil
 
-	elseif tp.tphr_list[name] then
-		name2 = tp.tphr_list[name]
+	elseif tp.tp2me_list[name] then
+		name2 = tp.tp2me_list[name]
 		source = minetest.get_player_by_name(name2)
 		target = minetest.get_player_by_name(name)
 		chatmsg = S("You are teleporting to @1.", name2)
-		tp.tphr_list[name] = nil
+		tp.tp2me_list[name] = nil
 	else
 		return
 	end
@@ -261,7 +134,7 @@ function tp.tpr_accept(name)
 	or not target then
 		send_message(name, S("@1 is not online right now.", name2))
 		tp.tpr_list[name] = nil
-		tp.tphr_list[name] = nil
+		tp.tp2me_list[name] = nil
 		return
 	end
 
