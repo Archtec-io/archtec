@@ -14,6 +14,8 @@ dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."skybox.lua")
 dofile(scriptsPath.."lua_mem.lua")
+dofile(scriptsPath.."homedecor_wardrobe.lua")
+dofile(scriptsPath.."mvps_stopper.lua")
 
 local http = minetest.request_http_api()
 if http then
@@ -25,9 +27,3 @@ if minetest.get_modpath("chatplus_discord") then
     dofile(scriptsPath.."idlekick.lua")
     dofile(scriptsPath.."shutdown.lua")
 end
-
-if minetest.get_modpath("homedecor_wardrobe") then
-    dofile(scriptsPath.."homedecor_wardrobe.lua")
-end
-
-dofile(scriptsPath.."mvps_stopper.lua")
