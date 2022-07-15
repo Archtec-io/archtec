@@ -16,6 +16,7 @@ dofile(scriptsPath.."skybox.lua")
 dofile(scriptsPath.."lua_mem.lua")
 dofile(scriptsPath.."homedecor_wardrobe.lua")
 dofile(scriptsPath.."mvps_stopper.lua")
+dofile(scriptsPath.."death_messages.lua")
 
 local http = minetest.request_http_api()
 if http then
@@ -23,7 +24,6 @@ if http then
 end
 
 if minetest.get_modpath("chatplus_discord") then
-    dofile(scriptsPath.."death_messages.lua")
     dofile(scriptsPath.."idlekick.lua")
     dofile(scriptsPath.."shutdown.lua")
 end

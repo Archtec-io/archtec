@@ -45,32 +45,27 @@ messages.other = {
     " passed out -permanently."
 }
 
-local function get_message(mtype)
-	return messages[mtype][math.random(1, #messages[mtype])]
+local function get_message(death_type)
+	return messages[death_type][math.random(1, #messages[death_type])]
+end
+
+local function make_death_public(message)
+	minetest.chat_send_all(message)
+	if minetest.get_modpath("chatplus_discord") ~= nil then
+		discord.send(":skull_crossbones: "..message)
+	end
 end
 
 minetest.register_on_dieplayer(function(player)
-    local player_name = player:get_player_name()
-    local node = minetest.registered_nodes[minetest.get_node(player:get_pos()).name]
-    -- Death by lava
-    if node.groups.lava ~= nil then
-        local msg = player_name .. get_message("lava")
-        minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: '..msg)
-    -- Death by drowning
-    elseif player:get_breath() == 0 then
-        local msg = player_name .. get_message("water")
-        minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: '..msg)
-    -- Death by fire
-    elseif node.name == "fire:basic_flame" then
-        local msg = player_name .. get_message("fire")
-        minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: '..msg)
-    -- Death by something else
-    else
-        local msg = player_name .. get_message("other")
-        minetest.chat_send_all(msg)
-        discord.send(':skull_crossbones: '..msg)
-    end
+	local player_name = player:get_player_name()
+	local node = minetest.registered_nodes[minetest.get_node(player:get_pos()).name]
+	local msg = get_message("other")
+	if node.groups.lava ~= nil then
+		msg = get_message("lava")
+	elseif node.name == "fire:basic_flame" then
+		msg = get_message("fire")
+	elseif player:get_breath() == 0 then
+		msg = get_message("water")
+	end
+	make_death_public(player_name..msg)
 end)
