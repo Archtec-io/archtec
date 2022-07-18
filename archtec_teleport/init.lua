@@ -6,7 +6,6 @@ local MP = minetest.get_modpath(minetest.get_current_modname())
 tp = {
 	tpr_list = {},
 	tp2me_list = {},
-    tpc_list = {},
 	tpn_list = {}
 }
 
