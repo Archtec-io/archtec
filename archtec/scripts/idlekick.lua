@@ -1,6 +1,6 @@
 local modname = minetest.get_current_modname()
 
-local timeout = 600
+local timeout = 6000
 
 local times = {}
 
