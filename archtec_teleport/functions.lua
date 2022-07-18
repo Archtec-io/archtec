@@ -158,10 +158,6 @@ function tp.tpr_accept(name)
 	target_coords = nil
 
 	send_message(name, chatmsg)
-
-
-	if tp.enable_immediate_teleport then return end
-		send_message(name2, S("Request Accepted!"))
-		return
-	end
+	--immediate_teleport
+	send_message(name2, S("Request Accepted!"))
 end
