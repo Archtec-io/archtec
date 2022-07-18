@@ -65,10 +65,27 @@ function tp.tpr_send(sender, receiver)
 		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"))
 		return
 	end
+
+	send_message(receiver, S("@1 is requesting to teleport to you. /ok to accept.", sender))
+	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
+
+	-- Write name values to list and clear old values.
+	tp.tpr_list[receiver] = sender
+	tp.tpn_list[sender] = receiver
+
+	-- Teleport timeout delay
+	minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
+		if tp.tpr_list[receiver_name] and tp.tpn_list[sender_name] then
+			tp.tpr_list[receiver_name] = nil
+
+			send_message(sender_name, S("Request timed-out."))
+			send_message(receiver_name, S("Request timed-out."))
+			return
+		end
+	end, sender, receiver)
 end
 
 function tp.tp2me_send(sender, receiver)
-
 	if receiver == "" then
 		send_message(sender, S("Usage: /tp2me <Player name>"))
 		return
@@ -78,6 +95,25 @@ function tp.tp2me_send(sender, receiver)
 		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online."))
 		return
 	end
+
+	send_message(receiver, S("@1 is requesting that you teleport to them. /ok to accept; /tpn to deny.", sender))
+	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", tp.timeout_delay))
+
+	-- Write name values to list and clear old values.
+	tp.tp2me_list[receiver] = sender
+
+	-- Teleport timeout delay
+
+	minetest.after(tp.timeout_delay, function(sender_name, receiver_name)
+		if tp.tp2me_list[receiver_name] and tp.tpn_list[sender_name] then
+			tp.tp2me_list[receiver_name] = nil
+			tp.tpn_list[sender_name] = nil
+
+			send_message(sender_name, S("Request timed-out."))
+			send_message(receiver_name, S("Request timed-out."))
+			return
+		end
+	end, sender, receiver)
 end
 
 -- Teleport Accept Systems
@@ -123,11 +159,8 @@ function tp.tpr_accept(name)
 
 	send_message(name, chatmsg)
 
-	if minetest.check_player_privs(name2, {tp_admin = true}) == false then
-		send_message(name2, S("Request Accepted!"))
-	else
-		if tp.enable_immediate_teleport then return end
 
+	if tp.enable_immediate_teleport then return end
 		send_message(name2, S("Request Accepted!"))
 		return
 	end
