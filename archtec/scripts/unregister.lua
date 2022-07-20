@@ -19,3 +19,11 @@ if minetest.get_modpath("currency") then
     minetest.unregister_item("currency:minegeld_bundle")
     minetest.unregister_item("currency:shop")
 end
+
+if minetest.get_modpath("xdecor") then
+    minetest.unregister_item("xdecor:cobweb")
+end
+
+if minetest.get_modpath("homedecor_cobweb") then
+    minetest.unregister_item("homedecor:cobweb_corner")
+end
