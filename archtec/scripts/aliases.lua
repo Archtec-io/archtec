@@ -1,7 +1,0 @@
-minetest.register_alias("regional_weather:puddle_29", "default:stone")
-minetest.register_alias("regional_weather:puddle_30", "default:stone")
-minetest.register_alias("regional_weather:puddle_11_flipped", "default:stone")
-minetest.register_alias("regional_weather:puddle_10_flipped", "default:stone")
-minetest.register_alias("regional_weather:puddle_25", "default:stone")
-minetest.register_alias("bakedclay_blocks:greybrick", "default:stone")
-minetest.register_alias("myblocks:brick", "graystone:brick")
