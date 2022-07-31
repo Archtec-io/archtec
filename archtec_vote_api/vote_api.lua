@@ -155,7 +155,7 @@ minetest.register_chatcommand("vote_clear", {
 	end
 })
 
-local hudkit = dofile(minetest.get_modpath("archtec_vote") .. "/vote_hudkit.lua")
+local hudkit = dofile(minetest.get_modpath("archtec_vote_api") .. "/vote_hudkit.lua")
 
 vote.hud = hudkit()
 function vote.update_hud(player)
