@@ -1,6 +1,7 @@
 local modname = minetest.get_current_modname()
 
-local timeout = 6000
+local timeout = 60
+local timer = 0
 
 local times = {}
 
@@ -32,7 +33,13 @@ local function checkplayer(player)
 	return pname
 end
 
-minetest.register_globalstep(function()
+minetest.register_globalstep(function(dtime)
+	timer = timer + dtime
+	if timer < 2 then
+		return
+	end
+	timer = 0
+
 	for _, player in pairs(minetest.get_connected_players()) do
 		local pname = checkplayer(player)
 		if times[pname] < now() - timeout then
