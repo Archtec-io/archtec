@@ -8,6 +8,8 @@ minetest.unregister_chatcommand("unban")
 
 if minetest.get_modpath("abriglass") then
     minetest.unregister_item("abriglass:ghost_crystal")
+    minetest.unregister_item("abriglass:porthole_junglewood")
+    minetest.unregister_item("abriglass:porthole_wood")
 end
 
 if minetest.get_modpath("currency") then
