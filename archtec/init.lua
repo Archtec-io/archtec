@@ -19,6 +19,7 @@ dofile(scriptsPath.."mvps_stopper.lua")
 dofile(scriptsPath.."death_messages.lua")
 dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
+dofile(scriptsPath.."redef.lua")
 
 local http = minetest.request_http_api()
 if http then
