@@ -5,6 +5,7 @@ end
 
 minetest.unregister_chatcommand("ban")
 minetest.unregister_chatcommand("unban")
+minetest.unregister_chatcommand("rollback")
 
 if minetest.get_modpath("abriglass") then
     minetest.unregister_item("abriglass:ghost_crystal")
