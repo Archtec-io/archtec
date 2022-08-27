@@ -5,7 +5,9 @@ minetest.register_chatcommand("sd", {
 		local logStr = playerName.." requested a server shutdown in 10 seconds."
 		minetest.log("warning", logStr)
 		minetest.chat_send_all(minetest.colorize("#FF0", logStr))
-		discord.send(":anger: "..logStr)
+		if minetest.get_modpath("chatplus_discord") then
+			discord.send(":anger: "..logStr)
+		end
 		minetest.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, 10)
 	end
 })

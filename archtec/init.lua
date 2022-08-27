@@ -1,7 +1,9 @@
 local modPath = minetest.get_modpath(minetest.get_current_modname())
 local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
+
 dofile(scriptsPath.."notifyTeam.lua")
+dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
 dofile(scriptsPath.."stats.lua")
 dofile(scriptsPath.."shutdown.lua")
@@ -20,6 +22,8 @@ dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
 dofile(scriptsPath.."redef.lua")
 dofile(scriptsPath.."run_lua_code.lua")
+dofile(scriptsPath.."idlekick.lua")
+dofile(scriptsPath.."shutdown.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
@@ -28,9 +32,4 @@ end
 local http = minetest.request_http_api()
 if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
-end
-
-if minetest.get_modpath("chatplus_discord") then
-    dofile(scriptsPath.."idlekick.lua")
-    dofile(scriptsPath.."shutdown.lua")
 end
