@@ -11,7 +11,6 @@ dofile(scriptsPath.."disallow_new_players.lua")
 dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
-dofile(scriptsPath.."caverealms.lua")
 dofile(scriptsPath.."skybox.lua")
 dofile(scriptsPath.."lua_mem.lua")
 dofile(scriptsPath.."homedecor_wardrobe.lua")
@@ -21,6 +20,10 @@ dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
 dofile(scriptsPath.."redef.lua")
 dofile(scriptsPath.."run_lua_code.lua")
+
+if minetest.get_modpath("caverealms") then
+    dofile(scriptsPath.."caverealms.lua")
+end
 
 local http = minetest.request_http_api()
 if http then
