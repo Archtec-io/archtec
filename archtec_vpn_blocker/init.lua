@@ -87,7 +87,6 @@ function archtec_vpn_blocker.handle_player(name, ip)
 end
 
 --  Do handle_player on prejoin and normal join
-minetest.register_on_prejoinplayer(archtec_vpn_blocker.handle_player)
 minetest.register_on_joinplayer(function(player)
   local name = player:get_player_name()
   local ip = minetest.get_player_ip(name)

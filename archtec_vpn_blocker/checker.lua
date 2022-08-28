@@ -31,6 +31,7 @@ if iphub_key then
   archtec_vpn_blocker.register_checker(check)
 end
 
+--[[
 --  Getipintel.net
 
 local contact = minetest.settings:get("getipintel_contact")
@@ -93,3 +94,4 @@ do
 
   archtec_vpn_blocker.register_checker(check)
 end
+]]--
