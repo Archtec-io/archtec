@@ -29,6 +29,10 @@ if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
 end
 
+if minetest.get_modpath("techage") then
+    dofile(scriptsPath.."techage.lua")
+end
+
 local http = minetest.request_http_api()
 if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
