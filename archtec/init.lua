@@ -24,6 +24,7 @@ dofile(scriptsPath.."redef.lua")
 dofile(scriptsPath.."run_lua_code.lua")
 dofile(scriptsPath.."idlekick.lua")
 dofile(scriptsPath.."shutdown.lua")
+dofile(scriptsPath.."discord.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
