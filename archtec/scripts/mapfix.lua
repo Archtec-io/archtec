@@ -14,7 +14,7 @@ local max_size = tonumber(minetest.settings:get("mapfix_max_size")) or 32
 local delay = tonumber(minetest.settings:get("mapfix_delay")) or 15
 
 minetest.register_chatcommand("mapfix", {
-	privs = {moderate=true},  
+	privs = {staff=true},  
 	params = "<size>",
 	description = "Recalculate the flowing liquids and the light of a chunk",
 	func = function(name, param)
