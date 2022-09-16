@@ -7,33 +7,19 @@ local function mapfix(minp, maxp)
 	print(minetest.pos_to_string(emin), minetest.pos_to_string(emax))
 end
 
-local previous = os.time()
-
-local default_size = tonumber(minetest.settings:get("mapfix_default_size")) or 24
-local max_size = tonumber(minetest.settings:get("mapfix_max_size")) or 32
-local delay = tonumber(minetest.settings:get("mapfix_delay")) or 15
+local default_size = 24
+local max_size = 32
 
 minetest.register_chatcommand("mapfix", {
 	privs = {staff=true},  
-	params = "<size>",
+	params = "<size> (max radius 32)",
 	description = "Recalculate the flowing liquids and the light of a chunk",
 	func = function(name, param)
 		local pos = vector.round(minetest.get_player_by_name(name):get_pos())
 		local size = tonumber(param) or default_size
 
-		if size >= 121 then
+		if size >= 33 then
 			return false, "Radius is too big"
-		end
-		local privs = minetest.check_player_privs(name, {server=true})
-		local time = os.time()
-
-		if not privs then
-			if size > max_size then
-				return false, "You need the server privilege to exceed the radius of " .. max_size .. " blocks"
-			elseif time - previous < delay then
-				return false, "Wait at least " .. delay .. " seconds from the previous \"/mapfix\"."
-			end
-			previous = time
 		end
 
 		minetest.log("action", name .. " uses mapfix at " .. minetest.pos_to_string(vector.round(pos)) .. " with radius " .. size)
