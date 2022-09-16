@@ -2,24 +2,9 @@ local sky_start = tonumber(-100)
 local player_list = {}
 local timer = 0
 
-local function node_ok(pos, fallback)
-	fallback = fallback or "air"
-	local node = minetest.get_node_or_nil(pos)
-
-	if not node then
-		return fallback
-	end
-
-	if minetest.registered_nodes[node.name] then
-		return node.name
-	end
-
-	return fallback
-end
-
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
-	if timer < 12.7 then
+	if timer < 6 then
 		return
 	end
 
@@ -28,11 +13,7 @@ minetest.register_globalstep(function(dtime)
 	for _, player in pairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 		local pos = player:get_pos()
-		local head_node = node_ok(pos)
-		local ndef = minetest.registered_nodes[head_node]
 		local current = player_list[name] or ""
-		pos.y = pos.y - 1.5 -- reset pos
-		pos.y = pos.y + 1.5 -- head level
 
 		if pos.y > sky_start and current ~= "surface" then
 			player:set_sky({ type = "regular", clouds = true })
