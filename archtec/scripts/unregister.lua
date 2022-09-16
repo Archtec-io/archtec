@@ -9,12 +9,6 @@ minetest.unregister_chatcommand("rollback")
 minetest.unregister_chatcommand("rollback_check")
 minetest.unregister_chatcommand("set")
 
-if minetest.get_modpath("abriglass") then
-    minetest.unregister_item("abriglass:ghost_crystal")
-    minetest.unregister_item("abriglass:porthole_junglewood")
-    minetest.unregister_item("abriglass:porthole_wood")
-end
-
 if minetest.get_modpath("currency") then
     minetest.unregister_item("currency:minegeld_bundle")
     minetest.unregister_item("currency:shop")
