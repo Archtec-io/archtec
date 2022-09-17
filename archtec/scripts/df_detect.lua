@@ -229,12 +229,10 @@ minetest.register_on_joinplayer(function(player)
 		minetest.log("action", "[df_detect] " .. msg)
         local logMessage = "[archtec] Detected use of Dragonfireclient by '" .. name .. "' Auto ban in 15 seconds"
         notifyTeam(minetest.colorize("#666", logMessage))
-        minetest.after(15.0, function()
-			if player:is_player() then
-                xban.ban_player(name, "Server", nil, "Cheating") 
-				local logMessage = "[archtec] Auto banned '" .. name .. "'"
-                notifyTeam(minetest.colorize("#666", logMessage))
-            end
+        minetest.after(30.0, function()
+            xban.ban_player(name, "Server", nil, "Cheating") 
+			local logMessage = "[archtec] Auto banned '" .. name .. "'"
+            notifyTeam(minetest.colorize("#666", logMessage))
         end)
 	end
 
