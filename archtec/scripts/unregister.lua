@@ -21,3 +21,7 @@ end
 if minetest.get_modpath("homedecor_cobweb") then
     minetest.unregister_item("homedecor:cobweb_corner")
 end
+
+if minetest.get_modpath("mesecons_debug") then
+    minetest.unregister_item("mesecons_debug:mesecons_lagger")
+end
