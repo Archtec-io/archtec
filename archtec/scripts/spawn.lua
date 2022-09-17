@@ -5,7 +5,7 @@ minetest.register_privilege("spawn", {
 local function movePlayerToSpawn(playerName)
 	local player = minetest.get_player_by_name(playerName)
 	if player ~= nil then
-		player:set_pos({ x =-194, y = 10, z = 482 })
+		player:set_pos({ x =325, y = 12, z = 1120 })
 	end
 end
 
