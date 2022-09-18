@@ -24,18 +24,22 @@ local function send_report(name, report)
 	end
 end
 
-minetest.register_chatcommand("report", {
-	privs = { interact = true },
-	func = function(name, params)
-		local param = params:trim()
-		if param ~= "" then
-			if send_report(name, param) then
-				return true, "Report successfully created."
+if webhook_url == nil then
+	minetest.log("warning", "No Discord webhook URL found in the settings. Please specify 'archtec.webhook_url' in the settings. The '/report' command is not available now.")
+else
+	minetest.register_chatcommand("report", {
+		privs = { interact = true },
+		func = function(name, params)
+			local param = params:trim()
+			if param ~= "" then
+				if send_report(name, param) then
+					return true, "Report successfully created."
+				else
+					return false, "Error: Creating report failed. You are using illegal characters and/or symbols."
+				end
 			else
-				return false, "Error: Creating report failed. You are using illegal characters and/or symbols."
+				return false, "Error: You have to provide a report text."
 			end
-		else
-			return false, "Error: You have to provide a report text."
-		end
-	end,
-})
+		end,
+	})
+end
