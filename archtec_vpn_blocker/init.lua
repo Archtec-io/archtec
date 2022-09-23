@@ -42,7 +42,10 @@ local function check_ip(name, ip, hash)
           elseif pass == false then
             cache[hash] = 2
             minetest.log("action", "archtec_vpn_blocker: Kicking bad-ip-player "..name.." ["..ip.."]")
-          else minetest.log("error", "archtec_vpn_blocker: Callback-Error "..err.." while checking "..name.." ["..ip.."]!")
+            local logMessage = "[archtec_vpn_blocker] Kicking bad-ip-player "..name.."' (IP: "..ip..")"
+            notifyTeam(minetest.colorize("#666", logMessage))
+          else 
+            minetest.log("error", "archtec_vpn_blocker: Callback-Error "..err.." while checking "..name.." ["..ip.."]!")
           end
         end
         http.fetch(req, callback)
