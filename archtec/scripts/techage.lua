@@ -7,7 +7,7 @@ minetest.override_item("techage:forceload", {
             minetest.chat_send_player(pname, "[Forceload Restriction]: 'forceload' priv required to use this node")
             return
         else
-            return old_place(itemstack, placer, pointed_thing)
+            return old_on_place(itemstack, placer, pointed_thing)
         end
     end
 })
@@ -21,7 +21,7 @@ minetest.override_item("techage:forceloadtile", {
             minetest.chat_send_player(pname, "[Forceload Restriction]: 'forceload' priv required to use this node")
             return
         else
-            return old_place(itemstack, placer, pointed_thing)
+            return old_on_place(itemstack, placer, pointed_thing)
         end
     end
 })
