@@ -29,3 +29,32 @@ minetest.register_abm({
 		cool_lava(...)
 	end,
 })
+
+minetest.register_craftitem("techage_cobble_generator:diamond_powder", {
+	description = ("Diamond Powder"),
+	inventory_image = "techage_powder_inv.png^[colorize:#00FFFF:120",
+	groups = {powder = 1},
+})
+
+minetest.register_craftitem("techage_cobble_generator:dry_ice_cri", {
+	description = ("Dry ice"),
+	inventory_image = "techage_cobble_generator_dry_ice.png",
+	groups = {powder = 1},
+})
+
+techage.add_rinser_recipe({input="techage:sieved_gravel", output="techage_cobble_generator:diamond_powder", probability=300})
+
+techage.recipes.add("ta4_doser", {
+	output = "techage_cobble_generator:dry_ice_cri 1",
+	input = {
+		"techage_cobble_generator:diamond_powder 5",
+		"techage:water 3",
+	}
+})
+
+minetest.register_craft({
+	output = "techage_cobble_generator:dry_ice",
+	recipe={
+		{"", "techage_cobble_generator:dry_ice_cri", ""},
+	}
+})
