@@ -119,8 +119,7 @@ end
 -- Teleport Accept Systems
 function tp.tpr_accept(name)
 	-- Check to prevent constant teleporting
-	if not tp.tpr_list[name] and not tp.tp2me_list[name]
-	and not tp.tpc_list[name] then
+	if not tp.tpr_list[name] and not tp.tp2me_list[name] then
 		send_message(name, S("Usage: /ok allows you to accept teleport/area requests sent to you by other players."))
 		return
 	end
