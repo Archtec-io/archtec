@@ -1,8 +1,5 @@
 # Climate API
 A powerful engine for weather presets and visual effects.
-Requires a weather pack like [Regional Weather](https://github.com/t-affeldt/regional_weather).
-
-![](https://raw.githubusercontent.com/t-affeldt/climate_api/master/screenshot.png)
 
 Use the regional climate to set up different effects for different regions.
 Control where your effects are activated based on temperature, humidity, wind,
@@ -74,9 +71,6 @@ For performance considerations it is recommended to decrease the amount of parti
 If set to true, weather effects are allowed to modify a player's sky.
 This includes skybox, sun, moon, and clouds (also used for fog effects).
 Running this mod on Minetest 5.1.2 or earlier versions will automatically disable this feature.
-- ``Display HUD overlays`` (default true):
-If set to true, weather effects are allowed to render an image on top of the gameplay.
-This is usually an optional effect used to increase immersion (like a frozen-over camera in a snow storm).
 
 ### Environment
 - ``Global base temperature`` (default 0):
@@ -93,17 +87,12 @@ A value of 2 will double the speed at which weather presets change.
 A value of 0.5 will half the speed respectively.
 
 ### Preferences
-- ``Show degrees in Fahrenheit instead of Celsius`` (default false):
-If set to true, temperature information in */weather* command will be displayed in Fahrenheit.
 - ``Play ambient sound loops`` (default true):
 If set to true, weather effects are allowed to play sound loops.
 Note that you can also adjust sound levels instead of deactivating this feature completely.
 - ``Volume of sound effects`` (default 1.0):
 This value regulates overall sound volume.
 A value of 2 will double the volume whereas a value of 0.5 will reduce the volume by half.
-
-## Modding Information
-Check the [api_doc.md](https://github.com/t-affeldt/climate_api/blob/master/api_doc.md) for a (currently incomplete) documentation on how to register new weather presets and visual effects. Use my weather [presets](https://github.com/t-affeldt/regional_weather/tree/master/ca_weathers) and [effects](https://github.com/t-affeldt/regional_weather/tree/master/ca_effects) as an example. Ask in the [forum](https://forum.minetest.net/viewtopic.php?t=24569) or open an [issue](https://github.com/t-affeldt/climate_api/issues) if you run into problems. Also check the source code of predefined weather effects because they include usage documentation at the top of each file.
 
 ## License
 - Source Code: *GNU LGPL v3* by me
