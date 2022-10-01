@@ -1,1 +1,3 @@
-minetest.register_alias("ethereal:icebrick", "xdecor:packed_ice")
+if minetest.get_modpath("ethereal") then 
+    minetest.register_alias("xdecor_packed_ice", "ethereal:icebrick")
+end
