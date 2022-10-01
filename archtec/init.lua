@@ -28,6 +28,7 @@ dofile(scriptsPath.."discord.lua")
 dofile(scriptsPath.."crafting.lua")
 dofile(scriptsPath.."df_detect.lua")
 dofile(scriptsPath.."overrides.lua")
+dofile(scriptsPath.."cheat_log.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
