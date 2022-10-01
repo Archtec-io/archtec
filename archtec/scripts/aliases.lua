@@ -1,0 +1,1 @@
+minetest.register_alias("ethereal:icebrick", "xdecor:packed_ice")
