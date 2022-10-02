@@ -10,3 +10,9 @@ if minetest.get_modpath("digilines") then
 	    },
     })
 end
+
+if minetest.get_modpath("itemframes") then
+	minetest.override_item("itemframes:pedestal", {
+		tiles = {"itemframes_pedestal_new.png"},
+    })
+end
