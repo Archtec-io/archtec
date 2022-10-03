@@ -8,10 +8,9 @@ local function mapfix(minp, maxp)
 end
 
 local default_size = 24
-local max_size = 32
 
 minetest.register_chatcommand("mapfix", {
-	privs = {staff=true},  
+	privs = {staff=true},
 	params = "<size> (max radius 32)",
 	description = "Recalculate the flowing liquids and the light of a chunk",
 	func = function(name, param)

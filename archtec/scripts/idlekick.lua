@@ -1,5 +1,3 @@
-local modname = minetest.get_current_modname()
-
 local timeout = 1800
 local timer = 0
 
@@ -57,7 +55,7 @@ else
 			return
 		end
 		timer = 0
-	
+
 		for _, player in pairs(minetest.get_connected_players()) do
 			local pname = checkplayer(player)
 			if times[pname] < now() - timeout then

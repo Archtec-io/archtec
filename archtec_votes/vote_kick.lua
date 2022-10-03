@@ -26,7 +26,6 @@ minetest.register_chatcommand("vote_kick", {
 							#results.yes .. " to " .. #results.no .. ", " ..
 							self.name .. " will be kicked.")
 					minetest.kick_player(self.name, "The vote to kick you passed")
-					
 				else
 					minetest.chat_send_all("Vote failed, " ..
 							#results.yes .. " to " .. #results.no .. ", " ..

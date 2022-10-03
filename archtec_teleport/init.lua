@@ -1,9 +1,9 @@
---Archtec_teleport based on https://github.com/minetest-mods/teleport-request 
+--Archtec_teleport based on https://github.com/minetest-mods/teleport-request
 --WIP
 
 local MP = minetest.get_modpath(minetest.get_current_modname())
 
-tp = {
+archtec_teleport = {
 	tpr_list = {},
 	tp2me_list = {},
 	tpn_list = {}
@@ -11,27 +11,27 @@ tp = {
 
 -- Clear requests when the player leaves
 minetest.register_on_leaveplayer(function(name)
-	if tp.tpr_list[name] then
-		tp.tpr_list[name] = nil
+	if archtec_teleport.tpr_list[name] then
+		archtec_teleport.tpr_list[name] = nil
 		return
 	end
 
-	if tp.tp2me_list[name] then
-		tp.tp2me_list[name] = nil
+	if archtec_teleport.tp2me_list[name] then
+		archtec_teleport.tp2me_list[name] = nil
 		return
 	end
 
-    if tp.tpn_list[name] then
-		tp.tpn_list[name] = nil
+    if archtec_teleport.tpn_list[name] then
+		archtec_teleport.tpn_list[name] = nil
 		return
 	end
 end)
 
 -- Timeout delay
-tp.timeout_delay = 60
+archtec_teleport.timeout_delay = 60
 
 -- Message color
-tp.message_color = "#FF8800"
+archtec_teleport.message_color = "#FF8800"
 
 dofile(MP.."/privileges.lua")
 dofile(MP.."/functions.lua")

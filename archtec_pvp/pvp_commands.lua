@@ -1,5 +1,3 @@
-local MP = minetest.get_modpath(minetest.get_current_modname())
-
 local S = minetest.get_translator(minetest.get_current_modname())
 
 if minetest.get_modpath("unified_inventory") then

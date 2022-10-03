@@ -3,7 +3,7 @@ if minetest.get_modpath("chatplus_discord") then
         for _, player in ipairs(minetest.get_connected_players()) do
             local name = player:get_player_name()
             if name then
-                local hasPrivs, missingPrivs = minetest.check_player_privs(name, "server")
+                local hasPrivs = minetest.check_player_privs(name, "staff")
                 if hasPrivs then
                     minetest.chat_send_player(name, message)
                 end
@@ -16,7 +16,7 @@ else
         for _, player in ipairs(minetest.get_connected_players()) do
             local name = player:get_player_name()
             if name then
-                local hasPrivs, missingPrivs = minetest.check_player_privs(name, "server")
+                local hasPrivs = minetest.check_player_privs(name, "staff")
                 if hasPrivs then
                     minetest.chat_send_player(name, message)
                 end

@@ -4,8 +4,6 @@ local pvptable = {}
 -- Public table, containing global functions
 archtec_pvp = {}
 
-local MP = minetest.get_modpath(minetest.get_current_modname())
-
 local S = minetest.get_translator(minetest.get_current_modname())
 
 minetest.register_privilege("pvp", ("Can change own PvP state"))
