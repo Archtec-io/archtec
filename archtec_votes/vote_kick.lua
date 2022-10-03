@@ -22,9 +22,6 @@ minetest.register_chatcommand("vote_kick", {
 					minetest.chat_send_all("Vote passed, " ..
 							#results.yes .. " to " .. #results.no .. ", " ..
 							self.name .. " will be kicked.")
-					discord.send(":rotating_light: Vote kick passed, " ..
-							#results.yes .. " to " .. #results.no .. ", " ..
-							self.name .. " will be kicked.")
 					minetest.kick_player(self.name, "The vote to kick you passed")
 				else
 					minetest.chat_send_all("Vote failed, " ..

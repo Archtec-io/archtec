@@ -20,6 +20,8 @@ end
 
 function vote.start_vote(voteset)
 	minetest.log("action", "Vote started: " .. voteset.description)
+	local logMessage = "[archtec_votes] Vote started: '" .. voteset.description .. "'"
+	notifyTeam(minetest.colorize("#666", logMessage))
 
 	table.insert(vote.active, voteset)
 
@@ -82,7 +84,8 @@ function vote.end_vote(voteset)
 
 	minetest.log("action", "Vote '" .. voteset.description ..
 			"' ended with result '" .. result .. "'.")
-
+	local logMessage = "[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'"
+	notifyTeam(minetest.colorize("#666", logMessage))
 	if voteset.on_result then
 		voteset:on_result(result, voteset.results)
 	end
@@ -130,6 +133,8 @@ function vote.vote(voteset, name, value)
 
 	minetest.log("action", name .. " voted '" .. value .. "' to '"
 			.. voteset.description .. "'")
+	local logMessage = "[archtec_votes] '" .. name .. "' voted '" .. value .. "' to '" .. voteset.description .. "'"
+	notifyTeam(minetest.colorize("#666", logMessage))
 
 	table.insert(voteset.results[value], name)
 	voteset.results.voted[name] = true
@@ -172,7 +177,7 @@ function vote.update_hud(player)
 		vote.hud:add(player, "vote:bg", {
 			hud_elem_type = "image",
 			position = {x = 1, y = 0.5},
-			scale = {x = 1, y = 1},
+			scale = {x = 2, y = 2},
 			text = "vote_background.png",
 			offset = {x=-100, y = 10},
 			number = 0xFFFFFF
@@ -209,19 +214,30 @@ function vote.update_hud(player)
 		vote.hud:remove(player, "vote:help")
 	end
 end
+
 minetest.register_on_leaveplayer(function(player)
 	vote.hud.players[player:get_player_name()] = nil
 end)
+
 function vote.update_all_hud()
 	local players = minetest.get_connected_players()
 	for _, player in pairs(players) do
 		vote.update_hud(player)
 	end
-	minetest.after(5, vote.update_all_hud)
 end
-minetest.after(5, vote.update_all_hud)
 
-minetest.register_chatcommand("y", {
+local timer_gs = 0
+minetest.register_globalstep(function(dtime)
+	timer_gs = timer_gs + dtime
+	if timer_gs < 5 then
+		return
+	end
+	timer_gs = 0
+
+	vote.update_all_hud()
+end)
+
+minetest.register_chatcommand("yes", {
 	privs = {
 		interact = true
 	},
@@ -244,7 +260,7 @@ minetest.register_chatcommand("y", {
 	end
 })
 
-minetest.register_chatcommand("n", {
+minetest.register_chatcommand("no", {
 	privs = {
 		interact = true
 	},
