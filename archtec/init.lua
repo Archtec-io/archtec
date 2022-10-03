@@ -2,6 +2,7 @@ local modPath = minetest.get_modpath(minetest.get_current_modname())
 local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
 
+dofile(scriptsPath.."discord_fallback.lua")
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")

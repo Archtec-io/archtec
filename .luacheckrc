@@ -32,3 +32,7 @@ read_globals = {
 
 	string = {fields = {"split"}},
 }
+
+files["archtec/scripts/discord_fallback.lua"] = {
+	globals = { "discord" },
+}
