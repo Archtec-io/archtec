@@ -41,3 +41,18 @@ if minetest.get_modpath("homedecor_tables") then
         },
     })
 end
+
+--doors:prison_door (xdecor)/xpanes:door_steel_bar (xpanes)
+if minetest.get_modpath("xpanes") then
+    minetest.clear_craft({
+        output = "xpanes:door_steel_bar"
+    })
+    minetest.register_craft({
+        output = "xpanes:door_steel_bar",
+		recipe = {
+			{"xpanes:bar_flat", "default:steel_ingot"},
+			{"default:steel_ingot", "xpanes:bar_flat"},
+			{"xpanes:bar_flat", "default:steel_ingot"},
+		},
+    })
+end
