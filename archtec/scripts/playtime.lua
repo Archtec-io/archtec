@@ -41,13 +41,17 @@ local function format_duration(seconds)
 end
 
 minetest.register_chatcommand("playtime", {
-	params = "player",
+	params = "<player>",
 	description = ("See playtime on this server"),
 	func = function(player, param)
 		if minetest.get_player_by_name(param) then
 			return true,
 				C("#63d437", "Total: ")..C("#ffea00", format_duration(archtec.get_total_playtime(param))).."\n"..
 				C("#63d437", "Current: ")..C("#ffea00", format_duration(archtec.get_session_playtime(param)))
+		elseif minetest.get_player_by_name(player) then
+			return true,
+				C("#63d437", "Total: ")..C("#ffea00", format_duration(archtec.get_total_playtime(player))).."\n"..
+				C("#63d437", "Current: ")..C("#ffea00", format_duration(archtec.get_session_playtime(player)))
 		else
 			return false, ("This player isn't online")
 		end
