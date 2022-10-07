@@ -13,18 +13,11 @@ climate_api.register_influence("daylight", function(pos)
 end)
 
 climate_api.register_influence("indoors", function(pos)
-	pos = vector.add(pos, {x = 0, y = 1, z = 0})
-	local daylight = minetest.get_node_light(pos, 0.5) or 0
-	if daylight < 15 then return true end
-
-	for i = 1, climate_mod.settings.ceiling_checks do
-		local lpos = vector.add(pos, {x = 0, y = i, z = 0})
-		local node = minetest.get_node_or_nil(lpos)
-		if node ~= nil and node.name ~= "air" and node.name ~= "ignore" then
-			return true
-		end
-	end
-	return false
+    pos = vector.add(pos, {x = 0, y = 1, z = 0})
+    local daylight = minetest.get_node_light(pos, 0.5) or 0
+    if daylight < 15 then return true end
+    local free_sight, blocking_node_pos = minetest.line_of_sight(pos, { x = pos.x, y = pos.y + 10, z = pos.z })
+    return not free_sight
 end)
 
 climate_api.register_global_influence("time",
