@@ -6,14 +6,6 @@ local conditions = {
 	max_heat		= 30,
 	min_humidity	= 65,
 	indoors			= false,
-	not_biome		= {
-		"cold_desert",
-		"cold_desert_ocean",
-		"desert",
-		"desert_ocean",
-		"sandstone_desert",
-		"sandstone_desert_ocean"
-	}
 }
 
 local effects = {}

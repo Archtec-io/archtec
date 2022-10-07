@@ -3,7 +3,7 @@ local api = {}
 
 -- define various standard effect cycle lengths
 api.SHORT_CYCLE		=	0	-- for particles and fast animations (use GSCYCLE)
-api.DEFAULT_CYCLE	=	2.0	-- for most effect types
+api.DEFAULT_CYCLE	=	3.0	-- for most effect types
 api.LONG_CYCLE		=	5.0	-- for ressource intensive tasks or timed effects
 
 -- register new weather presets (like rain)

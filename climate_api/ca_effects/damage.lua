@@ -8,7 +8,6 @@ Expects a table as the parameter containing the following values:
 	- type <"light"|"raycast"> ["light"] (Whether the light level should be used a raycast should be performed)
 	- height <number> [0] (Height offset of weather origin from the player. Only used for raycasts)
 	- velocity <number> [1] (Velocity of damaging particles. Only used for raycasts)
-	- use_wind <bool> [true] (Whether the wind should be factored in. Only used for raycasts)
 ]]
 
 if not minetest.is_yes(minetest.settings:get_bool("enable_damage"))
@@ -29,7 +28,7 @@ local function check_hit(player, ray)
 	if ray.type == nil or ray.type == "light" then
 		return minetest.get_node_light(ppos, 0.5) == 15
 	end
-	
+
 	return true
 end
 

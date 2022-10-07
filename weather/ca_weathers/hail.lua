@@ -3,32 +3,14 @@ local name = "weather:hail"
 local conditions = {
 	min_height			= weather.settings.min_height,
 	max_height			= weather.settings.max_height,
-	min_heat				= 30,
-	max_heat				= 45,
+	min_heat			= 30,
+	max_heat			= 45,
 	min_humidity		= 65,
 	min_windspeed		= 2.5,
-	indoors					= false,
-	not_biome				= {
-		"cold_desert",
-		"cold_desert_ocean",
-		"desert",
-		"desert_ocean",
-		"sandstone_desert",
-		"sandstone_desert_ocean"
-	}
+	indoors				= false,
 }
 
 local effects = {}
-
-effects["climate_api:damage"] = {
-	rarity = 15,
-	value = 3,
-	check = {
-		type = "raycast",
-		height = 7,
-		velocity = 20
-	}
-}
 
 effects["climate_api:sound"] = {
 	name = "weather_hail",

@@ -12,7 +12,6 @@ minetest.register_globalstep(function(dtime)
 
 	if world_timer >= WORLD_CYCLE then
 		world_timer = 0
-		climate_mod.world.update_status(minetest.get_gametime())
 		climate_mod.global_environment = climate_mod.trigger.get_global_environment()
 	end
 

@@ -28,7 +28,6 @@ The following optional values have been expanded with additional value types for
 - acceleration <vector | int> [nil] (Overrides both minacc and maxacc if set)
 
 The following new behaviours have been introduced:
-- use_wind <bool> [true] (Adjusts velocity and position for current windspeed)
 - detach <bool> [false] (Unless enabled, considers positions as relative to current player as if spawner's position would be attached)
 - adjust_for_velocity <bool> [true] (Corrects position of particle spawner by player's movement speed. Only applicable if detach = false and not manually attached)
 ]]
@@ -46,7 +45,6 @@ local function parse_config(player, particles)
 		collisiondetection = true,
 		collision_removal = true,
 		playername = player:get_player_name(),
-		use_wind = true,
 		attach_to_player = false,
 		detach = false,
 		adjust_for_velocity = true
@@ -172,25 +170,6 @@ local function parse_config(player, particles)
 	end
 	config.detach = nil
 	config.adjust_for_velocity = nil
-
-	-- move particles in wind direction
-	if config.use_wind then
-		local pos = vector.multiply(vector.add(config.minpos, config.maxpos), 0.5)
-		local wind = climate_api.environment.get_wind(pos)
-		-- adjust velocity to include wind
-		config.minvel = vector.add(config.minvel, wind)
-		config.maxvel = vector.add(config.maxvel, wind)
-
-		-- adjust spawn position for better visibility
-		local vel = vector.multiply(vector.add(config.minvel, config.maxvel), 0.5)
-		local windpos = vector.multiply(
-			vector.normalize(vel),
-			-vector.length(wind)
-		)
-		config.minpos = vector.add(config.minpos, windpos)
-		config.maxpos = vector.add(config.maxpos, windpos)
-	end
-	config.use_wind = nil
 
 	-- if unspecified, use 2D or 3D rotation based on movement direction
 	if particles.vertical == nil then
