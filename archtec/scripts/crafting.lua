@@ -77,3 +77,17 @@ if minetest.get_modpath("farming") and minetest.get_modpath("moreores") then
 		}
 	})
 end
+
+if minetest.get_modpath("ethereal") then
+    minetest.register_craft({
+        output = "ethereal:bowl",
+        type = "shapeless",
+        recipe = {"farming:bowl"}
+    })
+
+    minetest.register_craft({
+    output = "farming:bowl",
+    type = "shapeless",
+    recipe = {"ethereal:bowl"}
+    })
+end
