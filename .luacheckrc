@@ -18,6 +18,7 @@ globals = {
 }
 
 read_globals = {
+	"core"
 	"DIR_DELIM",
 	"dump",
 	"minetest",
