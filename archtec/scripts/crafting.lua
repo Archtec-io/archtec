@@ -91,3 +91,26 @@ if minetest.get_modpath("ethereal") then
     recipe = {"ethereal:bowl"}
     })
 end
+
+if minetest.get_modpath("jonez") then
+    minetest.clear_craft({
+        output = "xpanes:palace_window_top_flat"
+    })
+    minetest.clear_craft({
+        output = "xpanes:palace_window_bottom_flat"
+    })
+    minetest.register_craft({
+        output = "xpanes:palace_window_top_flat",
+		recipe = {
+			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
+			{"xpanes:pane_flat", "", "xpanes:pane_flat"},
+		},
+    })
+    minetest.register_craft({
+        output = "xpanes:palace_window_bottom_flat",
+		recipe = {
+			{"xpanes:pane_flat", "", "xpanes:pane_flat"},
+			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
+		},
+    })
+end
