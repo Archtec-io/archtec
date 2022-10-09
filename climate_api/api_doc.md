@@ -67,27 +67,6 @@ __Returns__: ``nil``
 
 ## Environment Access
 
-### Get Temperature At Position
-``climate_api.environment.get_heat(pos)``
-
-__Parameter__: ``pos <vector>``: Coordinates of requested location
-
-__Returns__: ``<number>`` indicating current temperature in °F
-
-### Get Humidity At Position
-``climate_api.environment.get_humidity(pos)``
-
-__Parameter__: ``pos <vector>``: Coordinates of requested location
-
-__Returns__: ``<number>`` indicating current humidity
-
-### Get Current Windspeed
-``climate_api.environment.get_wind(pos)``
-
-__Parameter__: ``pos <vector>``: Coordinates of requested location. Right now, only y-coordinate is used.
-
-__Returns__: ``<vector>`` indicating speed and direction
-
 ### Get Active Weather Presets
 ``climate_api.environment.get_weather_presets(player)``
 
@@ -105,37 +84,6 @@ __Returns__: ``<vector>`` indicating speed and direction
 
 ### Update Player Sky
 ``climate_api.skybox.update(playername)``
-
-
-## Player Physics Modifications
-Climate API provides an easy way of modfying player physics in a compatible way.
-The API is similar to those of ``player_monoids`` or ``playerphysics`` because it also uses multiplication to account for multiple modifiers.
-In fact, these functions use ``player_monoids`` under the hud if that mod is available. If not, they will fall back to ``playerphysics``, ``pova``, or native overrides in that order.
-
-### Add Physics Modifier
-``climate_api.player_physics.add(id, player, effect, value)``
-
-Register a new modifier that will be multiplied with the current value to set the new physics factor. Call this function again with the same id in order to change an existing modifier.
-
-__Parameters__:
-- ``id <string>``: A unique name used to identify the modifier. Should be prefixed with the mod's name.
-- ``player <ObjectRef>``: The player affected by the physics change
-- ``effect <"speed" | "jump" | "gravity">``: The type of physics to be changed
-- ``value <number>``: The multiplicator. Use values between 0 and 1 to reduce physics attribute. Use values above 1 to increase it.
-
-__Returns__: ``nil``
-
-### Remove Physics Modifier
-``climate_api.player_physics.remove(id, player, effect)``
-
-Use this function to completely remove a physics modifer from the attribute calculation.
-
-__Parameters__:
-- ``id <string>``: The name used in ``player_physics.add`` that identifies a registered modifier
-- ``player <ObjectRef>``: The player affected by the physics change
-- ``effect <"speed" | "jump" | "gravity">``: The type of physics to be changed
-
-__Returns__: ``nil``
 
 
 ## Utility Functions

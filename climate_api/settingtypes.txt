@@ -45,9 +45,6 @@ climate_api_time_spread (Time rate of weather changes) float 1 0.1 10
 
 [Preferences]
 
-# If set to true, temperature information in /weather command will be displayed in Fahrenheit.
-climate_api_fahrenheit (Show degrees in Fahrenheit instead of Celsius) bool false
-
 # If set to true, weather effects are allowed to play sound loops.
 # You can also adjust sound levels instead of deactivating this feature completely.
 # Setting this value to false will be slightly more performant than setting the volume to zero.
