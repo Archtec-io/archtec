@@ -11,14 +11,11 @@ local modpath = minetest.get_modpath(modname)
 
 -- load settings from config file
 climate_mod.settings = {
-	damage			= true,
 	particles		= true,
 	skybox			= true,
 	sound			= true,
 	seasons			= true,
 	block_updates	= true,
-	heat			= 0,
-	humidity		= 0,
 	time_spread		= 1,
 	particle_count	= 0.5,
 	tick_speed		= 1,
@@ -44,7 +41,6 @@ climate_mod.forced_enviroment = {}
 climate_api = dofile(modpath .. "/lib/api.lua")
 climate_api.utility = dofile(modpath .. "/lib/api_utility.lua")
 climate_api.skybox = dofile(modpath .. "/lib/skybox_merger.lua")
-climate_api.player_physics = dofile(modpath .. "/lib/player_physics.lua")
 climate_api.environment = dofile(modpath .. "/lib/environment.lua")
 climate_mod.trigger = dofile(modpath .. "/lib/trigger.lua")
 
@@ -56,7 +52,6 @@ dofile(modpath .. "/lib/commands.lua")
 dofile(modpath .. "/lib/influences.lua")
 
 -- import predefined environment effects
-dofile(modpath .. "/ca_effects/damage.lua")
 dofile(modpath .. "/ca_effects/particles.lua")
 dofile(modpath .. "/ca_effects/skybox.lua")
 dofile(modpath .. "/ca_effects/sound.lua")

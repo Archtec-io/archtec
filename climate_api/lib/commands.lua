@@ -1,11 +1,5 @@
 local S = climate_mod.i18n
 
--- register weather privilege in order to modify the weather status
-minetest.register_privilege("weather", {
-	description = S("Make changes to the current weather"),
-	give_to_singleplayer = false
-})
-
 -- display general information on current weather
 minetest.register_chatcommand("weather", {
 	description = S("Display weather information"),
@@ -50,7 +44,7 @@ minetest.register_chatcommand("weather_settings", {
 minetest.register_chatcommand("set_weather", {
 	params ="<weather> <status>",
 	description = S("Turn the specified weather preset on or off for all players or reset it to automatic"),
-	privs = { weather = true },
+	privs = { staff = true },
 	func = function(playername, param)
 		local arguments = {}
 		for w in param:gmatch("%S+") do table.insert(arguments, w) end

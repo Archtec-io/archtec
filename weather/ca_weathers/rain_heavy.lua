@@ -3,8 +3,6 @@ local name = "weather:rain_heavy"
 local conditions = {
 	min_height		= weather.settings.min_height,
 	max_height		= weather.settings.max_height,
-	min_heat		= 40,
-	min_humidity	= 65,
 	indoors			= false
 }
 

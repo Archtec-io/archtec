@@ -31,12 +31,6 @@ The following mods complement Climate API particularly well:
 - ``/weather_settings``: Display current mod configuration in the chat
 - ``/weather_influences``: Display all different factors and how they affect you in this moment.
 - ``/weather_status``: Display a list of all installed weather presets and whether they have been forced on, turned off, or are running normally (auto). If no weather presets are listed here then you need to install a weather mod like Regional Weather.
-- ``/grant <playername> weather``: Enable a specified player to modify the current weather.
-- ``/set_heat <value>``: Override global heat levels with given value.
-- ``/set_base_heat <value>``: Override the base heat value used to calculate local climate. Positive numbers will increase temperature by X degrees Fahrenheit, whereas negative values will lower it.
-- ``/set_humidity <value>``: Override global humidity levels with given value.
-- ``/set_base_humidity <value>``: Override the base humidity value used to calculate local climate. Positive numbers will increase humidity by X percent, whereas negative values will lower it.
-- ``/set_wind <x> <z>``: Override wind speed and direction. Higher absolute values result in stronger wind. The sign indicates direction.
 - ``/set_weather <weather> <on|off|auto>``: Set a weather preset to always be applied (on), disable it completely (off), or reset it to be applied automatically (auto). Turning presets on manually might result in partially missing effects (like no sound if you enable sandstorms but no storms). Use ``/weather_status`` for a full list of installed weather presets. The prefix is important.
 
 ## Configuration Options
@@ -73,14 +67,6 @@ This includes skybox, sun, moon, and clouds (also used for fog effects).
 Running this mod on Minetest 5.1.2 or earlier versions will automatically disable this feature.
 
 ### Environment
-- ``Global base temperature`` (default 0):
-This value will be added to all biome's base temperatures before applying random modifiers.
-Every unit here will increase the global base heat by one degree Fahrenheit.
-Negative values will cool down global base heat respectively.
-- ``Global base humidity`` (default 0):
-This value will be added to all biome's base humidity before applying random modifiers.
-Every unit here will increase the global base humidity by one percent.
-Negative values will dry up global base humidity respectively.
 - ``Time rate of weather changes`` (default 1.0):
 This value regulates how quickly environment factors like heat, humidity and wind are changing.
 A value of 2 will double the speed at which weather presets change.

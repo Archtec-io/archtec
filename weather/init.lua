@@ -10,9 +10,6 @@ weather.settings.min_height		= -30
 weather.settings.cloud_height	= 120
 weather.settings.cloud_scale	= 40
 
-local S = minetest.get_translator("weather")
-weather.i18n = S
-
 -- import individual weather types
 dofile(modpath .. "/ca_weathers/ambient.lua") --clouds and wind
 dofile(modpath .. "/ca_weathers/deep_cave.lua") --dark sky in caves

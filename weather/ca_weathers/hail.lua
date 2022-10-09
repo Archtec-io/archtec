@@ -3,10 +3,6 @@ local name = "weather:hail"
 local conditions = {
 	min_height			= weather.settings.min_height,
 	max_height			= weather.settings.max_height,
-	min_heat			= 30,
-	max_heat			= 45,
-	min_humidity		= 65,
-	min_windspeed		= 2.5,
 	indoors				= false,
 }
 

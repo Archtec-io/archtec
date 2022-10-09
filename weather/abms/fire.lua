@@ -9,16 +9,14 @@ climate_api.register_abm({
 	chance		= 2,
 	catch_up	= false,
 
-	 conditions	= {
-		 min_height		= weather.settings.min_height,
-		 max_height		= weather.settings.max_height,
-		 min_humidity	= 55,
-		 max_heat		= 85,
-		 daylight		= 15,
-		 indoors		= false
-	 },
+	conditions	= {
+		min_height	= weather.settings.min_height,
+		max_height	= weather.settings.max_height,
+		daylight	= 15,
+		indoors		= false
+	},
 
-	 action = function (pos, node, env)
-		 minetest.set_node(pos, { name = "air" })
-	 end
+	action = function (pos, node, env)
+		minetest.set_node(pos, { name = "air" })
+	end
 })

@@ -3,8 +3,6 @@ local name = "weather:snow_heavy"
 local conditions = {
 	min_height 		= weather.settings.min_height,
 	max_height 		= weather.settings.max_height,
-	max_heat		= 30,
-	min_humidity	= 65,
 	indoors			= false,
 }
 

@@ -1,7 +1,7 @@
 local name = "weather:deep_cave"
 
 local conditions = {
-	max_height		= -100
+	max_height	= -100
 }
 
 local effects = {}
