@@ -1,6 +1,6 @@
 minetest.register_chatcommand("memory", {
     description = "Get Lua memory usage",
-    privs = {server = true},
+    privs = { server = true },
     func = function(name, param)
 		minetest.chat_send_player(
             name,

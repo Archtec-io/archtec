@@ -1,6 +1,6 @@
 --based on https://github.com/wsor4035/liquid_restriction
 --registering priv
-minetest.register_privilege("adv_buckets", {description = "Able to use all liquids.", give_to_singleplayer=false})
+minetest.register_privilege("adv_buckets", {description = "Able to use all liquids.")
 
 local liquid_list = {
     "bucket:bucket_lava",

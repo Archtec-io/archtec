@@ -7,7 +7,7 @@ if minetest.get_modpath("pride_flags") then
         recipe = {
             {"default:steel_ingot", "farming:string"},
             {"default:steel_ingot", "farming:string"},
-            {"default:steel_ingot", "farming:string"},
+            {"default:steel_ingot", "farming:string"}
         }
     })
 end
@@ -22,7 +22,7 @@ if minetest.get_modpath("ropes") then
         recipe = {
             {"group:stick", "", "group:stick"},
             {"group:stick", "", "group:stick"},
-            {"group:stick", "group:stick", "group:stick"},
+            {"group:stick", "group:stick", "group:stick"}
         }
     })
 end
@@ -37,8 +37,8 @@ if minetest.get_modpath("homedecor_tables") then
         recipe = {
             { "group:wood","group:wood", "group:wood" },
             { "group:stick", "", "group:stick" },
-            { "", "group:stick", "" },
-        },
+            { "", "group:stick", "" }
+        }
     })
 end
 
@@ -52,8 +52,8 @@ if minetest.get_modpath("xpanes") then
 		recipe = {
 			{"xpanes:bar_flat", "default:steel_ingot"},
 			{"default:steel_ingot", "xpanes:bar_flat"},
-			{"xpanes:bar_flat", "default:steel_ingot"},
-		},
+			{"xpanes:bar_flat", "default:steel_ingot"}
+		}
     })
 end
 
@@ -103,14 +103,14 @@ if minetest.get_modpath("jonez") then
         output = "xpanes:palace_window_top_flat",
 		recipe = {
 			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
-			{"xpanes:pane_flat", "", "xpanes:pane_flat"},
-		},
+			{"xpanes:pane_flat", "", "xpanes:pane_flat"}
+		}
     })
     minetest.register_craft({
         output = "xpanes:palace_window_bottom_flat",
 		recipe = {
 			{"xpanes:pane_flat", "", "xpanes:pane_flat"},
-			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
-		},
+			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"}
+		}
     })
 end

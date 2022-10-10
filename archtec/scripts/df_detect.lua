@@ -235,5 +235,4 @@ minetest.register_on_joinplayer(function(player)
             notifyTeam(minetest.colorize("#666", logMessage))
         end)
 	end
-
 end)

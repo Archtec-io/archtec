@@ -43,8 +43,8 @@ if minetest.get_modpath("chatplus_discord") then
 			local pname = checkplayer(player)
 			if times[pname] < now() - timeout then
 				minetest.kick_player(pname, "Too long inactive")
-				minetest.chat_send_all(pname.." got kicked! Reason: Too long inactive")
-				discord.send(":bangbang: "..pname.." got kicked! Reason: Too long inactive")
+				minetest.chat_send_all(pname .. " got kicked! Reason: Too long inactive")
+				discord.send(":bangbang: " .. pname .. " got kicked! Reason: Too long inactive")
 			end
 		end
 	end)
@@ -60,7 +60,7 @@ else
 			local pname = checkplayer(player)
 			if times[pname] < now() - timeout then
 				minetest.kick_player(pname, "Too long inactive")
-				minetest.chat_send_all(pname.." got kicked! Reason: Too long inactive")
+				minetest.chat_send_all(pname .. " got kicked! Reason: Too long inactive")
 			end
 		end
 	end)

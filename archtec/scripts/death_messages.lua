@@ -51,9 +51,7 @@ end
 
 local function make_death_public(message)
 	minetest.chat_send_all(message)
-	if minetest.get_modpath("chatplus_discord") ~= nil then
-		discord.send(":skull_crossbones: "..message)
-	end
+	discord.send(":skull_crossbones: " .. message)
 end
 
 minetest.register_on_dieplayer(function(player)
@@ -67,5 +65,5 @@ minetest.register_on_dieplayer(function(player)
 	elseif player:get_breath() == 0 then
 		msg = get_message("water")
 	end
-	make_death_public(player_name..msg)
+	make_death_public(player_name .. msg)
 end)
