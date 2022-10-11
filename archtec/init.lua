@@ -34,6 +34,7 @@ dofile(scriptsPath.."cheat_log.lua")
 dofile(scriptsPath.."playtime.lua")
 dofile(scriptsPath.."join_ratelimit.lua")
 dofile(scriptsPath.."status.lua")
+dofile(scriptsPath.."random_messages.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
