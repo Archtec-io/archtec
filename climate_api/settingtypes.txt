@@ -35,14 +35,6 @@ climate_api_particles (Show particle effects) bool true
 climate_api_skybox (Override the skybox) bool true
 
 
-[Environment]
-
-# This value regulates how quickly environment factors like heat, humidity and wind are changing.
-# A value of 2 will double the speed at which weather presets change.
-# A value of 0.5 will half the speed respectively.
-climate_api_time_spread (Time rate of weather changes) float 1 0.1 10
-
-
 [Preferences]
 
 # If set to true, weather effects are allowed to play sound loops.

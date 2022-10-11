@@ -30,5 +30,4 @@ function utility.normalized_cycle(value)
 	return math.cos((2 * value + 1) * math.pi) / 2 + 0.5
 end
 
-
 return utility

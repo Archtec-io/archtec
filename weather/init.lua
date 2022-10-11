@@ -11,7 +11,7 @@ weather.settings.cloud_height	= 120
 weather.settings.cloud_scale	= 40
 
 -- import individual weather types
-dofile(modpath .. "/ca_weathers/ambient.lua") --clouds and wind
+dofile(modpath .. "/ca_weathers/ambient.lua") --clouds
 dofile(modpath .. "/ca_weathers/deep_cave.lua") --dark sky in caves
 dofile(modpath .. "/ca_weathers/hail.lua") --hail
 dofile(modpath .. "/ca_weathers/rain.lua") --rain

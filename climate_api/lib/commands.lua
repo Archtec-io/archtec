@@ -5,7 +5,6 @@ minetest.register_chatcommand("weather", {
 	description = S("Display weather information"),
 	func = function(playername)
 		local player = minetest.get_player_by_name(playername)
-		local ppos = player:get_pos()
 		local weathers = climate_api.environment.get_weather_presets(player)
 		local effects = climate_api.environment.get_effects(player)
 		local msg = ""
