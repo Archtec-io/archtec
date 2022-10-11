@@ -20,6 +20,7 @@ read_globals = {
 	"core",
 	"DIR_DELIM",
 	"dump",
+	"dump2",
 	"minetest",
 	"discord",
 	"xban",
@@ -31,6 +32,7 @@ read_globals = {
 	"techage",
 
 	string = {fields = {"split"}},
+	table = {fields = {"copy"}},
 }
 
 files["archtec/scripts/discord_fallback.lua"] = {
@@ -42,5 +44,10 @@ files["archtec/scripts/status.lua"] = {
 }
 
 files["archtec_pvp/pvp.lua"] = {
-	globals ={ "minetest.calculate_knockback" },
+	globals = { "minetest.calculate_knockback" },
+}
+
+files["weather/ca_effects/lightning.lua"] = {
+	globals = { "lightning" },
+	read_globals = { "PcgRandom" },
 }
