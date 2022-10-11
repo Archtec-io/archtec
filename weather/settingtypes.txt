@@ -1,0 +1,24 @@
+[Features]
+
+# If set to true, fires will be extinguished during rain showers.
+weather_fire (Extinguish fire) bool true
+
+# Multiplier for lightning strike chances
+# Requires lightning mod to be installed
+weather_lightning (Lightning chance modifier) float 1 0 20
+
+[World Configuration]
+
+# No visual effects will be applied below this height.
+# This will prevent unwanted visuals within large underground caves.
+weather_min_height (Minimum height of weather effects) int -50
+
+# No visual effects will be applied above this height.
+# This value defaults to normal cloud height (120 nodes above sea level).
+weather_max_height (Maximum height of weather effects) int 120
+
+# Average height of cloud bases
+weather_cloud_height (Cloud height) int 120
+
+# Maxmial variation of cloud height from base value
+weather_cloud_scale (Cloud height variation) int 40
