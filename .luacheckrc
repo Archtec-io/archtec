@@ -14,7 +14,6 @@ globals = {
 	"archtec_teleport",
 	"vote",
 	"archtec_vpn_blocker",
-	"minetest.calculate_knockback", -- Archtec PVP
 }
 
 read_globals = {
@@ -36,4 +35,12 @@ read_globals = {
 
 files["archtec/scripts/discord_fallback.lua"] = {
 	globals = { "discord" },
+}
+
+files["archtec/scripts/status.lua"] = {
+	globals = { "minetest.get_server_status" },
+}
+
+files["archtec_pvp/pvp.lua"] = {
+	globals ={ "minetest.calculate_knockback" },
 }
