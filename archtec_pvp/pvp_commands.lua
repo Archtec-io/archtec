@@ -31,9 +31,9 @@ minetest.register_chatcommand("pvp_enable", {
 		if archtec_pvp.is_pvp(name) then
 			return false, S("Your PvP is already enabled.")
 		end
-		minetest.chat_send_player(name, "Enabled PvP of" .. name)
+		minetest.chat_send_player(name, "Enabled PvP of " .. name)
 		if starter ~= name then
-			minetest.chat_send_player(starter, "Enabled PvP of" .. name)
+			minetest.chat_send_player(starter, "Enabled PvP of " .. name)
 		end
 		return archtec_pvp.pvp_enable(name)
 	end
@@ -55,9 +55,9 @@ minetest.register_chatcommand("pvp_disable", {
 		if not archtec_pvp.is_pvp(name) then
 			return false, S("Your PvP is already disabled.")
 		end
-		minetest.chat_send_player(name, "Disableded PvP of" .. name)
+		minetest.chat_send_player(name, "Disabled PvP of " .. name)
 		if starter ~= name then
-			minetest.chat_send_player(starter, "Disabled PvP of" .. name)
+			minetest.chat_send_player(starter, "Disabled PvP of " .. name)
 		end
 		return archtec_pvp.pvp_disable(name)
 	end
