@@ -1,0 +1,38 @@
+local hit_count = 0
+local miss_count = 0
+
+local cache = {}
+
+local old_get_player_privs = minetest.get_player_privs
+minetest.get_player_privs = function(name)
+	local privs = cache[name]
+	if privs == nil then
+		miss_count =  miss_count + 1
+		privs = old_get_player_privs(name)
+		cache[name] = privs
+	else
+		hit_count = hit_count + 1
+	end
+
+	return privs
+end
+
+-- invalidation on set_privs and leave-player
+local old_set_player_privs = minetest.set_player_privs
+minetest.set_player_privs = function(name, privs)
+	cache[name] = privs
+	old_set_player_privs(name, privs);
+end
+
+minetest.register_on_leaveplayer(function(player)
+	cache[player:get_player_name()] = nil
+end)
+
+minetest.register_chatcommand("privs_cache", {
+    description = "Get privs cache debug info",
+    privs = {server = true},
+    func = function(name)
+		minetest.chat_send_player(name, "Hit: " .. hit_count)
+		minetest.chat_send_player(name, "Miss: " .. miss_count)
+    end
+})
