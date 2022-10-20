@@ -1,6 +1,6 @@
 if minetest.get_modpath("chatplus_discord") then
     function notifyTeam(message)
-        for _, online_players in ipairs(online_players) do
+        for _, player in ipairs(minetest.get_connected_players()) do
             local name = player:get_player_name()
             if name then
                 local hasPrivs = minetest.check_player_privs(name, "staff")
@@ -13,7 +13,7 @@ if minetest.get_modpath("chatplus_discord") then
     end
 else
     function notifyTeam(message)
-        for _, online_players in ipairs(online_players) do
+        for _, player in ipairs(minetest.get_connected_players()) do
             local name = player:get_player_name()
             if name then
                 local hasPrivs = minetest.check_player_privs(name, "staff")
