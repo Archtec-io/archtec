@@ -75,7 +75,6 @@ function archtec_vpn_blocker.handle_player(name, ip)
   end
   if not cache[iphash] then
     check_ip(name, ip, iphash)
-    return
   end
   if cache[iphash] == 2 then
     local player = minetest.get_player_by_name(name)
