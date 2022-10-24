@@ -39,6 +39,7 @@ dofile(scriptsPath.."random_messages.lua")
 dofile(scriptsPath.."split_long_msg.lua")
 dofile(scriptsPath.."privs_cache.lua")
 dofile(scriptsPath.."item_drop.lua")
+dofile(scriptsPath.."abm.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
