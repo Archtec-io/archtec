@@ -128,7 +128,6 @@ local function attach(name_watcher, name_target)
 		target = name_target,
 		visual_size = properties.visual_size,
 	}
-	local privs_extra
 
 	original_state_set(watcher, state)
 
