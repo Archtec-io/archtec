@@ -14,6 +14,7 @@ globals = {
 	"archtec_teleport",
 	"vote",
 	"archtec_vpn_blocker",
+	"player_api"
 }
 
 read_globals = {
