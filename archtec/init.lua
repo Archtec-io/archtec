@@ -41,6 +41,7 @@ dofile(scriptsPath.."privs_cache.lua")
 dofile(scriptsPath.."item_drop.lua")
 dofile(scriptsPath.."abm.lua")
 dofile(scriptsPath.."first_join.lua")
+dofile(scriptsPath.."random_things.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
