@@ -64,3 +64,7 @@ files["archtec/scripts/privs_cache.lua"] = {
 files["archtec/scripts/item_drop.lua"] = {
 	read_globals = { "ItemStack" },
 }
+
+files["stamina/init.lua"] = {
+	globals = { "minetest.do_item_eat" },
+}
