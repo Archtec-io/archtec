@@ -142,13 +142,9 @@ function vote.vote(voteset, name, value)
 end
 
 --register commands
-minetest.register_privilege("vote_admin", {
-	description = "Allows a player to manage running votes."
-})
-
 minetest.register_chatcommand("vote_clear", {
 	privs = {
-		vote_admin = true,
+		staff = true,
 	},
 	func = function(name, params)
 		vote.active = {}

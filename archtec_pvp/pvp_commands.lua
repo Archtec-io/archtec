@@ -23,8 +23,8 @@ minetest.register_chatcommand("pvp_enable", {
 	func = function(name, param)
 		local starter = name
 		if param ~= "" then
-			if not minetest.check_player_privs(name, "pvp_admin") then
-				return false, S("You cannot change other players PvP state unless you have the pvp_admin privilege.")
+			if not minetest.check_player_privs(name, "staff") then
+				return false, S("You cannot change other players PvP state unless you have the 'staff privilege.")
 			end
 			name = param
 		end
@@ -38,6 +38,7 @@ minetest.register_chatcommand("pvp_enable", {
 		return archtec_pvp.pvp_enable(name)
 	end
 })
+
 minetest.register_chatcommand("pvp_disable", {
 	params = "",
 	description = S("Disables PvP"),
@@ -47,8 +48,8 @@ minetest.register_chatcommand("pvp_disable", {
 	func = function(name, param)
 		local starter = name
 		if param ~= "" then
-			if not minetest.check_player_privs(name, "pvp_admin") then
-				return false, S("You cannot change other players PvP state unless you have the pvp_admin privilege.")
+			if not minetest.check_player_privs(name, "staff") then
+				return false, S("You cannot change other players PvP state unless you have the 'staff' privilege.")
 			end
 			name = param
 		end
