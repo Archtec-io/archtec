@@ -8,10 +8,10 @@ stamina.settings = {
 	exhaust_place = 1, --exhaustion for placing a node
 	exhaust_lvl = 160, --exhaustion level at which saturation gets lowered
 	heal = 1, --amount of HP a player gains per stamina.health_tick
-	heal_lvl = 10, --minimum saturation needed for healing
+	heal_lvl = 12, --minimum saturation needed for healing
 	starve = 1, --amount of HP a player loses per stamina.health_tick
 	starve_lvl = 3, --maximum stamina needed for starving
-	visual_max = 20, --hunger points
+	visual_max = 20 --hunger points
 }
 local settings = stamina.settings
 
@@ -77,8 +77,7 @@ function stamina.update_saturation(player, level)
 		return
 	end
 
-	-- players without interact priv cannot eat
-	if old < settings.heal_lvl and not minetest.check_player_privs(player, {interact=true}) then
+	if old < settings.heal_lvl then
 		return
 	end
 
@@ -96,7 +95,6 @@ function stamina.change_saturation(player, change)
 	return true
 end
 
---- END SATURATION API ---
 --- EXHAUSTION API ---
 stamina.exhaustion_reasons = {
 	dig = "dig",
@@ -123,16 +121,15 @@ function stamina.exhaust_player(player, change, cause)
 	if exhaustion >= settings.exhaust_lvl then
 		exhaustion = exhaustion - settings.exhaust_lvl
 		stamina.change_saturation(player, -1)
-		print("exhaust_player -1 hunger")
 	end
 
 	stamina.set_exhaustion(player, exhaustion)
 end
---- END EXHAUSTION API ---
+
 -- Time based stamina functions
 local function stamina_tick()
 	-- lower saturation by 1 point after settings.tick second(s)
-	for _,player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		local saturation = stamina.get_saturation(player)
 		if saturation > settings.tick_min then
 			stamina.update_saturation(player, saturation - 1)
@@ -142,7 +139,7 @@ end
 
 local function health_tick()
 	-- heal or damage player, depending on saturation
-	for _,player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		local air = player:get_breath() or 0
 		local hp = player:get_hp()
 		local saturation = stamina.get_saturation(player)
@@ -156,10 +153,9 @@ local function health_tick()
 			hp > 0 and
 			air > 0
 		)
-		-- or damage player by 1 hp if saturation is < 2 (of 30)
+		-- or damage player by 1 hp if saturation is < 2 (of 20)
 		local is_starving = (
-			saturation < settings.starve_lvl and
-			hp > 0
+			saturation < settings.starve_lvl and hp > 0
 		)
 
 		if should_heal then
@@ -223,10 +219,10 @@ function minetest.do_item_eat(hp_change, replace_with_item, itemstack, player, p
 			itemstack:add_item(replace_with_item)
 		else
 			local inv = player:get_inventory()
-			if inv:room_for_item("main", {name=replace_with_item}) then
+			if inv:room_for_item("main", {name = replace_with_item}) then
 				inv:add_item("main", replace_with_item)
 			else
-				local pos = player:getpos()
+				local pos = player:get_pos()
 				pos.y = math.floor(pos.y - 1.0)
 				minetest.add_item(pos, replace_with_item)
 			end
@@ -264,9 +260,11 @@ minetest.register_globalstep(stamina_globaltimer)
 minetest.register_on_placenode(function(pos, oldnode, player, ext)
 	stamina.exhaust_player(player, settings.exhaust_place, stamina.exhaustion_reasons.place)
 end)
+
 minetest.register_on_dignode(function(pos, oldnode, player, ext)
 	stamina.exhaust_player(player, settings.exhaust_dig, stamina.exhaustion_reasons.dig)
 end)
+
 minetest.register_on_respawnplayer(function(player)
 	stamina.update_saturation(player, settings.visual_max)
 end)
