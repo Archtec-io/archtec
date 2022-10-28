@@ -1,5 +1,5 @@
 local group_grass = {
-	"default:dry_grass_1", 
+	"default:dry_grass_1",
 	"default:dry_grass_2",
 	"default:dry_grass_3",
 	"default:dry_grass_4",
