@@ -16,7 +16,7 @@ local function check_ip(name, ip, hash)
     end
     local data = minetest.parse_json(result.data)
     if result.completed and result.succeeded and data and data.block then
-      if data.block == 2 then
+      if data.block == 0 then
         minetest.log("action", "archtec_vpn_blocker: Passing good-ip-player " .. name .. " [" .. ip .. "]")
       else
         minetest.log("action", "archtec_vpn_blocker: Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
