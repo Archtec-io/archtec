@@ -23,7 +23,7 @@ local function check_ip(name, ip, hash)
         local logMessage = "[archtec_vpn_blocker] Kicking bad-ip-player ".. name .."' (IP: " .. ip .. ")"
         notifyTeam(minetest.colorize("#666", logMessage))
         minetest.after(0.01, function()
-          if name:is_player() then
+          if minetest.get_player_by_name(name) then
             minetest.log("action", "[archtec_vpn_blocker] kicked '" .. name .. "'")
             minetest.kick_player(name, "You are using a proxy, vpn or other hosting services, please disable them to play on this server.")
           end
