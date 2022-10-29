@@ -1,9 +1,13 @@
-local MESSAGE_INTERVAL = 300
+local MESSAGE_INTERVAL = 600
 local S = minetest.get_translator("archtec")
 
 random_messages = {
-	"To check someone's playtime use /playtime <player_name>.",
+	"To check someone's playtime use '/playtime <player_name>'",
 	"Visit our Discord server: https://discord.gg/txCMTMwBWm",
+	"Abusing '/vote_kick' will result in a ban for you",
+	"Read our rules at the spawn",
+	"If you find a bug use '/report <message>'",
+	"Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)"
 }
 
 local function display_random_message(message)
