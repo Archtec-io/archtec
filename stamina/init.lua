@@ -21,7 +21,10 @@ local attribute = {
 }
 
 local function is_player(player)
-	return (minetest.is_player(player) and not player.is_fake_player)
+	return (
+		minetest.is_player(player) and
+		not player.is_fake_player
+	)
 end
 
 local function set_player_attribute(player, key, value)
@@ -77,7 +80,7 @@ function archtec_stamina.update_saturation(player, level)
 		return
 	end
 
-	if old < settings.heal_lvl then
+	if old < settings.heal_lvl and not minetest.check_player_privs(player, {interact=true}) then
 		return
 	end
 
