@@ -151,8 +151,7 @@ local function health_tick()
 		end
 		-- don't heal if dead or drowninga
 		local should_heal = (
-			saturation >= settings.heal_lvl and
-			saturation >= hp and
+			saturation > settings.heal_lvl and
 			hp > 0 and
 			air > 0
 		)
