@@ -3,19 +3,17 @@
 
 local ratelimit = {}
 local after = minetest.after
-local LIMIT = 1
+local LIMIT = 3
 
 local function remove_entry(ip)
 	ratelimit[ip] = nil
 end
 
-minetest.register_on_mods_loaded(function()
-	table.insert(core.registered_on_prejoinplayers, 1, function(_, ip)
-		if ratelimit[ip] then
-			return "You are joining too fast, please try again"
-		else
-			ratelimit[ip] = true
-			after(LIMIT, remove_entry, ip)
-		end
-	end)
+minetest.register_on_prejoinplayer(function(_, ip)
+	if ratelimit[ip] then
+		return "You are joining too fast, please try again"
+	else
+		ratelimit[ip] = true
+		after(LIMIT, remove_entry, ip)
+	end
 end)
