@@ -56,3 +56,8 @@ local http = minetest.request_http_api()
 if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
 end
+
+local http = minetest.request_http_api()
+if http then
+    assert(loadfile(scriptsPath.."/geoip.lua"))(http)
+end
