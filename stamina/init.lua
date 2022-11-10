@@ -149,21 +149,11 @@ local function health_tick()
 		if hp == 20 then
 			return
 		end
-		-- don't heal if dead or drowninga
-		local should_heal = (
-			saturation > settings.heal_lvl and
-			hp > 0 and
-			air > 0
-		)
-		-- or damage player by 1 hp if saturation is < 2 (of 20)
-		local is_starving = (
-			saturation < settings.starve_lvl and hp > 0
-		)
 
-		if should_heal then
+		if saturation > settings.heal_lvl and hp > 0 and air > 0 then
 			player:set_hp(hp + settings.heal)
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
-		elseif is_starving then
+		elseif saturation < settings.starve_lvl and hp > 0 then -- or damage player by 1 hp if saturation is < 2 (of 20)
 			player:set_hp(hp - settings.starve)
 		end
 	end
