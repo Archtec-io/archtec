@@ -146,14 +146,23 @@ local function health_tick()
 		local air = player:get_breath() or 0
 		local hp = player:get_hp()
 		local saturation = archtec_stamina.get_saturation(player)
+		local log = false
+		local name = player:get_player_name()
+		if name == "Niklp" then
+			log = true
+		end
+		if log then print("air: " .. air .. " hp: " .. hp .. " saturation: " .. saturation) end
 		if hp == 20 then
+			if log then print("hp == 20, return") end
 			return
 		end
 
 		if saturation > settings.heal_lvl and hp > 0 and air > 0 then
+			if log then print("healing player") end
 			player:set_hp(hp + settings.heal)
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
 		elseif saturation < settings.starve_lvl and hp > 0 then -- or damage player by 1 hp if saturation is < 2 (of 20)
+			if log then print("damage player") end
 			player:set_hp(hp - settings.starve)
 		end
 	end

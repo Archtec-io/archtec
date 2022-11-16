@@ -16,3 +16,9 @@ if minetest.get_modpath("itemframes") then
 		tiles = {"itemframes_pedestal_new.png"},
     })
 end
+
+if minetest.get_modpath("fireworkz") then
+	minetest.override_item("fireworkz:launcher", {
+		groups = {cracky = 2},
+    })
+end

@@ -25,3 +25,9 @@ end
 if minetest.get_modpath("mesecons_debug") then
     minetest.unregister_item("mesecons_debug:mesecons_lagger")
 end
+
+if minetest.get_modpath("abriglass") then
+    minetest.unregister_item("agriglass:ghost_crystal")
+    minetest.unregister_item("agriglass:porthole_junglewood")
+    minetest.unregister_item("agriglass:porthole_wood")
+end
