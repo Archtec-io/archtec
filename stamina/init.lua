@@ -140,24 +140,21 @@ local function stamina_tick()
 	end
 end
 
+-- heal or damage player, depending on saturation
 local function health_tick()
-	-- heal or damage player, depending on saturation
 	for _, player in ipairs(minetest.get_connected_players()) do
-		local air = player:get_breath() or 0
-		local hp = player:get_hp()
+		local name = player:get_player_name()
+		if name ~= nil and name ~= "" then return end
+		local air = player:get_breath() or 10
+		local hp = player:get_hp() or 20
 		local saturation = archtec_stamina.get_saturation(player)
 		local log = false
-		local name = player:get_player_name()
 		if name == "Niklp" then
 			log = true
 		end
 		if log then print("air: " .. air .. " hp: " .. hp .. " saturation: " .. saturation) end
-		if hp == 20 then
-			if log then print("hp == 20, return") end
-			return
-		end
 
-		if saturation > settings.heal_lvl and hp > 0 and air > 0 then
+		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0 then
 			if log then print("healing player") end
 			player:set_hp(hp + settings.heal)
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
