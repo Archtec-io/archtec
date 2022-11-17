@@ -144,10 +144,10 @@ end
 local function health_tick()
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
-		if name ~= nil and name ~= "" then return end
+		if name == nil or name == "" then return end
 		local air = player:get_breath() or 10
 		local hp = player:get_hp() or 20
-		local saturation = archtec_stamina.get_saturation(player)
+		local saturation = archtec_stamina.get_saturation(player) or 20
 		local log = false
 		if name == "Niklp" then
 			log = true
