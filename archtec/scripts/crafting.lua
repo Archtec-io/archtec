@@ -100,3 +100,55 @@ if minetest.get_modpath("jonez") then
 		}
     })
 end
+
+--xdecor
+if minetest.get_modpath("xdecor") then
+    minetest.clear_craft({
+        output = "xdecor:pressure_stone_off"
+    })
+    minetest.register_craft({
+        output = "xdecor:pressure_stone_off",
+		recipe = {{"xdecor:stone_tile", "xdecor:stone_tile"}}
+    })
+
+    minetest.clear_craft({
+        output = "xdecor:pressure_wood_off"
+    })
+    minetest.register_craft({
+        output = "xdecor:pressure_wood_off",
+		recipe = {{"xdecor:wood_tile", "xdecor:wood_tile"}}
+    })
+
+    minetest.clear_craft({
+        output = "xdecor:tatami"
+    })
+    minetest.register_craft({
+        output = "xdecor:tatami",
+        recipe = {
+            {"farming:wheat", "farming:wheat", "farming:wheat"},
+            {"", "farming:wheat", ""}
+        }
+    })
+
+    minetest.clear_craft({
+        output = "xdecor:packed_ice"
+    })
+    minetest.register_craft({
+        output = "xdecor:packed_ice",
+        recipe = {
+            {"ethereal:icebrick", "ethereal:icebrick"},
+            {"ethereal:icebrick", "ethereal:icebrick"}
+        }
+    })
+
+    minetest.clear_craft({
+        output = "xdecor:bowl"
+    })
+    minetest.register_craft({
+        output = "xdecor:bowl",
+        recipe = {
+            {"xdecor:wood_tile", "", "xdecor:wood_tile"},
+            {"", "xdecor:wood_tile", ""}
+        }
+    })
+end
