@@ -27,7 +27,7 @@ if minetest.get_modpath("mesecons_debug") then
 end
 
 if minetest.get_modpath("abriglass") then
-    minetest.unregister_item("agriglass:ghost_crystal")
-    minetest.unregister_item("agriglass:porthole_junglewood")
-    minetest.unregister_item("agriglass:porthole_wood")
+    minetest.unregister_item("abriglass:ghost_crystal")
+    minetest.unregister_item("abriglass:porthole_junglewood")
+    minetest.unregister_item("abriglass:porthole_wood")
 end
