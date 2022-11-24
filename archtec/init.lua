@@ -1,3 +1,4 @@
+local before = minetest.get_us_time()
 local modPath = minetest.get_modpath(minetest.get_current_modname())
 local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
@@ -61,3 +62,11 @@ local http = minetest.request_http_api()
 if http then
     assert(loadfile(scriptsPath.."/geoip.lua"))(http)
 end
+
+dofile(scriptsPath.."pairs_by_key.lua")
+dofile(scriptsPath.."count_objects.lua")
+dofile(scriptsPath.."instrument_mod.lua")
+
+local after = minetest.get_us_time()
+
+print("Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")
