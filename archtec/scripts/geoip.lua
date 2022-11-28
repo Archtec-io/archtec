@@ -103,13 +103,9 @@ minetest.register_on_joinplayer(function(player, last_login)
 		-- log to debug.txt
 		local txt = format_result(data)
 		if txt then
-			local msg = "[geoip] Result for player '" .. name .. "': " .. txt
-			minetest.log("action", msg)
-			notifyTeam(minetest.colorize("#666", msg))
+			notifyTeam("[geoip] Result for player '" .. name .. "': " .. txt)
 		else
-			local msg = "[geoip] Lookup failed for " .. name .. "@" .. ip .. " Reason: " .. tostring(data.description)
-			minetest.log("warning", msg)
-			notifyTeam(minetest.colorize("#666", msg))
+			notifyTeam("[geoip] Lookup failed for " .. name .. "@" .. ip .. " Reason: " .. tostring(data.description))
 		end
 	end, name)
 end)

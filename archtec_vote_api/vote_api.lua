@@ -19,8 +19,7 @@ end
 
 function vote.start_vote(voteset)
 	minetest.log("action", "Vote started: " .. voteset.description)
-	local logMessage = "[archtec_votes] Vote started: '" .. voteset.description .. "'"
-	notifyTeam(minetest.colorize("#666", logMessage))
+	notifyTeam("[archtec_votes] Vote started: '" .. voteset.description .. "'")
 
 	table.insert(vote.active, voteset)
 
@@ -82,8 +81,7 @@ function vote.end_vote(voteset)
 	end
 
 	minetest.log("action", "Vote '" .. voteset.description .. "' ended with result '" .. result .. "'.")
-	local logMessage = "[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'"
-	notifyTeam(minetest.colorize("#666", logMessage))
+	notifyTeam("[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'")
 	if voteset.on_result then
 		voteset:on_result(result, voteset.results)
 	end
@@ -130,8 +128,7 @@ function vote.vote(voteset, name, value)
 	end
 
 	minetest.log("action", name .. " voted '" .. value .. "' to '" .. voteset.description .. "'")
-	local logMessage = "[archtec_votes] '" .. name .. "' voted '" .. value .. "' to '" .. voteset.description .. "'"
-	notifyTeam(minetest.colorize("#666", logMessage))
+	notifyTeam("[archtec_votes] '" .. name .. "' voted '" .. value .. "' to '" .. voteset.description .. "'")
 
 	table.insert(voteset.results[value], name)
 	voteset.results.voted[name] = true

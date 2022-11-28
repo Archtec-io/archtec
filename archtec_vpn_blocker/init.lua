@@ -20,8 +20,7 @@ local function check_ip(name, ip, hash)
         minetest.log("action", "archtec_vpn_blocker: Passing good-ip-player " .. name .. " [" .. ip .. "]")
       else
         minetest.log("action", "archtec_vpn_blocker: Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
-        local logMessage = "[archtec_vpn_blocker] Kicking bad-ip-player ".. name .."' (IP: " .. ip .. ")"
-        notifyTeam(minetest.colorize("#666", logMessage))
+        notifyTeam("[archtec_vpn_blocker] Kicking bad-ip-player ".. name .."' (IP: " .. ip .. ")")
         minetest.after(0.01, function()
           if minetest.get_player_by_name(name) then
             minetest.log("action", "[archtec_vpn_blocker] kicked '" .. name .. "'")

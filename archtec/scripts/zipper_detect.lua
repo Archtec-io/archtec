@@ -42,10 +42,7 @@ local function track_player(player)
         if data.strikes > 8 then
             -- suspicious movement, log it
             -- TODO: if this doesn't yield any false-positives, add a kick/ban option
-            local msg = "suspicious movement detected for player: '" .. name .. "'"
-            local msg2 = "[archtec] Zipper-Detetct: "..msg
-            minetest.log("action", "[archtec] " .. msg)
-            notifyTeam(minetest.colorize("#666", msg2))
+            notifyTeam("[archtec] Zipper-Detetct: suspicious movement detected for player: '" .. name .. "'")
         end
 
         -- reset counters

@@ -18,8 +18,7 @@ local function send_report(name, report)
 			extra_headers = { "Content-Type: Application/JSON" },
 			data = json,
 		}, function() end)
-		local logMessage = "[archtec] " .. name .. " reported an Issue: " .. report
-		notifyTeam(minetest.colorize("#666", logMessage))
+		notifyTeam("[archtec] " .. name .. " reported an Issue: " .. report)
 		return true
 	end
 end

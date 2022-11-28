@@ -36,8 +36,7 @@ minetest.override_item("techage:ta3_drillbox_pas", {
             privs["forceload"] = true
             minetest.set_player_privs(pname, privs)
             minetest.chat_send_player(pname, "Congratulations! You have been granted the 'forceload' privilege")
-            local logMessage = "[techage] Granted '"..pname.."' the 'forceload' priv"
-            notifyTeam(minetest.colorize("#666", logMessage))
+            notifyTeam("[techage] Granted '"..pname.."' the 'forceload' priv")
             return old_on_place(itemstack, placer, pointed_thing)
         else
             return old_on_place(itemstack, placer, pointed_thing)
