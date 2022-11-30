@@ -5,7 +5,7 @@ local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 archtec = {}
 
 dofile(scriptsPath.."discord_fallback.lua")
-dofile(scriptsPath.."online_players.lua")
+--dofile(scriptsPath.."online_players.lua")
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
