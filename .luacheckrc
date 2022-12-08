@@ -16,7 +16,8 @@ globals = {
 	"archtec_vpn_blocker",
 	"player_api",
 	"ranks",
-	"biome_lib"
+	"biome_lib",
+	"stairs"
 }
 
 read_globals = {
