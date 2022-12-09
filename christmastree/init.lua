@@ -81,8 +81,8 @@ minetest.register_craft({
 minetest.register_craft({
     output = "christmastree:outdoortree",
     recipe = {
-        { "","default:gold_ingot","" },
         { "","default:sapling","" },
+		{ "","default:gold_ingot","" },
         { "default:sapling","default:sapling","default:sapling" },
     },
 })
