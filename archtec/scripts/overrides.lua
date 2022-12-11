@@ -22,3 +22,11 @@ if minetest.get_modpath("fireworkz") then
 		groups = {cracky = 2},
     })
 end
+
+if minetest.get_modpath("fake_fire") then
+	minetest.override_item("fake_fire:fancy_fire", {
+		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+			return itemstack
+		end,
+	})
+end
