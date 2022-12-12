@@ -1,12 +1,12 @@
 archtec_stamina = {}
 
 archtec_stamina.settings = {
-	tick = 800, --time in seconds after that 1 saturation point is taken
+	tick = 600, --time in seconds after that 1 saturation point is taken
 	tick_min = 4, --stamina ticks won't reduce saturation below this level
 	health_tick = 4, --time in seconds after player gets healed/damaged
 	exhaust_dig = 3, --exhaustion for digging a nod
 	exhaust_place = 1, --exhaustion for placing a node
-	exhaust_lvl = 160, --exhaustion level at which saturation gets lowered
+	exhaust_lvl = 220, --exhaustion level at which saturation gets lowered
 	heal = 1, --amount of HP a player gains per archtec_stamina.health_tick
 	heal_lvl = 12, --minimum saturation needed for healing
 	starve = 1, --amount of HP a player loses per archtec_stamina.health_tick
