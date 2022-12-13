@@ -11,6 +11,7 @@ random_messages = {
 	"Change the color of you name with '/namecolor <color>'",
 	"Use '/request_lava' if you want to place lava buckets",
 	"Use '/request_areas_high_limit' if you need more or bigger areas",
+	"You get the 'forceload' privilege automatically when you enter TA3",
 }
 
 local function display_random_message(message)
