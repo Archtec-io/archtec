@@ -43,7 +43,6 @@ for _, ab in pairs(minetest.registered_abms) do
 		ab.chance = 6000 --8000
 		ab.neighbours = group_grass
 	elseif label == "mobs_animal:cow spawning" then
-		ab.chance = 6000 --8000
 		ab.neighbours = group_grass
 	elseif label == "mobs_animal:kitten spawning" then
 		ab.chance = 8000 --10000
@@ -52,7 +51,6 @@ for _, ab in pairs(minetest.registered_abms) do
 		ab.chance = 6000 --8000
 		ab.neighbours = group_grass
 	elseif label == "mobs_animal:sheep_white spawning" then
-		ab.chance = 6000 --8000
 		ab.neighbours = group_grass
 	elseif label == "mobs_animal:pumba spawning" then
 		ab.chance = 6000 --8000
