@@ -7,7 +7,10 @@ random_messages = {
 	"Abusing '/vote_kick' will result in a ban for you",
 	"Read our rules at the spawn",
 	"If you find a bug use '/report <message>'",
-	"Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)"
+	"Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)",
+	"Change the color of you name with '/namecolor <color>'",
+	"Use '/request_lava' if you want to place lava buckets",
+	"Use '/request_areas_high_limit' if you need more or bigger areas",
 }
 
 local function display_random_message(message)

@@ -46,10 +46,12 @@ minetest.register_chatcommand("playtime", {
 	func = function(player, param)
 		if minetest.get_player_by_name(param) then
 			return true,
+				C("#63d437", "Playtime of: ")..C("#ffea00", param).."\n"..
 				C("#63d437", "Total: ")..C("#ffea00", format_duration(archtec.get_total_playtime(param))).."\n"..
 				C("#63d437", "Current: ")..C("#ffea00", format_duration(archtec.get_session_playtime(param)))
 		elseif minetest.get_player_by_name(player) then
 			return true,
+				C("#63d437", "Playtime of: ")..C("#ffea00", param).."\n"..
 				C("#63d437", "Total: ")..C("#ffea00", format_duration(archtec.get_total_playtime(player))).."\n"..
 				C("#63d437", "Current: ")..C("#ffea00", format_duration(archtec.get_session_playtime(player)))
 		else
