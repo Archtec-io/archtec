@@ -22,8 +22,7 @@ minetest.register_chatcommand("vote_kick", {
 					minetest.chat_send_all("Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
 					minetest.kick_player(self.name, "The vote to kick you passed")
 					discord.send("Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
-					local expires = os.time() + 3600
-					xban.ban_player(name, "/vote_kick", expires, "vote-kicked")
+					xban.ban_player(name, "/vote_kick", os.time() + 3600, "vote-kicked")
 				else
 					minetest.chat_send_all("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
 					discord.send("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
