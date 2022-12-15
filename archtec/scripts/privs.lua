@@ -12,7 +12,7 @@ minetest.register_chatcommand("request_lava", {
 	description = ("Request the lava bucket placment priv"),
 	func = function(player, param)
         if minetest.check_player_privs(player, "adv_buckets") then
-            minetest.chat_send_player(player, "You already have the 'adv_buckets' privilege")
+            minetest.chat_send_player(player, "[request_lava] You already have the 'adv_buckets' privilege")
             return
         end
 
@@ -31,7 +31,7 @@ minetest.register_chatcommand("request_areas_high_limit", {
 	description = ("Request the areas_high_limit priv"),
 	func = function(player, param)
         if minetest.check_player_privs(player, "areas_high_limit") then
-            minetest.chat_send_player(player, "You already have the 'areas_high_limit' privilege")
+            minetest.chat_send_player(player, "[request_areas_high_limit] You already have the 'areas_high_limit' privilege")
             return
         end
 
