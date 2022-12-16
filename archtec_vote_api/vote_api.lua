@@ -11,16 +11,13 @@ function vote.new_vote(creator, voteset)
 	else
 		table.insert(vote.queue, voteset)
 		if creator then
-			minetest.chat_send_player(creator,
-				"Vote queued until there is less then " .. max_votes .. " votes active.")
+			minetest.chat_send_player(creator, "Vote queued until there is less then " .. max_votes .. " votes active.")
 		end
 	end
 end
 
 function vote.start_vote(voteset)
 	minetest.log("action", "Vote started: " .. voteset.description)
-	notifyTeam("[archtec_votes] Vote started: '" .. voteset.description .. "'")
-
 	table.insert(vote.active, voteset)
 
 	-- Build results table
@@ -28,6 +25,7 @@ function vote.start_vote(voteset)
 		abstain = {},
 		voted = {}
 	}
+
 	if voteset.options then
 		for _, option in pairs(voteset.options) do
 			voteset.results[option] = {}
@@ -50,8 +48,7 @@ function vote.start_vote(voteset)
 		end)
 	end
 
-	-- Show HUD a.s.a.p.
-	vote.update_all_hud()
+	minetest.chat_send_all("Vote started: " .. voteset.description)
 end
 
 function vote.end_vote(voteset)
@@ -81,7 +78,6 @@ function vote.end_vote(voteset)
 	end
 
 	minetest.log("action", "Vote '" .. voteset.description .. "' ended with result '" .. result .. "'.")
-	notifyTeam("[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'")
 	if voteset.on_result then
 		voteset:on_result(result, voteset.results)
 	end
@@ -90,11 +86,7 @@ function vote.end_vote(voteset)
 	if #vote.active < max_votes and #vote.queue > 0 then
 		local nextvote = table.remove(vote.queue, 1)
 		vote.start_vote(nextvote)
-	else
-		-- Update HUD a.s.a.p.
-		vote.update_all_hud()
 	end
-
 end
 
 function vote.get_next_vote(name)
@@ -128,7 +120,6 @@ function vote.vote(voteset, name, value)
 	end
 
 	minetest.log("action", name .. " voted '" .. value .. "' to '" .. voteset.description .. "'")
-	notifyTeam("[archtec_votes] '" .. name .. "' voted '" .. value .. "' to '" .. voteset.description .. "'")
 
 	table.insert(voteset.results[value], name)
 	voteset.results.voted[name] = true
@@ -146,125 +137,57 @@ minetest.register_chatcommand("vote_clear", {
 	func = function(name, params)
 		vote.active = {}
 		vote.queue = {}
-		vote.update_all_hud()
+		minetest.chat_send_all(name .. " canceled all active votes!")
+		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes!")
 	end
 })
 
-local hudkit = dofile(minetest.get_modpath("archtec_vote_api") .. "/vote_hudkit.lua")
-
-vote.hud = hudkit()
-function vote.update_hud(player)
-	local name = player:get_player_name()
+local function vote_yes(name, params)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
-		vote.hud:remove(player, "vote:desc")
-		vote.hud:remove(player, "vote:bg")
-		vote.hud:remove(player, "vote:help")
+		minetest.chat_send_player(name, "There is no vote currently running!")
+		return
+	elseif not voteset.results.yes then
+		minetest.chat_send_player(name, "The vote is not a y/n one.")
+		return
+	elseif voteset.can_vote and not voteset:can_vote(name) then
+		minetest.chat_send_player(name, "You can't vote in the currently active vote!")
 		return
 	end
-
-	if not vote.hud:exists(player, "vote:bg") then
-		vote.hud:add(player, "vote:bg", {
-			hud_elem_type = "image",
-			position = {x = 1, y = 0.5},
-			scale = {x = 2, y = 2},
-			text = "vote_background.png",
-			offset = {x=-100, y = 10},
-			number = 0xFFFFFF
-		})
-	end
-
-	if vote.hud:exists(player, "vote:desc") then
-		vote.hud:change(player, "vote:desc", "text", voteset.description .. "?")
-	else
-		vote.hud:add(player, "vote:desc", {
-			hud_elem_type = "text",
-			position = {x = 1, y = 0.5},
-			scale = {x = 100, y = 100},
-			text = voteset.description .. "?",
-			offset = {x=-100, y = 0},
-			number = 0xFFFFFF
-		})
-	end
-
-	if voteset.help then
-		if vote.hud:exists(player, "vote:help") then
-			vote.hud:change(player, "vote:help", "text", voteset.help)
-		else
-			vote.hud:add(player, "vote:help", {
-				hud_elem_type = "text",
-				position = {x = 1, y = 0.5},
-				scale = {x = 100, y = 100},
-				text = voteset.help,
-				offset = {x=-100, y = 20},
-				number = 0xFFFFFF
-			})
-		end
-	else
-		vote.hud:remove(player, "vote:help")
-	end
+	vote.vote(voteset, name, "yes")
 end
-
-minetest.register_on_leaveplayer(function(player)
-	vote.hud.players[player:get_player_name()] = nil
-end)
-
-function vote.update_all_hud()
-	local players = minetest.get_connected_players()
-	for _, player in pairs(players) do
-		vote.update_hud(player)
-	end
-end
-
-local timer_gs = 0
-minetest.register_globalstep(function(dtime)
-	timer_gs = timer_gs + dtime
-	if timer_gs < 5 then
-		return
-	end
-	timer_gs = 0
-
-	vote.update_all_hud()
-end)
 
 minetest.register_chatcommand("yes", {
-	privs = {
-		interact = true
-	},
-	func = function(name, params)
-		local voteset = vote.get_next_vote(name)
-		if not voteset then
-			minetest.chat_send_player(name, "There is no vote currently running!")
-			return
-		elseif not voteset.results.yes then
-			minetest.chat_send_player(name, "The vote is not a y/n one.")
-			return
-		elseif voteset.can_vote and not voteset:can_vote(name) then
-			minetest.chat_send_player(name, "You can't vote in the currently active vote!")
-			return
-		end
-
-		vote.vote(voteset, name, "yes")
-	end
+	privs = {interact = true},
+	func = vote_yes
 })
 
-minetest.register_chatcommand("no", {
-	privs = {
-		interact = true
-	},
-	func = function(name, params)
-		local voteset = vote.get_next_vote(name)
-		if not voteset then
-			minetest.chat_send_player(name, "There is no vote currently running!")
-			return
-		elseif not voteset.results.no then
-			minetest.chat_send_player(name, "The vote is not a yes/no one.")
-			return
-		elseif voteset.can_vote and not voteset:can_vote(name) then
-			minetest.chat_send_player(name, "You can't vote in the currently active vote!")
-			return
-		end
+minetest.register_chatcommand("y", {
+	privs = {interact = true},
+	func = vote_yes
+})
 
-		vote.vote(voteset, name, "no")
+local function vote_no(name, params)
+	local voteset = vote.get_next_vote(name)
+	if not voteset then
+		minetest.chat_send_player(name, "There is no vote currently running!")
+		return
+	elseif not voteset.results.no then
+		minetest.chat_send_player(name, "The vote is not a yes/no one.")
+		return
+	elseif voteset.can_vote and not voteset:can_vote(name) then
+		minetest.chat_send_player(name, "You can't vote in the currently active vote!")
+		return
 	end
+	vote.vote(voteset, name, "no")
+end
+
+minetest.register_chatcommand("no", {
+	privs = {interact = true},
+	func = vote_no
+})
+
+minetest.register_chatcommand("n", {
+	privs = {interact = true},
+	func = vote_no
 })

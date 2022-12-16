@@ -15,7 +15,7 @@ minetest.register_chatcommand("vote_day", {
                     minetest.chat_send_all("Vote passed, " .. #results.yes .. " to " .. #results.no .. ", Time will be set to day ")
                     minetest.set_timeofday(0.5)
                 else
-                    minetest.chat_send_all("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", ")
+                    minetest.chat_send_all("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", Time won't be set to day ")
                 end
             end,
 
