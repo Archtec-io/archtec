@@ -44,6 +44,7 @@ dofile(scriptsPath.."abm.lua")
 dofile(scriptsPath.."first_join.lua")
 dofile(scriptsPath.."random_things.lua")
 dofile(scriptsPath.."watch.lua")
+dofile(scriptsPath.."fakedrawer.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
