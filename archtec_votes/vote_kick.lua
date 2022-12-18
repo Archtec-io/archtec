@@ -9,6 +9,11 @@ minetest.register_chatcommand("vote_kick", {
 			return
 		end
 
+		if param == name then
+			minetest.chat_send_player(name, "You can't vote-kick yourself!")
+			return
+		end
+
 		discord.send(":warning: **" .. name .. "** started a voting: Kick " .. param)
 		vote.new_vote(name, {
 			description = "Kick " .. param,
