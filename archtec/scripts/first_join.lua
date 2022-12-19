@@ -1,4 +1,5 @@
 local key = "archtec:joined"
+local C = minetest.colorize
 
 minetest.register_on_joinplayer(function(player)
 	local meta = player:get_meta()
@@ -20,9 +21,15 @@ minetest.register_chatcommand("joined", {
 	description = ("See when a player first joined the server"),
 	func = function(player, param)
 		if minetest.get_player_by_name(param) then
-            minetest.chat_send_player(player, "First join of " .. param .. ": " .. archtec.get_first_join_date(param))
-        else
-            minetest.chat_send_player(player, "First join of " .. player .. ": " .. archtec.get_first_join_date(player))
+			return true,
+            C("#63d437", "First join of: ") .. C("#ffea00", param) .. "\n" ..
+			C("#63d437", "Date: ") .. C("#ffea00", archtec.get_first_join_date(param))
+        elseif minetest.get_player_by_name(player) then
+			return true,
+            C("#63d437", "First join of: ") .. C("#ffea00", player) .. "\n" ..
+			C("#63d437", "Date: ") .. C("#ffea00", archtec.get_first_join_date(player))
+		else
+			return false, C("#ff0000", "This player isn't online")
 		end
 	end
 })
