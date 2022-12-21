@@ -8,6 +8,7 @@ function vote.new_vote(creator, voteset)
 
 	if #vote.active < max_votes then
 		vote.start_vote(voteset)
+		vote.vote(voteset, creator, "yes")
 	else
 		table.insert(vote.queue, voteset)
 		if creator then
