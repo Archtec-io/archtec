@@ -30,3 +30,14 @@ if minetest.get_modpath("fake_fire") then
 		end,
 	})
 end
+
+if minetest.get_modpath("ethereal") then
+	minetest.override_item("ethereal:golden_apple", {
+		on_use = function(itemstack, user, pointed_thing)
+			if user then
+				user:set_hp(20)
+				return minetest.do_item_eat(20, nil, itemstack, user, pointed_thing)
+			end
+		end,
+	})
+end
