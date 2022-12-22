@@ -15,3 +15,15 @@ stairs.register_stair_and_slab(
 	def.sounds,
 	true
 )
+
+if minetest.get_modpath("choppy") then
+	choppy.api.register_axe("default:enchanted_axe_bronze_durable")
+	choppy.api.register_axe("default:enchanted_axe_bronze_fast")
+	choppy.api.register_axe("default:enchanted_axe_diamond_durable")
+	choppy.api.register_axe("default:enchanted_axe_diamond_fast")
+	choppy.api.register_axe("default:enchanted_axe_mese_durable")
+	choppy.api.register_axe("default:enchanted_axe_mese_fast")
+	choppy.api.register_axe("default:enchanted_axe_steel_durable")
+	choppy.api.register_axe("default:enchanted_axe_steel_fast")
+	choppy.api.register_axe("titanium:axe")
+end

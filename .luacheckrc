@@ -34,6 +34,7 @@ read_globals = {
 	"unified_inventory",
 	"default",
 	"techage",
+	"choppy",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
