@@ -18,7 +18,6 @@ dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."skybox.lua")
-dofile(scriptsPath.."lua_mem.lua")
 dofile(scriptsPath.."homedecor_wardrobe.lua")
 dofile(scriptsPath.."mvps_stopper.lua")
 dofile(scriptsPath.."death_messages.lua")
@@ -57,10 +56,6 @@ end
 local http = minetest.request_http_api()
 if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
-end
-
-local http = minetest.request_http_api()
-if http then
     assert(loadfile(scriptsPath.."/geoip.lua"))(http)
 end
 
