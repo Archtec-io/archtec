@@ -18,7 +18,7 @@ function vote.new_vote(creator, voteset)
 end
 
 function vote.start_vote(voteset)
-	minetest.log("action", "Vote started: " .. voteset.description)
+	minetest.log("action", "Vote started: " .. voteset.description .. " (" .. voteset.help .. ")")
 	table.insert(vote.active, voteset)
 
 	-- Build results table
@@ -49,7 +49,7 @@ function vote.start_vote(voteset)
 		end)
 	end
 
-	minetest.chat_send_all("Vote started: " .. voteset.description)
+	minetest.chat_send_all("Vote started: " .. voteset.description .. minetest.colorize("#666", " (" .. voteset.help .. ")"))
 end
 
 function vote.end_vote(voteset)

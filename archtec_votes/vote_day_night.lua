@@ -3,9 +3,9 @@ minetest.register_chatcommand("vote_day", {
 	func = function(name)
         vote.new_vote(name, {
             description = "Make day",
-            help = "/yes,  /no  or  /abstain",
+            help = "/yes or /no",
             name = nil,
-            duration = 60,
+            duration = 30,
             perc_needed = 0.6,
 
             on_result = function(self, result, results)
@@ -33,9 +33,9 @@ minetest.register_chatcommand("vote_night", {
 	func = function(name)
         vote.new_vote(name, {
             description = "Make night",
-            help = "/yes,  /no  or  /abstain",
+            help = "/yes or /no",
             name = nil,
-            duration = 60,
+            duration = 30,
             perc_needed = 0.6,
 
             on_result = function(self, result, results)
