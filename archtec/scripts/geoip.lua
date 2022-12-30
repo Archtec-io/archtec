@@ -65,7 +65,7 @@ end
 
 local function format_result(result)
 	if result and result.success then
-		local txt = "Geoip result: "
+		local txt = ""
 		if result.country_name then
 			txt = txt .. " Country: " .. result.country_name
 		end
