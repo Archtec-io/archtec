@@ -3,10 +3,8 @@ local S = minetest.get_translator(minetest.get_current_modname())
 -- Placeholders
 local chatmsg, source, target, name2, target_coords
 
-local message_color = archtec_teleport.message_color
-
 local function send_message(player, message)
-	minetest.chat_send_player(player, minetest.colorize(message_color, message))
+	minetest.chat_send_player(player, minetest.colorize("#FF8800", message))
 end
 
 -- Teleport player to a player (used in "/tpr" command).
@@ -47,6 +45,12 @@ function archtec_teleport.tpr_send(sender, receiver)
 		return
 	end
 
+	if sender == receiver then
+		send_message(sender, S("You can't teleport you to yourself"))
+		return
+	end
+
+	minetest.log("action", "[archtec_teleport] " .. sender .. " is trying to teleport to " .. receiver)
 	send_message(receiver, S("@1 is requesting to teleport to you. /ok to accept.", sender))
 	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", archtec_teleport.timeout_delay))
 
@@ -73,11 +77,17 @@ function archtec_teleport.tp2me_send(sender, receiver)
 	end
 
 	if not minetest.get_player_by_name(receiver) then
-		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online."))
+		send_message(sender, S("There is no player by that name. Keep in mind this is case-sensitive, and the player must be online"))
 		return
 	end
 
-	send_message(receiver, S("@1 is requesting that you teleport to them. /ok to accept; /tpn to deny.", sender))
+	if sender == receiver then
+		send_message(sender, S("You can't teleport you to yourself"))
+		return
+	end
+
+	minetest.log("action", "[archtec_teleport] " .. sender .. " requested to teleport " .. receiver .. " to " .. sender)
+	send_message(receiver, S("@1 is requesting that you teleport to them. /ok to accept.", sender))
 	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", archtec_teleport.timeout_delay))
 
 	-- Write name values to list and clear old values.
@@ -101,7 +111,7 @@ end
 function archtec_teleport.tpr_accept(name)
 	-- Check to prevent constant teleporting
 	if not archtec_teleport.tpr_list[name] and not archtec_teleport.tp2me_list[name] then
-		send_message(name, S("Usage: /ok allows you to accept teleport/area requests sent to you by other players."))
+		send_message(name, S("Usage: /ok allows you to accept teleport requests sent to you by other players."))
 		return
 	end
 
@@ -124,8 +134,7 @@ function archtec_teleport.tpr_accept(name)
 	end
 
 	-- Could happen if either player disconnects (or timeout); if so just abort
-	if not source
-	or not target then
+	if not source or not target then
 		send_message(name, S("@1 is not online right now.", name2))
 		archtec_teleport.tpr_list[name] = nil
 		archtec_teleport.tp2me_list[name] = nil
@@ -138,6 +147,6 @@ function archtec_teleport.tpr_accept(name)
 	target_coords = nil
 
 	send_message(name, chatmsg)
-	--immediate_teleport
+	-- Immediate_teleport
 	send_message(name2, S("Request Accepted!"))
 end

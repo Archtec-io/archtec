@@ -223,7 +223,7 @@ minetest.register_on_joinplayer(function(player)
 		return
 	end
 
-	notifyTeam("[archtec] Debug info for '" .. name .. "' Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
+	notifyTeam("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
 
 	local dfv = version:find("dragonfire") or dfver(version)
 	if dfv then

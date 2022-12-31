@@ -1,5 +1,4 @@
 --Archtec_teleport based on https://github.com/minetest-mods/teleport-request
---WIP
 
 local MP = minetest.get_modpath(minetest.get_current_modname())
 
@@ -29,9 +28,6 @@ end)
 
 -- Timeout delay
 archtec_teleport.timeout_delay = 60
-
--- Message color
-archtec_teleport.message_color = "#FF8800"
 
 dofile(MP.."/privileges.lua")
 dofile(MP.."/functions.lua")
