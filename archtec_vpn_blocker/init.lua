@@ -7,7 +7,7 @@ local iphub_key = minetest.settings:get("iphub_key")
 --  Add the main ipcheckup function
 local function check_ip(name, ip, hash)
   local request = {
-    ["url"] = "http://v2.api.iphub.info/ip/" .. ip,
+    ["url"] = "https://v2.api.iphub.info/ip/" .. ip,
     ["extra_headers"] = {"X-Key: " .. iphub_key}
   }
   http.fetch(request, function(result)
