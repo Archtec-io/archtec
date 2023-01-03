@@ -1,41 +1,27 @@
 vote = {
 	active = {},
-	queue = {}
 }
 
 function vote.new_vote(creator, voteset)
-	local max_votes = 1
-
-	if #vote.active < max_votes then
+	if #vote.active < 1 then
 		vote.start_vote(voteset)
 		vote.vote(voteset, creator, "yes")
-	else
-		table.insert(vote.queue, voteset)
-		if creator then
-			minetest.chat_send_player(creator, "Vote queued until there is less then " .. max_votes .. " votes active.")
-		end
+	elseif creator then
+		minetest.chat_send_player(creator, "Can't start a new vote! A vote is already in progress.")
 	end
 end
 
 function vote.start_vote(voteset)
-	minetest.log("action", "Vote started: " .. voteset.description .. " (" .. voteset.help .. ")")
+	minetest.log("action", "[archtec_votes] Vote started: " .. voteset.description .. " (" .. voteset.help .. ")")
 	table.insert(vote.active, voteset)
 
 	-- Build results table
 	voteset.results = {
-		abstain = {},
 		voted = {}
 	}
 
-	if voteset.options then
-		for _, option in pairs(voteset.options) do
-			voteset.results[option] = {}
-			print(" - " .. option)
-		end
-	else
-		voteset.results.yes = {}
-		voteset.results.no = {}
-	end
+	voteset.results.yes = {}
+	voteset.results.no = {}
 
 	-- Run start callback
 	if voteset.on_start then
@@ -65,9 +51,7 @@ function vote.end_vote(voteset)
 	end
 
 	local result = nil
-	if voteset.on_decide then
-		result = voteset:on_decide(voteset.results)
-	elseif voteset.results.yes and voteset.results.no then
+	if voteset.results.yes and voteset.results.no then
 		local total = #voteset.results.yes + #voteset.results.no
 		local perc_needed = voteset.perc_needed or 0.5
 
@@ -78,21 +62,16 @@ function vote.end_vote(voteset)
 		end
 	end
 
-	minetest.log("action", "Vote '" .. voteset.description .. "' ended with result '" .. result .. "'.")
+	minetest.log("action", "[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'.")
 	if voteset.on_result then
 		voteset:on_result(result, voteset.results)
-	end
-
-	local max_votes = 1
-	if #vote.active < max_votes and #vote.queue > 0 then
-		local nextvote = table.remove(vote.queue, 1)
-		vote.start_vote(nextvote)
 	end
 end
 
 function vote.get_next_vote(name)
 	for _, voteset in pairs(vote.active) do
 		if not voteset.results.voted[name] then
+			print(dump(vote.active))
 			return voteset
 		end
 	end
@@ -120,7 +99,7 @@ function vote.vote(voteset, name, value)
 		return
 	end
 
-	minetest.log("action", name .. " voted '" .. value .. "' to '" .. voteset.description .. "'")
+	minetest.log("action", "[archtec_votes] " .. name .. " voted '" .. value .. "' to '" .. voteset.description .. "'")
 
 	table.insert(voteset.results[value], name)
 	voteset.results.voted[name] = true
@@ -130,18 +109,19 @@ function vote.vote(voteset, name, value)
 	vote.check_vote(voteset)
 end
 
---register commands
+-- Register commands
 minetest.register_chatcommand("vote_clear", {
 	privs = {
 		staff = true,
 	},
 	func = function(name, params)
 		vote.active = {}
-		vote.queue = {}
 		minetest.chat_send_all(name .. " canceled all active votes!")
 		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes!")
 	end
 })
+
+-- Vote /y and /n functions
 
 local function vote_yes(name, params)
 	local voteset = vote.get_next_vote(name)
