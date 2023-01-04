@@ -131,3 +131,32 @@ if minetest.get_modpath("xdecor") then
         }
     })
 end
+
+--cottages
+if minetest.get_modpath("cottages") then
+    --cottages:glass_pane/xdecor:woodframed_glass
+    minetest.clear_craft({
+        output = "cottages:glass_pane"
+    })
+    minetest.register_craft({
+		output = "cottages:glass_pane 4",
+		recipe = {
+			{"default:stick", "default:stick", "default:stick"},
+			{"default:stick", "xpanes:pane_flat", "default:stick"},
+			{"default:stick", "default:stick", "default:stick"}
+		}
+	})
+
+    --cottages:barrel/wine:wine_barrel
+    minetest.clear_craft({
+        output = "cottages:barrel"
+    })
+    minetest.register_craft({
+		output = "cottages:barrel",
+		recipe = {
+			{"group:wood", "group:wood", "group:wood"},
+			{"default:tin_ingot", "", "default:tin_ingot"},
+			{"group:wood", "group:wood", "group:wood"},
+		},
+	})
+end

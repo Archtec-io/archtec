@@ -31,3 +31,7 @@ if minetest.get_modpath("abriglass") then
     minetest.unregister_item("abriglass:porthole_junglewood")
     minetest.unregister_item("abriglass:porthole_wood")
 end
+
+if minetest.get_modpath("cottages") then
+    minetest.unregister_item("cottages:rope")
+end
