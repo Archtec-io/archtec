@@ -61,5 +61,6 @@ local flowers = {
 minetest.after(1, function()
     for _, flowers in pairs(flowers) do
         techage.register_flower(flowers)
+        signs_bot.register_flower(flowers)
     end
 end)

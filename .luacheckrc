@@ -35,6 +35,7 @@ read_globals = {
 	"default",
 	"techage",
 	"choppy",
+	"signs_bot",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
