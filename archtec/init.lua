@@ -19,7 +19,9 @@ dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."skybox.lua")
 dofile(scriptsPath.."homedecor_wardrobe.lua")
-dofile(scriptsPath.."mvps_stopper.lua")
+if minetest get_modpath("mesecons") then
+    dofile(scriptsPath.."mvps_stopper.lua")
+end
 dofile(scriptsPath.."death_messages.lua")
 dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
