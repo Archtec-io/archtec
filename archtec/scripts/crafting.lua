@@ -1,46 +1,110 @@
-if minetest.get_modpath("pride_flags") then
+local function fix_craft(node, recipedef, amount)
+    if not node or not recipedef then
+        return
+    end
+
+    if amount == nil or amount < 1 then
+        amount = 1
+    end
+
+    if not minetest.registered_nodes[node] and not minetest.registered_items[node] then
+        minetest.log("warning", "[archtec] tried to overwrite recipe of non exist item '" .. node .. "'")
+        return
+    end
+
     minetest.clear_craft({
-        output = "pride_flags:lower_mast"
+        output = node
     })
+
     minetest.register_craft({
-        output = "pride_flags:lower_mast",
-        recipe = {
-            {"default:steel_ingot", "farming:string"},
-            {"default:steel_ingot", "farming:string"},
-            {"default:steel_ingot", "farming:string"}
-        }
+        output = node .. " " .. amount,
+        recipe = recipedef
     })
+
+    minetest.log("action", "[archtec] changed recipe of '" .. node .. "'")
 end
 
---homedecor:table/ts_furniture:default_WOODTYPE_small_table
-if minetest.get_modpath("homedecor_tables") then
-    minetest.clear_craft({
-        output = "homedecor:table"
-    })
-    minetest.register_craft({
-        output = "homedecor:table",
-        recipe = {
-            { "group:wood","group:wood", "group:wood" },
-            { "group:stick", "", "group:stick" },
-            { "", "group:stick", "" }
-        }
-    })
-end
+-- ???
+fix_craft("pride_flags:lower_mast", {
+    {"default:steel_ingot", "farming:string"},
+    {"default:steel_ingot", "farming:string"},
+    {"default:steel_ingot", "farming:string"}
+})
 
---doors:prison_door (xdecor)/xpanes:door_steel_bar (xpanes)
-if minetest.get_modpath("xpanes") then
-    minetest.clear_craft({
-        output = "xpanes:door_steel_bar"
-    })
-    minetest.register_craft({
-        output = "xpanes:door_steel_bar",
-		recipe = {
-			{"xpanes:bar_flat", "default:steel_ingot"},
-			{"default:steel_ingot", "xpanes:bar_flat"},
-			{"xpanes:bar_flat", "default:steel_ingot"}
-		}
-    })
-end
+-- homedecor:table/ts_furniture:default_WOODTYPE_small_table
+fix_craft("homedecor:table", {
+    { "group:wood","group:wood", "group:wood" },
+    { "group:stick", "", "group:stick" },
+    { "", "group:stick", "" }
+})
+
+-- doors:prison_door/xpanes:door_steel_bar
+fix_craft("xpanes:door_steel_bar", {
+    {"xpanes:bar_flat", "default:steel_ingot"},
+    {"default:steel_ingot", "xpanes:bar_flat"},
+    {"xpanes:bar_flat", "default:steel_ingot"}
+})
+
+-- jonez palace windows had the same recipe
+fix_craft("xpanes:palace_window_top_flat", {
+    {"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
+    {"xpanes:pane_flat", "", "xpanes:pane_flat"}
+})
+
+-- jonez palace windows had the same recipe
+fix_craft("xpanes:palace_window_bottom_flat", {
+    {"xpanes:pane_flat", "", "xpanes:pane_flat"},
+    {"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"}
+})
+
+-- xdecor:pressure_stone_off/mesecons_pressureplates:pressure_plate_stone_off
+fix_craft("xdecor:pressure_stone_off", {
+    {"xdecor:stone_tile", "xdecor:stone_tile"}
+})
+
+-- xdecor:pressure_wood_off/mesecons_pressureplates:pressure_plate_wood_off
+fix_craft("xdecor:pressure_wood_off", {
+    {"xdecor:wood_tile", "xdecor:wood_tile"}
+})
+
+-- xdecor:tatami/homedecor:tatami_mat
+fix_craft("xdecor:tatami", {
+    {"farming:wheat", "farming:wheat", "farming:wheat"},
+    {"", "farming:wheat", ""}
+})
+
+-- ???
+fix_craft("xdecor:packed_ice", {
+    {"ethereal:icebrick", "ethereal:icebrick"},
+    {"ethereal:icebrick", "ethereal:icebrick"}
+})
+
+-- xdecor:bowl/farming:bowl
+fix_craft("xdecor:bowl", {
+    {"xdecor:wood_tile", "", "xdecor:wood_tile"},
+    {"", "xdecor:wood_tile", ""}
+})
+
+-- cottages:glass_pane/xdecor:woodframed_glass
+fix_craft("cottages:glass_pane", {
+    {"default:stick", "default:stick", "default:stick"},
+    {"default:stick", "xpanes:pane_flat", "default:stick"},
+    {"default:stick", "default:stick", "default:stick"}
+}, 4)
+
+-- cottages:barrel/wine:wine_barrel
+fix_craft("cottages:barrel", {
+    {"group:wood", "group:wood", "group:wood"},
+    {"default:tin_ingot", "", "default:tin_ingot"},
+    {"group:wood", "group:wood", "group:wood"},
+})
+
+-- cottages:barrel_open/cottages:barrel (it looks weird when a barrel is made of different metals)
+fix_craft("cottages:barrel_open", {
+    {"group:wood", "", "group:wood"},
+	{"default:tin_ingot", "", "default:tin_ingot"},
+	{"group:wood", "group:wood", "group:wood"},
+})
 
 if minetest.get_modpath("ethereal") then
     minetest.register_craft({
@@ -50,113 +114,8 @@ if minetest.get_modpath("ethereal") then
     })
 
     minetest.register_craft({
-    output = "farming:bowl",
-    type = "shapeless",
-    recipe = {"ethereal:bowl"}
+        output = "farming:bowl",
+        type = "shapeless",
+        recipe = {"ethereal:bowl"}
     })
-end
-
---jonez palace windows have the same recipe
-if minetest.get_modpath("jonez") then
-    minetest.clear_craft({
-        output = "xpanes:palace_window_top_flat"
-    })
-    minetest.clear_craft({
-        output = "xpanes:palace_window_bottom_flat"
-    })
-    minetest.register_craft({
-        output = "xpanes:palace_window_top_flat",
-		recipe = {
-			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
-			{"xpanes:pane_flat", "", "xpanes:pane_flat"}
-		}
-    })
-    minetest.register_craft({
-        output = "xpanes:palace_window_bottom_flat",
-		recipe = {
-			{"xpanes:pane_flat", "", "xpanes:pane_flat"},
-			{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"}
-		}
-    })
-end
-
---xdecor
-if minetest.get_modpath("xdecor") then
-    minetest.clear_craft({
-        output = "xdecor:pressure_stone_off"
-    })
-    minetest.register_craft({
-        output = "xdecor:pressure_stone_off",
-		recipe = {{"xdecor:stone_tile", "xdecor:stone_tile"}}
-    })
-
-    minetest.clear_craft({
-        output = "xdecor:pressure_wood_off"
-    })
-    minetest.register_craft({
-        output = "xdecor:pressure_wood_off",
-		recipe = {{"xdecor:wood_tile", "xdecor:wood_tile"}}
-    })
-
-    minetest.clear_craft({
-        output = "xdecor:tatami"
-    })
-    minetest.register_craft({
-        output = "xdecor:tatami",
-        recipe = {
-            {"farming:wheat", "farming:wheat", "farming:wheat"},
-            {"", "farming:wheat", ""}
-        }
-    })
-
-    minetest.clear_craft({
-        output = "xdecor:packed_ice"
-    })
-    minetest.register_craft({
-        output = "xdecor:packed_ice",
-        recipe = {
-            {"ethereal:icebrick", "ethereal:icebrick"},
-            {"ethereal:icebrick", "ethereal:icebrick"}
-        }
-    })
-
-    minetest.clear_craft({
-        output = "xdecor:bowl"
-    })
-    minetest.register_craft({
-        output = "xdecor:bowl",
-        recipe = {
-            {"xdecor:wood_tile", "", "xdecor:wood_tile"},
-            {"", "xdecor:wood_tile", ""}
-        }
-    })
-end
-
---cottages
-if minetest.get_modpath("cottages") then
-    --cottages:glass_pane/xdecor:woodframed_glass
-    minetest.clear_craft({
-        output = "cottages:glass_pane"
-    })
-    minetest.register_craft({
-		output = "cottages:glass_pane 4",
-		recipe = {
-			{"default:stick", "default:stick", "default:stick"},
-			{"default:stick", "xpanes:pane_flat", "default:stick"},
-			{"default:stick", "default:stick", "default:stick"}
-		}
-	})
-
-    --cottages:barrel/wine:wine_barrel
-    minetest.clear_craft({
-        output = "cottages:barrel"
-    })
-    minetest.register_craft({
-		output = "cottages:barrel",
-		recipe = {
-			{"group:wood", "group:wood", "group:wood"},
-			{"default:tin_ingot", "", "default:tin_ingot"},
-			{"group:wood", "group:wood", "group:wood"},
-		},
-	})
 end
