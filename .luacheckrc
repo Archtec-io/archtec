@@ -53,11 +53,6 @@ files["archtec_pvp/pvp.lua"] = {
 	globals = { "minetest.calculate_knockback" },
 }
 
-files["weather/ca_effects/lightning.lua"] = {
-	globals = { "lightning" },
-	read_globals = { "PcgRandom" },
-}
-
 files["archtec/scripts/split_long_msg.lua"] = {
 	globals = { "minetest.chat_send_all", "minetest.chat_send_player" },
 }
@@ -72,4 +67,8 @@ files["archtec/scripts/item_drop.lua"] = {
 
 files["stamina/init.lua"] = {
 	globals = { "minetest.do_item_eat" },
+}
+
+files["archtec/scripts/mvps_stopper.lua"] = {
+	globals = { "mesecon" },
 }

@@ -19,7 +19,7 @@ dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."skybox.lua")
 dofile(scriptsPath.."homedecor_wardrobe.lua")
-if minetest get_modpath("mesecons") then
+if minetest.get_modpath("mesecons") then
     dofile(scriptsPath.."mvps_stopper.lua")
 end
 dofile(scriptsPath.."death_messages.lua")
