@@ -4,15 +4,18 @@ vote = {
 
 function vote.new_vote(creator, voteset)
 	if #vote.active < 1 then
-		vote.start_vote(voteset)
-		vote.vote(voteset, creator, "yes")
+		vote.start_vote(voteset, creator)
+		-- vote "yes"
+		table.insert(voteset.results["yes"], creator)
+		voteset.results.voted[creator] = true
+		vote.check_vote(voteset)
 	elseif creator then
 		minetest.chat_send_player(creator, "Can't start a new vote! A vote is already in progress.")
 	end
 end
 
-function vote.start_vote(voteset)
-	minetest.log("action", "[archtec_votes] Vote started: " .. voteset.description .. " (" .. voteset.help .. ")")
+function vote.start_vote(voteset, creator)
+	minetest.log("action", "[archtec_votes] " .. creator .. " started a vote: " .. voteset.description .. " (" .. voteset.help .. ")")
 	table.insert(vote.active, voteset)
 
 	-- Build results table
@@ -35,7 +38,7 @@ function vote.start_vote(voteset)
 		end)
 	end
 
-	minetest.chat_send_all("Vote started: " .. voteset.description .. minetest.colorize("#666", " (" .. voteset.help .. ")"))
+	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. minetest.colorize("#666", " (" .. voteset.help .. ")"))
 end
 
 function vote.end_vote(voteset)
@@ -71,7 +74,6 @@ end
 function vote.get_next_vote(name)
 	for _, voteset in pairs(vote.active) do
 		if not voteset.results.voted[name] then
-			print(dump(vote.active))
 			return voteset
 		end
 	end
