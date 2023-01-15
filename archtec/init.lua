@@ -5,7 +5,6 @@ local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 archtec = {}
 
 dofile(scriptsPath.."discord_fallback.lua")
---dofile(scriptsPath.."online_players.lua")
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
@@ -13,7 +12,6 @@ dofile(scriptsPath.."stats.lua")
 dofile(scriptsPath.."shutdown.lua")
 dofile(scriptsPath.."mapfix.lua")
 dofile(scriptsPath.."prejoin.lua")
---dofile(scriptsPath.."disallow_new_players.lua")
 dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
@@ -23,7 +21,7 @@ if minetest.get_modpath("mesecons") then
     dofile(scriptsPath.."mvps_stopper.lua")
 end
 dofile(scriptsPath.."death_messages.lua")
-dofile(scriptsPath.."zipper_detect.lua")
+-- dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
 dofile(scriptsPath.."redef.lua")
 dofile(scriptsPath.."run_lua_code.lua")
@@ -46,6 +44,9 @@ dofile(scriptsPath.."first_join.lua")
 dofile(scriptsPath.."random_things.lua")
 dofile(scriptsPath.."watch.lua")
 dofile(scriptsPath.."fakedrawer.lua")
+dofile(scriptsPath.."pairs_by_key.lua")
+dofile(scriptsPath.."count_objects.lua")
+dofile(scriptsPath.."instrument_mod.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
@@ -60,10 +61,6 @@ if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
     assert(loadfile(scriptsPath.."/geoip.lua"))(http)
 end
-
-dofile(scriptsPath.."pairs_by_key.lua")
-dofile(scriptsPath.."count_objects.lua")
-dofile(scriptsPath.."instrument_mod.lua")
 
 local after = minetest.get_us_time()
 

@@ -22,6 +22,7 @@ minetest.register_globalstep(function(dtime)
 			player:set_stars({ visible = true })
 			player_list[name] = "surface"
 		elseif pos.y < sky_start and current ~= "blackness" then
+			auroras.restore_sky(player)
 			player:set_sky({ base_color = "#000000", type = "plain", clouds = false })
 			player:set_sun({ visible = false, sunrise_visible = false })
 			player:set_moon({ visible = false })

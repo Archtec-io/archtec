@@ -36,6 +36,7 @@ read_globals = {
 	"techage",
 	"choppy",
 	"signs_bot",
+	"auroras",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
