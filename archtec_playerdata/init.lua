@@ -9,46 +9,50 @@ archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 assert(minetest.mkdir(datadir), "[archtec_playerdata] Could not create playerdata directory " .. datadir)
 
-function archtec_playerdata.create(name)
-    local path = datadir .. "/" .. name .. ".txt"
-    local file = io.open(path, "w")
-    io.close(file)
-    return true
-end
+local cache = {}
 
-function archtec_playerdata.get(name, key, default)
+function archtec_playerdata.load(name)
     local path = datadir .. "/" .. name .. ".txt"
     local file = io.open(path, "r")
     local raw
     if file == nil then
-        archtec_playerdata.create(name)
+        return false
     end
     if file ~= nil then
         raw = file:read()
         io.close(file)
     end
     local data = minetest.deserialize(raw)
-    local value
-    if data == nil then
-        archtec_playerdata.set(name, key, default)
-        value = default
-    else
-        value = data[key]
-    end
+    cache[name] = data
+end
+
+function archtec_playerdata.save(name)
+    local path = datadir .. "/" .. name .. ".txt"
+    local file = io.open(path, "w")
+    local data = cache[name]
+    local raw = minetest.serialize(data)
+    file:write(raw)
+    io.close(file)
+end
+
+function archtec_playerdata.get(name, key)
+    local value = cache[name[key]]
     return value
 end
 
 function archtec_playerdata.set(name, key, value)
-    local path = datadir .. "/" .. name .. ".txt"
-    local file = io.open(path, "w")
-    local raw = file:read()
-    local data = minetest.deserialize(raw)
-    if raw and data == nil then
-        data = {}
-    end
-    data[key] = value
-    local new = minetest.serialize(data)
-    file:write(new)
-    io.close(file)
+    cache[name[key]] = value
     return true
 end
+
+minetest.register_on_joinplayer(function(player)
+    if player == nil then return end
+    local name = player:get_player_name()
+    archtec_playerdata.load(name)
+end)
+
+minetest.register_on_leaveplayer(function(player)
+    if player == nil then return end
+    local name = player:get_player_name()
+	cache[name] = nil
+end)
