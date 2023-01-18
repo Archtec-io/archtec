@@ -24,7 +24,7 @@ local function fix_craft(node, recipedef, amount)
     minetest.log("action", "[archtec] changed recipe of '" .. node .. "'")
 end
 
--- ???
+-- pride_flags:lower_mast/bridger:bridges_steel_rod
 fix_craft("pride_flags:lower_mast", {
     {"default:steel_ingot", "farming:string"},
     {"default:steel_ingot", "farming:string"},
@@ -73,7 +73,7 @@ fix_craft("xdecor:tatami", {
     {"", "farming:wheat", ""}
 })
 
--- ???
+-- xdecor:packed_ice/ethereal:icebrick
 fix_craft("xdecor:packed_ice", {
     {"ethereal:icebrick", "ethereal:icebrick"},
     {"ethereal:icebrick", "ethereal:icebrick"}
