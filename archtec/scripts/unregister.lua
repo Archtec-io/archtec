@@ -35,3 +35,7 @@ end
 if minetest.get_modpath("cottages") then
     minetest.unregister_item("cottages:rope")
 end
+
+if minetest.get_modpath("shields") then
+    minetest.unregister_item("shields:shield_nether")
+end
