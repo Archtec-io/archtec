@@ -10,7 +10,7 @@ function archtec_playerdata.set(name, key, value)
 archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 assert(minetest.mkdir(datadir), "[archtec_playerdata] Could not create playerdata directory " .. datadir)
-cache = {}
+cache = {} -- global for debug reasons
 
 local struct = {
     nodes_dug = 0,
@@ -39,10 +39,10 @@ local function stats_file_exsist(name)
     if file ~= nil then
         file:close()
         log("stats_file_exsist: file of '" .. name .. "' exsits")
-        return true 
-    else 
+        return true
+    else
         log("stats_file_exsist: file of '" .. name .. "' does not exsit")
-        return false 
+        return false
     end
 end
 
@@ -70,9 +70,6 @@ function archtec_playerdata.load(name)
     if not raw == nil and not raw == "" then
         data = minetest.deserialize(raw)
     end
-    --if data == nil then -- hack to prevent nil cache (???)
-       -- data[name] = name
-    --end
     cache[name] = data
     print(dump(cache))
 end
@@ -90,7 +87,8 @@ function archtec_playerdata.save(name)
         return
     end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
-    local raw = minetest.serialize(cache[name])
+    local data = cache[name]
+    local raw = minetest.serialize(data)
     file:write(raw)
     file:close()
 end
