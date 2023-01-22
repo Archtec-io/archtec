@@ -17,6 +17,7 @@ local struct = {
     nodes_placed = 0,
 }
 
+-- helper funtions
 local function log(message)
     if message ~= nil and message ~= "" then
         minetest.log("warning", "[archtec_playerdata] " .. message)
@@ -46,6 +47,7 @@ local function stats_file_exsist(name)
     end
 end
 
+-- (un)load/create data
 local function stats_create(name)
     if not valid_player(name) then return end
     if stats_file_exsist(name) then
@@ -62,8 +64,9 @@ function archtec_playerdata.load(name)
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "r")
     if not file then
-        log("load: file of '" .. name .. "' does not exsist")
+        log("load: file of '" .. name .. "' does not exsist!")
         stats_create(name)
+        file = io.open(datadir .. "/" .. name .. ".txt", "r")
     end
     local raw = file:read("*a")
     file:close()
@@ -76,7 +79,7 @@ function archtec_playerdata.load(name)
     print("raw: " .. raw)
     print("data: " .. dump(data))
     -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR
-    cache[name] = data
+    cache[name] = data -- if no data, the cache[name] key will not created. How to fix that ???
     print(dump(cache))
 end
 
@@ -86,6 +89,29 @@ function archtec_playerdata.unload(name)
     cache[name] = nil
 end
 
+function archtec_playerdata.load_offline(name)
+    if not valid_player(name) then return end
+    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
+    if not file then
+        log("load_offline: file of '" .. name .. "' does not exsist")
+        -- do not create any data!
+        return
+    end
+    local raw = file:read("*a")
+    file:close()
+    local data
+    if raw == nil then
+        log("load_offline: file of '" .. name .. "' contains no data!")
+    else
+        data = minetest.deserialize(raw)
+    end
+    print("raw: " .. raw)
+    print("data: " .. dump(data))
+    -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR
+    return data
+end
+
+-- save data
 function archtec_playerdata.save(name)
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
@@ -128,13 +154,18 @@ minetest.register_on_shutdown(function()
     log("shutdown: saved data!")
 end)
 
+-- get/set/mod data
 function archtec_playerdata.get(name, key)
     if not valid_player(name) then return nil end
     if type(key) ~= "string" then
         log("get: key is not a string! '" .. key .. "'")
     end
     local val
-    if cache[name][key] == nil then
+    if cache[name] == nil then
+        log("get: cache for '" .. name .. "' is nil!")
+        return
+    end
+    if cache[name][key] == nil then -- nil crash, how to fix that ??? (fixed with the above nil check)
         val = struct[key]
     else
         val = cache[name][key]
@@ -154,9 +185,17 @@ function archtec_playerdata.set(name, key, value)
 end
 
 function archtec_playerdata.mod(name, key, value)
-    if not valid_player(name) then return nil end
+    if not valid_player(name) then return false end
     -- check for valid input (only numbers)
+    if not type(value) == "number" then
+        log("mod: value '" .. value .. "' is not a number!")
+        return false
+    end
     local old = archtec_playerdata.get(name, key)
+    if old == nil then
+        log("mod: get returned nil for key '" .. key .. "' of '" .. name .. "'!")
+        return false
+    end
     value = old + value
     cache[name][key] = value
     return true
