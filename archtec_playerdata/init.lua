@@ -14,7 +14,7 @@ cache = {} -- global for debug reasons
 
 local struct = {
     nodes_dug = 0,
-    name = "unknown"
+    nodes_placed = 0,
 }
 
 local function log(message)
@@ -60,16 +60,20 @@ end
 
 function archtec_playerdata.load(name)
     if not valid_player(name) then return end
-    if not stats_file_exsist(name) then
+    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
+    if not file then
+        log("load: file of '" .. name .. "' does not exsist")
         stats_create(name)
     end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
-    local raw = file:read("*all")
+    local raw = file:read()
     file:close()
     local data = {}
-    if not raw == nil and not raw == "" then
+    --if not raw == nil and not raw == "" then -- broken ???
         data = minetest.deserialize(raw)
-    end
+    --end
+    print("raw: " .. raw)
+    print("data: " .. dump(data))
+    -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR 
     cache[name] = data
     print(dump(cache))
 end
@@ -82,11 +86,11 @@ end
 
 function archtec_playerdata.save(name)
     if not valid_player(name) then return end
-    if not stats_file_exsist(name) then
+    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
+    if not file then
         log("save: file of '" .. name .. "' does not exsist")
         return
     end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     local data = cache[name]
     local raw = minetest.serialize(data)
     file:write(raw)
@@ -115,6 +119,11 @@ end)
 minetest.register_on_leaveplayer(function(player)
     local name = player:get_player_name()
     archtec_playerdata.unload(name)
+end)
+
+minetest.register_on_shutdown(function()
+    archtec_playerdata.save_all()
+    log("shutdown: saved data!")
 end)
 
 function archtec_playerdata.get(name, key)
@@ -151,7 +160,17 @@ function archtec_playerdata.mod(name, key, value)
     return true
 end
 
+-- test functions
 minetest.register_on_dignode(function(_, _, digger)
     local name = digger:get_player_name()
-    archtec_playerdata.mod(name, "nodes_dug", 1)
+    if name ~= nil then
+        archtec_playerdata.mod(name, "nodes_dug", 1)
+    end
+end)
+
+minetest.register_on_placenode(function(_, _, placer, _, _, _)
+    local name = placer:get_player_name()
+    if name ~= nil then
+        archtec_playerdata.mod(name, "nodes_placed", 1)
+    end
 end)
