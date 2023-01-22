@@ -116,13 +116,14 @@ function archtec_playerdata.save(name)
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     if not file then
-        log("save: file of '" .. name .. "' does not exsist")
+        log("save: file of '" .. name .. "' does not exsist!")
         return
     end
     local data = cache[name]
     local raw = minetest.serialize(data)
     file:write(raw)
     file:close()
+    log("save: saved data of '" .. name .. "'")
 end
 
 function archtec_playerdata.save_all()
