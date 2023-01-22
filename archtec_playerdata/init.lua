@@ -65,15 +65,17 @@ function archtec_playerdata.load(name)
         log("load: file of '" .. name .. "' does not exsist")
         stats_create(name)
     end
-    local raw = file:read()
+    local raw = file:read("*a")
     file:close()
-    local data = {}
-    --if not raw == nil and not raw == "" then -- broken ???
+    local data
+    if raw == nil then
+        log("load: file of '" .. name .. "' contains no data!")
+    else
         data = minetest.deserialize(raw)
-    --end
+    end
     print("raw: " .. raw)
     print("data: " .. dump(data))
-    -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR 
+    -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR
     cache[name] = data
     print(dump(cache))
 end
@@ -131,7 +133,7 @@ function archtec_playerdata.get(name, key)
     if type(key) ~= "string" then
         log("get: key is not a string! '" .. key .. "'")
     end
-    local val = nil
+    local val
     if cache[name][key] == nil then
         val = struct[key]
     else
