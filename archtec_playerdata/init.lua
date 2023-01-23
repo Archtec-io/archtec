@@ -216,3 +216,24 @@ minetest.register_on_placenode(function(_, _, placer, _, _, _)
         archtec_playerdata.mod(name, "nodes_placed", 1)
     end
 end)
+
+-- /stats command for testing
+function archtec_playerdata.get_formspec(name)
+    local placed = archtec_playerdata.get(name, "nodes_placed")
+    local dug = archtec_playerdata.get(name, "nodes_dug")
+
+    local formspec = {
+        "formspec_version[4]",
+        "size[6,3.476]",
+        "label[0.375,0.5;", minetest.formspec_escape("Placed: " .. placed), "]",
+        "label[0.375,1.0;", minetest.formspec_escape("Dug: " .. dug), "]",
+    }
+
+    return table.concat(formspec, "")
+end
+
+minetest.register_chatcommand("stats", {
+    func = function(name)
+        minetest.show_formspec(name, "archtec_playerdata:stats", archtec_playerdata.get_formspec(name))
+    end,
+})
