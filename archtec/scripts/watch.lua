@@ -142,6 +142,7 @@ local function attach(name_watcher, name_target)
 	-- and attach
 	player_api.player_attached[name_watcher] = true
 	local target = minetest.get_player_by_name(name_target)
+	if type(target) ~= "userdata" then return end -- prevent crashes
 	watcher:set_attach(target, "", eye_pos)
 	minetest.log("action", "[spectator_mode] '" .. name_watcher .. "' attached to '" .. name_target .. "'")
 
@@ -179,6 +180,18 @@ local function unwatch(name_watcher)
 
 	detach(name_watcher)
 	return true -- no message as that has been sent by detach()
+end
+
+local function on_joinplayer(watcher)
+	local state = original_state_get(watcher)
+	if not state then return end
+
+	-- attempt to move to original state after log-off
+	-- during attach or server crash
+	local name_watcher = watcher:get_player_name()
+	original_state[name_watcher] = state
+	player_api.player_attached[name_watcher] = true
+	detach(name_watcher)
 end
 
 local function on_leaveplayer(watcher)
@@ -226,5 +239,6 @@ minetest.register_chatcommand("unwatch", {
 	func = unwatch,
 })
 
+minetest.register_on_joinplayer(on_joinplayer)
 minetest.register_on_leaveplayer(on_leaveplayer)
 minetest.register_on_respawnplayer(spectator_mode.on_respawnplayer)

@@ -37,6 +37,7 @@ read_globals = {
 	"choppy",
 	"signs_bot",
 	"auroras",
+	"font_api",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
