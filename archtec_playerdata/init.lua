@@ -1,12 +1,3 @@
---[[ Doc:
-function archtec_playerdata.set(name, key, value)
-    - name is a playername
-    - key is an identifier
-    - value is the data (number, string, boolean)
-]]--
--- player = ObjectRef, name = playername
--- set, get, mod
-
 archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 assert(minetest.mkdir(datadir), "[archtec_playerdata] Could not create playerdata directory " .. datadir)
@@ -197,8 +188,7 @@ end
 
 function archtec_playerdata.mod(name, key, value)
     if not valid_player(name) then return false end
-    -- check for valid input (only numbers)
-    if not type(value) == "number" then
+    if type(value) ~= "number" then
         log("mod: value '" .. value .. "' is not a number!")
         return false
     end

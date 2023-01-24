@@ -1,4 +1,5 @@
 error("[archtec_playerdata] tried to execute 'doc.lua' file!!!")
+local name, key, value = 1, 1, 1 -- luacheck workaround
 
 archtec_playerdata.load(name) -- loads data from disk, player must be online
 archtec_playerdata.unload(name) -- saves data and removes from cache, player must be online
