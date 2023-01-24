@@ -51,7 +51,7 @@ end
 local function stats_create(name)
     if not valid_player(name) then return end
     if stats_file_exsist(name) then
-        log("stats_create: stats for '" .. name .. "' already exsists")
+        log("stats_create: stats for '" .. name .. "' already exsists!")
         return false
     end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
@@ -75,11 +75,14 @@ function archtec_playerdata.load(name)
         log("load: file of '" .. name .. "' contains no data!")
     else
         data = minetest.deserialize(raw)
+        if data == nil then
+            data = {} -- fix nil crashes due non-existing keys
+        end
     end
     print("raw: " .. raw)
     print("data: " .. dump(data))
     -- CHECK IF ALL KEYS ARE IN STRUCT - ELSE ERROR
-    cache[name] = data -- if no data, the cache[name] key will not created. How to fix that ???
+    cache[name] = data -- if no data, the cache[name] key will not created. How to fix that ??? (see above!)
     print(dump(cache))
 end
 
@@ -114,13 +117,20 @@ end
 -- save data
 function archtec_playerdata.save(name)
     if not valid_player(name) then return end
+    local data = cache[name]
+    if data == nil or data == {} then -- broken
+        log("save: player '" .. name .. "' has no data, aborting!")
+        return
+    end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     if not file then
         log("save: file of '" .. name .. "' does not exsist!")
         return
     end
-    local data = cache[name]
     local raw = minetest.serialize(data)
+    if raw == nil then
+        log("save: raw data of '" .. name .. "' is nil!")
+    end
     file:write(raw)
     file:close()
     log("save: saved data of '" .. name .. "'")
@@ -219,8 +229,8 @@ end)
 
 -- /stats command for testing
 function archtec_playerdata.get_formspec(name)
-    local placed = archtec_playerdata.get(name, "nodes_placed")
-    local dug = archtec_playerdata.get(name, "nodes_dug")
+    local placed = archtec_playerdata.get(name, "nodes_placed") or 0
+    local dug = archtec_playerdata.get(name, "nodes_dug") or 0
 
     local formspec = {
         "formspec_version[4]",
