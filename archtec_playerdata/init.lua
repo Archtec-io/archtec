@@ -18,6 +18,7 @@ local struct = {
     playtime = 0,
     chatmessages = 0,
     joined = 0,
+    join_count = 0
 }
 
 -- helper funtions
@@ -191,6 +192,7 @@ minetest.register_on_joinplayer(function(player)
     local name = player:get_player_name()
     if name ~= nil then
         archtec_playerdata.load(name)
+        archtec_playerdata.mod(name, "join_count", 1)
     end
 end)
 
@@ -313,6 +315,8 @@ local function stats(name, param) -- check for valid player doesn't work
         return
     end
     local playtime_int = data.playtime
+    local avg = playtime_int / data.join_count
+    -- stats
     local nodes_dug = data.nodes_dug or 0
     local nodes_placed = data.nodes_placed or 0
     local crafted = data.items_crafted or 0
@@ -320,17 +324,21 @@ local function stats(name, param) -- check for valid player doesn't work
     local playtime = format_duration(playtime_int) or 0
     local chatmessages = data.chatmessages or 0
     local joined = data.joined or 0
+    local join_count = data.join_count or 1
+    local avg_playtime = format_duration(avg) or 0
     local formspec = {
         "formspec_version[4]",
-        "size[5,4.5]",
+        "size[5,5.5]",
         "label[0.375,0.5;", minetest.formspec_escape("Stats of: " .. target), "]",
         "label[0.375,1.0;", minetest.formspec_escape("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", minetest.formspec_escape("Placed: " .. nodes_placed), "]",
         "label[0.375,2.0;", minetest.formspec_escape("Crafted: " .. crafted), "]",
         "label[0.375,2.5;", minetest.formspec_escape("Died: " .. died), "]",
         "label[0.375,3.0;", minetest.formspec_escape("Playtime: " .. playtime), "]",
-        "label[0.375,3.5;", minetest.formspec_escape("Chatmessages: " .. chatmessages), "]",
-        "label[0.375,4.0;", minetest.formspec_escape("Join date: " .. joined), "]",
+        "label[0.375,3.5;", minetest.formspec_escape("Average playtime: " .. avg_playtime), "]",
+        "label[0.375,4.0;", minetest.formspec_escape("Chatmessages: " .. chatmessages), "]",
+        "label[0.375,4.5;", minetest.formspec_escape("Join date: " .. joined), "]",
+        "label[0.375,5.0;", minetest.formspec_escape("Join count: " .. join_count), "]",
     }
     minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end
