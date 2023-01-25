@@ -3,7 +3,7 @@ local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 assert(minetest.mkdir(datadir), "[archtec_playerdata] Could not create playerdata directory " .. datadir)
 cache = {} -- global for debug reasons
 
--- struct: add new keys with default/fallback values!
+-- struct: add new keys with default/fallback values! (Set always 0 as fallback!)
 local struct = {
     nodes_dug = 0,
     nodes_placed = 0,
@@ -225,7 +225,7 @@ end
 
 function archtec_playerdata.set(name, key, value)
     if not valid_player(name) then return false end
-    --if not is_valid(value) then return end BROKEN
+    if not is_valid(value) then return end
     if cache[name] == nil then
         log("set: cache for '" .. name .. "' is nil!")
         return false
