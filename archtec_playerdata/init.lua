@@ -7,6 +7,11 @@ cache = {} -- global for debug reasons
 local struct = {
     nodes_dug = 0,
     nodes_placed = 0,
+    items_crafted = 0,
+    died = 0,
+    playtime = 0,
+    chatmessages = 0,
+    joined = 0,
 }
 
 -- helper funtions
@@ -50,6 +55,10 @@ local function is_valid(value)
     else
         return false
     end
+end
+
+local function trim(s)
+    return s:match"^%s*(.*)":match"(.-)%s*$"
 end
 
 -- (un)load/create data
@@ -128,6 +137,15 @@ function archtec_playerdata.load_offline(name) -- do not create/change any data 
     return data
 end
 
+function archtec_playerdata.in_cache(name)
+    if not valid_player(name) then return false end
+    if cache[name] ~= nil then
+        return true
+    else
+        return false
+    end
+end
+
 -- save data
 function archtec_playerdata.save(name)
     if not valid_player(name) then return end
@@ -153,6 +171,7 @@ function archtec_playerdata.save_all()
     for _, player in pairs(minetest.get_connected_players()) do
         local name = player:get_player_name()
         archtec_playerdata.save(name)
+        archtec.playtimesave(name)
     end
     local after = minetest.get_us_time()
     print("Took: " .. (after-before) / 1000 .. " ms")
@@ -205,8 +224,12 @@ function archtec_playerdata.get(name, key)
 end
 
 function archtec_playerdata.set(name, key, value)
-    if not valid_player(name) then return end
-    if not is_valid(value) then return end
+    if not valid_player(name) then return false end
+    --if not is_valid(value) then return end BROKEN
+    if cache[name] == nil then
+        log("set: cache for '" .. name .. "' is nil!")
+        return false
+    end
     cache[name][key] = value
     return true
 end
@@ -242,22 +265,61 @@ minetest.register_on_placenode(function(_, _, placer, _, _, _)
     end
 end)
 
-function archtec_playerdata.get_formspec(name)
-    local placed = archtec_playerdata.get(name, "nodes_placed") or 0
-    local dug = archtec_playerdata.get(name, "nodes_dug") or 0
+minetest.register_on_craft(function(_, player, _, _)
+    local name = player:get_player_name()
+    if name ~= nil then
+        archtec_playerdata.mod(name, "items_crafted", 1)
+    end
+end)
 
+minetest.register_on_dieplayer(function(player, _)
+    local name = player:get_player_name()
+    if name ~= nil then
+        archtec_playerdata.mod(name, "died", 1)
+    end
+end)
+
+local function stats(name, param) -- check for valid player doesn't work
+    local target = trim(param)
+    local data
+    if target == "" or target == nil then
+        target = name
+    end
+    if not minetest.player_exists(target) or not valid_player(target) then
+        return("[stats]: Unknown player!")
+    end
+    if archtec_playerdata.in_cache(target) then
+        data = table.copy(cache[target])
+    else
+        data = archtec_playerdata.load_offline(target)
+    end
+    if data == nil then
+        return("[stats]: Can't read stats!")
+    end
+    local nodes_dug = data.nodes_dug or 0
+    local nodes_placed = data.nodes_placed or 0
+    local crafted = data.items_crafted or 0
+    local died = data.died or 0
+    local playtime = archtec.get_total_playtime_format(target) or 0
+    local chatmessages = data.chatmessages or 0
+    local joined = data.joined or 0
     local formspec = {
         "formspec_version[4]",
-        "size[6,3.476]",
-        "label[0.375,0.5;", minetest.formspec_escape("Placed: " .. placed), "]",
-        "label[0.375,1.0;", minetest.formspec_escape("Dug: " .. dug), "]",
+        "size[5,4.5]",
+        "label[0.375,0.5;", minetest.formspec_escape("Stats of: " .. target), "]",
+        "label[0.375,1.0;", minetest.formspec_escape("Dug: " .. nodes_dug), "]",
+        "label[0.375,1.5;", minetest.formspec_escape("Placed: " .. nodes_placed), "]",
+        "label[0.375,2.0;", minetest.formspec_escape("Crafted: " .. crafted), "]",
+        "label[0.375,2.5;", minetest.formspec_escape("Died: " .. died), "]",
+        "label[0.375,3.0;", minetest.formspec_escape("Playtime: " .. playtime), "]",
+        "label[0.375,3.5;", minetest.formspec_escape("Chatmessages: " .. chatmessages), "]",
+        "label[0.375,4.0;", minetest.formspec_escape("Join date: " .. joined), "]",
     }
-
     return table.concat(formspec, "")
 end
 
 minetest.register_chatcommand("stats", {
-    func = function(name)
-        minetest.show_formspec(name, "archtec_playerdata:stats", archtec_playerdata.get_formspec(name))
+    func = function(name, param)
+        minetest.show_formspec(name, "archtec_playerdata:stats", stats(name, param))
     end,
 })
