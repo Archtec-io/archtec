@@ -1,6 +1,12 @@
+--[[
+    Copyright (C) 2023 Niklp
+    GNU Lesser General Public License v2.1 See LICENSE.txt for more information
+]]--
+
 archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 assert(minetest.mkdir(datadir), "[archtec_playerdata] Could not create playerdata directory " .. datadir)
+
 cache = {} -- global for debug reasons
 
 -- struct: add new keys with default/fallback values! (Set always 0 as fallback!)
@@ -176,7 +182,7 @@ function archtec_playerdata.save_all()
     local after = minetest.get_us_time()
     print("Took: " .. (after-before) / 1000 .. " ms")
     minetest.after(20, archtec_playerdata.save_all)
-    print(dump(cache))
+    -- print(dump(cache))
 end
 
 minetest.after(6, archtec_playerdata.save_all)
@@ -279,6 +285,14 @@ minetest.register_on_dieplayer(function(player, _)
     end
 end)
 
+local function divmod(a, b) return math.floor(a / b), a % b end
+
+local function format_duration(seconds)
+	local display_hours, seconds_left = divmod(seconds, 3600)
+	local display_minutes, display_seconds = divmod(seconds_left, 60)
+	return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
+end
+
 local function stats(name, param) -- check for valid player doesn't work
     local target = trim(param)
     local data
@@ -286,7 +300,8 @@ local function stats(name, param) -- check for valid player doesn't work
         target = name
     end
     if not minetest.player_exists(target) or not valid_player(target) then
-        return("[stats]: Unknown player!")
+        minetest.chat_send_player(name, "[stats]: Unknown player!")
+        return
     end
     if archtec_playerdata.in_cache(target) then
         data = table.copy(cache[target])
@@ -294,13 +309,15 @@ local function stats(name, param) -- check for valid player doesn't work
         data = archtec_playerdata.load_offline(target)
     end
     if data == nil then
-        return("[stats]: Can't read stats!")
+        minetest.chat_send_player(name, "[stats]: Can't read stats!")
+        return
     end
+    local playtime_int = data.playtime
     local nodes_dug = data.nodes_dug or 0
     local nodes_placed = data.nodes_placed or 0
     local crafted = data.items_crafted or 0
     local died = data.died or 0
-    local playtime = archtec.get_total_playtime_format(target) or 0
+    local playtime = format_duration(playtime_int) or 0
     local chatmessages = data.chatmessages or 0
     local joined = data.joined or 0
     local formspec = {
@@ -315,11 +332,11 @@ local function stats(name, param) -- check for valid player doesn't work
         "label[0.375,3.5;", minetest.formspec_escape("Chatmessages: " .. chatmessages), "]",
         "label[0.375,4.0;", minetest.formspec_escape("Join date: " .. joined), "]",
     }
-    return table.concat(formspec, "")
+    minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end
 
 minetest.register_chatcommand("stats", {
     func = function(name, param)
-        minetest.show_formspec(name, "archtec_playerdata:stats", stats(name, param))
+        stats(name, param)
     end,
 })

@@ -5,13 +5,13 @@ minetest.register_on_joinplayer(function(player)
 		if player:is_player() then
 			local name = player:get_player_name()
 			local meta = player:get_meta()
-    		if meta:get_string(key) ~= "" then -- move legacy data
+			if meta:get_string(key) ~= "" then -- move legacy data
 				archtec_playerdata.set(name, "joined", meta:get_string(key))
-	    		meta:set_string(key, nil)
-    		end
+				meta:set_string(key, nil)
+			end
 			if archtec_playerdata.get(name, "joined") == 0 then
 				archtec_playerdata.set(name, "joined", os.date())
-			end	
+			end
 		end
 	end)
 end)
