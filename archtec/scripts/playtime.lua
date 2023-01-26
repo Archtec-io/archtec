@@ -19,6 +19,7 @@ end
 
 function archtec.playtimesave(name)
 	archtec_playerdata.mod(name, "playtime", archtec.get_session_playtime(name))
+	current[name] = os.time()
 end
 
 minetest.register_on_leaveplayer(function(player)
