@@ -121,6 +121,8 @@ end
 -- save data
 local function stats_save(name)
     if not valid_player(name) then return end
+    stats_mod(name, "playtime", get_session_playtime(name))
+    playtime_current[name] = time()
     local data = cache[name]
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     if not file then
@@ -140,8 +142,6 @@ local function stats_save_all()
     local before = minetest.get_us_time()
     for _, player in pairs(minetest.get_connected_players()) do
         local name = player:get_player_name()
-        stats_mod(name, "playtime", get_session_playtime(name))
-        playtime_current[name] = time()
         stats_save(name)
     end
     local after = minetest.get_us_time()
