@@ -355,8 +355,11 @@ local function stats(name, param) -- check for valid player doesn't work
         minetest.chat_send_player(name, "[stats]: Can't read stats!")
         return
     end
-    local playtime_int = data.playtime
-    local avg = playtime_int / data.join_count
+    if data.join_count == nil then
+        data.join_count = 1
+    end
+    local playtime_int = data.playtime or 1
+    local avg = playtime_int / data.join_count or 1
     -- stats
     local nodes_dug = data.nodes_dug or 0
     local nodes_placed = data.nodes_placed or 0
