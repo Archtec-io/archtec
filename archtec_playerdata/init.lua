@@ -6,16 +6,17 @@
 archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 local cache = {}
+local playtime_current = {}
 local fs_esc = minetest.formspec_escape
 local save_interval = 60
 local floor = math.floor
+local time = os.time
 local debug_mode = false
 
 minetest.register_on_mods_loaded(function()
     if not minetest.mkdir(datadir) then
 		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
 	end
-    archtec_playerdata.save_all()
 end)
 
 -- struct: add new keys with default/fallback values! (Set always 0 as fallback!)
@@ -109,6 +110,47 @@ local function in_cache(name)
     end
 end
 
+local function get_session_playtime(name)
+	if playtime_current[name] then
+		return time() - playtime_current[name]
+	else
+		return 0
+	end
+end
+
+-- save data
+local function stats_save(name)
+    if not valid_player(name) then return end
+    local data = cache[name]
+    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
+    if not file then
+        log_warning("save: file of '" .. name .. "' does not exsist!")
+        return
+    end
+    local raw = minetest.serialize(data)
+    if raw == nil then
+        log_warning("save: raw data of '" .. name .. "' is nil!")
+        return
+    end
+    file:write(raw)
+    file:close()
+end
+
+local function stats_save_all()
+    local before = minetest.get_us_time()
+    for _, player in pairs(minetest.get_connected_players()) do
+        local name = player:get_player_name()
+        stats_mod(name, "playtime", get_session_playtime(name))
+        playtime_current[name] = time()
+        stats_save(name)
+    end
+    local after = minetest.get_us_time()
+    log_debug("Took: " .. (after-before) / 1000 .. " ms")
+    minetest.after(save_interval, stats_save_all)
+end
+
+minetest.after(4, stats_save_all)
+
 -- (un)load/create data
 local function stats_create(name)
     if not valid_player(name) then return end
@@ -122,7 +164,7 @@ local function stats_create(name)
     return true
 end
 
-function archtec_playerdata.load(name)
+local function stats_load(name)
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "r")
     if not file then
@@ -150,13 +192,13 @@ function archtec_playerdata.load(name)
     cache[name] = data
 end
 
-function archtec_playerdata.unload(name)
+local function stats_unload(name)
     if not valid_player(name) then return end
-    archtec_playerdata.save(name)
+    stats_save(name)
     cache[name] = nil
 end
 
-function archtec_playerdata.load_offline(name) -- do not create/change any data of offline players!
+local function stats_load_offline(name) -- do not create/change any data of offline players!
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "r")
     if not file then
@@ -181,58 +223,36 @@ function archtec_playerdata.load_offline(name) -- do not create/change any data 
     return data
 end
 
--- save data
-function archtec_playerdata.save(name)
-    if not valid_player(name) then return end
-    local data = cache[name]
-    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
-    if not file then
-        log_warning("save: file of '" .. name .. "' does not exsist!")
-        return
-    end
-    local raw = minetest.serialize(data)
-    if raw == nil then
-        log_warning("save: raw data of '" .. name .. "' is nil!")
-        return
-    end
-    file:write(raw)
-    file:close()
-end
-
-function archtec_playerdata.save_all()
-    local before = minetest.get_us_time()
-    for _, player in pairs(minetest.get_connected_players()) do
-        local name = player:get_player_name()
-        archtec_playerdata.save(name)
-        archtec.playtimesave(name)
-    end
-    local after = minetest.get_us_time()
-    log_debug("Took: " .. (after-before) / 1000 .. " ms")
-    minetest.after(save_interval, archtec_playerdata.save_all)
-end
-
+-- load/save on player join/leave events
 minetest.register_on_joinplayer(function(player)
     local name = player:get_player_name()
     if name ~= nil then
-        archtec_playerdata.load(name)
-        archtec_playerdata.mod(name, "join_count", 1)
+        stats_load(name)
+        stats_mod(name, "join_count", 1)
+        if stats_get(name, "playtime") == 0 then
+            local meta = player:get_meta()
+            stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
+            meta:set_string("archtec:playtime", nil) -- remove playtime entry
+            log_warning("on_joinplayer: removed playtime meta of '" .. name .. "'")
+        end
     end
 end)
 
 minetest.register_on_leaveplayer(function(player)
     local name = player:get_player_name()
     if name ~= nil then
-        archtec_playerdata.unload(name)
+        stats_unload(name)
+        playtime_current[name] = nil
     end
 end)
 
 minetest.register_on_shutdown(function()
-    archtec_playerdata.save_all()
+    stats_save_all()
     log_action("shutdown: saved all data!")
 end)
 
 -- get/set/mod data
-function archtec_playerdata.get(name, key)
+function stats_get(name, key)
     if not valid_player(name) then return end
     if type(key) ~= "string" then
         log_warning("get: key is not a string! '" .. key .. "'")
@@ -254,7 +274,9 @@ function archtec_playerdata.get(name, key)
     return val
 end
 
-function archtec_playerdata.set(name, key, value)
+archtec_playerdata.get = stats_get
+
+function stats_set(name, key, value)
     if not valid_player(name) then return false end
     if not is_valid(value) then return false end
     if cache[name] == nil then
@@ -265,13 +287,15 @@ function archtec_playerdata.set(name, key, value)
     return true
 end
 
-function archtec_playerdata.mod(name, key, value)
+archtec_playerdata.set = stats_set
+
+function stats_mod(name, key, value)
     if not valid_player(name) then return false end
     if type(value) ~= "number" then
         log_warning("mod: value '" .. value .. "' is not a number!")
         return false
     end
-    local old = archtec_playerdata.get(name, key)
+    local old = stats_get(name, key)
     if old == nil then
         log_warning("mod: get returned nil for key '" .. key .. "' of '" .. name .. "'!")
         return false
@@ -281,32 +305,34 @@ function archtec_playerdata.mod(name, key, value)
     return true
 end
 
+archtec_playerdata.mod = stats_mod
+
 -- stats
 minetest.register_on_dignode(function(_, _, digger)
     local name = digger:get_player_name()
     if name ~= nil then
-        archtec_playerdata.mod(name, "nodes_dug", 1)
+        stats_mod(name, "nodes_dug", 1)
     end
 end)
 
 minetest.register_on_placenode(function(_, _, placer, _, _, _)
     local name = placer:get_player_name()
     if name ~= nil then
-        archtec_playerdata.mod(name, "nodes_placed", 1)
+        stats_mod(name, "nodes_placed", 1)
     end
 end)
 
 minetest.register_on_craft(function(_, player, _, _)
     local name = player:get_player_name()
     if name ~= nil then
-        archtec_playerdata.mod(name, "items_crafted", 1)
+        stats_mod(name, "items_crafted", 1)
     end
 end)
 
 minetest.register_on_dieplayer(function(player, _)
     local name = player:get_player_name()
     if name ~= nil then
-        archtec_playerdata.mod(name, "died", 1)
+        stats_mod(name, "died", 1)
     end
 end)
 
@@ -323,7 +349,7 @@ local function stats(name, param) -- check for valid player doesn't work
     if in_cache(target) then
         data = table.copy(cache[target])
     else
-        data = archtec_playerdata.load_offline(target)
+        data = stats_load_offline(target)
     end
     if data == nil then
         minetest.chat_send_player(name, "[stats]: Can't read stats!")
