@@ -17,7 +17,8 @@ globals = {
 	"player_api",
 	"ranks",
 	"biome_lib",
-	"stairs"
+	"stairs",
+	"choppy"
 }
 
 read_globals = {
@@ -34,7 +35,6 @@ read_globals = {
 	"unified_inventory",
 	"default",
 	"techage",
-	"choppy",
 	"signs_bot",
 	"auroras",
 	"font_api",
