@@ -1,0 +1,13 @@
+diff --git a/craft_all.lua b/craft_all.lua
+index c811c52..427db29 100644
+--- a/craft_all.lua
++++ b/craft_all.lua
+@@ -128,7 +128,7 @@ local function craft_craftall(player)
+     player_inv:set_list("main", tmp_inv:get_list("main"))
+ 
+     minetest.remove_detached_inventory(tmp_inv_name)
+-
++    archtec_playerdata.mod(player_name, "items_crafted", num_crafted)
+     uip.log("action", S("%s crafts %s %i"), player_name, expected_result:to_string(), num_crafted)
+ end
+ 
