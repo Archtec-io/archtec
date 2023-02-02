@@ -15,8 +15,8 @@ minetest.register_chatcommand("request_lava", {
             minetest.chat_send_player(player, "[request_lava] You already have the 'adv_buckets' privilege")
             return
         end
-
-        if archtec.get_total_playtime(player) > 180000 then -- 50 h playtime
+        local playtime = archtec_playerdata.get(player, "playtime") or 0
+        if playtime > 180000 then -- 50 h playtime
             grant_priv(player, "adv_buckets")
             minetest.chat_send_player(player, "[request_lava] Congratulations! You have been granted the 'adv_buckets' privilege")
             notifyTeam("[request_lava] Granted '" .. player .. "' the 'adv_buckets' priv")
@@ -34,8 +34,8 @@ minetest.register_chatcommand("request_areas_high_limit", {
             minetest.chat_send_player(player, "[request_areas_high_limit] You already have the 'areas_high_limit' privilege")
             return
         end
-
-        if archtec.get_total_playtime(player) > 108000 then -- 30 h playtime
+        local playtime = archtec_playerdata.get(player, "playtime") or 0
+        if playtime > 108000 then -- 30 h playtime
             grant_priv(player, "areas_high_limit")
             minetest.chat_send_player(player, "[request_areas_high_limit] Congratulations! You have been granted the 'areas_high_limit' privilege")
             notifyTeam("[request_areas_high_limit] Granted '" .. player .. "' the 'areas_high_limit' priv")
