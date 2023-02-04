@@ -1,5 +1,6 @@
 minetest.register_privilege("staff", ("Archtec staff member priv"))
 minetest.register_privilege("forceload", ("Allows you to forceload your machines"))
+minetest.register_privilege("archtec_chainsaw", ("Allows you to use the chainsaw"))
 
 local function grant_priv(player, priv)
     local privs = minetest.get_player_privs(player)

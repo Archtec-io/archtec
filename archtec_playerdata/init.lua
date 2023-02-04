@@ -118,6 +118,25 @@ local function get_session_playtime(name)
 	end
 end
 
+local function month2int(name)
+    local months = {Jan = 01, Feb = 02, Mar = 03, Apr = 04, May = 05, Jun = 06, Jul = 07, Aug = 08, Sep = 09, Oct = 10, Nov = 11, Dec = 12}
+    for key, value in pairs(months) do
+        if key == name then
+            return months[key]
+        end
+    end
+end
+
+local function string2timestap(monthstring)
+    if type(monthstring) ~= "string" then return end
+    local _, rday, rmonth, ryear, rhour, rminute, rsecond, _ = string.match(monthstring, "(%a+) (%d+) (%a+) (%d+) (%d+):(%d+):(%d+) (%a+)")
+    rmonth = month2int(rmonth) or 01
+    local convertedTimestamp = time({year = ryear, month = rmonth, day = rday, hour = rhour, min = rminute, sec = rsecond})
+    return convertedTimestamp
+end
+
+archtec_playerdata.string2timestap = string2timestap
+
 -- save data
 local function stats_save(name)
     if not valid_player(name) then return end
@@ -358,6 +377,7 @@ local function stats(name, param) -- check for valid player doesn't work
     if data.join_count == nil then
         data.join_count = 1
     end
+    local privs = minetest.get_player_privs(target) or {}
     local playtime_int = data.playtime or 1
     local avg = playtime_int / data.join_count or 1
     -- stats
@@ -370,9 +390,14 @@ local function stats(name, param) -- check for valid player doesn't work
     local joined = data.joined or 0
     local join_count = data.join_count or 1
     local avg_playtime = format_duration(avg) or 0
+    local priv_lava, priv_chainsaw, priv_forceload, priv_areas
+    if privs["adv_buckets"] then priv_lava = "YES" else priv_lava = "NO" end
+    if privs["archtec_chainsaw"] then priv_chainsaw = "YES" else priv_chainsaw = "NO" end
+    if privs["forceload"] then priv_forceload = "YES" else priv_forceload = "NO" end
+    if privs["areas_high_limit"] then priv_areas = "YES" else priv_areas = "NO" end
     local formspec = {
         "formspec_version[4]",
-        "size[5,5.5]",
+        "size[5,7.5]",
         "label[0.375,0.5;", fs_esc("Stats of: " .. target), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
@@ -383,6 +408,10 @@ local function stats(name, param) -- check for valid player doesn't work
         "label[0.375,4.0;", fs_esc("Chatmessages: " .. chatmessages), "]",
         "label[0.375,4.5;", fs_esc("Join date: " .. joined), "]",
         "label[0.375,5.0;", fs_esc("Join count: " .. join_count), "]",
+        "label[0.375,5.5;", fs_esc("Can spill lava: " .. priv_lava), "]",
+        "label[0.375,6.0;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
+        "label[0.375,6.5;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
+        "label[0.375,7.0;", fs_esc("Can create big areas: " .. priv_areas), "]",
     }
     minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end
