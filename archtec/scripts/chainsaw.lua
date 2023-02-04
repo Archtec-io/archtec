@@ -60,12 +60,12 @@ minetest.register_tool(":technic:chainsaw", {
 				minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chainsaw]: You don't satisfy all conditions to use a chainsaw. See /stats"))
 				return
 			end
-        end
+		end
 
 		if pointed_thing.type ~= "node" then
 			return
 		end
-	
+
 		local pos = pointed_thing.under
 		local oldnode = minetest.get_node_or_nil(pointed_thing.under)
 
