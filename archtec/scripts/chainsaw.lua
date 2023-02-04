@@ -42,7 +42,7 @@ end
 minetest.register_tool(":technic:chainsaw", {
 	description = "Chainsaw",
 	inventory_image = "technic_chainsaw.png",
-    tool_capabilities = {
+	tool_capabilities = {
 		full_punch_interval = 0.9,
 		max_drop_level=1,
 		groupcaps={

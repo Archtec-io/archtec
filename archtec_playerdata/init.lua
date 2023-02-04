@@ -164,7 +164,7 @@ local function stats_save_all()
         stats_save(name)
     end
     local after = minetest.get_us_time()
-    log_debug("Took: " .. (after-before) / 1000 .. " ms")
+    log_debug("Took: " .. (after - before) / 1000 .. " ms")
     minetest.after(save_interval, stats_save_all)
 end
 
@@ -179,7 +179,7 @@ local function stats_create(name)
     end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     file:close()
-    log_action("stats_create: create stats file for '" .. name .. "'")
+    log_debug("stats_create: create stats file for '" .. name .. "'")
     return true
 end
 
@@ -221,7 +221,7 @@ local function stats_load_offline(name) -- do not create/change any data of offl
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "r")
     if not file then
-        log_action("load_offline: file of '" .. name .. "' does not exsist")
+        log_debug("load_offline: file of '" .. name .. "' does not exsist")
         return
     end
     local raw = file:read("*a")
@@ -235,7 +235,7 @@ local function stats_load_offline(name) -- do not create/change any data of offl
     end
     for key, value in pairs(data) do
         if not (in_struct(key)) then
-            log_action("load_offline: (temporary) removing unknown key '" .. key .. "' of player '" .. name .. "'!")
+            log_debug("load_offline: (temporary) removing unknown key '" .. key .. "' of player '" .. name .. "'!")
             data[key] = nil -- remove unknown keys
         end
     end
@@ -252,7 +252,7 @@ minetest.register_on_joinplayer(function(player)
             local meta = player:get_meta()
             stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
             meta:set_string("archtec:playtime", nil) -- remove playtime entry
-            log_warning("on_joinplayer: removed playtime meta of '" .. name .. "'")
+            log_debug("on_joinplayer: removed playtime meta of '" .. name .. "'")
         end
     end
 end)
@@ -278,7 +278,7 @@ function stats_get(name, key)
     end
     local val
     if cache[name] == nil then
-        log_debug("get: cache for '" .. name .. "' is nil!")
+        log_warning("get: cache for '" .. name .. "' is nil!")
         return
     end
     if cache[name][key] == nil then
@@ -355,7 +355,7 @@ minetest.register_on_dieplayer(function(player, _)
     end
 end)
 
-local function stats(name, param) -- check for valid player doesn't work
+local function stats(name, param)
     local target = param:trim()
     local data
     if target == "" or target == nil then
