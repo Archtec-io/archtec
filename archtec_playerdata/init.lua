@@ -11,6 +11,7 @@ local fs_esc = minetest.formspec_escape
 local save_interval = 60
 local floor = math.floor
 local time = os.time
+local date = os.date
 local debug_mode = false
 
 minetest.register_on_mods_loaded(function()
@@ -378,6 +379,7 @@ local function stats(name, param)
         data.join_count = 1
     end
     local privs = minetest.get_player_privs(target) or {}
+    local pauth = minetest.get_auth_handler().get_auth(target)
     local playtime_int = data.playtime or 1
     local avg = playtime_int / data.join_count or 1
     -- stats
@@ -390,14 +392,19 @@ local function stats(name, param)
     local joined = data.joined or 0
     local join_count = data.join_count or 1
     local avg_playtime = format_duration(avg) or 0
-    local priv_lava, priv_chainsaw, priv_forceload, priv_areas
+    local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
     if privs["adv_buckets"] then priv_lava = "YES" else priv_lava = "NO" end
     if privs["archtec_chainsaw"] then priv_chainsaw = "YES" else priv_chainsaw = "NO" end
     if privs["forceload"] then priv_forceload = "YES" else priv_forceload = "NO" end
     if privs["areas_high_limit"] then priv_areas = "YES" else priv_areas = "NO" end
+    if pauth and pauth.last_login and pauth.last_login ~= -1 then
+        last_login = date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
+    else
+        last_login = "unknown"
+    end
     local formspec = {
         "formspec_version[4]",
-        "size[5,7.5]",
+        "size[5,8]",
         "label[0.375,0.5;", fs_esc("Stats of: " .. target), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
@@ -408,10 +415,11 @@ local function stats(name, param)
         "label[0.375,4.0;", fs_esc("Chatmessages: " .. chatmessages), "]",
         "label[0.375,4.5;", fs_esc("Join date: " .. joined), "]",
         "label[0.375,5.0;", fs_esc("Join count: " .. join_count), "]",
-        "label[0.375,5.5;", fs_esc("Can spill lava: " .. priv_lava), "]",
-        "label[0.375,6.0;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
-        "label[0.375,6.5;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
-        "label[0.375,7.0;", fs_esc("Can create big areas: " .. priv_areas), "]",
+        "label[0.375,5.5;", fs_esc("Last login: " .. last_login), "]",
+        "label[0.375,6.0;", fs_esc("Can spill lava: " .. priv_lava), "]",
+        "label[0.375,6.5;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
+        "label[0.375,7.0;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
+        "label[0.375,7.5;", fs_esc("Can create big areas: " .. priv_areas), "]",
     }
     minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end
