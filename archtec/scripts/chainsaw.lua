@@ -3,8 +3,7 @@ if not minetest.get_modpath("choppy") then return end
 local api = choppy.api
 
 local function joined(name)
-	local string = archtec_playerdata.get(name, "joined")
-	local timestap = archtec_playerdata.string2timestap(string)
+	local timestap = archtec_playerdata.get(name, "first_join")
 	if timestap < (os.time() - 604800) then -- one week ago
 		return true
 	else

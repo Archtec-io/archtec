@@ -28,7 +28,8 @@ local struct = {
     died = 0,
     playtime = 0,
     chatmessages = 0,
-    joined = 0,
+    joined = 0, -- legacy -> use 'first_join'
+    first_join = 0,
     join_count = 0
 }
 
@@ -119,21 +120,18 @@ local function get_session_playtime(name)
 	end
 end
 
-local function month2int(name)
-    local months = {Jan = 01, Feb = 02, Mar = 03, Apr = 04, May = 05, Jun = 06, Jul = 07, Aug = 08, Sep = 09, Oct = 10, Nov = 11, Dec = 12}
-    for key, value in pairs(months) do
-        if key == name then
-            return months[key]
-        end
+local function string2timestap(s)
+    if type(s) ~= "string" then return end
+    local p = "(%a+) (%a+) (%d+) (%d+):(%d+):(%d+) (%d+)"
+    local p2 = "(%a+) (%a+)  (%d+) (%d+):(%d+):(%d+) (%d+)"
+    local _, month, day, hour, min, sec, year = s:match(p)
+    if day == nil then
+        _, month, day, hour, min, sec, year = s:match(p2)
     end
-end
-
-local function string2timestap(monthstring)
-    if type(monthstring) ~= "string" then return end
-    local _, rday, rmonth, ryear, rhour, rminute, rsecond, _ = string.match(monthstring, "(%a+) (%d+) (%a+) (%d+) (%d+):(%d+):(%d+) (%a+)")
-    rmonth = month2int(rmonth) or 01
-    local convertedTimestamp = time({year = ryear, month = rmonth, day = rday, hour = rhour, min = rminute, sec = rsecond})
-    return convertedTimestamp
+    local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4,May = 5,Jun = 6,Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
+    local month = MON[month]
+    local offset = os.time() - os.time(os.date("!*t"))
+    return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
 archtec_playerdata.string2timestap = string2timestap
@@ -249,12 +247,29 @@ minetest.register_on_joinplayer(function(player)
     if name ~= nil then
         stats_load(name)
         stats_mod(name, "join_count", 1)
+        local meta = player:get_meta()
+        -- playtime data migration
         if stats_get(name, "playtime") == 0 then
-            local meta = player:get_meta()
             stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
             meta:set_string("archtec:playtime", nil) -- remove playtime entry
             log_debug("on_joinplayer: removed playtime meta of '" .. name .. "'")
         end
+        -- first join data migration
+		if meta:get_string("archtec:joined") ~= "" then -- move legacy data
+			local string = meta:get_string("archtec:joined")
+			local int = string2timestap(string)
+			stats_set(name, "first_join", int)
+			meta:set_string("archtec:joined", nil)
+		end
+		if stats_get(name, "joined") ~= 0 then
+			local string = stats_get(name, "joined")
+			local int = string2timestap(string)
+			stats_set(name, "first_join", int)
+			stats_set(name, "joined", 0)
+		end
+		if stats_get(name, "first_join") == 0 then
+			stats_set(name, "first_join", os.time())
+		end
     end
 end)
 
@@ -302,6 +317,9 @@ function stats_set(name, key, value)
     if cache[name] == nil then
         log_warning("set: cache for '" .. name .. "' is nil!")
         return false
+    end
+    if value == struct[key] then
+        value = nil
     end
     cache[name][key] = value
     return true
@@ -389,7 +407,7 @@ local function stats(name, param)
     local died = data.died or 0
     local playtime = format_duration(playtime_int) or 0
     local chatmessages = data.chatmessages or 0
-    local joined = data.joined or 0
+    local first_join = date("!%c", data.first_join) or 0
     local join_count = data.join_count or 1
     local avg_playtime = format_duration(avg) or 0
     local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
@@ -413,7 +431,7 @@ local function stats(name, param)
         "label[0.375,3.0;", fs_esc("Playtime: " .. playtime), "]",
         "label[0.375,3.5;", fs_esc("Average playtime: " .. avg_playtime), "]",
         "label[0.375,4.0;", fs_esc("Chatmessages: " .. chatmessages), "]",
-        "label[0.375,4.5;", fs_esc("Join date: " .. joined), "]",
+        "label[0.375,4.5;", fs_esc("Join date: " .. first_join), "]",
         "label[0.375,5.0;", fs_esc("Join count: " .. join_count), "]",
         "label[0.375,5.5;", fs_esc("Last login: " .. last_login), "]",
         "label[0.375,6.0;", fs_esc("Can spill lava: " .. priv_lava), "]",
