@@ -12,6 +12,7 @@ local save_interval = 60
 local floor = math.floor
 local time = os.time
 local date = os.date
+local C = minetest.colorize
 local debug_mode = false
 
 minetest.register_on_mods_loaded(function()
@@ -128,10 +129,10 @@ local function string2timestap(s)
     if day == nil then
         _, month, day, hour, min, sec, year = s:match(p2)
     end
-    local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4,May = 5,Jun = 6,Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
+    local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
     local month = MON[month]
-    local offset = os.time() - os.time(os.date("!*t"))
-    return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
+    local offset = time() - time(date("!*t"))
+    return(time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
 archtec_playerdata.string2timestap = string2timestap
@@ -139,6 +140,7 @@ archtec_playerdata.string2timestap = string2timestap
 -- save data
 local function stats_save(name)
     if not valid_player(name) then return end
+    -- update playtime
     stats_mod(name, "playtime", get_session_playtime(name))
     playtime_current[name] = time()
     local data = cache[name]
@@ -194,7 +196,7 @@ local function stats_load(name)
     file:close()
     local data
     if raw == nil then
-        log_warning("load: file of '" .. name .. "' contains no data!") -- ???
+        log_warning("load: file of '" .. name .. "' contains no data!")
     else
         data = minetest.deserialize(raw)
         if data == nil then
@@ -214,6 +216,7 @@ local function stats_unload(name)
     if not valid_player(name) then return end
     stats_save(name)
     cache[name] = nil
+    playtime_current[name] = nil
 end
 
 local function stats_load_offline(name) -- do not create/change any data of offline players!
@@ -268,7 +271,7 @@ minetest.register_on_joinplayer(function(player)
 			stats_set(name, "joined", 0)
 		end
 		if stats_get(name, "first_join") == 0 then
-			stats_set(name, "first_join", os.time())
+			stats_set(name, "first_join", time())
 		end
     end
 end)
@@ -277,7 +280,6 @@ minetest.register_on_leaveplayer(function(player)
     local name = player:get_player_name()
     if name ~= nil then
         stats_unload(name)
-        playtime_current[name] = nil
     end
 end)
 
@@ -376,21 +378,23 @@ end)
 
 local function stats(name, param)
     local target = param:trim()
-    local data
+    local data, is_online, user
     if target == "" or target == nil then
         target = name
     end
     if not minetest.player_exists(target) or not valid_player(target) then
-        minetest.chat_send_player(name, "[stats]: Unknown player!")
+        minetest.chat_send_player(name, C("#FF0000", "[stats] Unknown player!"))
         return
     end
     if in_cache(target) then
         data = table.copy(cache[target])
+        is_online = true
     else
         data = stats_load_offline(target)
+        is_online = false
     end
     if data == nil then
-        minetest.chat_send_player(name, "[stats]: Can't read stats!")
+        minetest.chat_send_player(name, C("#FF0000", "[stats] Can't read stats!"))
         return
     end
     if data.join_count == nil then
@@ -401,6 +405,8 @@ local function stats(name, param)
     local playtime_int = data.playtime or 1
     local avg = playtime_int / data.join_count or 1
     -- stats
+    if is_online then user = target .. C("#00BD00", " [Online]") else user = target .. C("#FF0000", " [Offline]") end
+    if privs["staff"] then user = user .. C("#FF8800", " [Staff]") end
     local nodes_dug = data.nodes_dug or 0
     local nodes_placed = data.nodes_placed or 0
     local crafted = data.items_crafted or 0
@@ -411,10 +417,10 @@ local function stats(name, param)
     local join_count = data.join_count or 1
     local avg_playtime = format_duration(avg) or 0
     local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
-    if privs["adv_buckets"] then priv_lava = "YES" else priv_lava = "NO" end
-    if privs["archtec_chainsaw"] then priv_chainsaw = "YES" else priv_chainsaw = "NO" end
-    if privs["forceload"] then priv_forceload = "YES" else priv_forceload = "NO" end
-    if privs["areas_high_limit"] then priv_areas = "YES" else priv_areas = "NO" end
+    if privs["adv_buckets"] then priv_lava = C("#00BD00", "YES") else priv_lava = C("#FF0000", "NO") end
+    if privs["archtec_chainsaw"] then priv_chainsaw = C("#00BD00", "YES") else priv_chainsaw = C("#FF0000", "NO") end
+    if privs["forceload"] then priv_forceload = C("#00BD00", "YES") else priv_forceload = C("#FF0000", "NO") end
+    if privs["areas_high_limit"] then priv_areas = C("#00BD00", "YES") else priv_areas = C("#FF0000", "NO") end
     if pauth and pauth.last_login and pauth.last_login ~= -1 then
         last_login = date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
     else
@@ -423,7 +429,7 @@ local function stats(name, param)
     local formspec = {
         "formspec_version[4]",
         "size[5,8]",
-        "label[0.375,0.5;", fs_esc("Stats of: " .. target), "]",
+        "label[0.375,0.5;", fs_esc("Stats of: " .. user), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
         "label[0.375,2.0;", fs_esc("Crafted: " .. crafted), "]",
