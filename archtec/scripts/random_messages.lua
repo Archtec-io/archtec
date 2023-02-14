@@ -13,7 +13,7 @@ random_messages = {
 	"Use '/request_areas_high_limit' if you need more or bigger areas",
 	"You get the 'forceload' privilege automatically when you enter TA3",
 	"To start vote day/night you must have 3 etherium dust in your inventory",
-	"change your PvP state with the sword sysmbol in your inventory",
+	"Change your PvP state with the sword symbol in your inventory",
 }
 
 local function display_random_message(message)
