@@ -1,4 +1,4 @@
-local timeout = 10 -- kick after 30 mins
+local timeout = 1800 -- kick after 30 mins
 local timer = 0
 
 local times = {}
