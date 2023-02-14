@@ -21,7 +21,7 @@ local function override()
                     local pname = placer:get_player_name()
 
                     if not minetest.check_player_privs(pname, "adv_buckets") then
-                        minetest.chat_send_player(pname, "[Liquid Restriction]: 'adv_buckets' priv required to use this node")
+                        minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[Liquid Restriction] 'adv_buckets' priv required to use this node (run /request_lava)"))
                         return
                     else
                         return old_place(itemstack, placer, pointed_thing)

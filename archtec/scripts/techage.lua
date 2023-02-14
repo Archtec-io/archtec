@@ -4,7 +4,7 @@ minetest.override_item("techage:forceload", {
         local pname = placer:get_player_name()
 
         if not minetest.check_player_privs(pname, "forceload") then
-            minetest.chat_send_player(pname, "[Forceload Restriction]: 'forceload' priv required to use this node")
+            minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[Forceload Restriction]: 'forceload' priv required to use this node"))
             return
         else
             return old_on_place(itemstack, placer, pointed_thing)
@@ -18,7 +18,7 @@ minetest.override_item("techage:forceloadtile", {
         local pname = placer:get_player_name()
 
         if not minetest.check_player_privs(pname, "forceload") then
-            minetest.chat_send_player(pname, "[Forceload Restriction]: 'forceload' priv required to use this node")
+            minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[Forceload Restriction]: 'forceload' priv required to use this node"))
             return
         else
             return old_on_place(itemstack, placer, pointed_thing)
@@ -35,8 +35,8 @@ minetest.override_item("techage:ta3_drillbox_pas", {
             local privs = minetest.get_player_privs(pname)
             privs["forceload"] = true
             minetest.set_player_privs(pname, privs)
-            minetest.chat_send_player(pname, "Congratulations! You have been granted the 'forceload' privilege")
-            notifyTeam("[techage] Granted '"..pname.."' the 'forceload' priv")
+            minetest.chat_send_player(pname, minetest.colorize("#00BD00", "Congratulations! You have been granted the 'forceload' privilege"))
+            notifyTeam("[techage] Granted '" .. pname .. "' the 'forceload' priv")
             return old_on_place(itemstack, placer, pointed_thing)
         else
             return old_on_place(itemstack, placer, pointed_thing)

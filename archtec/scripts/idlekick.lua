@@ -1,4 +1,4 @@
-local timeout = 1800 -- kick after 30 mins
+local timeout = 10 -- kick after 30 mins
 local timer = 0
 
 local times = {}
@@ -41,7 +41,7 @@ minetest.register_globalstep(function(dtime)
 		if times[pcheck] < now() - timeout then
 			local name = player:get_player_name()
 			minetest.kick_player(name, "Too long inactive")
-			minetest.chat_send_all(name .. " got kicked! Reason: Too long inactive")
+			minetest.chat_send_all(minetest.colorize("#FF0000", name .. " got kicked! Reason: Too long inactive"))
 			discord.send(":bangbang: " .. name .. " got kicked! Reason: Too long inactive")
 		end
 	end

@@ -50,7 +50,7 @@ local function get_message(death_type)
 end
 
 local function make_death_public(message)
-	minetest.chat_send_all(message)
+	minetest.chat_send_all(minetest.colorize("#666", message))
 	discord.send(":skull_crossbones: " .. message)
 end
 
