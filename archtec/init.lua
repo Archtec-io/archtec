@@ -4,6 +4,7 @@ local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
 
 archtec = {}
 
+dofile(scriptsPath.."common.lua")
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
@@ -45,6 +46,7 @@ dofile(scriptsPath.."pairs_by_key.lua")
 dofile(scriptsPath.."count_objects.lua")
 dofile(scriptsPath.."instrument_mod.lua")
 dofile(scriptsPath.."chainsaw.lua")
+dofile(scriptsPath.."network_info.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
@@ -59,6 +61,15 @@ if http then
     assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
     assert(loadfile(scriptsPath.."/geoip.lua"))(http)
 end
+
+minetest.register_on_mods_loaded(function()
+    if not discord then
+        discord = {}
+        discord.send = function(...)
+            -- dummy function
+        end
+    end
+end)
 
 local after = minetest.get_us_time()
 
