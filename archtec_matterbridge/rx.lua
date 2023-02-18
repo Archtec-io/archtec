@@ -59,10 +59,11 @@ local function handle_data(data)
 			local _, ret_val = commands[data.command].func(data.username, data.params or "")
 			if ret_val then
 				local trans = minetest.get_translated_string("en", ret_val)
-				if data.params == nil then data.params = "" end
-				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " executed '/" .. data.command .. " " .. data.params .. "' via Discord."))
 				discord.send(nil, trans)
 			end
+			if data.params ~= nil then data.params = " " .. data.params end -- space between command and params
+			if data.params == nil then data.params = "" end
+			minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " executed '/" .. data.command .. data.params .. "' via Discord."))
 			minetest.chat_send_player = old_chat_send_player
 		else
 			-- regular user message
