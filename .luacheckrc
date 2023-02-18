@@ -18,7 +18,9 @@ globals = {
 	"ranks",
 	"biome_lib",
 	"stairs",
-	"choppy"
+	"choppy",
+	"archtec_matterbridge",
+	"discord"
 }
 
 read_globals = {
@@ -27,7 +29,6 @@ read_globals = {
 	"dump",
 	"dump2",
 	"minetest",
-	"discord",
 	"xban",
 	"homedecor",
 	"vector",
@@ -41,10 +42,6 @@ read_globals = {
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
-}
-
-files["archtec/scripts/discord_fallback.lua"] = {
-	globals = { "discord" },
 }
 
 files["archtec/scripts/status.lua"] = {
@@ -73,4 +70,12 @@ files["stamina/init.lua"] = {
 
 files["archtec/scripts/mvps_stopper.lua"] = {
 	globals = { "mesecon" },
+}
+
+files["archtec_matterbridge/tx.lua"] = {
+	globals = { "minetest.send_join_message", "minetest.send_leave_message" },
+}
+
+files["archtec_matterbridge/rx.lua"] = {
+	globals = { "minetest.chat_send_player" },
 }

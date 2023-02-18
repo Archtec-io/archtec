@@ -14,7 +14,7 @@ minetest.register_chatcommand("vote_kick", {
 			return
 		end
 
-		discord.send(":warning: **" .. name .. "** started a voting: Kick " .. param)
+		discord.send(nil, ":warning: **" .. name .. "** started a voting: Kick " .. param)
 		vote.new_vote(name, {
 			description = "Kick " .. param,
 			help = "/yes or /no",
@@ -26,20 +26,20 @@ minetest.register_chatcommand("vote_kick", {
 				if result == "yes" then
 					minetest.chat_send_all("Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
 					minetest.kick_player(self.name, "The vote to kick you passed")
-					discord.send("Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
+					discord.send(nil, "Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
 					xban.ban_player(name, "/vote_kick", os.time() + 3600, "vote-kicked")
 				else
 					minetest.chat_send_all("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
-					discord.send("Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
+					discord.send(nil, "Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
 				end
 			end,
 
 			on_vote = function(self, name, value)
 				minetest.chat_send_all(name .. " voted " .. value .. " to '" .. self.description .. "'")
 				if value == "yes" then
-					discord.send(":green_square: **" .. name .. "** voted YES")
+					discord.send(nil, ":green_square: **" .. name .. "** voted YES")
 				else
-					discord.send(":red_square: **" .. name .. "** voted NO")
+					discord.send(nil, ":red_square: **" .. name .. "** voted NO")
 				end
 			end
 		})

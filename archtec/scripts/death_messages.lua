@@ -51,7 +51,7 @@ end
 
 local function make_death_public(message)
 	minetest.chat_send_all(minetest.colorize("#666", message))
-	discord.send(":skull_crossbones: " .. message)
+	discord.send(nil, ":skull_crossbones: " .. message)
 end
 
 minetest.register_on_dieplayer(function(player)

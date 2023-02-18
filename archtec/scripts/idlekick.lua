@@ -42,7 +42,7 @@ minetest.register_globalstep(function(dtime)
 			local name = player:get_player_name()
 			minetest.kick_player(name, "Too long inactive")
 			minetest.chat_send_all(minetest.colorize("#FF0000", name .. " got kicked! Reason: Too long inactive"))
-			discord.send(":bangbang: " .. name .. " got kicked! Reason: Too long inactive")
+			discord.send(nil, ":bangbang: " .. name .. " got kicked! Reason: Too long inactive")
 		end
 	end
 end)

@@ -10,5 +10,5 @@ function notifyTeam(message)
             end
         end
     end
-    discord.send(message, "1002864057398870066")
+    discord.send(nil, message, "log")
 end
