@@ -21,3 +21,22 @@ if minetest.get_modpath("moreblocks") then
 		true
 	)
 end
+
+minetest.register_chatcommand("thankyou", {
+    description = "Shows player stats",
+	privs = {interact = true},
+    func = function(name, param)
+        local target = archtec.get_target(name, param)
+		if target == name then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank yourself"))
+			return
+		end
+		if not archtec.is_online(target) then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank someone who is offline"))
+			return
+		end
+		archtec_playerdata.mod(target, "thank_you", 1)
+		minetest.chat_send_all(minetest.colorize("#00BD00", name .. " said thank you to " .. target))
+		discord.send(nil, ":wave: " .. name .. " said thank you to " .. target)
+    end
+})

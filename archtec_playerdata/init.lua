@@ -31,7 +31,8 @@ local struct = {
     chatmessages = 0,
     joined = 0, -- legacy -> use 'first_join'
     first_join = 0,
-    join_count = 0
+    join_count = 0,
+    thank_you = 0
 }
 
 -- helper funtions
@@ -415,6 +416,7 @@ local function stats(name, param)
     local chatmessages = data.chatmessages or 0
     local first_join = date("!%c", data.first_join) or 0
     local join_count = data.join_count or 1
+    local thank_you = data.thank_you or 0
     local avg_playtime = format_duration(avg) or 0
     local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
     if privs["adv_buckets"] then priv_lava = C("#00BD00", "YES") else priv_lava = C("#FF0000", "NO") end
@@ -428,7 +430,7 @@ local function stats(name, param)
     end
     local formspec = {
         "formspec_version[4]",
-        "size[5,8]",
+        "size[5,8.5]",
         "label[0.375,0.5;", fs_esc("Stats of: " .. user), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
@@ -437,13 +439,14 @@ local function stats(name, param)
         "label[0.375,3.0;", fs_esc("Playtime: " .. playtime), "]",
         "label[0.375,3.5;", fs_esc("Average playtime: " .. avg_playtime), "]",
         "label[0.375,4.0;", fs_esc("Chatmessages: " .. chatmessages), "]",
-        "label[0.375,4.5;", fs_esc("Join date: " .. first_join), "]",
-        "label[0.375,5.0;", fs_esc("Join count: " .. join_count), "]",
-        "label[0.375,5.5;", fs_esc("Last login: " .. last_login), "]",
-        "label[0.375,6.0;", fs_esc("Can spill lava: " .. priv_lava), "]",
-        "label[0.375,6.5;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
-        "label[0.375,7.0;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
-        "label[0.375,7.5;", fs_esc("Can create big areas: " .. priv_areas), "]",
+        "label[0.375,4.5;", fs_esc("Thank you: " .. thank_you), "]",
+        "label[0.375,5.0;", fs_esc("Join date: " .. first_join), "]",
+        "label[0.375,5.5;", fs_esc("Join count: " .. join_count), "]",
+        "label[0.375,6.0;", fs_esc("Last login: " .. last_login), "]",
+        "label[0.375,6.5;", fs_esc("Can spill lava: " .. priv_lava), "]",
+        "label[0.375,7.0;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
+        "label[0.375,7.5;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
+        "label[0.375,8.0;", fs_esc("Can create big areas: " .. priv_areas), "]",
     }
     minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end

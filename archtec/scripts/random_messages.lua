@@ -1,7 +1,7 @@
 local MESSAGE_INTERVAL = 600
 local S = minetest.get_translator("archtec")
 
-random_messages = {
+local random_messages = {
 	"To check someone's stats use '/stats <player_name>'",
 	"Visit our Discord server: https://discord.gg/txCMTMwBWm",
 	"Abusing '/vote_kick' will result in a ban for you",
@@ -14,6 +14,8 @@ random_messages = {
 	"You get the 'forceload' privilege automatically when you enter TA3",
 	"To start vote day/night you must have 3 etherium dust in your inventory",
 	"Change your PvP state with the sword symbol in your inventory",
+	"Say someone thank you with '/thankyou <name>'",
+	"Start a day/night vote with '/vote_day' or '/vote_night'",
 }
 
 local function display_random_message(message)
