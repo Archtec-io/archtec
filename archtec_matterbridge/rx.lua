@@ -20,6 +20,7 @@ local function handle_data(data)
 		elseif string.sub(data.text, 1, 4) == "!cmd" then
 			-- user command
 			if not archtec_matterbridge.staff_user(data.username, data.userid) then
+				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute a command via Discord. (Error: Only staff members can run commands.)"))
 				discord.send(nil, "Error: Only staff members can run commands.")
 				return
 			end
@@ -31,6 +32,7 @@ local function handle_data(data)
 			end
 			-- Check if command exists
 			if data.command == nil or commands[data.command] == nil then
+				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. data.params .. "' via Discord. (Error: Command does not exist.)"))
 				discord.send(nil, "Error: Command does not exist.")
 				return
 			end
@@ -46,6 +48,7 @@ local function handle_data(data)
 					end
 				end
 				privs = privs:sub(1, #privs - 2)
+				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. data.params .. "' via Discord. (Error: Missing privileges)"))
 				discord.send(nil, "Error: Missing privileges: " .. privs or "unknown")
 				return
 			end

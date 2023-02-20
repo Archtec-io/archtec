@@ -113,9 +113,8 @@ end
 
 -- Register commands
 minetest.register_chatcommand("vote_clear", {
-	privs = {
-		staff = true,
-	},
+	description = "Clear the active vote",
+	privs = {staff = true},
 	func = function(name, params)
 		vote.active = {}
 		minetest.chat_send_all(name .. " canceled all active votes!")
@@ -141,11 +140,13 @@ local function vote_yes(name, params)
 end
 
 minetest.register_chatcommand("yes", {
+	description = "Vote yes",
 	privs = {interact = true},
 	func = vote_yes
 })
 
 minetest.register_chatcommand("y", {
+	description = "Vote yes",
 	privs = {interact = true},
 	func = vote_yes
 })
@@ -166,11 +167,13 @@ local function vote_no(name, params)
 end
 
 minetest.register_chatcommand("no", {
+	description = "Vote no",
 	privs = {interact = true},
 	func = vote_no
 })
 
 minetest.register_chatcommand("n", {
+	description = "Vote no",
 	privs = {interact = true},
 	func = vote_no
 })

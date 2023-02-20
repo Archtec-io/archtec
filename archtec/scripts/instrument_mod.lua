@@ -50,7 +50,7 @@ end
 
 minetest.register_chatcommand("instrument_mod", {
     params = "<global_name>",
-    description = "toggles recording timing data for all functions declared in a particular global",
+    description = "Toggles recording timing data for all functions declared in a particular global",
     privs = {staff = true},
     func = function(name, param)
         if not (minetest.global_exists(param) and _G[param]) then

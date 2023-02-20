@@ -130,13 +130,12 @@ end
 
 -- manual query
 minetest.register_chatcommand("geoip", {
-	params = "<playername>",
+	params = "<name>",
 	privs = {staff = true},
 	description = "Does a geoip lookup on the given player",
 	func = function(name, param)
-
 		if not param then
-			return true, "usage: /geoip <playername>"
+			return true, "usage: /geoip <name>"
 		end
 
 		minetest.log("action", "[geoip] Player " .. name .. " queries the player: " .. param)

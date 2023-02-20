@@ -15,51 +15,31 @@ if minetest.get_modpath("unified_inventory") then
 end
 
 minetest.register_chatcommand("pvp_enable", {
-	params = "[<player>]",
+	params = "<name>",
 	description = S("Enables PvP"),
-	privs = {
-		pvp = true
-	},
+	privs = {staff = true},
 	func = function(name, param)
-		local starter = name
-		if param ~= "" then
-			if not minetest.check_player_privs(name, "staff") then
-				return false, S("You cannot change other players PvP state unless you have the 'staff privilege.")
-			end
-			name = param
+		local target = param:trim()
+		if archtec_pvp.is_pvp(target) then
+			minetest.chat_send_player(name, "PvP of " .. target .. " is already enabled")
+			return
 		end
-		if archtec_pvp.is_pvp(name) then
-			return false, S("Your PvP is already enabled.")
-		end
-		minetest.chat_send_player(name, "Enabled PvP of " .. name)
-		if starter ~= name then
-			minetest.chat_send_player(starter, "Enabled PvP of " .. name)
-		end
-		return archtec_pvp.pvp_enable(name)
+		archtec_pvp.pvp_enable(target)
+		minetest.chat_send_player(name, "Enabled PvP of " .. target)
 	end
 })
 
 minetest.register_chatcommand("pvp_disable", {
-	params = "",
+	params = "<name>",
 	description = S("Disables PvP"),
-	privs = {
-		pvp = true
-	},
+	privs = {staff = true},
 	func = function(name, param)
-		local starter = name
-		if param ~= "" then
-			if not minetest.check_player_privs(name, "staff") then
-				return false, S("You cannot change other players PvP state unless you have the 'staff' privilege.")
-			end
-			name = param
+		local target = param:trim()
+		if not archtec_pvp.is_pvp(target) then
+			minetest.chat_send_player(name, "PvP of " .. target .. " is already disabled")
+			return
 		end
-		if not archtec_pvp.is_pvp(name) then
-			return false, S("Your PvP is already disabled.")
-		end
-		minetest.chat_send_player(name, "Disabled PvP of " .. name)
-		if starter ~= name then
-			minetest.chat_send_player(starter, "Disabled PvP of " .. name)
-		end
-		return archtec_pvp.pvp_disable(name)
+		archtec_pvp.pvp_disable(target)
+		minetest.chat_send_player(name, "Disabled PvP of " .. target)
 	end
 })

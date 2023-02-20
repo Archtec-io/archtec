@@ -3,7 +3,7 @@ local function C(text)
 end
 
 minetest.register_chatcommand("network_info", {
-	params = "<playername>",
+	params = "<name>",
 	description = "Get network information of player",
 	privs = {staff = true},
 	func = function(name, param)

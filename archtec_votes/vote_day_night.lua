@@ -3,6 +3,7 @@ local function is_night()
 end
 
 minetest.register_chatcommand("vote_day", {
+	description = "Start a vote to set the time to day",
 	privs = {interact = true},
 	func = function(name)
         if not is_night() then
@@ -48,6 +49,7 @@ minetest.register_chatcommand("vote_day", {
 })
 
 minetest.register_chatcommand("vote_night", {
+    description = "Start a vote to set the time to night",
 	privs = {interact = true},
 	func = function(name)
         if is_night() then

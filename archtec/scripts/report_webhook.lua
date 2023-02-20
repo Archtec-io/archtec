@@ -27,7 +27,9 @@ if webhook_url == nil then
 	minetest.log("warning", "No Discord webhook URL found in the settings. Please specify 'archtec.webhook_url' in the settings. The '/report' command is not available now.")
 else
 	minetest.register_chatcommand("report", {
-		privs = { interact = true },
+		params = "<message>",
+		description = "Report a bug",
+		privs = {interact = true},
 		func = function(name, params)
 			local param = params:trim()
 			if param ~= "" then

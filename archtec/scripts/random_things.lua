@@ -23,7 +23,8 @@ if minetest.get_modpath("moreblocks") then
 end
 
 minetest.register_chatcommand("thankyou", {
-    description = "Shows player stats",
+	params = "<name>",
+    description = "Thank someone",
 	privs = {interact = true},
     func = function(name, param)
         local target = archtec.get_target(name, param)

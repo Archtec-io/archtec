@@ -227,7 +227,7 @@ function spectator_mode.on_respawnplayer(watcher)
 end
 
 minetest.register_chatcommand("watch", {
-	params = "<target name>",
+	params = "<name>",
 	description = "Watch a given player",
 	privs = {staff = true},
 	func = watch,

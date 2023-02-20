@@ -1,5 +1,7 @@
 --vote_kick
 minetest.register_chatcommand("vote_kick", {
+	params = "<name>",
+	description = "Vote kick someone. Warning: Abusing '/vote_kick' will result in a ban for you",
 	privs = {
 		interact = true
 	},

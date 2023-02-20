@@ -8,8 +8,8 @@ end
 
 function archtec.is_online(name)
     local player = minetest.get_player_by_name(name)
-	if not player then
-		return false
-	end
+    if not player then
+        return false
+    end
     return true
 end

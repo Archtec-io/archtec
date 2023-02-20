@@ -17,21 +17,25 @@ local function movePlayerToOldSpawn(playerName)
 end
 
 minetest.register_chatcommand("spawn", {
+	description = "Teleport to spawn",
 	privs = {spawn = true},
 	func = movePlayerToSpawn
 })
 
 minetest.register_chatcommand("s", {
+	description = "Teleport to spawn",
 	privs = {spawn = true},
 	func = movePlayerToSpawn
 })
 
 minetest.register_chatcommand("spawn_old", {
+	description = "Teleport to old spawn",
 	privs = {spawn = true},
 	func = movePlayerToOldSpawn
 })
 
 minetest.register_chatcommand("s_o", {
+	description = "Teleport to old spawn",
 	privs = {spawn = true},
 	func = movePlayerToOldSpawn
 })

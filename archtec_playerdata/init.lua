@@ -452,6 +452,7 @@ local function stats(name, param)
 end
 
 minetest.register_chatcommand("stats", {
+    params = "<name>",
     description = "Shows player stats",
 	privs = {interact = true},
     func = function(name, param)
