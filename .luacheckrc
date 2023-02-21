@@ -79,3 +79,7 @@ files["archtec_matterbridge/tx.lua"] = {
 files["archtec_matterbridge/rx.lua"] = {
 	globals = { "minetest.chat_send_player" },
 }
+
+files["archtec/scripts/common.lua"] = {
+	globals = { "core.kick_player" },
+}

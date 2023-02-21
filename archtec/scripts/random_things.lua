@@ -38,6 +38,6 @@ minetest.register_chatcommand("thankyou", {
 		end
 		archtec_playerdata.mod(target, "thank_you", 1)
 		minetest.chat_send_all(minetest.colorize("#00BD00", name .. " said thank you to " .. target))
-		discord.send(nil, ":wave: " .. name .. " said thank you to " .. target)
+		discord.send(nil, ":wave: **" .. name .. "** said thank you to **" .. target .. "**")
     end
 })

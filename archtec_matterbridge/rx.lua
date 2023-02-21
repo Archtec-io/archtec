@@ -56,13 +56,25 @@ local function handle_data(data)
 			minetest.chat_send_player = function(name, message)
 				old_chat_send_player(name, message)
 				if name == data.username then
-					discord.send(nil, message)
+					local ret = minetest.get_translated_string("en", message)
+					ret = minetest.strip_colors(ret)
+					if string.sub(ret, 1, 1) == "[" then
+						minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (1)")
+					else
+						discord.send(nil, ret)
+					end
 				end
 			end
 			local _, ret_val = commands[data.command].func(data.username, data.params or "")
 			if ret_val then
-				local trans = minetest.get_translated_string("en", ret_val)
-				discord.send(nil, trans)
+				old_chat_send_player(data.username, ret_val)
+				local ret = minetest.get_translated_string("en", ret_val)
+				ret = minetest.strip_colors(ret)
+				if string.sub(ret, 1, 1) == "[" then
+					minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (2)")
+				else
+					discord.send(nil, ret)
+				end
 			end
 			if data.params ~= nil then data.params = " " .. data.params end -- space between command and params
 			if data.params == nil then data.params = "" end

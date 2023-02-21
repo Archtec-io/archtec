@@ -24,7 +24,7 @@ local function check_ip(name, ip, hash)
                 minetest.after(0.01, function()
                     if minetest.get_player_by_name(name) then
                         minetest.log("action", "[archtec_vpn_blocker] kicked '" .. name .. "'")
-                        minetest.kick_player(name, "You are using a proxy, vpn or other hosting services, please disable them to play on this server.")
+                        minetest.kick_player(name, "Please turn off you VPN.")
                     end
                 end)
             end
