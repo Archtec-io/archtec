@@ -58,7 +58,7 @@ local function handle_data(data)
 				if name == data.username then
 					local ret = minetest.get_translated_string("en", message)
 					ret = minetest.strip_colors(ret)
-					if string.sub(ret, 1, 1) == "[" then
+					if string.sub(ret, 1, 9) == "[archtec]" or string.sub(ret, 1, 6) == "[xban]" then
 						minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (1)")
 					else
 						discord.send(nil, ret)
@@ -70,7 +70,7 @@ local function handle_data(data)
 				old_chat_send_player(data.username, ret_val)
 				local ret = minetest.get_translated_string("en", ret_val)
 				ret = minetest.strip_colors(ret)
-				if string.sub(ret, 1, 1) == "[" then
+				if string.sub(ret, 1, 9) == "[archtec]" or string.sub(ret, 1, 6) == "[xban]" then
 					minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (2)")
 				else
 					discord.send(nil, ret)
