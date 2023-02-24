@@ -24,27 +24,18 @@ local function register_drawer(name, def)
 	local def1 = table.copy(def)
 	def1.description = "Fake Drawer"
 	def1.tiles = def.tiles or def.tiles1
-	def1.tiles1 = nil
-	def1.tiles2 = nil
-	def1.tiles4 = nil
 	minetest.register_node(name .. "1", def1)
 
 	-- 1x2 = 2
 	local def2 = table.copy(def)
 	def2.description = "Fake Drawer (1x2)"
 	def2.tiles = def.tiles2
-	def2.tiles1 = nil
-	def2.tiles2 = nil
-	def2.tiles4 = nil
 	minetest.register_node(name .. "2", def2)
 
 	-- 2x2 = 4
 	local def4 = table.copy(def)
 	def4.description = "Fake Drawer (2x2)"
 	def4.tiles = def.tiles4
-	def4.tiles1 = nil
-	def4.tiles2 = nil
-	def4.tiles4 = nil
 	minetest.register_node(name .. "4", def4)
 end
 

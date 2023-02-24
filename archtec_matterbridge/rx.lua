@@ -1,4 +1,5 @@
 local http = ...
+local sub = string.sub
 
 local function handle_data(data)
 	if not data or not data.username or not data.text or not data.gateway or not data.protocol or not data.userid then
@@ -14,10 +15,10 @@ local function handle_data(data)
 		-- discord.send(data.username, data.gateway, data.text)
 	else
 		-- regular text
-		if string.sub(data.text, 1, 7) == "!status" then
+		if sub(data.text, 1, 7) == "!status" then
 			minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " requested the server status via Discord."))
 			discord.send(nil, minetest.get_server_status(nil, false))
-		elseif string.sub(data.text, 1, 4) == "!cmd" then
+		elseif sub(data.text, 1, 4) == "!cmd" then
 			-- user command
 			if not archtec_matterbridge.staff_user(data.username, data.userid) then
 				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute a command via Discord. (Error: Only staff members can run commands.)"))
@@ -25,9 +26,9 @@ local function handle_data(data)
 				return
 			end
 			local commands = minetest.registered_chatcommands
-			local raw = string.sub(data.text, 5)
+			local raw = sub(data.text, 5)
 			data.command, data.params = raw:match("(%a+) (.+)")
-			if data.command == nil or data.command == "" then
+			if data.command == nil or data.command == "" then -- no params; trim
 				data.command = raw:trim()
 			end
 			-- Check if command exists
@@ -58,7 +59,7 @@ local function handle_data(data)
 				if name == data.username then
 					local ret = minetest.get_translated_string("en", message)
 					ret = minetest.strip_colors(ret)
-					if string.sub(ret, 1, 9) == "[archtec]" or string.sub(ret, 1, 6) == "[xban]" then
+					if sub(ret, 1, 9) == "[archtec]" or sub(ret, 1, 6) == "[xban]" then
 						minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (1)")
 					else
 						discord.send(nil, ret)
@@ -70,7 +71,7 @@ local function handle_data(data)
 				old_chat_send_player(data.username, ret_val)
 				local ret = minetest.get_translated_string("en", ret_val)
 				ret = minetest.strip_colors(ret)
-				if string.sub(ret, 1, 9) == "[archtec]" or string.sub(ret, 1, 6) == "[xban]" then
+				if sub(ret, 1, 9) == "[archtec]" or sub(ret, 1, 6) == "[xban]" then
 					minetest.log("warning", "[archtec_matterbridge] Stopped possible notifyTeam leak '" .. ret .. "' (2)")
 				else
 					discord.send(nil, ret)
