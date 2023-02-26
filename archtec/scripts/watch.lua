@@ -167,6 +167,10 @@ local function watch(name_watcher, name_target)
 		return true, "'" .. name_target .. "' is watching " .. original_state[name_target].target .. "'. You may not watch a watcher."
 	end
 
+	if not archtec.is_online(name_watcher) then
+		return true, "Watcher is not online."
+	end
+
 	attach(name_watcher, name_target)
 	return true, "Watching '" .. name_target .. "' at '" .. minetest.pos_to_string(vector.round(target:get_pos()))
 
