@@ -350,6 +350,7 @@ archtec_playerdata.mod = stats_mod
 
 -- stats
 minetest.register_on_dignode(function(_, _, digger)
+    if not digger then return end
     local name = digger:get_player_name()
     if name ~= nil then
         stats_mod(name, "nodes_dug", 1)
@@ -357,6 +358,7 @@ minetest.register_on_dignode(function(_, _, digger)
 end)
 
 minetest.register_on_placenode(function(_, _, placer, _, _, _)
+    if not placer then return end
     local name = placer:get_player_name()
     if name ~= nil then
         stats_mod(name, "nodes_placed", 1)
@@ -364,6 +366,7 @@ minetest.register_on_placenode(function(_, _, placer, _, _, _)
 end)
 
 minetest.register_on_craft(function(_, player, _, _)
+    if not player then return end
     local name = player:get_player_name()
     if name ~= nil then
         stats_mod(name, "items_crafted", 1)
@@ -371,6 +374,7 @@ minetest.register_on_craft(function(_, player, _, _)
 end)
 
 minetest.register_on_dieplayer(function(player, _)
+    if not player then return end
     local name = player:get_player_name()
     if name ~= nil then
         stats_mod(name, "died", 1)
