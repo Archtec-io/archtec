@@ -86,7 +86,7 @@ local function send_death_message(cause, player, killer)
         end
     end
 
-    minetest.chat_send_all(minetest.colorize("#FF0", death_message))
+    minetest.chat_send_all(minetest.colorize("#FF0000", death_message))
     if cause == "pvp" then
 	    discord.send(nil, ":crossed_swords: " .. death_message)
     else

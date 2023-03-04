@@ -65,7 +65,7 @@ function vote.end_vote(voteset)
 		end
 	end
 
-	minetest.log("action", "[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'.")
+	minetest.log("action", "[archtec_votes] Vote '" .. voteset.description .. "' ended with result '" .. result .. "'")
 	if voteset.on_result then
 		voteset:on_result(result, voteset.results)
 	end
@@ -117,7 +117,7 @@ minetest.register_chatcommand("vote_clear", {
 	privs = {staff = true},
 	func = function(name, params)
 		vote.active = {}
-		minetest.chat_send_all(name .. " canceled all active votes!")
+		minetest.chat_send_all(minetest.colorize("#FF0000", name .. " canceled all active votes!"))
 		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes!")
 	end
 })
