@@ -2,6 +2,7 @@
 
 -- luacheck: push no max line length
 local df = {
+	"dragonfire",
 	"296cce39d", -- Fix upstream merge issues
 	"350b6d175", -- Install lua_async dependency
 	"393c83928", -- Don't include client/game.h on server build
@@ -225,7 +226,7 @@ minetest.register_on_joinplayer(function(player)
 
 	notifyTeam("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
 
-	local dfv = version:find("dragonfire") or dfver(version)
+	local dfv = dfver(version)
 	if dfv then
 		local msg = "Unsupported client detected: " .. dfv .. " player: " .. name
 		minetest.log("action", "[df_detect] " .. msg)
