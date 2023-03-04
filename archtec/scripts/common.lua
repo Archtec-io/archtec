@@ -14,6 +14,18 @@ function archtec.is_online(name)
     return true
 end
 
+function archtec.grant_priv(name, priv)
+    local privs = minetest.get_player_privs(name)
+    privs[priv] = true
+    minetest.set_player_privs(name, privs)
+end
+
+function archtec.revoke_priv(name, priv)
+    local privs = minetest.get_player_privs(name)
+    privs[priv] = nil
+    minetest.set_player_privs(name, privs)
+end
+
 function core.kick_player(player_name, reason)
     if type(reason) == "string" then
         reason = "Kicked: " .. reason

@@ -9,7 +9,6 @@ local random_messages = {
 	"If you find a bug use '/report <message>'",
 	"Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)",
 	"Change the color of your name with '/namecolor <color>'",
-	"Use '/request_lava' if you want to place lava buckets",
 	"Use '/request_areas_high_limit' if you need more or bigger areas",
 	"You get the 'forceload' privilege automatically when you enter TA3",
 	"To start vote day/night you must have 3 etherium dust in your inventory",

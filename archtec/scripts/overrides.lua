@@ -11,12 +11,6 @@ if minetest.get_modpath("digilines") then
     })
 end
 
-if minetest.get_modpath("itemframes") then
-	minetest.override_item("itemframes:pedestal", {
-		tiles = {"itemframes_pedestal_new.png"},
-    })
-end
-
 if minetest.get_modpath("fireworkz") then
 	minetest.override_item("fireworkz:launcher", {
 		groups = {cracky = 2},
@@ -47,4 +41,18 @@ if minetest.get_modpath("3d_armor") then
 	minetest.override_item("default:torch", {damage_per_second = 0})
 	minetest.override_item("default:torch_wall", {damage_per_second = 0})
 	minetest.override_item("default:torch_ceiling", {damage_per_second = 0})
+end
+
+if minetest.get_modpath("homedecor_wardrobe") then
+	minetest.override_item("homedecor:wardrobe", {
+		on_construct = function()
+		end,
+		on_place = function(itemstack, placer, pointed_thing)
+			return homedecor.stack_vertically(itemstack, placer, pointed_thing, itemstack:get_name(), "placeholder")
+		end,
+		can_dig = function(pos,player)
+			local meta = minetest.get_meta(pos)
+			return meta:get_inventory():is_empty("main")
+		end,
+	})
 end

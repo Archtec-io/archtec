@@ -1,6 +1,6 @@
 local before = minetest.get_us_time()
 local modPath = minetest.get_modpath(minetest.get_current_modname())
-local scriptsPath = modPath..DIR_DELIM.."scripts"..DIR_DELIM
+local scriptsPath = modPath .. DIR_DELIM .. "scripts" .. DIR_DELIM
 
 archtec = {}
 
@@ -16,12 +16,10 @@ dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."skybox.lua")
-dofile(scriptsPath.."homedecor_wardrobe.lua")
 if minetest.get_modpath("mesecons") then
     dofile(scriptsPath.."mvps_stopper.lua")
 end
 dofile(scriptsPath.."death_messages.lua")
--- dofile(scriptsPath.."zipper_detect.lua")
 dofile(scriptsPath.."buckets.lua")
 dofile(scriptsPath.."redef.lua")
 dofile(scriptsPath.."run_lua_code.lua")

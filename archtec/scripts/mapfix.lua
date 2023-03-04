@@ -8,8 +8,6 @@ local function mapfix(minp, maxp)
 end
 
 local default_size = 24
-local mathmax = math.max
-local mathfloor = math.floor
 
 minetest.register_chatcommand("mapfix", {
 	privs = {staff=true},
@@ -25,7 +23,7 @@ minetest.register_chatcommand("mapfix", {
 
 		minetest.log("action", name .. " uses mapfix at " .. minetest.pos_to_string(vector.round(pos)) .. " with radius " .. size)
 
-		size = mathmax(mathfloor(size - 8), 0) -- When passed to get_voxel_manip, positions are rounded up, to a multiple of 16 nodes in each direction. By subtracting 8 it's rounded to the nearest chunk border. max is used to avoid negative radius.
+		size = math.max(math.floor(size - 8), 0) -- When passed to get_voxel_manip, positions are rounded up, to a multiple of 16 nodes in each direction. By subtracting 8 it's rounded to the nearest chunk border. max is used to avoid negative radius.
 
 		local minp = vector.subtract(pos, size)
 		local maxp = vector.add(pos, size)

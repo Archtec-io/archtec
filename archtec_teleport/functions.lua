@@ -12,8 +12,8 @@ function archtec_teleport.tpr_teleport_player()
 	target_coords = source:get_pos()
 	local target_sound = target:get_pos()
 	target:set_pos(archtec_teleport.find_free_position_near(target_coords))
-	minetest.sound_play("tpr_warp", {pos = target_coords, gain = 0.5, max_hear_distance = 10})
-	minetest.sound_play("tpr_warp", {pos = target_sound, gain = 0.5, max_hear_distance = 10})
+	minetest.sound_play("tpr_warp", {pos = target_coords, gain = 0.5, max_hear_distance = 10}, true)
+	minetest.sound_play("tpr_warp", {pos = target_sound, gain = 0.5, max_hear_distance = 10}, true)
 end
 
 function archtec_teleport.find_free_position_near(pos)

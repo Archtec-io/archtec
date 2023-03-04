@@ -13,7 +13,7 @@ end
 minetest.register_chatcommand("lua", {
 	params = "<code>",
 	description = "Executes <code> as a Lua chunk in the global namespace",
-	privs = {server=true},
+	privs = {staff = true},
 	parse = function(param)
 		return true, param
 	end,
