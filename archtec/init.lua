@@ -63,7 +63,7 @@ if http then
 end
 
 minetest.register_on_mods_loaded(function()
-    if not discord then
+    if not minetest.global_exists("discord") then
         discord = {}
         discord.send = function(...)
             -- dummy function
