@@ -11,7 +11,7 @@ local function handle_data(data)
 		discord.send(nil, ":speech_left: " .. ('%s *%s*'):format(data.username, data.text))
 	elseif data.event == "join_leave" then
 		return
-		-- join/leave message, from irc for example
+		-- join/leave message, from irc for example; ignore
 		-- discord.send(data.username, data.gateway, data.text)
 	else
 		-- regular text
@@ -28,12 +28,12 @@ local function handle_data(data)
 			local commands = minetest.registered_chatcommands
 			local raw = sub(data.text, 5)
 			data.command, data.params = raw:match("(%a+) (.+)")
-			if data.command == nil or data.command == "" then -- no params; trim
+			if data.params == nil or data.params == "" then -- no params; trim
 				data.command = raw:trim()
 			end
 			-- Check if command exists
 			if data.command == nil or commands[data.command] == nil then
-				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. data.params .. "' via Discord. (Error: Command does not exist.)"))
+				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. (data.params or "") .. "' via Discord. (Error: Command does not exist.)"))
 				discord.send(nil, "Error: Command does not exist.")
 				return
 			end
@@ -49,8 +49,8 @@ local function handle_data(data)
 					end
 				end
 				privs = privs:sub(1, #privs - 2)
-				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. data.params .. "' via Discord. (Error: Missing privileges)"))
-				discord.send(nil, "Error: Missing privileges: " .. privs or "unknown")
+				minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " tried to execute '/" .. data.command .. (data.params or "") .. "' via Discord. (Error: Missing privileges: " .. (privs or "unknown") .. " )"))
+				discord.send(nil, "Error: Missing privileges: " .. (privs or "unknown"))
 				return
 			end
 			local old_chat_send_player = minetest.chat_send_player
