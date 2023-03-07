@@ -36,7 +36,7 @@ minetest.register_chatcommand("vote_kick", {
 
 			on_result = function(self, _, results)
 				local pcount, result = #minetest.get_connected_players()
-				for i = pcount - #results.yes, 1, -1 do
+				for i = pcount - #results.yes - #results.no, 1, -1 do
 					table.insert(results["no"], "")
 				end
 
