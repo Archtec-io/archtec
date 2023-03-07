@@ -31,7 +31,7 @@ minetest.register_chatcommand("vote_day", {
             on_result = function(self, result, results)
                 if result == "yes" then
                     minetest.chat_send_all("Vote passed, " .. minetest.colorize("#088A08", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time will be set to day")
-                    minetest.set_timeofday(0.3)
+                    minetest.set_timeofday(0.23) -- same as beds
                 else
                     minetest.chat_send_all("Vote failed, " .. minetest.colorize("#088A08", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time won't be set to day")
                 end

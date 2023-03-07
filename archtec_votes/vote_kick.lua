@@ -21,6 +21,11 @@ minetest.register_chatcommand("vote_kick", {
 			return
 		end
 
+		if #minetest.get_connected_players() <= 3 then -- min 4 players
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Not enough players online to start a vote-kick!"))
+			return
+		end
+
 		discord.send(nil, ":warning: **" .. name .. "** started a voting: Kick " .. param)
 		vote.new_vote(name, {
 			description = "Kick " .. param,
@@ -29,7 +34,18 @@ minetest.register_chatcommand("vote_kick", {
 			duration = 60,
 			perc_needed = 0.8,
 
-			on_result = function(self, result, results)
+			on_result = function(self, _, results)
+				local pcount, result = #minetest.get_connected_players()
+				for i = pcount - #results.yes, 1, -1 do
+					table.insert(results["no"], "")
+				end
+
+				if #results.yes / pcount > 0.8 then
+					result = "yes"
+				else
+					result = "no"
+				end
+
 				if result == "yes" then
 					minetest.chat_send_all("Vote passed, " .. minetest.colorize("#088A08", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
 					discord.send(nil, ":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
