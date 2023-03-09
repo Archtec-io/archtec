@@ -4,13 +4,13 @@ local webhook_url = minetest.settings:get("archtec.webhook_url")
 local function send_report(name, report)
 	local player = minetest.get_player_by_name(name)
 	local pos = tostring(player:get_pos())
-    local json = minetest.write_json({
+	local json = minetest.write_json({
 		embeds = {{
 			title = "Report by " .. name .. ":",
 			description = report .. "\n\n**Position:**\n" .. pos,
 		}}
-    })
-    if json == nil then
+	})
+	if json == nil then
 		minetest.log("warning", "[archtec] Failed to create JSON for '/report'. Report parameters: " .. dump(report))
 		return false
 	else

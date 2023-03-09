@@ -45,6 +45,7 @@ dofile(scriptsPath.."count_objects.lua")
 dofile(scriptsPath.."instrument_mod.lua")
 dofile(scriptsPath.."chainsaw.lua")
 dofile(scriptsPath.."network_info.lua")
+dofile(scriptsPath.."recipe_check.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")

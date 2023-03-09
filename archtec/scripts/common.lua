@@ -38,3 +38,12 @@ function core.kick_player(player_name, reason)
     end
     return core.disconnect_player(player_name, reason)
 end
+
+function archtec.get_modname_by_itemname(itemname)
+    local delimpos = string.find(itemname, ":")
+    if delimpos then
+        return string.sub(itemname, 1,  delimpos - 1)
+    else
+        return nil
+    end
+end
