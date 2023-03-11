@@ -56,3 +56,18 @@ if minetest.get_modpath("homedecor_wardrobe") then
 		end,
 	})
 end
+
+if minetest.get_modpath("xdecor") then
+	minetest.override_item("xdecor:mailbox", {
+		can_dig = function(pos, player)
+			local meta = minetest.get_meta(pos)
+			local owner = meta:get_string("owner")
+			local player_name = player and player:get_player_name()
+			local inv = meta:get_inventory()
+			if minetest.check_player_privs(player_name, {staff = true}) then
+				return inv:is_empty("mailbox")
+			end
+			return inv:is_empty("mailbox") and player_name == owner
+		end,
+	})
+end
