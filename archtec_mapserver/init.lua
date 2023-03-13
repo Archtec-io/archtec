@@ -5,7 +5,7 @@
 ]]--
 
 mapserver = {
-	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 5,
+	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 12.3,
 	bridge = {}
 }
 

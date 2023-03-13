@@ -3,7 +3,12 @@ local webhook_url = minetest.settings:get("archtec.webhook_url")
 
 local function send_report(name, report)
 	local player = minetest.get_player_by_name(name)
-	local pos = tostring(player:get_pos())
+	local pos
+	if player then
+		pos = tostring(player:get_pos())
+	else
+		pos = "unknown"
+	end
 	local json = minetest.write_json({
 		embeds = {{
 			title = "Report by " .. name .. ":",

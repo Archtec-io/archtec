@@ -2,13 +2,24 @@ local timeout = 1800 -- kick after 30 mins
 local timer = 0
 
 local times = {}
+local tag = {}
 
 local function now() return minetest.get_us_time() / 1000000 end
-local function bumpn(player) times[player] = now() return player end
+local function bumpn(name) times[name] = now() return name end
 
 local function bump(player)
-	if not (player) then return end
-	return bumpn(player)
+	if not player then return end
+	local name = player:get_player_name()
+	return bumpn(name)
+end
+
+local function get_nametag(name, player)
+	if not player then return end
+	local att = player:get_nametag_attributes()
+	if att.text == "" or att.text == nil then
+		att.text = name
+	end
+	return att.text
 end
 
 minetest.register_on_joinplayer(function(player) return bump(player) end)
@@ -19,28 +30,42 @@ minetest.register_on_chat_message(function(player) bumpn(player) end)
 minetest.register_on_craft(function(_, player) bump(player) end)
 minetest.register_on_player_inventory_action(function(player) return bump(player) end)
 
-local looks = {}
-local function checkplayer(player)
-	local look = player:get_look_dir()
-	local old = looks[player]
-	looks[player] = look
-	if player:get_player_control_bits() ~= 0 then return bumpn(player) end
-	if not (old and vector.equals(old, look)) then return bumpn(player) end
-	return player
-end
-
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
-	if timer < 2 then
+	if timer < 6 then
 		return
 	end
 	timer = 0
 
 	for _, player in pairs(minetest.get_connected_players()) do
-		local pcheck = checkplayer(player)
-		if times[pcheck] < now() - timeout then
-			local name = player:get_player_name()
+		local name = player:get_player_name()
+		local time = now()
+		if times[name] < time - timeout then
 			minetest.kick_player(name, "Too long inactive")
+			return
+		end
+		if times[name] < time - 300 then
+			if not tag[name] then
+				tag[name] = true
+				local nametag = get_nametag(name, player) .. " (idle)"
+				player:set_nametag_attributes({
+					text = nametag
+				})
+			end
+		elseif tag[name] == true then
+			tag[name] = nil
+			local nametag = get_nametag(name, player)
+			nametag = string.sub(nametag, 1, #nametag - 7)
+			player:set_nametag_attributes({
+				text = nametag
+			})
 		end
 	end
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	if not player then return end
+	local name = player:get_player_name()
+	times[name] = nil
+	tag[name] = nil
 end)

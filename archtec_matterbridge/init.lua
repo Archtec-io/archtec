@@ -14,6 +14,10 @@ archtec_matterbridge = {
 	}
 }
 
+if not archtec_matterbridge.token then
+	error("[archtec_matterbridge] No token provided!")
+end
+
 function archtec_matterbridge.staff_user(name, id)
 	if archtec_matterbridge.allowed_users[name] == id then
 		return true

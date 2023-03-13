@@ -83,3 +83,7 @@ files["archtec_matterbridge/rx.lua"] = {
 files["archtec/scripts/common.lua"] = {
 	globals = { "core.kick_player" },
 }
+
+files["archtec/scripts/overrides.lua"] = {
+	globals = { "minetest.registered_entities" },
+}

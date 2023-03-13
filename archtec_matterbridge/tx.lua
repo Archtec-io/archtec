@@ -31,20 +31,21 @@ minetest.override_chatcommand("me", {
 })
 
 -- join player message
+local old_join = minetest.send_join_message
 function minetest.send_join_message(player_name)
-	minetest.chat_send_all("*** " .. player_name .. " joined the game. ")
 	discord.send(nil, ":information_source: " .. player_name .. " joined the game.")
+	old_join(player_name)
 end
 
 -- leave player message
+local old_leave = minetest.send_leave_message
 function minetest.send_leave_message(player_name, timed_out)
 	if timed_out then
-		minetest.chat_send_all("*** " .. player_name .. " lost the connection...")
 		discord.send(nil, ":information_source: " .. player_name .. " lost the connection...")
 	else
-		minetest.chat_send_all("*** " .. player_name .. " left the game.")
 		discord.send(nil, ":information_source: " .. player_name .. " left the game.")
 	end
+	old_leave(player_name, timed_out)
 end
 
 -- initial message on start

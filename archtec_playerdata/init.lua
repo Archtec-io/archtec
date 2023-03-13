@@ -420,7 +420,7 @@ local function stats(name, param)
     local died = data.died or 0
     local playtime = format_duration(playtime_int) or 0
     local chatmessages = data.chatmessages or 0
-    local first_join = date("!%c", data.first_join) or 0
+    local first_join = date("!%Y-%m-%dT%H:%M:%SZ", data.first_join) .. " UTC"
     local join_count = data.join_count or 1
     local thank_you = data.thank_you or 0
     local avg_playtime = format_duration(avg) or 0
