@@ -21,7 +21,7 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
--- struct: add new keys with default/fallback values! (Set always 0 as fallback!)
+-- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
 local struct = {
     nodes_dug = 0,
     nodes_placed = 0,
@@ -29,7 +29,7 @@ local struct = {
     died = 0,
     playtime = 0,
     chatmessages = 0,
-    joined = 0, -- legacy -> use 'first_join'
+    -- joined = 0, -- legacy -> use 'first_join'
     first_join = 0,
     join_count = 0,
     thank_you = 0
@@ -133,6 +133,7 @@ local function string2timestap(s)
     local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
     local month = MON[month]
     local offset = time() - time(date("!*t"))
+    -- Todo: fix possible crashes here
     return(time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
@@ -312,26 +313,23 @@ minetest.register_on_joinplayer(function(player)
     if name ~= nil then
         stats_load(name)
         stats_mod(name, "join_count", 1)
-        local meta = player:get_meta()
         -- playtime data migration
         if stats_get(name, "playtime") == 0 then
             stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
-            meta:set_string("archtec:playtime", nil) -- remove playtime entry
-            log_debug("on_joinplayer: removed playtime meta of '" .. name .. "'")
+            player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
+            log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
         end
         -- first join data migration
-		if meta:get_string("archtec:joined") ~= "" then -- move legacy data
-			local string = meta:get_string("archtec:joined")
-			local int = string2timestap(string)
-			stats_set(name, "first_join", int)
-			meta:set_string("archtec:joined", nil)
+		if stats_get(name, "first_join") == 0 then -- move legacy data
+			local string = player:get_meta():get_string("archtec:joined")
+            if string ~= "" or string == nil then
+			    local int = string2timestap(string)
+			    stats_set(name, "first_join", int)
+			    player:get_meta():set_string("archtec:joined", nil)
+                log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")
+            end
 		end
-		if stats_get(name, "joined") ~= 0 then
-			local string = stats_get(name, "joined")
-			local int = string2timestap(string)
-			stats_set(name, "first_join", int)
-			stats_set(name, "joined", 0)
-		end
+        -- add first join
 		if stats_get(name, "first_join") == 0 then
 			stats_set(name, "first_join", time())
 		end
@@ -465,3 +463,38 @@ minetest.register_chatcommand("stats", {
         stats(name, param)
     end,
 })
+
+
+--[[
+Code example to migrate a key
+local updated = 0
+
+local function legacy_migrate_join_date(name)
+    stats_load(name)
+    local joined = stats_get(name, "joined")
+    if joined ~= 0 then
+        local int = string2timestap(joined)
+        stats_set(name, "first_join", int)
+        stats_set(name, "joined", 0)
+        updated = updated + 1
+        stats_unload(name)
+    end
+end
+
+local function migrate()
+    local files = minetest.get_dir_list(datadir)
+    for _, file in pairs(files) do
+        local name = string.sub(file, 1, #file - 4)
+        legacy_migrate_join_date(name)
+    end
+    print(updated)
+end
+
+minetest.register_chatcommand("stats_migrate", {
+	privs = {server = true},
+    func = function(name, param)
+        migrate()
+    end,
+})
+]]--
+
