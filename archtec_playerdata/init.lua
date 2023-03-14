@@ -17,8 +17,8 @@ local debug_mode = false
 
 minetest.register_on_mods_loaded(function()
     if not minetest.mkdir(datadir) then
-		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
-	end
+        error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
+    end
 end)
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
@@ -100,9 +100,9 @@ local function divmod(a, b)
 end
 
 local function format_duration(seconds)
-	local display_hours, seconds_left = divmod(seconds, 3600)
-	local display_minutes, display_seconds = divmod(seconds_left, 60)
-	return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
+    local display_hours, seconds_left = divmod(seconds, 3600)
+    local display_minutes, display_seconds = divmod(seconds_left, 60)
+    return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
 end
 
 local function in_cache(name)
@@ -115,11 +115,11 @@ local function in_cache(name)
 end
 
 local function get_session_playtime(name)
-	if playtime_current[name] then
-		return time() - playtime_current[name]
-	else
-		return 0
-	end
+    if playtime_current[name] then
+        return time() - playtime_current[name]
+    else
+        return 0
+    end
 end
 
 local function string2timestap(s)
@@ -323,16 +323,16 @@ minetest.register_on_joinplayer(function(player)
 		if stats_get(name, "first_join") == 0 then -- move legacy data
 			local string = player:get_meta():get_string("archtec:joined")
             if string ~= "" or string == nil then
-			    local int = string2timestap(string)
-			    stats_set(name, "first_join", int)
-			    player:get_meta():set_string("archtec:joined", nil)
+                local int = string2timestap(string)
+                stats_set(name, "first_join", int)
+                player:get_meta():set_string("archtec:joined", nil)
                 log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")
             end
-		end
+        end
         -- add first join
-		if stats_get(name, "first_join") == 0 then
-			stats_set(name, "first_join", time())
-		end
+        if stats_get(name, "first_join") == 0 then
+            stats_set(name, "first_join", time())
+        end
     end
 end)
 
