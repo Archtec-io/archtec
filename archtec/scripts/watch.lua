@@ -81,7 +81,7 @@ local function detach(name_watcher)
 		makes_footstep_sound = state.makes_footstep_sound,
 		collisionbox = state.collisionbox,
 	})
-	ranks.update_nametag(name_watcher)
+	archtec.ranks_update_nametag(watcher, false)
 
 	-- restore privs
 	local privs = minetest.get_player_privs(name_watcher)
