@@ -27,7 +27,7 @@ local function handle_data(data)
 			end
 			local commands = minetest.registered_chatcommands
 			local raw = sub(data.text, 5)
-			data.command, data.params = raw:match("(%a+) (.+)")
+			data.command, data.params = raw:match("([^ ]+) *(.*)")
 			if data.params == nil or data.params == "" then -- no params; trim
 				data.command = raw:trim()
 			end
