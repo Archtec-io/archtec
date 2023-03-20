@@ -6,84 +6,87 @@ Modified by Niklp and debagos (Juri)
 --]]
 
 local messages = {}
+local S = minetest.get_translator("archtec")
 
 -- Fall damage
 messages.fall = {
-    "1 hit the ground too hard",
-    "1 jumped off a cliff",
-    "1 thought water canceled fall damage",
-    "1 fell and couldn't get back up"
+    "@1 hit the ground too hard",
+    "@1 jumped off a cliff",
+    "@1 thought water canceled fall damage",
+    "@1 fell and couldn't get back up"
 }
 
 -- Burning death messages
 messages.burn = {
-    "1 burned to a crisp.",
-    "1 got a little too warm.",
-    "1 got too close to the camp fire.",
-    "1 just got roasted, hotdog style.",
-    "1 got burned up. More light that way."
+    "@1 burned to a crisp.",
+    "@1 got a little too warm.",
+    "@1 got too close to the camp fire.",
+    "@1 just got roasted, hotdog style.",
+    "@1 got burned up. More light that way."
 }
 
 -- Drowning
 messages.drown = {
-    "1 drowned.",
-    "1 ran out of air.",
-    "1 failed at swimming lessons.",
-    "1 tried to impersonate an anchor.",
-    "1 forgot he wasn't a fish.",
-    "1 blew one too many bubbles."
+    "@1 drowned.",
+    "@1 ran out of air.",
+    "@1 failed at swimming lessons.",
+    "@1 tried to impersonate an anchor.",
+    "@1 forgot he wasn't a fish.",
+    "@1 blew one too many bubbles."
 }
 
 -- Burning in lava
 messages.lava = {
-    "1 melted into a ball of fire.",
-    "1 thought lava was cool.",
-    "1 melted into a ball of fire.",
-    "1 couldn't resist that warm glow of lava.",
-    "1 dug straight down.",
-    "1 didn't know lava was hot."
+    "@1 melted into a ball of fire.",
+    "@1 thought lava was cool.",
+    "@1 melted into a ball of fire.",
+    "@1 couldn't resist that warm glow of lava.",
+    "@1 dug straight down.",
+    "@1 didn't know lava was hot."
 }
 
 -- Killed by other player
 messages.pvp = {
-    "1 was slain by 2.",
-    "1 was killed by 2.",
-    "1 was put to the sword by 2.",
-    "1 lost a PVP battle to 2."
+    "@1 was slain by @2.",
+    "@1 was killed by @2.",
+    "@1 was put to the sword by @2.",
+    "@1 lost a PVP battle to @2."
 }
 
 -- Killed by mob
 messages.mob = {
-    "1 was slain by 2.",
-    "1 was killed by 2.",
-    "1 got on 2's last nerve.",
-    "1 forgot to feed 2."
+    "@1 was slain by @2.",
+    "@1 was killed by @2.",
+    "@1 got on @2's last nerve.",
+    "@1 forgot to feed @2."
 }
 
 -- Everything else
 messages.other = {
-    "1 died.",
-    "1 did something fatal.",
-    "1 gave up on life.",
-    "1 is somewhat dead now.",
-    "1 passed out -permanently."
+    "@1 died.",
+    "@1 did something fatal.",
+    "@1 gave up on life.",
+    "@1 is somewhat dead now.",
+    "@1 passed out -permanently."
 }
 
 local function send_death_message(cause, player, killer)
     local random_selection = messages[cause][math.random(1, #messages[cause])]
-    local death_message = string.gsub(random_selection, "1", player:get_player_name())
+    local name = player:get_player_name()
+    local death_message
 
     if killer then
         if killer:is_player() then
-            death_message = string.gsub(death_message, "2", killer:get_player_name())
+            death_message = S(random_selection, name, killer:get_player_name())
         else
             -- Get entity name, excluding mod name ("mymod:enemy" -> "enemy")
             local entity_name = killer:get_luaentity().name
             local index, _ = string.find(entity_name, ":")
             local entity_name = string.sub(entity_name, index + 1)
-
-            death_message = string.gsub(death_message, "2", entity_name)
+            death_message = S(random_selection, name, entity_name)
         end
+    else
+        death_message = S(random_selection, name)
     end
 
     minetest.chat_send_all(minetest.colorize("#FF0000", death_message))
