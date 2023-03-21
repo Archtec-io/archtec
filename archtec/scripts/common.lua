@@ -47,3 +47,13 @@ function archtec.get_modname_by_itemname(itemname)
         return nil
     end
 end
+
+function archtec.string_to_table(str, delim)
+	assert(type(str) == "string")
+	delim = delim or ','
+	local table = {}
+	for _, name in pairs(string.split(str, delim)) do
+		table[name:trim()] = name:trim()
+	end
+	return table
+end
