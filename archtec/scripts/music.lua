@@ -66,7 +66,7 @@ minetest.register_chatcommand("music_stop", {
 	privs = {staff = true},
 	func = function(name, param)
         if param:trim() == "" or param:trim() == nil then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] No player names provided!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_stop] No player names provided!"))
             return
         end
         local players = archtec.string_to_table(param)

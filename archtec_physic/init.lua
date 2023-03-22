@@ -135,6 +135,8 @@ player_monoids.speed = monoid({
 		local ov = player:get_physics_override()
 		ov.speed = multiplier
 		player:set_physics_override(ov)
+		local name = player:get_player_name()
+		print("speed: " .. name .. ": " .. player:get_physics_override().speed)
 	end,
 })
 
@@ -147,6 +149,8 @@ player_monoids.jump = monoid({
 		local ov = player:get_physics_override()
 		ov.jump = multiplier
 		player:set_physics_override(ov)
+		local name = player:get_player_name()
+		print("jump: " .. name .. ": " .. player:get_physics_override().jump)
 	end,
 })
 
@@ -159,5 +163,7 @@ player_monoids.gravity = monoid({
 		local ov = player:get_physics_override()
 		ov.gravity = multiplier
 		player:set_physics_override(ov)
+		local name = player:get_player_name()
+		print("gravity: " .. name .. ": " .. player:get_physics_override().gravity)
 	end,
 })
