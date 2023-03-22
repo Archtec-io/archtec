@@ -54,7 +54,7 @@ minetest.register_chatcommand("music_play", {
                 return
             end
             music.play(player, title)
-            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw))
+            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw:trim()))
         end
 
 	end
@@ -76,7 +76,7 @@ minetest.register_chatcommand("music_stop", {
                 return
             end
             music.stop(player)
-            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param))
+            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
         end
 	end
 })
@@ -85,7 +85,7 @@ minetest.register_chatcommand("music_list", {
 	description = "Returns a list with all available songs",
 	privs = {staff = true},
 	func = function(name)
-        minetest.chat_send_player(name, minetest.colorize("#00BD00", get_music_list()))
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_list] " .. get_music_list()))
 	end
 })
 
