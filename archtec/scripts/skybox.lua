@@ -10,6 +10,12 @@ local function allow_skybox_change(name)
 	return true
 end
 
+if not auroras then
+	allow_skybox_change = function(name)
+		return true
+	end
+end
+
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
 	if timer < 6 then

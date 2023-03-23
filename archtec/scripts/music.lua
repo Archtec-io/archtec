@@ -54,8 +54,8 @@ minetest.register_chatcommand("music_play", {
                 return
             end
             music.play(player, title)
-            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw:trim()))
         end
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw:trim()))
 
 	end
 })
@@ -76,8 +76,8 @@ minetest.register_chatcommand("music_stop", {
                 return
             end
             music.stop(player)
-            minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
         end
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
 	end
 })
 
