@@ -34,7 +34,7 @@ end
 
 minetest.register_chatcommand("music_play", {
 	description = "Play music to specified players",
-    params = "<title> <name>",
+    params = "<title> <name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
         if param:trim() == "" or param:trim() == nil then
@@ -65,7 +65,7 @@ minetest.register_chatcommand("music_play", {
 
 minetest.register_chatcommand("music_stop", {
 	description = "Stop music for specified players",
-    params = "<name>",
+    params = "<name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
         if param:trim() == "" or param:trim() == nil then
@@ -80,7 +80,7 @@ minetest.register_chatcommand("music_stop", {
             end
             music.stop(player)
             if name ~= player then
-                minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] " .. name .. " stopped your music"))
+                minetest.chat_send_player(player, minetest.colorize("#00BD00", "[music_stop] " .. name .. " stopped your music"))
             end
         end
         minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
