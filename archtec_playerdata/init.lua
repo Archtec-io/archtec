@@ -66,14 +66,6 @@ local function valid_player(name)
     end
 end
 
-local function is_online(name)
-    local player = minetest.get_player_by_name(name)
-    if not player then
-        return false
-    end
-    return true
-end
-
 local function stats_file_exsist(name)
     if not valid_player(name) then return end
     local file = io.open(datadir .. "/" .. name .. ".txt", "r")
@@ -222,19 +214,9 @@ local function stats_get(name, key)
     end
     local val
     if cache[name] == nil then
-        log_debug("get: cache for '" .. name .. "' is nil; loading")
-        if is_online(name) then
-            stats_load(name)
-        else
-            log_warning("get: tried to get data of offline player!")
-            return
-        end
-        if cache[name] == nil then -- check again
-            log_warning("get: cache for '" .. name .. "' is nil!")
-            return
-        end
+        log_warning("get: cache for '" .. name .. "' is nil!")
+        return
     end
-
     if cache[name][key] == nil then
         val = struct[key]
     else

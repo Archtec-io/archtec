@@ -54,6 +54,9 @@ minetest.register_chatcommand("music_play", {
                 return
             end
             music.play(player, title)
+            if name ~= player then
+                minetest.chat_send_player(player, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to you (started by " .. name .. ")"))
+            end
         end
         minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw:trim()))
 
@@ -76,6 +79,9 @@ minetest.register_chatcommand("music_stop", {
                 return
             end
             music.stop(player)
+            if name ~= player then
+                minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] " .. name .. " stopped your music"))
+            end
         end
         minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
 	end
