@@ -95,8 +95,8 @@ minetest.register_tool(":technic:chainsaw", {
 	end,
 })
 
+anvil.make_unrepairable("technic:chainsaw")
 choppy.api.registered_axes = {}
-
 choppy.api.register_axe("technic:chainsaw")
 
 minetest.register_craft({
@@ -105,5 +105,14 @@ minetest.register_craft({
 		{"default:steel_ingot", "default:mese_crystal_fragment", "default:diamond"},
 		{"basic_materials:copper_wire", "basic_materials:motor", "default:diamond"},
 		{"", "dye:red", "default:steel_ingot"},
+	}
+})
+
+minetest.register_craft({
+	type = "shapeless",
+	output = "technic:chainsaw",
+	recipe = {
+		"biofuel:fuel_can", "technic:chainsaw",
+		"biofuel:fuel_can", "biofuel:fuel_can",
 	}
 })

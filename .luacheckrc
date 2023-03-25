@@ -39,6 +39,7 @@ read_globals = {
 	"signs_bot",
 	"auroras",
 	"font_api",
+	"anvil",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
