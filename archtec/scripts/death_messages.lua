@@ -6,7 +6,6 @@ Modified by Niklp and debagos (Juri)
 --]]
 
 local messages = {}
-local S = minetest.get_translator("archtec")
 
 -- Fall damage
 messages.fall = {
@@ -77,23 +76,25 @@ local function send_death_message(cause, player, killer)
 
     if killer then
         if killer:is_player() then
-            death_message = S(random_selection, name, killer:get_player_name())
+            death_message = string.gsub(random_selection, "@1", name)
+            death_message = string.gsub(death_message, "@2", killer:get_player_name())
         else
             -- Get entity name, excluding mod name ("mymod:enemy" -> "enemy")
             local entity_name = killer:get_luaentity().name
             local index, _ = string.find(entity_name, ":")
             local entity_name = string.sub(entity_name, index + 1)
-            death_message = S(random_selection, name, entity_name)
+            death_message = string.gsub(random_selection, "@1", name)
+            death_message = string.gsub(death_message, "@2", entity_name)
         end
     else
-        death_message = S(random_selection, name)
+        death_message = string.gsub(random_selection, "@1", name)
     end
 
     minetest.chat_send_all(minetest.colorize("#FF0000", death_message))
     if cause == "pvp" then
 	    discord.send(nil, ":crossed_swords: " .. death_message)
     else
-        discord.send(nil, ":skull_crossbones: " .. death_message)
+        discord.send(nil, ":skull_and_crossbones: " .. death_message)
     end
 end
 
