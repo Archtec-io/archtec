@@ -35,8 +35,10 @@ local function auto_grant_revoke(name)
         table.insert(revoke, "travelnet_remove")
         archtec.revoke_priv(name, "travelnet_remove")
     end
-    minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. table.concat(revoke, ", ") .. ")"))
-    minetest.log("action", "[auto_grant_revoke] updated privs of '" .. name ..  "' (revoked: " .. table.concat(revoke, ", ") .. ")")
+    if next(revoke) ~= nil then
+        minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. table.concat(revoke, ", ") .. ")"))
+        minetest.log("action", "[auto_grant_revoke] updated privs of '" .. name ..  "' (revoked: " .. table.concat(revoke, ", ") .. ")")
+    end
 end
 
 minetest.register_on_joinplayer(function(player)
