@@ -22,3 +22,25 @@ minetest.register_chatcommand("request_areas_high_limit", {
         end
 	end
 })
+
+local function auto_grant_revoke(name)
+    local privs = minetest.get_player_privs(name)
+    -- local grant = {}
+    local revoke = {}
+    if privs["travelnet_attach"] then
+        table.insert(revoke, "travelnet_attach")
+        archtec.revoke_priv(name, "travelnet_attach")
+    end
+    if privs["travelnet_remove"] then
+        table.insert(revoke, "travelnet_remove")
+        archtec.revoke_priv(name, "travelnet_remove")
+    end
+    minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. table.concat(revoke, ", ") .. ")"))
+    minetest.log("action", "[auto_grant_revoke] updated privs of '" .. name ..  "' (revoked: " .. table.concat(revoke, ", ") .. ")")
+end
+
+minetest.register_on_joinplayer(function(player)
+    if player then
+        auto_grant_revoke(player:get_player_name())
+    end
+end)
