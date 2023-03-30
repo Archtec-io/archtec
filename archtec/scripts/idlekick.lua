@@ -43,7 +43,7 @@ minetest.register_globalstep(function(dtime)
 		local pos = player:get_pos()
 		local time = now()
 
-		if ppos[name] and pos ~= ppos[name] then
+		if pos ~= ppos[name] then
 			bumpn(name)
 			ppos[name] = pos
 		end
