@@ -3,6 +3,7 @@ local timer = 0
 
 local times = {}
 local tag = {}
+local ppos = {}
 
 local function now() return minetest.get_us_time() / 1000000 end
 local function bumpn(name) times[name] = now() return name end
@@ -39,7 +40,14 @@ minetest.register_globalstep(function(dtime)
 
 	for _, player in pairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
+		local pos = player:get_pos()
 		local time = now()
+
+		if ppos[name] and pos ~= ppos[name] then
+			bumpn(name)
+			ppos[name] = pos
+		end
+
 		if times[name] < time - timeout then
 			minetest.kick_player(name, "Too long inactive")
 			return
@@ -68,4 +76,5 @@ minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	times[name] = nil
 	tag[name] = nil
+	ppos[name] = nil
 end)
