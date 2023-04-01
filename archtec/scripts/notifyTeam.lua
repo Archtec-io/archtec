@@ -1,4 +1,4 @@
-function notifyTeam(message)
+function notifyTeam(message, dc)
     minetest.log("action", message)
     local colored_message = minetest.colorize("#666", message)
     for _, player in ipairs(minetest.get_connected_players()) do
@@ -10,5 +10,6 @@ function notifyTeam(message)
             end
         end
     end
+    if dc == false then return end
     discord.send(nil, message, "log")
 end
