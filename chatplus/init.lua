@@ -77,6 +77,7 @@ local function set_color(name, color)
 	color_cache[name] = color
 end
 
+-- Hard depend chatplus on archtec mod to run archtec's on_chat_message callbacks (HACK)
 minetest.register_on_chat_message(function(name, message)
 	if minetest.check_player_privs(name, "shout") == true then
 		if string.sub(message, 1, 4) == "7msg" then
@@ -94,8 +95,7 @@ minetest.register_on_chat_message(function(name, message)
 	else
 		return false
 	end
-end
-)
+end)
 
 minetest.register_chatcommand("namecolor", {
 	description = S("Change the color of your name"),
