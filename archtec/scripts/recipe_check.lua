@@ -188,7 +188,8 @@ end
 minetest.register_chatcommand("recipe_check", {
 	description = "Get recipe bugs",
 	privs = {staff = true},
-	func = function(name, param)
+	func = function(name)
+        minetest.log("action", "[/recipe_check] executed by '" .. name .. "'")
 		run(name)
     end
 })

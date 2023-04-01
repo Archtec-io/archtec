@@ -37,6 +37,7 @@ minetest.register_chatcommand("music_play", {
     params = "<title> <name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
+        minetest.log("action", "[/music_play] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
             minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] No arguments provided!"))
             return
@@ -68,6 +69,7 @@ minetest.register_chatcommand("music_stop", {
     params = "<name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
+        minetest.log("action", "[/music_stop] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
             minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_stop] No player names provided!"))
             return
@@ -91,6 +93,7 @@ minetest.register_chatcommand("music_list", {
 	description = "Returns a list with all available songs",
 	privs = {staff = true},
 	func = function(name)
+        minetest.log("action", "[/music_list] executed by '" .. name .. "'")
         minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_list] " .. get_music_list()))
 	end
 })

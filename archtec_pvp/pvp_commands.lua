@@ -19,6 +19,7 @@ minetest.register_chatcommand("pvp_enable", {
 	description = S("Enables PvP"),
 	privs = {staff = true},
 	func = function(name, param)
+		minetest.log("action", "[/pvp_enable] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = param:trim()
 		if archtec_pvp.is_pvp(target) then
 			minetest.chat_send_player(name, "PvP of " .. target .. " is already enabled")
@@ -34,6 +35,7 @@ minetest.register_chatcommand("pvp_disable", {
 	description = S("Disables PvP"),
 	privs = {staff = true},
 	func = function(name, param)
+		minetest.log("action", "[/pvp_disable] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = param:trim()
 		if not archtec_pvp.is_pvp(target) then
 			minetest.chat_send_player(name, "PvP of " .. target .. " is already disabled")

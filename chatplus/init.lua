@@ -100,7 +100,7 @@ end
 minetest.register_chatcommand("namecolor", {
 	description = S("Change the color of your name"),
 	func = function(name, param)
-
+		minetest.log("action", "[/namecolor] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local valid_color = false
 
 		for k in pairs(color_table) do

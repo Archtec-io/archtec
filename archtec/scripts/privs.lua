@@ -7,7 +7,8 @@ local C = minetest.colorize
 minetest.register_chatcommand("request_areas_high_limit", {
 	params = "",
 	description = ("Request the areas_high_limit priv"),
-	func = function(name, param)
+	func = function(name)
+        minetest.log("action", "[/request_areas_high_limit] executed by '" .. name .. "'")
         if minetest.check_player_privs(name, "areas_high_limit") then
             minetest.chat_send_player(name, C("#00BD00", "[request_areas_high_limit] You already have the 'areas_high_limit' privilege"))
             return

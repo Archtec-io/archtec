@@ -460,6 +460,7 @@ minetest.register_chatcommand("stats", {
     description = "Shows player stats",
 	privs = {interact = true},
     func = function(name, param)
+        minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         stats(name, param)
     end,
 })

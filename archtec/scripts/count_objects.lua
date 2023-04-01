@@ -53,6 +53,7 @@ minetest.register_chatcommand("count_objects", {
     description = "Get counts of all objects active on the server",
     privs = {staff = true},
     func = function(name)
+        minetest.log("action", "[/count_objects] executed by '" .. name .. "'")
         minetest.chat_send_player(name, count_object())
     end
 })

@@ -32,6 +32,7 @@ minetest.register_chatcommand("privs_cache", {
     description = "Get privs cache debug info",
     privs = {staff = true},
     func = function(name)
+		minetest.log("action", "[/privs_cache] executed by '" .. name .. "'")
 		minetest.chat_send_player(name, "Hit: " .. hit_count .. ", Miss: " .. miss_count)
     end
 })

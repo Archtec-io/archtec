@@ -27,6 +27,7 @@ minetest.register_chatcommand("thankyou", {
     description = "Thank someone",
 	privs = {interact = true},
     func = function(name, param)
+		minetest.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         local target = archtec.get_target(name, param)
 		if target == name then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank yourself"))

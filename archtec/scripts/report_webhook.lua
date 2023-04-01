@@ -90,6 +90,7 @@ minetest.register_chatcommand("report", {
 	description = "Report a bug",
 	privs = {interact = true},
 	func = function(name, params)
+		minetest.log("action", "[/report] executed by '" .. name .. "' with param '" .. (params or "") .. "'")
 		local param = params:trim()
 		if param == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Error: You have to provide a report text."))

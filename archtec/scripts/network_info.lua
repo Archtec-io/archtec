@@ -7,6 +7,7 @@ minetest.register_chatcommand("network_info", {
 	description = "Get network information of player",
 	privs = {staff = true},
 	func = function(name, param)
+		minetest.log("action", "[/network_info] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = archtec.get_target(name, param)
 		local info = minetest.get_player_information(target)
 		if not info then
