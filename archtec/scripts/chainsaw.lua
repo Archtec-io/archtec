@@ -109,6 +109,14 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "technic:chainsaw",
+	recipe = {
+		{"techage:ta3_canister_gasoline", "technic:chainsaw"}
+	},
+	replacements = {{"techage:ta3_canister_gasoline", "techage:ta3_canister_empty"}}
+})
+
+minetest.register_craft({
 	type = "shapeless",
 	output = "technic:chainsaw",
 	recipe = {
