@@ -16,6 +16,22 @@ local function test_json(name, report)
 	return true
 end
 
+-- func stolen at https://github.com/fluxionary/minetest-bug_command/blob/653ac5191f7cc4350b8a96bddebbc7b4f8280bef/init.lua#L25
+local function create_title(param)
+	local parts = param:split("%s+", false, -1, true)
+	local title_length = 0
+	local title_parts = {}
+	for _, part in ipairs(parts) do
+		table.insert(title_parts, part)
+		title_length = title_length + part:len() + 1
+		if title_length > 40 then
+			table.insert(title_parts, "...")
+			break
+		end
+	end
+	return table.concat(title_parts, " ")
+end
+
 local function send_report(name, report)
 	local player = minetest.get_player_by_name(name)
 	local pos
@@ -31,7 +47,7 @@ local function send_report(name, report)
 		meta = "unknown"
 	end
 	local json = minetest.write_json({
-		title = "Report by " .. name .. ": " .. report,
+		title = "Report by " .. name .. ": " .. create_title(report),
 		body = "**Report by " .. name .. ":**\n > " .. report .. "\n\n**Position:**\n```\n" .. pos .. "\n```\n" .. "\n\n**Meta:**\n```\n" .. meta .. "\n```\n" .. "\n\n**Server status:**\n```\n" .. minetest.get_server_status() .. "\n```\n",
 	})
 
@@ -67,7 +83,7 @@ local function send_report(name, report)
 		local json = minetest.write_json({
 			embeds = {{
 				title = "Report by " .. name .. ":",
-				description = report .. "\n\n**Position:**\n" .. pos .. "\n\n**Github Issue:**\n" .. parse.html_url,
+				description = report .. "\n\n**Position:**\n" .. pos .. "\n\n**GitHub Issue:**\n" .. parse.html_url,
 			}}
 		})
 
