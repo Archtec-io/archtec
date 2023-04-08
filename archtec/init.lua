@@ -49,6 +49,7 @@ dofile(scriptsPath.."recipe_check.lua")
 dofile(scriptsPath.."tool_break.lua")
 dofile(scriptsPath.."ranks.lua")
 dofile(scriptsPath.."music.lua")
+dofile(scriptsPath.."node_limiter.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
