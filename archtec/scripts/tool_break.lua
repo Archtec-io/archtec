@@ -27,7 +27,8 @@ minetest.register_on_mods_loaded(function()
             string.sub(tool.name, 1, 9) == "ethereal:" or
             string.sub(tool.name, 1, 8) == "farming:" or
             string.sub(tool.name, 1, 9) == "moreores:" or
-            string.sub(tool.name, 1, 9) == "titanium:"
+            string.sub(tool.name, 1, 9) == "titanium:" or
+            string.sub(tool.name, 1, 8) == "techage:"
         then
             if not tool.after_use then
                 minetest.override_item(tool.name, {
