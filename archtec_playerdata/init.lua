@@ -434,7 +434,7 @@ local function stats(name, param)
     end
     local formspec = {
         "formspec_version[4]",
-        "size[5,8.5]",
+        "size[5.5,8.5]",
         "label[0.375,0.5;", fs_esc("Stats of: " .. user), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",

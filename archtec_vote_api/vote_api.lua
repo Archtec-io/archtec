@@ -72,10 +72,12 @@ function vote.end_vote(voteset)
 end
 
 function vote.get_next_vote(name)
+	-- luacheck: ignore (512)
 	for _, voteset in pairs(vote.active) do
 		if not voteset.results.voted[name] then
 			return voteset
 		end
+		return 0 -- false is already used
 	end
 	return nil
 end
@@ -129,6 +131,9 @@ local function vote_yes(name, params)
 	if not voteset then
 		minetest.chat_send_player(name, "There is no vote currently running!")
 		return
+	elseif voteset == 0 then
+		minetest.chat_send_player(name, "You've already voted!")
+		return
 	elseif not voteset.results.yes then
 		minetest.chat_send_player(name, "The vote is not a y/n one.")
 		return
@@ -155,6 +160,9 @@ local function vote_no(name, params)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
 		minetest.chat_send_player(name, "There is no vote currently running!")
+		return
+	elseif voteset == 0 then
+		minetest.chat_send_player(name, "You've already voted!")
 		return
 	elseif not voteset.results.no then
 		minetest.chat_send_player(name, "The vote is not a yes/no one.")

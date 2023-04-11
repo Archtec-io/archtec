@@ -15,6 +15,10 @@ local random_messages = {
 	"Change your PvP state with the sword symbol in your inventory",
 	"Say someone thank you with '/thankyou <name>'",
 	"Start a day/night vote with '/vote_day' or '/vote_night'",
+	"Ask Niklp or LonnySophie to get a free shop at spawn",
+	"Get a free mailbox at the spawn post",
+	"Do you like christmas? Place your stocking at spawn's christmas area",
+	"Diamond Powder can be used to build cobble stone generators",
 }
 
 local function show_random_message()
