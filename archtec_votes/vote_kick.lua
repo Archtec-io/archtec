@@ -68,10 +68,10 @@ minetest.register_chatcommand("vote_kick", {
 			return
 		end
 
-		--if #minetest.get_connected_players() <= 3 then -- min 4 players
-		--	minetest.chat_send_player(name, minetest.colorize("#FF0000", "Not enough players online to start a vote-kick!"))
-		--	return
-		--end
+		if #minetest.get_connected_players() <= 3 then -- min 4 players
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Not enough players online to start a vote-kick!"))
+			return
+		end
 
 		local formspec = {
 			"formspec_version[4]",
