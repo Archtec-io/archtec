@@ -53,10 +53,6 @@ files["archtec_pvp/pvp.lua"] = {
 	globals = { "minetest.calculate_knockback" },
 }
 
-files["archtec/scripts/split_long_msg.lua"] = {
-	globals = { "minetest.chat_send_all", "minetest.chat_send_player" },
-}
-
 files["archtec/scripts/privs_cache.lua"] = {
 	globals = { "minetest.set_player_privs", "minetest.get_player_privs" },
 }
