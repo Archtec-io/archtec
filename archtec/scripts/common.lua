@@ -57,3 +57,11 @@ function archtec.string_to_table(str, delim)
 	end
 	return table
 end
+
+local f = math.floor
+
+function archtec.get_block_bounds(pos)
+    local p1 = vector.new((f(pos.x/16))*16,(f(pos.y/16))*16,(f(pos.z/16))*16)
+    local p2 = vector.new((f(pos.x/16))*16+15,(f(pos.y/16))*16+15,(f(pos.z/16))*16+15)
+    return p1, p2
+end

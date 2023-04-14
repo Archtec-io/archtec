@@ -34,3 +34,31 @@ local quarrys = {"techage:ta2_quarry_pas", "techage:ta2_quarry_act", "techage:ta
 for _, quarry in pairs(quarrys) do
     ov_node(quarry, quarrys, 24, 3)
 end
+
+-- limit drawers
+local function ov_drawer(node)
+    local old_place = minetest.registered_items[node].on_place or function() end
+    minetest.override_item(node, {
+        on_place = function(itemstack, placer, pointed_thing)
+            local pos = pointed_thing.under
+            local p1, p2 = archtec.get_block_bounds(pos)
+            local objs = minetest.get_objects_in_area(p1, p2)
+
+            if #objs > 70 then
+                local pname = placer:get_player_name()
+                minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
+                minetest.chat_send_player(pname, minetest.colorize("#FF0000", "You can't place more 'Drawers' in this area! (Too many entities)"))
+            else
+                return old_place(itemstack, placer, pointed_thing)
+            end
+        end,
+    })
+end
+
+for _, ndef in pairs(minetest.registered_nodes) do
+    if ndef and ndef.name and string.match(ndef.name, "drawers:") then
+        if ndef.name ~= "drawers:trim" and ndef.name ~= "drawers:controller" then
+            ov_drawer(ndef.name)
+        end
+    end
+end
