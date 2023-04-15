@@ -64,7 +64,7 @@ minetest.register_chatcommand("ranks_reload", {
 	description = "Reload staff ranks",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/ranks_reload] executed by '")
+		minetest.log("action", "[/ranks_reload] executed by '" .. name .. "'")
 		for _, player in ipairs(minetest.get_connected_players()) do
 			update_nametag(player, true)
 		end
