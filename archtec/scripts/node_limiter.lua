@@ -6,7 +6,7 @@ local function ov_node(node, t, rad, max)
     local old_place = minetest.registered_items[node].on_place or function() end
     minetest.override_item(node, {
         on_place = function(itemstack, placer, pointed_thing)
-            local pos = pointed_thing.under
+            local pos = pointed_thing.above
             local count = minetest.find_nodes_in_area(generate_vector(pos, tonumber(-rad)), generate_vector(pos, tonumber(rad)), t)
             if #count < max then
                 return old_place(itemstack, placer, pointed_thing)
@@ -40,10 +40,9 @@ local function ov_drawer(node)
     local old_place = minetest.registered_items[node].on_place or function() end
     minetest.override_item(node, {
         on_place = function(itemstack, placer, pointed_thing)
-            local pos = pointed_thing.under
+            local pos = pointed_thing.above
             local p1, p2 = archtec.get_block_bounds(pos)
             local objs = minetest.get_objects_in_area(p1, p2)
-
             if #objs > 70 then
                 local pname = placer:get_player_name()
                 minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))

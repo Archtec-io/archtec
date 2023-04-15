@@ -40,9 +40,8 @@ minetest.register_craftitem("techage_cobble_generator:dry_ice_cri", {
 	description = ("Dry ice"),
 	inventory_image = "techage_cobble_generator_dry_ice.png",
 	groups = {powder = 1},
-	on_place = function(itemstack, placer, pointed_thing)
+	on_place = function(itemstack, placer, pt)
 		local name = placer and placer:get_player_name() or ""
-		local pt = pointed_thing
 
 		-- check if pointing at a node
 		if not pt or pt.type ~= "node" then
