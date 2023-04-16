@@ -35,6 +35,9 @@ for _, quarry in pairs(quarrys) do
     ov_node(quarry, quarrys, 24, 3)
 end
 
+-- limit signs_bots
+ov_node("signs_bot:box", {"signs_bot:box", "signs_bot:robot"}, 24, 7)
+
 -- limit drawers
 local function ov_drawer(node)
     local old_place = minetest.registered_items[node].on_place or function() end
