@@ -40,6 +40,10 @@ end
 -- leave player message
 local old_leave = minetest.send_leave_message
 function minetest.send_leave_message(player_name, timed_out)
+	if archtec.silent_leave[player_name] then
+		archtec.silent_leave[player_name] = nil
+		return
+	end
 	if timed_out then
 		discord.send(nil, ":information_source: " .. player_name .. " lost the connection...")
 	else
