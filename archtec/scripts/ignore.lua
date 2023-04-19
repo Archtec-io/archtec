@@ -1,4 +1,3 @@
-local no_ignore = {"LonnySophie", "HomerJayS", "Juri", "Niklp", "Adrian"}
 local cache = {}
 
 local function key_in_table(table, element)
@@ -92,7 +91,7 @@ minetest.register_chatcommand("ignore", {
                     minetest.chat_send_player(name, C("#FF0000", "[ignore] You ignore " .. target .. " already!"))
                     return
                 end
-                if archtec.table_contains(no_ignore, target) then
+                if minetest.get_player_privs(target).staff then
                     minetest.chat_send_player(name, C("#FF0000", "[ignore] You can't ignore staff members!"))
                     return
                 end
