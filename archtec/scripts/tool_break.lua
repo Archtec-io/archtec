@@ -6,14 +6,15 @@ local function break_warning(itemstack, user, node, digparams)
         itemstack:add_wear(digparams.wear)
         if itemstack:get_count() == 0 and wdef.sound and wdef.sound.breaks then
             minetest.sound_play(wdef.sound.breaks, {
+                to_player = name,
                 pos = node.pos,
                 gain = 0.5
             }, true)
         end
     end
-    if itemstack:get_wear() > 60135 then
+    if itemstack:get_wear() > 60135 and wdef.sound and wdef.sound.breaks then
         minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
-        minetest.sound_play("default_tool_breaks", {
+        minetest.sound_play(wdef.sound.breaks, {
             to_player = name,
             gain = 2.0,
         }, true)
