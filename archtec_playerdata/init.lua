@@ -32,7 +32,8 @@ local struct = {
     -- joined = 0, -- legacy -> use 'first_join'
     first_join = 0,
     join_count = 0,
-    thank_you = 0
+    thank_you = 0,
+    ignores = "",
 }
 
 -- helper funtions
