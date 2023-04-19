@@ -32,6 +32,11 @@ local function get_music_list()
     return files
 end
 
+local function file_exists(title)
+    local flist = minetest.get_dir_list(path, false)
+    return archtec.table_contains(flist, title .. ".ogg")
+end
+
 minetest.register_chatcommand("music_play", {
 	description = "Play music to specified players",
     params = "<title> <name[s]>",
@@ -46,6 +51,10 @@ minetest.register_chatcommand("music_play", {
 		title, playersraw = param:match("([^ ]+) *(.*)")
         if playersraw:trim() == "" or playersraw:trim() == nil then
             minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] No player names provided!"))
+            return
+        end
+        if not file_exists(title) then
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] Unknown title!"))
             return
         end
         local players = archtec.string_to_table(playersraw)

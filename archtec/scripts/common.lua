@@ -67,3 +67,20 @@ function archtec.get_block_bounds(pos)
     local p2 = vector.new((f(pos.x/16))*16+15,(f(pos.y/16))*16+15,(f(pos.z/16))*16+15)
     return p1, p2
 end
+
+function archtec.count_keys(table)
+    local c = 0
+    for k, _ in pairs(table) do
+        c = c + 1
+    end
+    return c
+end
+
+function archtec.table_contains(table, element)
+	for _, value in pairs(table) do
+		if value == element then
+			return true
+		end
+	end
+	return false
+end

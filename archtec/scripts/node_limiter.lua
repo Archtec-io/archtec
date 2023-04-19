@@ -18,6 +18,7 @@ local function ov_node(node, t, rad, max)
             end
         end,
     })
+    mesecon.register_mvps_stopper(node)
 end
 
 
