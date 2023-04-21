@@ -3,7 +3,7 @@
 
 local ratelimit = {}
 local after = minetest.after
-local LIMIT = 3
+local LIMIT = 1
 
 local function remove_entry(ip)
 	ratelimit[ip] = nil
