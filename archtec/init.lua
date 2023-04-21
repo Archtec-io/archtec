@@ -52,6 +52,7 @@ dofile(scriptsPath.."node_limiter.lua")
 dofile(scriptsPath.."news.lua")
 -- dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."lock.lua")
+dofile(scriptsPath.."lagometer.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
