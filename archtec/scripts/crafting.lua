@@ -119,3 +119,46 @@ if minetest.get_modpath("ethereal") then
         recipe = {"ethereal:bowl"}
     })
 end
+
+-- table_lamp and standing_lamp crafts are broken with UI https://github.com/mt-mods/homedecor_modpack/issues/39 *This is a hack
+if minetest.get_modpath("homedecor_lightning") then
+    minetest.register_craft({
+        output = "homedecor:table_lamp_14",
+        recipe = {
+            { "wool:white", "default:torch", "wool:white"},
+            { "", "group:stick", ""},
+            { "", "default:slab_wood_8", "" },
+        },
+    })
+
+    unifieddyes.register_color_craft({
+        output = "homedecor:table_lamp_14",
+        palette = "extended",
+        type = "shapeless",
+        neutral_node = "homedecor:table_lamp_14",
+        recipe = {
+            "NEUTRAL_NODE",
+            "MAIN_DYE"
+        }
+    })
+
+    minetest.register_craft({
+        output = "homedecor:standing_lamp_14",
+        recipe = {
+            {"homedecor:table_lamp_14"},
+            {"group:stick"},
+            {"group:stick"},
+        },
+    })
+
+    unifieddyes.register_color_craft({
+        output = "homedecor:standing_lamp_14",
+        palette = "extended",
+        type = "shapeless",
+        neutral_node = "homedecor:standing_lamp_14",
+        recipe = {
+            "NEUTRAL_NODE",
+            "MAIN_DYE"
+        }
+    })
+end

@@ -62,3 +62,6 @@ minetest.after(1, function()
         signs_bot.register_flower(flowers)
     end
 end)
+
+-- Disable titanium drops
+techage.register_ore_for_gravelsieve("titanium:titanium", 99999)

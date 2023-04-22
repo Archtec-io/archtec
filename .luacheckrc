@@ -40,6 +40,7 @@ read_globals = {
 	"auroras",
 	"font_api",
 	"anvil",
+	"unifieddyes",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},
