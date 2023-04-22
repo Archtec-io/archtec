@@ -14,6 +14,7 @@ local time = os.time
 local date = os.date
 local C = minetest.colorize
 local debug_mode = false
+local shutdown_mode = false
 
 minetest.register_on_mods_loaded(function()
     if not minetest.mkdir(datadir) then
@@ -46,6 +47,7 @@ end
 local function log_warning(message)
     if message ~= nil and message ~= "" then
         minetest.log("warning", "[archtec_playerdata] " .. message)
+        notifyTeam("[archtec_player] Critical error! Please read the server logs!")
     end
 end
 
@@ -107,7 +109,6 @@ local function format_duration(seconds)
 end
 
 local function in_cache(name)
-    if not valid_player(name) then return false end
     if cache[name] ~= nil then
         return true
     else
@@ -273,13 +274,17 @@ local function stats_save(name)
     stats_mod(name, "playtime", get_session_playtime(name))
     playtime_current[name] = time()
     local data = cache[name]
+    if data == nil then
+        log_warning("save: cache for '" .. name .. "' is nil! Saving will be aborted!")
+        return
+    end
     local file = io.open(datadir .. "/" .. name .. ".txt", "w")
     if not file then
         log_warning("save: file of '" .. name .. "' does not exsist!")
         return
     end
     local raw = minetest.serialize(data)
-    if raw == nil then
+    if raw == nil or raw == "" then
         log_warning("save: raw data of '" .. name .. "' is nil!")
         return
     end
@@ -296,6 +301,18 @@ local function stats_save_all()
     local after = minetest.get_us_time()
     log_debug("Took: " .. (after - before) / 1000 .. " ms")
     minetest.after(save_interval, stats_save_all)
+end
+
+local function stats_save_all_shutdown()
+    local before = minetest.get_us_time()
+    for _, player in pairs(minetest.get_connected_players()) do
+        local name = player:get_player_name()
+        stats_save(name)
+        cache[name] = nil
+        playtime_current[name] = nil
+    end
+    local after = minetest.get_us_time()
+    log_debug("Took: " .. (after - before) / 1000 .. " ms")
 end
 
 minetest.after(4, stats_save_all)
@@ -338,6 +355,7 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 minetest.register_on_leaveplayer(function(player)
+    if shutdown_mode then return end -- Do not save anything
     local name = player:get_player_name()
     if name ~= nil then
         stats_unload(name)
@@ -345,7 +363,8 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 minetest.register_on_shutdown(function()
-    stats_save_all()
+    shutdown_mode = true
+    stats_save_all_shutdown()
     log_action("shutdown: saved all data!")
 end)
 

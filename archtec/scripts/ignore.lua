@@ -47,6 +47,8 @@ function archtec.unignore_player(name, target)
     -- update cache
     if not cache[name] then
         cache[name] = {} -- that should ne be possible
+    else
+        cache[name][target] = nil
     end
 end
 
