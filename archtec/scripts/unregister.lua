@@ -28,10 +28,7 @@ if minetest.get_modpath("abriglass") then
     minetest.unregister_item("abriglass:porthole_wood")
 end
 
-if minetest.get_modpath("cottages") then
-    minetest.unregister_item("cottages:rope")
-end
-
 if minetest.get_modpath("shields") then
     minetest.unregister_item("shields:shield_nether")
+    minetest.unregister_item("invisible_shields:shield_nether")
 end

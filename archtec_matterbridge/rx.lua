@@ -80,8 +80,10 @@ local function handle_data(data)
 			minetest.chat_send_all(minetest.colorize("#FF8800", data.username) .. minetest.colorize("#666", " executed '/" .. data.command .. data.params .. "' via Discord."))
 			minetest.chat_send_player = old_chat_send_player
 		else
+			local text = data.text:gsub("\n", " ")
 			-- regular user message
-			minetest.chat_send_all(minetest.colorize("#5662f6", "[Discord] ") .. minetest.colorize("#FF8800", data.username .. ": ") .. data.text)
+			minetest.log("action", "[archtec_matterbridge] CHAT: <" .. data.username .. "> " .. text)
+			minetest.chat_send_all(minetest.colorize("#5662f6", "[Discord] ") .. minetest.colorize("#FF8800", data.username .. ": ") .. text)
 		end
 	end
 end
