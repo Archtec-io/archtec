@@ -85,13 +85,6 @@ fix_craft("xdecor:bowl", {
     {"", "xdecor:wood_tile", ""}
 })
 
--- cottages:glass_pane/xdecor:woodframed_glass
-fix_craft("cottages:glass_pane", {
-    {"default:stick", "default:stick", "default:stick"},
-    {"default:stick", "xpanes:pane_flat", "default:stick"},
-    {"default:stick", "default:stick", "default:stick"}
-}, 4)
-
 -- cottages:barrel/wine:wine_barrel
 fix_craft("cottages:barrel", {
     {"group:wood", "group:wood", "group:wood"},

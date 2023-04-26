@@ -1,96 +1,5 @@
 -- Find duplicate crafting recipes
 
-local function get_depend_checker(modname)
-	local self = {
-		modname = modname,
-		depends = {} -- depends.txt parsed
-	}
-
-	-- Check if dependency exists to mod modname
-	function self:check_depend(modname, deptype)
-		if self.depends[modname] then
-			if not deptype then  -- "required" or "optional" only
-				return true
-			else
-				return (self.depends[modname] == deptype)
-			end
-		else
-			return false
-		end
-	end
-
-	-- Check if dependency exists to item origin mod
-	function self:check_depend_by_itemname(itemname, deptype)
-		local modname = archtec.get_modname_by_itemname(itemname)
-		if modname then
-			return self:check_depend(modname, deptype)
-		else
-			return false
-		end
-	end
-
-	-- get module path
-	local modpath = minetest.get_modpath(modname)
-	if not modpath then
-		return nil -- module not found
-	end
-
-	-- read the depends file
-	local dependsfile = io.open(modpath .. "/depends.txt")
-	if not dependsfile then
-		return nil
-	end
-
-	-- parse the depends file
-	for line in dependsfile:lines() do
-		if line:sub(-1) == "?" then
-			line = line:sub(1, -2)
-			self.depends[line] = "optional"
-		else
-			self.depends[line] = "required"
-		end
-	end
-	dependsfile:close()
-	return self
-end
-
-local function dependency_exists(item1, item2)
-    local modname1, modname2, depmod, delimpos
-
-    -- the items are from crafting output so maybe the counter needs to be cutted
-    delimpos = string.find(item1, " ")
-    if delimpos then
-        item1 = string.sub(item1, 1, delimpos - 1)
-    end
-
-    delimpos = string.find(item2, " ")
-    if delimpos then
-        item2 = string.sub(item2, 1, delimpos - 1)
-    end
-
-    -- check dependency item1 depends on item2
-    modname1 = archtec.get_modname_by_itemname(item1)
-    modname2 = archtec.get_modname_by_itemname(item2)
-
-    if not modname1 or modname1 == "group" or
-        not modname2 or modname2 == "group" then
-        return false
-    end
-
-    if modname1 == modname2 then
-        return false -- there should not be a redefinition in same module
-    end
-    depmod = get_depend_checker(modname1)
-    if depmod and depmod:check_depend(modname2) then
-        return true
-    end
-
-    depmod = get_depend_checker(modname2)
-    if depmod and depmod:check_depend(modname1) then
-        return true
-    end
-end
-
 local function is_same_item(item1, item2)
 
 	local chkgroup = nil
@@ -169,11 +78,9 @@ local function run(pname)
                     for ku, vu in ipairs(known_recipes) do
                         if vu.output ~= vn.output and
                         is_same_recipe(vu, vn) == true then
-                            if not dependency_exists(vu.output, vn.output) then
-                                minetest.log("warning", "[recipe-check] " .. vu.output .. " " .. vn.output)
-                                if name then
-                                    minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output))
-                                end
+                            minetest.log("warning", "[recipe-check] " .. vu.output .. " " .. vn.output)
+                            if name then
+                                minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output))
                             end
                         end
                     end
