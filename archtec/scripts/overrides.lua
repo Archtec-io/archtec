@@ -79,3 +79,40 @@ if minetest.get_modpath("mobs_animal") then
 	def.hp_min = 15 -- default 10
 	minetest.registered_entities["mobs_animal:panda"] = def
 end
+
+local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
+
+if minetest.get_modpath("castle_gates") then
+	for _, name in ipairs(gates) do
+		local def = table.copy(minetest.registered_nodes[name]) -- table.copy prevents LC warnings
+		-- remove castle_gates specific groups and functions
+		def.can_dig = nil
+		def.on_rightclick = nil
+		if def.groups.cracky then
+			def.groups = {cracky = 1}
+		elseif def.groups.choppy then
+			def.groups = {choppy = 1}
+		end
+		def.description = def.description .. " (without function)"
+		-- register node
+		minetest.register_node(":" .. name .. "_lite", def)
+	end
+
+	minetest.register_craft({
+		output = "castle_gates:steel_portcullis_bars_lite",
+		recipe = {
+			{"group:wood", "default:steel_ingot", "group:wood"},
+			{"group:wood", "", "group:wood"},
+			{"group:wood", "default:steel_ingot", "group:wood"},
+		}
+	})
+
+	minetest.register_craft({
+		output = "castle_gates:wood_portcullis_bars_lite",
+		recipe = {
+			{"", "default:steel_ingot", ""},
+			{"default:steel_ingot", "", "default:steel_ingot"},
+			{"", "default:steel_ingot", ""},
+		}
+	})
+end
