@@ -53,8 +53,7 @@ for _, ab in pairs(minetest.registered_abms) do
 	elseif label == "mobs_animal:sheep_white spawning" then
 		ab.neighbours = group_grass
 	elseif label == "mobs_animal:pumba spawning" then
-		--ab.chance = ab.chance * 0.75
-		ab.chance = 1
+		ab.chance = ab.chance * 0.75
 		ab.neighbours = group_dry_grass
 	end
 
