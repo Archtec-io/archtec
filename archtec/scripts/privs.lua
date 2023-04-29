@@ -23,7 +23,7 @@ minetest.register_chatcommand("request_areas_high_limit", {
         end
 	end
 })
-
+--[[
 local function auto_grant_revoke(name)
     local privs = minetest.get_player_privs(name)
     -- local grant = {}
@@ -47,3 +47,4 @@ minetest.register_on_joinplayer(function(player)
         auto_grant_revoke(player:get_player_name())
     end
 end)
+]]--

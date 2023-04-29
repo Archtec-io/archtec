@@ -1,26 +1,14 @@
 local cache = {}
 
-local function key_in_table(table, element)
-	for key, _ in pairs(table) do
-		if key == element then
-			return true
-		end
-	end
-	return false
-end
-
 function archtec.is_ignored(name, target)
     if cache[name] then
-        local t = cache[name]
-        return key_in_table(t, target)
+        return cache[name][target] ~= nil
     end
     local ignores = archtec_playerdata.get(name, "ignores")
     if ignores == "" then return false end
     ignores = minetest.deserialize(ignores)
-    if key_in_table(ignores, target) then
-        return true
-    end
-    return false
+    cache[name] = ignores
+    return ignores[target] ~= nil
 end
 
 function archtec.ignore_player(name, target)
@@ -87,7 +75,7 @@ minetest.register_chatcommand("ignore", {
         local action = params[1]
         if action == "ignore" or action == "add" then
             local target = params[2]
-            target:trim() -- prevent whitespace issues
+            target = target:trim() -- prevent whitespace issues
             if minetest.player_exists(target) then
                 if archtec.is_ignored(name, target) then
                     minetest.chat_send_player(name, C("#FF0000", "[ignore] You ignore " .. target .. " already!"))
@@ -114,7 +102,7 @@ minetest.register_chatcommand("ignore", {
             end
         elseif action == "unignore" or action == "remove" then
             local target = params[2]
-            target:trim() -- prevent whitespace issues
+            target = target:trim() -- prevent whitespace issues
             if minetest.player_exists(target) then
                 if not archtec.is_ignored(name, target) then
                     minetest.chat_send_player(name, C("#FF0000", "[ignore] You aren't ignoring " .. target .. "!"))

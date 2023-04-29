@@ -121,12 +121,6 @@ minetest.register_chatcommand("namecolor", {
 	end
 })
 
-minetest.register_on_joinplayer(function(player)
-	if not player then return end
-	local name = player:get_player_name()
-	get_color(name)
-end)
-
 local function private_message(name, param)
 	local to, msg = string.match(param, "([%a%d_-]+) (.+)")
 	if to == nil or msg == nil then
