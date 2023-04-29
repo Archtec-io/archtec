@@ -401,8 +401,7 @@ minetest.register_on_dieplayer(function(player, _)
     end
 end)
 
-local function stats(name, param)
-    local target = param:trim()
+local function stats(name, target)
     local data, is_online, user
     if target == "" or target == nil then
         target = name
@@ -481,7 +480,12 @@ minetest.register_chatcommand("stats", {
 	privs = {interact = true},
     func = function(name, param)
         minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-        stats(name, param)
+        local target = param:trim()
+        if archtec.ignore_check(name, target) then
+            archtec.ignore_msg("stats", name, target)
+            return
+        end
+        stats(name, target)
     end,
 })
 

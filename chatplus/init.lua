@@ -135,6 +135,11 @@ local function private_message(name, param)
 		minetest.chat_send_player(name, "You can't send yourself a msg.")
 		return
 	end
+	if archtec.ignore_check(name, to) then
+		minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg .. " (message blocked by ignore)")
+		archtec.ignore_msg("chatplus", name, to)
+		return
+	end
 	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To ") .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
 	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From ") .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
 	minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg)

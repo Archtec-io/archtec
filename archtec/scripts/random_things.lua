@@ -37,6 +37,10 @@ minetest.register_chatcommand("thankyou", {
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank someone who is offline"))
 			return
 		end
+		if archtec.ignore_check(name, target) then
+			archtec.ignore_msg("thankyou", name, target)
+			return
+		end
 		archtec_playerdata.mod(target, "thank_you", 1)
 		minetest.chat_send_all(minetest.colorize("#00BD00", name .. " said thank you to " .. target))
 		discord.send(nil, ":wave: **" .. name .. "** said thank you to **" .. target .. "**")

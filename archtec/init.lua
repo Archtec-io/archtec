@@ -50,7 +50,7 @@ dofile(scriptsPath.."ranks.lua")
 dofile(scriptsPath.."music.lua")
 dofile(scriptsPath.."node_limiter.lua")
 dofile(scriptsPath.."news.lua")
--- dofile(scriptsPath.."ignore.lua")
+dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."lock.lua")
 dofile(scriptsPath.."lagometer.lua")
 
