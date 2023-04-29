@@ -197,6 +197,9 @@ local function stats_load_offline(name) -- do not create/change any data of offl
         return
     else
         data = minetest.deserialize(raw)
+        if data == nil then
+            data = {} -- fix nil crashes due non-existing keys
+        end
     end
     for key, value in pairs(data) do
         if not (in_struct(key)) then
@@ -206,6 +209,8 @@ local function stats_load_offline(name) -- do not create/change any data of offl
     end
     return data
 end
+
+archtec_playerdata.load_offline = stats_load_offline
 
 -- get/set/mod data
 local function stats_get(name, key)

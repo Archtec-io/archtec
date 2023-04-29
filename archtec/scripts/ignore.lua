@@ -1,17 +1,40 @@
 local cache = {}
 
 local function get_list(name)
-    if cache[name] then
+    if cache[name] then -- load from direct cache
         return cache[name]
     end
-    local ignores = archtec_playerdata.get(name, "ignores")
-    ignores = minetest.deserialize(ignores)
-    if ignores == nil then
+    local ignores
+    if archtec.is_online(name) then -- load from playerdata cache
+        ignores = minetest.deserialize(archtec_playerdata.get(name, "ignores"))
+    end
+    if ignores == nil then -- load offline playerdata
+        local t = archtec_playerdata.load_offline(name)
+        if t and t.ignores then
+            ignores = minetest.deserialize(t.ignores)
+        end
+    end
+    if ignores == nil then -- no data available, do nothing
         ignores = {}
     end
     cache[name] = ignores
     return ignores
 end
+
+local function purge_cache()
+    local l = 0
+    for _ in pairs(cache) do
+        l = l + 1
+    end
+    -- purge
+    cache = {}
+    if l > 0 then
+        minetest.log("action", "[archtec] Ignore cache cleaner removed " .. l .. " entries")
+    end
+    minetest.after(25200, purge_cache) -- clean cache all 7 hours (60*60*7)
+end
+
+minetest.after(2, purge_cache)
 
 local function is_ignored(name, target)
     local ignores = get_list(name)
@@ -152,9 +175,3 @@ function archtec.ignore_msg(cmdname, name, target)
         minetest.chat_send_player(name, C("#FF0000", cmdname .. target .. " ignores you. You can't interact with them!"))
     end
 end
-
-minetest.register_on_leaveplayer(function(player)
-    if player then
-        cache[player:get_player_name()] = nil
-    end
-end)
