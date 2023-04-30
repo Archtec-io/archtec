@@ -85,20 +85,6 @@ fix_craft("xdecor:bowl", {
     {"", "xdecor:wood_tile", ""}
 })
 
--- cottages:barrel/wine:wine_barrel
-fix_craft("cottages:barrel", {
-    {"group:wood", "group:wood", "group:wood"},
-    {"default:tin_ingot", "", "default:tin_ingot"},
-    {"group:wood", "group:wood", "group:wood"},
-})
-
--- cottages:barrel_open/cottages:barrel (it looks weird when a barrel is made of different metals)
-fix_craft("cottages:barrel_open", {
-    {"group:wood", "", "group:wood"},
-	{"default:tin_ingot", "", "default:tin_ingot"},
-	{"group:wood", "group:wood", "group:wood"},
-})
-
 if minetest.get_modpath("ethereal") then
     minetest.register_craft({
         output = "ethereal:bowl",

@@ -99,16 +99,16 @@ if minetest.get_modpath("castle_gates") then
 	end
 
 	minetest.register_craft({
-		output = "castle_gates:steel_portcullis_bars_lite",
+		output = "castle_gates:wood_portcullis_bars_lite",
 		recipe = {
 			{"group:wood", "default:steel_ingot", "group:wood"},
-			{"group:wood", "", "group:wood"},
+			{"group:wood", "default:tin_ingot", "group:wood"},
 			{"group:wood", "default:steel_ingot", "group:wood"},
 		}
 	})
 
 	minetest.register_craft({
-		output = "castle_gates:wood_portcullis_bars_lite",
+		output = "castle_gates:steel_portcullis_bars_lite",
 		recipe = {
 			{"", "default:steel_ingot", ""},
 			{"default:steel_ingot", "", "default:steel_ingot"},

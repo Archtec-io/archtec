@@ -48,6 +48,8 @@ minetest.register_chatcommand("vote_day", {
     end
 })
 
+archtec.register_chatcommand_alias("vd", "vote_day")
+
 minetest.register_chatcommand("vote_night", {
     description = "Start a vote to set the time to night",
 	privs = {interact = true},
@@ -93,3 +95,5 @@ minetest.register_chatcommand("vote_night", {
         })
     end
 })
+
+archtec.register_chatcommand_alias("vn", "vote_night")

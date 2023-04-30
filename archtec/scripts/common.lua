@@ -84,3 +84,10 @@ function archtec.table_contains(table, element)
 	end
 	return false
 end
+
+function archtec.register_chatcommand_alias(newname, original)
+    local cmd = minetest.registered_chatcommands[original]
+    if cmd then
+        minetest.register_chatcommand(newname, cmd)
+    end
+end
