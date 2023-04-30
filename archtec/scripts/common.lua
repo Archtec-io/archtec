@@ -91,3 +91,10 @@ function archtec.register_chatcommand_alias(newname, original)
         minetest.register_chatcommand(newname, cmd)
     end
 end
+
+function archtec.get_and_trim(string)
+    if string then
+        return string:trim()
+    end
+    return ""
+end
