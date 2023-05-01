@@ -62,7 +62,7 @@ minetest.register_chatcommand("open", {
 	func = function(name)
         minetest.log("action", "[/open] executed by '" .. name .. "'")
         if can_join then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[lock] The server is not locked!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[open] The server is not locked!"))
             return
         end
         open_server(name)
