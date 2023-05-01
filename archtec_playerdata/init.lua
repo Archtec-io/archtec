@@ -64,7 +64,7 @@ local function valid_player(name)
         log_debug("valid_player: '" .. name .. "' is valid!")
         return true
     else
-        log_warning("valid_player: '" .. name .. "' is not valid!")
+        log_action("valid_player: '" .. name .. "' is not valid!") -- log_warning() would trigger staff notifications
         return false
     end
 end
@@ -486,7 +486,7 @@ minetest.register_chatcommand("stats", {
     func = function(name, param)
         minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         local target = param:trim()
-        if archtec.ignore_check(name, target) then
+        if target ~= name and archtec.ignore_check(name, target) then
             archtec.ignore_msg("stats", name, target)
             return
         end

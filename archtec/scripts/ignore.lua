@@ -1,6 +1,7 @@
 local cache = {}
 
 local function get_list(name)
+    if not name or name == "" then return {} end
     if cache[name] then -- load from direct cache
         return cache[name]
     end
@@ -44,6 +45,8 @@ end
 archtec.is_ignored = is_ignored
 
 function archtec.ignore_check(name, target)
+    if not target or target == "" then return false end
+    if not name or name == "" then return false end
     return is_ignored(name, target) or is_ignored(target, name)
 end
 
