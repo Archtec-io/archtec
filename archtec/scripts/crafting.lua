@@ -100,7 +100,7 @@ if minetest.get_modpath("ethereal") then
 end
 
 -- table_lamp and standing_lamp crafts are broken with UI https://github.com/mt-mods/homedecor_modpack/issues/39 *This is a hack
-if minetest.get_modpath("homedecor_lightning") then
+if minetest.get_modpath("homedecor_lighting") then
     minetest.register_craft({
         output = "homedecor:table_lamp_14",
         recipe = {

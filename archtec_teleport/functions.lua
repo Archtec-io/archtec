@@ -50,6 +50,15 @@ function archtec_teleport.tpr_send(sender, receiver)
 		return
 	end
 
+	if archtec.ignore_check(sender, receiver) then
+		if archtec.is_ignored(sender, receiver) then -- TPR uses an extra message coloring and design system
+			send_message(sender, S("You are ignoring @1. You can't interact with them!", receiver))
+		else
+			send_message(sender, S(target .. " ignores you. You can't interact with them!", receiver))
+		end
+		return
+	end
+
 	minetest.log("action", "[archtec_teleport] " .. sender .. " is trying to teleport to " .. receiver)
 	send_message(receiver, S("@1 is requesting to teleport to you. /ok to accept.", sender))
 	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", archtec_teleport.timeout_delay))
@@ -83,6 +92,15 @@ function archtec_teleport.tp2me_send(sender, receiver)
 
 	if sender == receiver then
 		send_message(sender, S("You can't teleport you to yourself"))
+		return
+	end
+
+	if archtec.ignore_check(sender, receiver) then
+		if archtec.is_ignored(sender, receiver) then -- TPR uses an extra message coloring and design system
+			send_message(sender, S("You are ignoring @1. You can't interact with them!", receiver))
+		else
+			send_message(sender, S(target .. " ignores you. You can't interact with them!", receiver))
+		end
 		return
 	end
 

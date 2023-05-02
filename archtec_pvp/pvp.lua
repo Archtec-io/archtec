@@ -127,6 +127,12 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 		minetest.chat_send_player(hittername, string.format(S("You can't hit %s because your PvP is disabled."), localname))
 		return true
 	end
+
+	if archtec.ignore_check(localname, hitter) then
+		archtec.ignore_msg(nil, localname, hitter)
+		return true
+	end
+
 	return false
 end)
 

@@ -23,19 +23,23 @@ local function get_list(name)
 end
 
 local function purge_cache()
-    local l = 0
-    for _ in pairs(cache) do
-        l = l + 1
-    end
+    local l = 0 + archtec.count_keys(cache)
     -- purge
     cache = {}
     if l > 0 then
         minetest.log("action", "[archtec] Ignore cache cleaner removed " .. l .. " entries")
     end
-    minetest.after(25200, purge_cache) -- clean cache all 7 hours (60*60*7)
 end
 
-minetest.after(2, purge_cache)
+-- mintest.after() does not work :\
+local time = 0
+minetest.register_globalstep(function(dtime)
+    time = time + dtime
+    if time > 25200 then -- 7h
+        purge_cache()
+        time = 0
+    end
+end)
 
 local function is_ignored(name, target)
     local ignores = get_list(name)
