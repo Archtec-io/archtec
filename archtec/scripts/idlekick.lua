@@ -23,7 +23,19 @@ local function get_nametag(name, player)
 	return att.text
 end
 
-minetest.register_on_joinplayer(function(player) return bump(player) end)
+minetest.register_on_joinplayer(function(player)
+	-- can happen when player was idle and got kicked
+	local hp = player:get_hp() or 20
+	if hp == 0 then
+		local name = player:get_player_name()
+		minetest.log("action", "[archtec] Respawned dead player '" .. name .. "' on join")
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Server respawned you (you were dead without respawn option)"))
+		player:respawn()
+	end
+	-- create entrie
+	return bump(player)
+end)
+
 minetest.register_on_placenode(function(_, _, player) bump(player) end)
 minetest.register_on_dignode(function(_, _, player) return bump(player) end)
 minetest.register_on_punchnode(function(_, _, player) return bump(player) end)
@@ -50,7 +62,6 @@ minetest.register_globalstep(function(dtime)
 
 		if times[name] < time - timeout then
 			minetest.kick_player(name, "Too long inactive")
-			return
 		end
 		if times[name] < time - 300 then
 			if not tag[name] then
