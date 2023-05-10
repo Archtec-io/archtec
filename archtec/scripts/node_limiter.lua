@@ -3,6 +3,7 @@ local function generate_vector(pos, rad)
 end
 
 local function ov_node(node, t, rad, max)
+    if not minetest.registered_items[node] then return end
     local old_place = minetest.registered_items[node].on_place or function() end
     minetest.override_item(node, {
         on_place = function(itemstack, placer, pointed_thing)
@@ -50,6 +51,7 @@ ov_node("signs_bot:box", {"signs_bot:box", "signs_bot:robot"}, 24, 7)
 
 -- limit drawers
 local function ov_drawer(node)
+    if not minetest.registered_items[node] then return end
     local old_place = minetest.registered_items[node].on_place or function() end
     minetest.override_item(node, {
         on_place = function(itemstack, placer, pointed_thing)
