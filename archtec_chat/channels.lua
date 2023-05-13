@@ -50,7 +50,7 @@ end
 
 function channel.create(cname, owner, keep)
     minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. owner .. "'")
-    local def = {owner = owner, users = {}, invites = {}, keep = nil}
+    local def = {owner = owner, users = {}, invites = {}, keep = false}
     if keep then
         def.keep = true
     end
@@ -94,18 +94,20 @@ end
 
 function channel.invite_delete(cname, target, timed_out)
     local cdef = get_cdef(cname)
-    minetest.log("action", "[archtec_chat] Delete '" .. cname .. "' invite for '" .. target .. "'")
-    if timed_out then
-        minetest.chat_send_player(target, C("#FF8800", "Invite timed-out"))
+    if cdef.invites[target] then -- invite might already be deleted
+        minetest.log("action", "[archtec_chat] Delete '" .. cname .. "' invite for '" .. target .. "'")
+        if timed_out then
+            minetest.chat_send_player(target, C("#FF8800", "Invite timed-out"))
+        end
+        cdef.invites[target] = nil
+        set_cdef(cname, cdef)
     end
-    cdef.invites[target] = nil
-    set_cdef(cname, cdef)
 end
 
 function channel.invite(cname, target, inviter)
     local cdef = get_cdef(cname)
     minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited  '" .. target .. "' to channel '" .. cname .. "'")
-    minetest.chat_send_player(target, C("#FF8800", inviter .. " invited you to join #" .. cname .. ". '/c j " .. cname .. "' to join. It will timeout in 60 seconds"))
+    minetest.chat_send_player(target, C("#FF8800", inviter .. " invited you to join #" .. cname .. ". '/c j " .. cname .. "' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel."))
     cdef.invites[target] = os.time()
     set_cdef(cname, cdef)
     minetest.after(60, function(cname, target)
@@ -145,11 +147,91 @@ end
 
 channel.get_cname = get_cname
 
+local help_list = {
+    join = {
+        name = "join",
+        description = "Join a channel (# is optional)",
+        param = "<channel>",
+        shortcut = "j",
+        usage = "/c join #mychannel"
+    },
+    leave = {
+        name = "leave",
+        description = "Leave a channel (# is optional)",
+        param = "<channel>",
+        shortcut = "l",
+        usage = "/c leave #mychannel"
+    },
+    invite = {
+        name = "invite",
+        description = "Invite someone in a channel (# is optional)",
+        param = "<channel> <name>",
+        shortcut = "i",
+        usage = "/c invite #mychannel Player007"
+    },
+    list = {
+        name = "list",
+        description = "List all channels",
+        param = "",
+        shortcut = "li",
+        usage = "/c list"
+    },
+    find = {
+        name = "find",
+        description = "Finds all channels where <name> is",
+        param = "<name>",
+        shortcut = "f",
+        usage = "/c find Player007"
+    },
+    kick = {
+        name = "kick",
+        description = "Kicks <name> from <channel>. Can be used by channelowners. (# is optional)",
+        param = "<channel> <name>",
+        shortcut = "k",
+        usage = "/c kick #mychannel Player007"
+    },
+    move = {
+        name = "move",
+        description = "Moves <name> from <channel1> to <channel2>. Staff only command. (# is optional)",
+        param = "<name> <channel1> <channel2>",
+        shortcut = "m",
+        usage = "/c move Player007 #mychannel #mychannel2"
+    },
+    help = {
+        name = "help",
+        description = "Sends you the help for <sub-command>",
+        param = "<sub-command>",
+        shortcut = "h",
+        usage = "/c help join"
+    }
+}
+
+local tab = "   "
+
+local function parse_help(d)
+    local s = ""
+    s = s .. "----------\n"
+    s = s .. d.name .. ":\n"
+    s = s .. tab .. "Description: " .. d.description .. "\n"
+    s = s .. tab .. "Params: " .. d.param .. "\n"
+    s = s .. tab .. "Shortcut: " .. d.shortcut .. "\n"
+    s = s .. tab .. "Usage: " .. d.usage .. "\n"
+    return s
+end
+
+local function help_all()
+    local s = "Archtec chat command reference\n"
+    for cmd, d in pairs(help_list) do
+        s = s .. parse_help(d)
+    end
+    return C("#00BD00", s)
+end
+
 minetest.register_chatcommand("c", {
     func = function(name, param)
         minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
-            minetest.chat_send_player(name, C("#FF0000", "[c] No arguments provided!"))
+            minetest.chat_send_player(name, help_all())
             return
         end
         local params = {}
@@ -188,18 +270,28 @@ minetest.register_chatcommand("c", {
                 return
             end
             -- is player invited?
-            if cdef.invites[name] or is_channel_owner(cdef, name) then
+            local is_owner = is_channel_owner(cdef, name)
+            if cdef.invites[name] or is_owner then
                 -- is ignored player in channel?
+                local kicks = {}
                 for user, _ in pairs(cdef.users) do
                     if archtec.ignore_check(name, user) then
-                        archtec.ignore_msg("c/join", name, user)
-                        return
+                        if not is_channel_owner(cdef, user) and is_owner then
+                            table.insert(kicks, user)
+                        else
+                            archtec.ignore_msg("c/join", name, user)
+                            return
+                        end
                     end
                 end -- TODO allow owners to join, kick other players
                 if cdef.invites[name] then
                     channel.invite_accept(c, name)
                 else
                     channel.join(c, name)
+                end
+                -- kick later to prevent automatic channel deletions
+                for _, user in pairs(kicks) do
+                    channel.leave(c, user, name .. " (channelowner) kicked " .. user .. ". (automatic kick to allow owner join)")
                 end
             else
                 minetest.chat_send_player(name, C("#FF0000", "[c/join] You aren't invited!"))
@@ -268,6 +360,10 @@ minetest.register_chatcommand("c", {
             end
             if cdef.users[target] then
                 minetest.chat_send_player(name, C("#FF0000", "[c/invite] " .. target .. " is already a member of #" .. c .. "!"))
+                return
+            end
+            if archtec.ignore_check(name, target) then
+                archtec.ignore_msg("c/invite", name, target)
                 return
             end
             channel.invite(c, target, name)
@@ -347,8 +443,20 @@ minetest.register_chatcommand("c", {
                 return
             end
             minetest.chat_send_player(name, C("#00BD00", list_table(channels or {})))
+        elseif action == "help" or action == "h" then
+            local help = archtec.get_and_trim(p1)
+            if help == "" then
+                minetest.chat_send_player(name, C("#FF0000", "[c/help] No question provided!"))
+                return
+            end
+            local hd = help_list[help]
+            if not hd then
+                minetest.chat_send_player(name, C("#FF0000", "[c/help] No help for this sub-command available!"))
+                return
+            end
+            minetest.chat_send_player(name, C("#00BD00", parse_help(hd)))
         else
-            minetest.chat_send_player(name, C("#FF0000", "[c] Unknown subcommand!"))
+            minetest.chat_send_player(name, help_all())
         end
     end
 })

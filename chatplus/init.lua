@@ -96,9 +96,6 @@ minetest.register_on_chat_message(function(name, message)
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
 		return true
 	end
-	if has_playerdata then
-		archtec_playerdata.mod(name, "chatmessages", 1)
-	end
 	local cc = archtec.count_keys(archtec_chat.users[name])
 	-- channelname resolver
 	local channel
@@ -142,6 +139,9 @@ minetest.register_on_chat_message(function(name, message)
 	else
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (#" .. channel .. ")")
 		archtec_chat.channel.send(channel, name .. ": " .. message)
+	end
+	if has_playerdata then
+		archtec_playerdata.mod(name, "chatmessages", 1)
 	end
 	return true
 end)
