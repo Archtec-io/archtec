@@ -227,6 +227,8 @@ local function help_all()
 end
 
 minetest.register_chatcommand("c", {
+    description = "Run '/c help' to get the command help",
+	privs = {interact = true, shout = true},
     func = function(name, param)
         minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
