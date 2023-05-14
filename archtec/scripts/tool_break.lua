@@ -13,11 +13,13 @@ local function break_warning(itemstack, user, node, digparams)
         end
     end
     if itemstack:get_wear() > 60135 and wdef.sound and wdef.sound.breaks then
-        minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
-        minetest.sound_play(wdef.sound.breaks, {
-            to_player = name,
-            gain = 2.0,
-        }, true)
+        if archtec_playerdata.get(name, "s_tbw_show") then
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
+            minetest.sound_play(wdef.sound.breaks, {
+                to_player = name,
+                gain = 2.0,
+            }, true)
+        end
     end
     return itemstack
 end
@@ -38,11 +40,13 @@ minetest.register_on_mods_loaded(function()
                         local wdef = itemstack:get_definition()
                         if itemstack:get_wear() > 60135 and wdef.sound and wdef.sound.breaks then
                             local name = user:get_player_name()
-                            minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
-                            minetest.sound_play(wdef.sound.breaks, {
-                                to_player = name,
-                                gain = 2.0,
-                            }, true)
+                            if archtec_playerdata.get(name, "s_tbw_show") then
+                                minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
+                                minetest.sound_play(wdef.sound.breaks, {
+                                    to_player = name,
+                                    gain = 2.0,
+                                }, true)
+                            end
                         end
                         return old_on_use(itemstack, user, pointed_thing)
                     end

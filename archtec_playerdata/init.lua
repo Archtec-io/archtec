@@ -13,6 +13,7 @@ local floor = math.floor
 local time = os.time
 local date = os.date
 local C = minetest.colorize
+local type = type
 local debug_mode = false
 local shutdown_mode = false
 
@@ -35,6 +36,9 @@ local struct = {
     join_count = 0,
     thank_you = 0,
     ignores = "",
+    s_help_msg = true,
+    s_tbw_show = true,
+    s_sp_show = true,
 }
 
 -- helper funtions
@@ -355,6 +359,10 @@ minetest.register_on_joinplayer(function(player)
         -- add first join
         if stats_get(name, "first_join") == 0 then
             stats_set(name, "first_join", time())
+        end
+        -- show spawn waypoint
+        if stats_get(name, "s_sp_show") == true then
+            archtec.sp_add(name)
         end
     end
 end)

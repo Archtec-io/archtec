@@ -6,6 +6,7 @@ archtec = {}
 
 dofile(scriptsPath.."common.lua")
 dofile(scriptsPath.."notifyTeam.lua")
+dofile(scriptsPath.."settings.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
 dofile(scriptsPath.."stats.lua")
@@ -53,6 +54,7 @@ dofile(scriptsPath.."news.lua")
 dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."lock.lua")
 dofile(scriptsPath.."lagometer.lua")
+dofile(scriptsPath.."waypoints.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
