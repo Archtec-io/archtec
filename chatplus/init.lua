@@ -77,24 +77,73 @@ local function set_color(name, color)
 	color_cache[name] = color
 end
 
+local function get_first_key(t)
+	-- luacheck: ignore (512)
+	for k, _ in pairs(t) do
+		return k
+	end
+end
+
 -- Hard depend chatplus on archtec mod to run archtec's on_chat_message callbacks (HACK)
 minetest.register_on_chat_message(function(name, message)
-	if minetest.check_player_privs(name, "shout") == true then
-		if string.sub(message, 1, 4) == "7msg" then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] Anti leak detection blocked this message"))
-			minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
-			return true -- mark as handeld
-		end
-		minetest.chat_send_all(minetest.colorize(color_table[get_color(name)], name .. ": ") .. message)
-		minetest.log("action", "CHAT: <" .. name .. "> " .. message)
-		discord.send(('**%s**: '):format(name), message)
-		if has_playerdata then
-			archtec_playerdata.mod(name, "chatmessages", 1)
-		end
+	if not minetest.get_player_privs(name).shout then
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] You don't have the shout priv!"))
+		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (player does not have 'shout')")
 		return true
-	else
-		return false
 	end
+	if message:sub(1, 4) == "7msg" then
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] Anti leak detection blocked this message!"))
+		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
+		return true
+	end
+	local cc = archtec.count_keys(archtec_chat.users[name])
+	-- channelname resolver
+	local channel
+	if cc == 1 then
+		-- luacheck: ignore (211)
+		channel = get_first_key(archtec_chat.users[name])
+	end
+	if message:sub(1, 1) == "#" then
+		local cname, msg = string.match(message, "^#(%S+) ?(.*)")
+		cname = archtec_chat.channel.get_cname(cname)
+		if not cname then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] No channelname provided!"))
+			return true
+		end
+		if not msg then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] Don't forget to add a message!"))
+			return true
+		end
+		if archtec_chat.channels[cname] and archtec_chat.channels[cname].users[name] then
+			channel = cname
+			message = msg
+		else
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] #" .. cname .. " does not exist or you aren't a channel member!"))
+			return true
+		end
+	elseif archtec_chat.users[name].main then -- normal message
+		channel = "main"
+	end
+	if not channel then
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] You aren't in any channel! (try '/c j main')"))
+		return true
+	end
+	if channel == "main" then
+		local msg = minetest.colorize(color_table[get_color(name)], name .. ": ") .. message
+		minetest.log("action", "CHAT: <" .. name .. "> " .. message)
+		local cdef = archtec_chat.channel.get_cdef("main")
+		for uname, _ in pairs(cdef.users) do
+			minetest.chat_send_player(uname, msg)
+		end
+		discord.send(('**%s**: '):format(name), message)
+	else
+		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (#" .. channel .. ")")
+		archtec_chat.channel.send(channel, name .. ": " .. message)
+	end
+	if has_playerdata then
+		archtec_playerdata.mod(name, "chatmessages", 1)
+	end
+	return true
 end)
 
 minetest.register_chatcommand("namecolor", {
