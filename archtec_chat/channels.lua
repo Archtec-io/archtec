@@ -45,7 +45,6 @@ function channel.send(cname, message)
     for name, _ in pairs(cdef.users) do
         minetest.chat_send_player(name, msg)
     end
-    set_cdef(cname, cdef)
 end
 
 function channel.create(cname, owner, keep)
@@ -62,7 +61,7 @@ function channel.delete(cname, name)
     if cdef.keep then return end
     minetest.log("action", "[archtec_chat] Delete channel '" .. cname .. "' by '" .. name .. "'")
     channel.send(cname, name .. " deleted the channel.")
-    set_cdef(cname, nil)
+    archtec_chat.channels[cname] = nil
 end
 
 function channel.join(cname, name, msg)
@@ -85,10 +84,10 @@ function channel.leave(cname, name, msg)
         channel.send(cname, name .. " left the channel.")
     end
     cdef.users[name] = nil
+    set_cdef(cname, cdef)
     if archtec.count_keys(cdef.users) == 0 then -- channel cleanup
         channel.delete(cname, "Service")
     end
-    set_cdef(cname, cdef)
     archtec_chat.users[name][cname] = nil
 end
 
@@ -446,7 +445,7 @@ minetest.register_chatcommand("c", {
         elseif action == "help" or action == "h" then
             local help = archtec.get_and_trim(p1)
             if help == "" then
-                minetest.chat_send_player(name, C("#FF0000", "[c/help] No question provided!"))
+                minetest.chat_send_player(name, help_all())
                 return
             end
             local hd = help_list[help]
