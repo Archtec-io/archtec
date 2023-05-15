@@ -26,8 +26,8 @@ local group_dry_grass = {
 	"default:dry_grass_5",
 }
 
---override abms
-for _, ab in pairs(minetest.registered_abms) do
+-- override abms
+for _, ab in ipairs(minetest.registered_abms) do
 
 	local label = ab.label or ""
 	local node1 = ab.nodenames and ab.nodenames[1] or ""
@@ -75,3 +75,27 @@ for _, ab in pairs(minetest.registered_abms) do
 		ab.chance = ab.chance * 0.5
 	end
 end
+
+-- slow abm logger
+local get_us_time, P2S = minetest.get_us_time, minetest.pos_to_string
+
+archtec.abm_max_time = 5000 -- 5 ms
+
+local function inc(label, diff, pos, node)
+    if diff > archtec.abm_max_time then
+        minetest.log("action", "ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. node.name or "?" .. "'")
+    end
+end
+
+minetest.register_on_mods_loaded(function()
+    for _, abm in ipairs(minetest.registered_abms) do
+        local old_action = abm.action
+        abm.action = function(pos, node, active_object_count, active_object_count_wider)
+            local t0 = get_us_time()
+            old_action(pos, node, active_object_count, active_object_count_wider)
+            local t1 = get_us_time()
+            local diff = t1 - t0
+            inc(abm.label or "??", diff, pos, node)
+        end
+    end
+end)

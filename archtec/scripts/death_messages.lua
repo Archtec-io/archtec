@@ -83,6 +83,7 @@ local function send_death_message(cause, player, killer)
             local entity_name = killer:get_luaentity().name
             local index, _ = string.find(entity_name, ":")
             local entity_name = string.sub(entity_name, index + 1)
+            entity_name = string.gsub(entity_name, "_", " ") -- remove _'s from mob names
             death_message = string.gsub(random_selection, "@1", name)
             death_message = string.gsub(death_message, "@2", entity_name)
         end

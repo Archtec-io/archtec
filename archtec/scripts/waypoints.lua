@@ -1,7 +1,7 @@
 local waypoints = {}
 
 local pos = vector.new(tonumber(minetest.settings:get("static_spawnpoint")))
-pos.y = pos.y + 2
+pos.y = pos.y + 0.5
 
 local function waypoint_add(name)
     if not waypoints[name] then
