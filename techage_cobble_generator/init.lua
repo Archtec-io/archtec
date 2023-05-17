@@ -40,38 +40,11 @@ minetest.register_craftitem("techage_cobble_generator:dry_ice_cri", {
 	description = ("Dry ice"),
 	inventory_image = "techage_cobble_generator_dry_ice.png",
 	groups = {powder = 1},
-	on_place = function(itemstack, placer, pt)
-		local name = placer and placer:get_player_name() or ""
-
-		-- check if pointing at a node
-		if not pt or pt.type ~= "node" then
-			return
-		end
-
-		local under = minetest.get_node(pt.under)
-
-		local def = minetest.registered_nodes[under.name]
-		if placer and itemstack and def and def.on_rightclick then
-			return def.on_rightclick(pt.under, under, placer, itemstack, pt)
-		end
-
-		local above = minetest.get_node(pt.above)
-
-		-- return if any of the nodes is not registered
-		if not minetest.registered_nodes[under.name] or not minetest.registered_nodes[above.name] then
-			return
-		end
-
-		-- if not protected then add node and remove 1 item from the itemstack
-		if not minetest.is_protected(pt.above, name) then
-			minetest.set_node(pt.above, {name = "techage_cobble_generator:dry_ice", param2 = 1})
-
-			if placer and itemstack then
-				itemstack:take_item()
-			end
-
-			return itemstack
-		end
+	on_place = function(itemstack, placer, pointed_thing)
+		itemstack:set_name("techage_cobble_generator:dry_ice")
+        local leftover = minetest.item_place(itemstack, placer, pointed_thing)
+        leftover:set_name("techage_cobble_generator:dry_ice_cri")
+        return leftover
 	end
 })
 

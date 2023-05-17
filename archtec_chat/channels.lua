@@ -1,21 +1,18 @@
 local channel = {}
 local C = minetest.colorize
 
+--[[
 local cdef_default = {
     owner = "",
     users = {},
     invites = {},
     keep = false
 }
+]]--
 
 local function get_cdef(cname)
     if not archtec_chat.channels[cname] then return nil end
-    local c = table.copy(archtec_chat.channels[cname])
-    local t = {}
-    for k, v in pairs(cdef_default) do
-        t[k] = c[k] or v
-    end
-    return t
+    return table.copy(archtec_chat.channels[cname])
 end
 
 channel.get_cdef = get_cdef

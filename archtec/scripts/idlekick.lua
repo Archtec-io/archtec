@@ -50,7 +50,7 @@ minetest.register_globalstep(function(dtime)
 	end
 	timer = 0
 
-	for _, player in pairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 		local pos = player:get_pos()
 		local time = now()
