@@ -41,6 +41,7 @@ read_globals = {
 	"font_api",
 	"anvil",
 	"unifieddyes",
+	"ItemStack",
 
 	string = {fields = {"split"}},
 	table = {fields = {"copy"}},

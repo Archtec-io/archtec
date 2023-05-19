@@ -1,9 +1,14 @@
-archtec_stamina = {}
+local archtec_stamina = {}
+
+function archtec_stamina.log(level, message, ...)
+	return minetest.log(level, ("[%s] %s"):format("archtec_stamina", message:format(...)))
+end
 
 archtec_stamina.settings = {
 	tick = 600, --time in seconds after that 1 saturation point is taken
 	tick_min = 4, --stamina ticks won't reduce saturation below this level
 	health_tick = 4, --time in seconds after player gets healed/damaged
+	poison_tick = 2,
 	exhaust_dig = 3, --exhaustion for digging a nod
 	exhaust_place = 1, --exhaustion for placing a node
 	exhaust_lvl = 220, --exhaustion level at which saturation gets lowered
@@ -17,6 +22,7 @@ local settings = archtec_stamina.settings
 
 local attribute = {
 	saturation = "stamina:level",
+	poisoned = "stamina:poisoned",
 	exhaustion = "stamina:exhaustion",
 }
 
@@ -72,6 +78,7 @@ function archtec_stamina.update_saturation(player, level)
 		return
 	end
 
+	-- players without interact priv cannot eat
 	if old < settings.heal_lvl and not minetest.check_player_privs(player, {interact=true}) then
 		return
 	end
@@ -88,6 +95,57 @@ function archtec_stamina.change_saturation(player, change)
 	level = math.min(level, settings.visual_max)
 	archtec_stamina.update_saturation(player, level)
 	return true
+end
+
+--- POISON API ---
+function archtec_stamina.is_poisoned(player)
+	return get_player_meta(player, attribute.poisoned) == "yes"
+end
+
+function archtec_stamina.set_poisoned(player, poisoned)
+	local hud_id = get_hud_id(player)
+	if poisoned then
+		player:hud_change(hud_id, "text", "stamina_hud_poison.png")
+		set_player_meta(player, attribute.poisoned, "yes")
+	else
+		player:hud_change(hud_id, "text", "stamina_hud_fg.png")
+		set_player_meta(player, attribute.poisoned, "no")
+	end
+end
+
+local function poison_tick(player_name, ticks, interval, elapsed)
+	local player = minetest.get_player_by_name(player_name)
+	if not player or not archtec_stamina.is_poisoned(player) then
+		return
+	elseif elapsed > ticks then
+		archtec_stamina.set_poisoned(player, false)
+	else
+		local hp = player:get_hp() - 1
+		if hp > 0 then
+			player:set_hp(hp, {type = "set_hp", cause = "stamina:poison"})
+		end
+		minetest.after(interval, poison_tick, player_name, ticks, interval, elapsed + 1)
+	end
+end
+
+archtec_stamina.registered_on_poisons = {}
+function archtec_stamina.register_on_poison(fun)
+	table.insert(archtec_stamina.registered_on_poisons, fun)
+end
+
+function archtec_stamina.poison(player, ticks, interval)
+	for _, fun in ipairs(archtec_stamina.registered_on_poisons) do
+		local rv = fun(player, ticks, interval)
+		if rv == true then
+			return
+		end
+	end
+	if not is_player(player) then
+		return
+	end
+	archtec_stamina.set_poisoned(player, true)
+	local player_name = player:get_player_name()
+	poison_tick(player_name, ticks, interval, 0)
 end
 
 --- EXHAUSTION API ---
@@ -139,7 +197,7 @@ local function health_tick()
 		local hp = player:get_hp() or 20
 		local saturation = archtec_stamina.get_saturation(player) or 20
 
-		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0 then
+		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0  and not archtec_stamina.is_poisoned(player) then
 			player:set_hp(hp + settings.heal)
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
 		elseif saturation < settings.starve_lvl and hp > 0 then -- or damage player by 1 hp if saturation is < 2 (of 20)
@@ -180,35 +238,43 @@ function minetest.do_item_eat(hp_change, replace_with_item, itemstack, player, p
 		return itemstack
 	end
 
-	minetest.sound_play("hbhunger_eat_generic", {
-		object = player,
-		pos = player:get_pos(),
-		max_hear_distance = 16,
-	}, true)
+	local level = archtec_stamina.get_saturation(player) or 0
+	if level >= settings.visual_max and hp_change > 0 then
+		-- don't eat if player is full and item provides saturation
+		return itemstack
+	end
+
+	local itemname = itemstack:get_name()
+	if replace_with_item then
+		archtec_stamina.log("action", "%s eats %s for %s stamina, replace with %s",
+			player:get_player_name(), itemname, hp_change, replace_with_item)
+	else
+		archtec_stamina.log("action", "%s eats %s for %s stamina",
+			player:get_player_name(), itemname, hp_change)
+	end
+	minetest.sound_play("hbhunger_eat_generic", {object = player, pos = player:get_pos(), max_hear_distance = 16}, true)
 
 	if hp_change > 0 then
 		archtec_stamina.change_saturation(player, hp_change)
 		archtec_stamina.set_exhaustion(player, 0)
+	elseif hp_change < 0 then
+		archtec_stamina.poison(player, -hp_change, settings.poison_tick)
 	end
 
 	itemstack:take_item()
-
-	if replace_with_item then
-		if itemstack:is_empty() then
-			itemstack:add_item(replace_with_item)
-		else
-			local inv = player:get_inventory()
-			if inv and inv:room_for_item("main", {name = replace_with_item}) then
-				inv:add_item("main", replace_with_item)
-			else
-				local pos = player:get_pos()
-				pos.y = math.floor(pos.y - 1.0)
-				minetest.add_item(pos, replace_with_item)
-			end
+	player:set_wielded_item(itemstack)
+	replace_with_item = ItemStack(replace_with_item)
+	if not replace_with_item:is_empty() then
+		local inv = player:get_inventory()
+		replace_with_item = inv:add_item("main", replace_with_item)
+		if not replace_with_item:is_empty() then
+			local pos = player:get_pos()
+			pos.y = math.floor(pos.y - 1.0)
+			minetest.add_item(pos, replace_with_item)
 		end
 	end
 
-	return itemstack
+	return nil  -- don't overwrite wield item a second time
 end
 
 minetest.register_on_joinplayer(function(player)
@@ -228,6 +294,8 @@ minetest.register_on_joinplayer(function(player)
 	})
 	set_hud_id(player, id)
 	archtec_stamina.set_saturation(player, level)
+	-- reset poisoned
+	archtec_stamina.set_poisoned(player, false)
 end)
 
 minetest.register_on_leaveplayer(function(player)

@@ -45,7 +45,7 @@ function minetest.send_leave_message(player_name, timed_out)
 		return
 	end
 	if timed_out then
-		discord.send(nil, ":information_source: " .. player_name .. " lost the connection...")
+		discord.send(nil, ":information_source: " .. player_name .. " left the game (timed out).")
 	else
 		discord.send(nil, ":information_source: " .. player_name .. " left the game.")
 	end
