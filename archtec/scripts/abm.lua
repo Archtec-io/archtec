@@ -81,9 +81,9 @@ local get_us_time, P2S = minetest.get_us_time, minetest.pos_to_string
 
 archtec.abm_max_time = 5000 -- 5 ms
 
-local function inc(label, diff, pos, node)
+local function inc(label, diff, pos, nn)
     if diff > archtec.abm_max_time then
-        minetest.log("action", "ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. node.name or "?" .. "'")
+        minetest.log("action", "ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
     end
 end
 
@@ -95,7 +95,7 @@ minetest.register_on_mods_loaded(function()
             old_action(pos, node, active_object_count, active_object_count_wider)
             local t1 = get_us_time()
             local diff = t1 - t0
-            inc(abm.label or "??", diff, pos, node)
+            inc(abm.label or "??", diff, pos, node.name or "??")
         end
     end
 end)

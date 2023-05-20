@@ -12,9 +12,9 @@ local function joined(name)
 end
 
 local function conditions(name)
-	local playtime = archtec_playerdata.get(name, "playtime") or 0
-	local nodes_dug = archtec_playerdata.get(name, "nodes_dug") or 0
-	local nodes_placed = archtec_playerdata.get(name, "nodes_placed") or 0
+	local playtime = archtec_playerdata.get(name, "playtime")
+	local nodes_dug = archtec_playerdata.get(name, "nodes_dug")
+	local nodes_placed = archtec_playerdata.get(name, "nodes_placed")
 	local old_enough = joined(name)
 	if old_enough ~= true then
 		return false
@@ -84,13 +84,13 @@ minetest.register_tool(":technic:chainsaw", {
 			return
 		end
 
-		if api.is_wielding_axe(digger) and api.is_enabled(digger) then
-			local treetop = api.find_treetop(pos, oldnode, player_name)
-			if treetop then
-				api.start_process(digger, treetop, oldnode.name)
-			else
-				api.start_process(digger, pos, oldnode.name)
-			end
+		if not api.is_initialized(digger) then
+			choppy.show_first_use_form(digger)
+		end
+
+		if api.is_enabled(digger) then
+			local treetop = api.find_treetop(pos, oldnode, digger)
+			api.start_process(digger, pos, treetop or pos, oldnode.name)
 		end
 	end,
 })
