@@ -47,7 +47,7 @@ for _, quarry in pairs(quarrys) do
 end
 
 -- limit signs_bots
-ov_node("signs_bot:box", {"signs_bot:box", "signs_bot:robot"}, 24, 7)
+ov_node("signs_bot:box", {"signs_bot:box"}, 24, 7)
 
 -- limit drawers
 local function ov_drawer(node)
