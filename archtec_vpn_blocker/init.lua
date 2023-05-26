@@ -1,15 +1,29 @@
 local http = minetest.request_http_api()
+local iphub_key = minetest.settings:get("iphub_key")
 assert(http ~= nil, "You need to add archtec_vpn_blocker to secure.http_mods")
 
-archtec_vpn_blocker = {}
-local iphub_key = minetest.settings:get("iphub_key")
+local cache, ttl = {}, 14400 -- 4 h
+
+local function cleanup()
+    local expire = os.time() - ttl
+    for ip, d in pairs(cache) do
+        if d.expire < expire then
+            cache[ip] = nil
+        end
+    end
+    minetest.after(ttl, cleanup)
+end
+minetest.after(ttl, cleanup)
 
 --  Add the main ipcheckup function
-local function check_ip(name, ip, hash)
+local function check_ip(name, ip)
     local request = {
         ["url"] = "https://v2.api.iphub.info/ip/" .. ip,
         ["extra_headers"] = {"X-Key: " .. iphub_key}
     }
+    if cache[ip] then
+        return cache[ip].result
+    end
     http.fetch(request, function(result)
         if result.code == 429 then
             return
@@ -28,25 +42,24 @@ local function check_ip(name, ip, hash)
                     end
                 end)
             end
+            cache[ip] = {}
+            cache[ip].result = data.block
+            cache[ip].expire = os.time()
         else
 			return
         end
     end)
 end
 
-function archtec_vpn_blocker.handle_player(name, ip)
+local function handle_player(name, ip)
 	if not ip or not name then
 		return
 	end
-	local iphash = minetest.sha1(ip)
-	if not iphash then
-		return
-	end
-	check_ip(name, ip, iphash)
+	check_ip(name, ip)
 end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local ip = minetest.get_player_ip(name)
-	archtec_vpn_blocker.handle_player(name, ip)
+	handle_player(name, ip)
 end)
