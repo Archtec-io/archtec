@@ -32,6 +32,14 @@ local function create_title(param)
 	return table.concat(title_parts, " ")
 end
 
+local function clean_meta(m)
+	local meta = table.copy(m) -- not sure if we need this...
+	if meta.ui_waypoints then -- waypoints may contain private data
+		meta.ui_waypoints = nil
+	end
+	return meta
+end
+
 local function send_report(name, report)
 	local player = minetest.get_player_by_name(name)
 	local pos
@@ -42,7 +50,7 @@ local function send_report(name, report)
 	end
 	local meta
 	if player then
-		meta = dump(player:get_meta():to_table())
+		meta = dump(clean_meta(player:get_meta():to_table()))
 	else
 		meta = "unknown"
 	end
