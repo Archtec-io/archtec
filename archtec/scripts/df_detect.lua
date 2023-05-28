@@ -3,6 +3,7 @@
 -- luacheck: push no max line length
 local df = {
 	"dragonfire",
+	"texmodbot",
 	"f8fd5c11b", -- Merge pull request #59 from PrairieAstronomer/readme_irrlicht_change
 	"c66ae6717", -- Add exact irrlichtmt version to the clone command
 	"296cce39d", -- Fix upstream merge issues

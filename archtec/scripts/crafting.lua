@@ -141,3 +141,9 @@ if minetest.get_modpath("homedecor_lighting") then
         }
     })
 end
+
+-- https://github.com/Archtec-io/bugtracker/issues/58 (small hack)
+minetest.register_craft({
+	output = "farming:wheat 3",
+	recipe = {{"farming:straw"}}
+})
