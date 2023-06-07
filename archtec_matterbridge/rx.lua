@@ -8,7 +8,7 @@ local function handle_data(data)
 
 	if data.event == "user_action" then
 		minetest.log("action", "[archtec_matterbridge] User action '" .. data.text .. "' by '" .. data.username)
-		minetest.chat_send_all("* " .. data.username .. " " .. data.text)
+		minetest.chat_send_all("* " .. data.username .. " " .. data.text .. minetest.colorize("#666", " [send from Discord]"))
 		discord.send(nil, ":speech_left: " .. ('%s *%s*'):format(data.username, data.text))
 	elseif data.event == "join_leave" then
 		return

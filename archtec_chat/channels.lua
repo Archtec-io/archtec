@@ -392,7 +392,7 @@ minetest.register_chatcommand("c", {
                 minetest.chat_send_player(name, C("#FF0000", target .. " is in no channels!"))
                 return
             end
-            minetest.chat_send_player(name, C("#00BD00", list_table(channels or {})))
+            minetest.chat_send_player(name, C("#00BD00", "[c/find] " .. target .. " is in the following channels: " .. list_table(channels or {})))
         elseif action == "help" or action == "h" then
             local help = archtec.get_and_trim(p1)
             if help == "" then
@@ -406,7 +406,7 @@ minetest.register_chatcommand("c", {
             end
             minetest.chat_send_player(name, C("#00BD00", parse_help(hd)))
         else
-            minetest.chat_send_player(name, help_all())
+            minetest.chat_send_player(name, C("#FF0000", "[c] Unknown sub-command! (try '/c help')"))
         end
     end
 })
