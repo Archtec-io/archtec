@@ -1,6 +1,7 @@
 local pickup_gain = 0.4
 local pickup_radius = 0.75
 local pickup_age = 0.5
+local enabled = {}
 
 -- adds the item to the inventory and removes the object
 local function collect_item(ent, pos, player)
@@ -23,13 +24,6 @@ local function opt_get_ent(object)
 	return ent
 end
 
-local function is_inside_map(pos)
-	local bound = 31000
-	return -bound < pos.x and pos.x < bound
-		and -bound < pos.y and pos.y < bound
-		and -bound < pos.z and pos.z < bound
-end
-
 -- called for each player to possibly collect an item, returns true if so
 local function pickupfunc(player)
 	if player:get_hp() <= 0 then
@@ -37,10 +31,6 @@ local function pickupfunc(player)
 	end
 
 	local pos = player:get_pos()
-	if not is_inside_map(pos) then
-		-- get_objects_inside_radius crashes for too far positions
-		return
-	end
 	pos.y = pos.y+0.5
 	local inv = player:get_inventory()
 
@@ -63,17 +53,39 @@ end
 
 local function pickup_step()
 	local got_item
-	local players = minetest.get_connected_players()
-	for i = 1, #players do
-		got_item = got_item or pickupfunc(players[i])
+	for _, player in ipairs(minetest.get_connected_players()) do
+		local name = player:get_player_name()
+		if enabled[name] == nil then
+			enabled[name] = archtec_playerdata.get(name, "s_r_id")
+		end
+		if enabled[name] then
+			got_item = got_item or pickupfunc(player)
+		end
 	end
 	-- lower step if takeable item(s) were found
 	local time
 	if got_item then
-		time = 0.02
+		time = 0.05 -- next step
 	else
-		time = 0.2
+		time = 0.4
 	end
 	minetest.after(time, pickup_step)
 end
 minetest.after(3.0, pickup_step)
+
+local function update(name, setting, newvalue)
+    if setting ~= "r_id" then return end
+    if newvalue == true then
+        enabled[name] = true
+    else
+        enabled[name] = false -- yes, this is intentional
+    end
+end
+
+archtec.settings.add_callback(update)
+
+minetest.register_on_leaveplayer(function(player)
+    if player then
+        enabled[player:get_player_name()] = nil
+    end
+end)

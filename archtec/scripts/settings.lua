@@ -21,10 +21,11 @@ end
 local function tobool(v) if v == "true" then return true end return false end
 
 local function set(name, setting, val)
-    minetest.log("action", "[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. val .. "'")
-    return archtec_playerdata.set(name, "s_" .. setting, tobool(val))
+    minetest.log("action", "[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. dump(val) .. "'")
+    return archtec_playerdata.set(name, "s_" .. setting, val)
 end
 
+-- y + 0.5
 local function show_settings(name)
     local formspec = {
         "formspec_version[4]",
@@ -34,6 +35,7 @@ local function show_settings(name)
         "checkbox[0.6,1.4;s_tbw_show;Show tool breakage warnings;" .. get(name, "tbw_show") .. "]",
         "label[0.3,1.9;", fs_esc("Misc"), "]",
         "checkbox[0.6,2.4;s_sp_show;Show a waypoint to the spawn;" .. get(name, "sp_show") .. "]",
+        "checkbox[0.6,2.9;s_r_id;Collect dropped items automatically;" .. get(name, "r_id") .. "]",
     }
     minetest.show_formspec(name, "archtec:settings", table.concat(formspec, ""))
 end
@@ -44,8 +46,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     for f, v in pairs(fields) do
         if f:sub(1, 2) == "s_" then
             local setting = f:sub(3, #f)
-            set(name, setting, v)
-            on_setting_change(name, setting, v)
+            local val = tobool(v)
+            set(name, setting, val)
+            on_setting_change(name, setting, val)
         end
     end
 end)

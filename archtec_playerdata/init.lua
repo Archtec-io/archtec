@@ -36,9 +36,10 @@ local struct = {
     join_count = 0,
     thank_you = 0,
     ignores = "",
-    s_help_msg = true,
-    s_tbw_show = true,
-    s_sp_show = true,
+    s_help_msg = true, -- help msg
+    s_tbw_show = true, -- tool breakage warnings
+    s_sp_show = true, -- spawnwaypoint
+    s_r_id = true, -- auto item drop collection
 }
 
 -- helper funtions

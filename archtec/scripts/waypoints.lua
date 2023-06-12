@@ -30,7 +30,7 @@ archtec.sp_remove = waypoint_remove
 
 local function update(name, setting, newvalue)
     if setting ~= "sp_show" then return end
-    if newvalue == "true" then
+    if newvalue == true then
         waypoint_add(name)
     else
         waypoint_remove(name)
