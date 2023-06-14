@@ -8,9 +8,10 @@ local function register(name, def)
 	registered[name] = def
 end
 
-local function get_rank(player)
-	if minetest.check_player_privs(player, "staff") then
-		if minetest.check_player_privs(player, "server") then
+local function get_rank(name)
+	local privs = minetest.get_player_privs(name)
+	if privs.staff then
+		if privs.server then
 			return "admin"
 		end
 		return "mod"
@@ -18,9 +19,9 @@ local function get_rank(player)
 end
 
 local function update_nametag(player, remove)
-	local rank = get_rank(player)
+	local name = player:get_player_name()
+	local rank = get_rank(name)
 	if rank ~= nil then
-		local name = player:get_player_name()
 		local def = registered[rank]
 		local color = get_color(def.color)
 		local prefix = minetest.colorize(color, def.prefix) .. " "
@@ -34,7 +35,6 @@ local function update_nametag(player, remove)
 		return true
 	end
 	if remove and rank == nil then
-		local name = player:get_player_name()
 		player:set_nametag_attributes({
 			text = name,
 			color = "#ffffff",
