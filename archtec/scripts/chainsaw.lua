@@ -56,7 +56,7 @@ minetest.register_tool(":technic:chainsaw", {
 			if conditions(name) then
 				grant_priv(name, "archtec_chainsaw")
 			else
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chainsaw] You don't satisfy all conditions to use a chainsaw. See /stats"))
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account"))
 				return
 			end
 		end
