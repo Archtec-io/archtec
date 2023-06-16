@@ -110,6 +110,16 @@ local function stats_dump()
     minetest.safe_file_write(datadir .. "/dump." .. time(), minetest.serialize(d))
 end
 
+archtec_playerdata.dump = stats_dump
+
+local function stats_restore(name, table)
+    local d = sql:to_table()
+    d.fields[name] = minetest.serialize(table)
+    sql:from_table(d)
+end
+
+archtec_playerdata.restore = stats_restore
+
 local function string2timestap(s)
     if type(s) ~= "string" then return end
     local p = "(%a+) (%a+) (%d+) (%d+):(%d+):(%d+) (%d+)"
