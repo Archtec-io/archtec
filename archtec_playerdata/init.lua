@@ -201,10 +201,6 @@ end
 -- get/set/mod data
 local function stats_get(name, key)
     if not valid_player(name) then return end
-    if type(key) ~= "string" then
-        log_warning("get: key '" .. dump(key) .. "' is not a string!")
-        return
-    end
     local val, clean
     if cache[name] == nil then
         stats_load(name, false)
