@@ -249,11 +249,19 @@ local function stats_mod(name, key, value)
     end
     local old, clean
     if cache[name] then
-        old = cache[name][key]
+        if cache[name][key] then
+            old = cache[name][key]
+        else
+            old = struct[key]
+        end
     else
         stats_load(name, false)
-        old = cache[name][key]
         clean = true
+        if cache[name][key] then
+            old = cache[name][key]
+        else
+            old = struct[key]
+        end
     end
     if old == nil then
         log_warning("mod: get returned nil for key '" .. dump(key) .. "' of '" .. dump(name) .. "'!")
