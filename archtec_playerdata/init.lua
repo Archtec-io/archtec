@@ -8,20 +8,12 @@ local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 local cache = {}
 local playtime_current = {}
 local fs_esc = minetest.formspec_escape
+local floor, time, date, type, C = math.floor, os.time, os.date, type, minetest.colorize
+local sql = minetest.get_mod_storage()
+-- config
 local save_interval = 60
-local floor = math.floor
-local time = os.time
-local date = os.date
-local C = minetest.colorize
-local type = type
 local debug_mode = false
 local shutdown_mode = false
-
-minetest.register_on_mods_loaded(function()
-    if not minetest.mkdir(datadir) then
-        error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
-    end
-end)
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
 local struct = {
@@ -66,23 +58,10 @@ end
 
 local function valid_player(name)
     if name ~= nil and name ~= "" and type(name) == "string" then
-        log_debug("valid_player: '" .. name .. "' is valid!")
+        log_debug("valid_player: '" .. dump(name) .. "' is valid!")
         return true
     else
-        log_action("valid_player: '" .. name .. "' is not valid!") -- log_warning() would trigger staff notifications
-        return false
-    end
-end
-
-local function stats_file_exsist(name)
-    if not valid_player(name) then return end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
-    if file ~= nil then
-        file:close()
-        log_debug("stats_file_exsist: file of '" .. name .. "' exsits")
-        return true
-    else
-        log_debug("stats_file_exsist: file of '" .. name .. "' does not exsit")
+        log_action("valid_player: '" .. dump(name) .. "' is not valid!") -- log_warning() would trigger staff notifications
         return false
     end
 end
@@ -101,9 +80,6 @@ local function is_valid(value)
 end
 
 local function divmod(a, b)
-    if type(a) ~= "number" or type(b) ~= "number" then
-        return
-    end
     return floor(a / b), a % b
 end
 
@@ -129,6 +105,21 @@ local function get_session_playtime(name)
     end
 end
 
+local function stats_dump()
+    local d = sql:to_table()
+    minetest.safe_file_write(datadir .. "/dump." .. time(), minetest.serialize(d))
+end
+
+archtec_playerdata.dump = stats_dump
+
+local function stats_restore(name, table)
+    local d = sql:to_table()
+    d.fields[name] = minetest.serialize(table)
+    sql:from_table(d)
+end
+
+archtec_playerdata.restore = stats_restore
+
 local function string2timestap(s)
     if type(s) ~= "string" then return end
     local p = "(%a+) (%a+) (%d+) (%d+):(%d+):(%d+) (%d+)"
@@ -148,86 +139,72 @@ archtec_playerdata.string2timestap = string2timestap
 
 -- load/create data
 local function stats_create(name)
-    if not valid_player(name) then return end
-    if stats_file_exsist(name) then
-        log_warning("stats_create: stats for '" .. name .. "' already exsists!")
+    if sql:contains(name) then
+        log_warning("stats_create: stats file for '" .. dump(name) .. "' already exsists!")
         return false
     end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
-    file:close()
-    log_debug("stats_create: create stats file for '" .. name .. "'")
-    return true
+    sql:set_string(name, minetest.serialize({}))
+    return sql:contains(name)
 end
 
-local function stats_load(name)
+local function stats_load(name, create)
     if not valid_player(name) then return end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
-    if not file then
-        log_debug("load: file of '" .. name .. "' does not exsist!")
-        stats_create(name)
-        file = io.open(datadir .. "/" .. name .. ".txt", "r") -- try again
+    if create == nil then create = true end
+    if cache[name] then
+        log_action("load: stats of '" .. dump(name) .. "' already loaded")
+        return
     end
-    local raw = file:read("*a")
-    file:close()
-    local data
-    if raw == nil then
-        log_warning("load: file of '" .. name .. "' contains no data!")
-    else
-        data = minetest.deserialize(raw)
-        if data == nil then
-            data = {} -- fix nil crashes due non-existing keys
+    local raw = sql:get_string(name)
+    if raw == "" then
+        if not create then
+            return
+        end
+        if stats_create(name) then
+            raw = sql:get_string(name) -- try again
+        else
+            log_warning("load: cannot create stats entry for '" .. dump(name) .. "'!")
+            return
         end
     end
-    for key, value in pairs(data) do
+    local data = minetest.deserialize(raw)
+    if date == nil then
+        log_warning("load: failed to deserialize stats of '" .. dump(name) .. "'!")
+        return
+    end
+    -- remove unknown keys
+    for key, _ in pairs(data) do
         if not (in_struct(key)) then
-            log_warning("load: removing unknown key '" .. key .. "' of player '" .. name .. "'!")
-            data[key] = nil -- remove unknown keys
+            log_action("load: removing unknown key '" .. dump(key) .. "' of player '" .. dump(name))
+            data[key] = nil
         end
     end
     cache[name] = data
 end
 
-local function stats_load_offline(name) -- do not create/change any data of offline players!
+-- save handler
+local function stats_save(name)
     if not valid_player(name) then return end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "r")
-    if not file then
-        log_debug("load_offline: file of '" .. name .. "' does not exsist")
+    -- save data
+    local data = cache[name]
+    if data == nil then
+        log_warning("save: cache for '" .. dump(name) .. "' is nil! Saving will be aborted!")
         return
     end
-    local raw = file:read("*a")
-    file:close()
-    local data
-    if raw == nil then
-        log_warning("load_offline: file of '" .. name .. "' contains no data!")
+    local raw = minetest.serialize(data)
+    if raw == nil or raw == "" then
+        log_warning("save: raw data of '" .. dump(name) .. "' is nil!")
         return
-    else
-        data = minetest.deserialize(raw)
-        if data == nil then
-            data = {} -- fix nil crashes due non-existing keys
-        end
     end
-    for key, value in pairs(data) do
-        if not (in_struct(key)) then
-            log_debug("load_offline: (temporary) removing unknown key '" .. key .. "' of player '" .. name .. "'!")
-            data[key] = nil -- remove unknown keys
-        end
-    end
-    return data
+    sql:set_string(name, raw)
 end
-
-archtec_playerdata.load_offline = stats_load_offline
 
 -- get/set/mod data
 local function stats_get(name, key)
     if not valid_player(name) then return end
-    if type(key) ~= "string" then
-        log_warning("get: key '" .. dump(key) .. "' is not a string!")
-        return
-    end
-    local val
+    local val, clean
     if cache[name] == nil then
-        log_warning("get: cache for '" .. name .. "' is nil!")
-        return
+        stats_load(name, false)
+        clean = true
     end
     if cache[name][key] == nil then
         val = struct[key]
@@ -235,8 +212,11 @@ local function stats_get(name, key)
         val = cache[name][key]
     end
     if val == nil then
-        log_warning("get: key '" .. key .. "' is unknown!")
+        log_warning("get: key '" .. dump(key) .. "' is unknown!")
         return
+    end
+    if clean then
+        cache[name] = nil
     end
     return val
 end
@@ -246,14 +226,19 @@ archtec_playerdata.get = stats_get
 local function stats_set(name, key, value)
     if not valid_player(name) then return false end
     if not is_valid(value) then return false end
+    local clean
     if cache[name] == nil then
-        log_warning("set: cache for '" .. name .. "' is nil!")
-        return false
+        stats_load(name, false)
+        clean = true
     end
     if value == struct[key] then
         value = nil
     end
     cache[name][key] = value
+    if clean then
+        stats_save(name)
+        cache[name] = nil
+    end
     return true
 end
 
@@ -262,50 +247,40 @@ archtec_playerdata.set = stats_set
 local function stats_mod(name, key, value)
     if not valid_player(name) then return false end
     if type(value) ~= "number" then
-        log_warning("mod: value '" .. value .. "' is not a number!")
+        log_warning("mod: value '" .. dump(value) .. "' is not a number!")
         return false
     end
-    local old = stats_get(name, key)
+    local old, clean
+    if cache[name] then
+        old = cache[name][key]
+    else
+        stats_load(name, false)
+        old = cache[name][key]
+        clean = true
+    end
     if old == nil then
-        log_warning("mod: get returned nil for key '" .. key .. "' of '" .. name .. "'!")
+        log_warning("mod: get returned nil for key '" .. dump(key) .. "' of '" .. dump(name) .. "'!")
         return false
     end
     value = old + value
     cache[name][key] = value
+    if clean then
+        stats_save(name)
+        cache[name] = nil
+    end
     return true
 end
 
 archtec_playerdata.mod = stats_mod
 
 -- save data
-local function stats_save(name)
-    if not valid_player(name) then return end
-    -- update playtime
-    stats_mod(name, "playtime", get_session_playtime(name))
-    playtime_current[name] = time()
-    local data = cache[name]
-    if data == nil then
-        log_warning("save: cache for '" .. name .. "' is nil! Saving will be aborted!")
-        return
-    end
-    local file = io.open(datadir .. "/" .. name .. ".txt", "w")
-    if not file then
-        log_warning("save: file of '" .. name .. "' does not exsist!")
-        return
-    end
-    local raw = minetest.serialize(data)
-    if raw == nil or raw == "" then
-        log_warning("save: raw data of '" .. name .. "' is nil!")
-        return
-    end
-    file:write(raw)
-    file:close()
-end
-
 local function stats_save_all()
     local before = minetest.get_us_time()
-    for _, player in pairs(minetest.get_connected_players()) do
+    for _, player in ipairs(minetest.get_connected_players()) do
         local name = player:get_player_name()
+        -- update playtime
+        stats_mod(name, "playtime", get_session_playtime(name))
+        playtime_current[name] = time()
         stats_save(name)
     end
     local after = minetest.get_us_time()
@@ -315,14 +290,17 @@ end
 
 local function stats_save_all_shutdown()
     local before = minetest.get_us_time()
-    for _, player in pairs(minetest.get_connected_players()) do
+    for _, player in ipairs(minetest.get_connected_players()) do
         local name = player:get_player_name()
+        -- update playtime
+        stats_mod(name, "playtime", get_session_playtime(name))
+        playtime_current[name] = time()
         stats_save(name)
         cache[name] = nil
         playtime_current[name] = nil
     end
     local after = minetest.get_us_time()
-    log_debug("Took: " .. (after - before) / 1000 .. " ms")
+    return (after - before) / 1000
 end
 
 minetest.after(4, stats_save_all)
@@ -345,7 +323,7 @@ minetest.register_on_joinplayer(function(player)
         if stats_get(name, "playtime") == 0 then
             stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
             player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
-            log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
+            log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. dump(name) .. "'")
         end
         -- first join data migration
 		if stats_get(name, "first_join") == 0 then -- move legacy data
@@ -354,7 +332,7 @@ minetest.register_on_joinplayer(function(player)
                 local int = string2timestap(string)
                 stats_set(name, "first_join", int)
                 player:get_meta():set_string("archtec:joined", nil)
-                log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")
+                log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. dump(name) .. "'")
             end
         end
         -- add first join
@@ -378,8 +356,8 @@ end)
 
 minetest.register_on_shutdown(function()
     shutdown_mode = true
-    stats_save_all_shutdown()
-    log_action("shutdown: saved all data!")
+    local t = stats_save_all_shutdown()
+    log_action("shutdown: saved all data in " .. t .. "ms!")
 end)
 
 -- stats
@@ -428,15 +406,14 @@ local function stats(name, target)
         data = table.copy(cache[target])
         is_online = true
     else
-        data = stats_load_offline(target)
+        stats_load(target, false) -- we won't create new stats files
+        data = table.copy(cache[target])
+        cache[target] = nil -- unload
         is_online = false
     end
     if data == nil then
         minetest.chat_send_player(name, C("#FF0000", "[stats] Can't read stats!"))
         return
-    end
-    if data.join_count == nil then
-        data.join_count = 1
     end
     local privs = minetest.get_player_privs(target) or {}
     local pauth = minetest.get_auth_handler().get_auth(target)
@@ -500,40 +477,50 @@ minetest.register_chatcommand("stats", {
             return
         end
         stats(name, target)
-    end,
+    end
 })
 
-
---[[
-Code example to migrate a key
-local updated = 0
-
-local function legacy_migrate_join_date(name)
-    stats_load(name)
-    local joined = stats_get(name, "joined")
-    if joined ~= 0 then
-        local int = string2timestap(joined)
-        stats_set(name, "first_join", int)
-        stats_set(name, "joined", 0)
-        updated = updated + 1
-        stats_unload(name)
+local function migrate_old()
+    -- generate list of files
+    local files = minetest.get_dir_list(datadir, false)
+    local flist = {}
+    for _, filename in ipairs(files) do
+        if not filename:find("dump.") then
+            local name, _ = filename:match("(.*)(.txt)$")
+            table.insert(flist, name)
+        end
+    end
+    -- create backup
+    if #flist > 0 then
+        minetest.cpdir(datadir,  minetest.get_worldpath() .. "/archtec_playerdata_backup")
+    end
+    -- read and delete
+    for _, name in ipairs(flist) do
+        local file = io.open(datadir .. "/" .. name .. ".txt", "r")
+        local raw = file:read("*a")
+        file:close()
+        sql:set_string(name, raw)
+        os.remove(datadir .. "/" .. name .. ".txt")
+    end
+    if #flist > 0 then
+        log_action("migrated " .. #flist .. " files")
     end
 end
 
-local function migrate()
-    local files = minetest.get_dir_list(datadir)
-    for _, file in pairs(files) do
-        local name = string.sub(file, 1, #file - 4)
-        legacy_migrate_join_date(name)
-    end
-    print(updated)
-end
-
-minetest.register_chatcommand("stats_migrate", {
+minetest.register_chatcommand("stats_dump", {
+    description = "Dump all stats",
 	privs = {server = true},
     func = function(name, param)
-        migrate()
-    end,
+        minetest.log("action", "[/stats_dump] executed by '" .. name .. "'")
+        stats_dump()
+        minetest.chat_send_player(name, C("#00BD00", "Dumped all stats"))
+    end
 })
-]]--
 
+minetest.register_on_mods_loaded(function()
+    if not minetest.mkdir(datadir) then
+        error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
+    end
+    migrate_old()
+    stats_dump()
+end)

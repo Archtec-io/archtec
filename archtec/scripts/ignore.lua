@@ -5,16 +5,7 @@ local function get_list(name)
     if cache[name] then -- load from direct cache
         return cache[name]
     end
-    local ignores
-    if archtec.is_online(name) then -- load from playerdata cache
-        ignores = minetest.deserialize(archtec_playerdata.get(name, "ignores"))
-    end
-    if ignores == nil then -- load offline playerdata
-        local t = archtec_playerdata.load_offline(name)
-        if t and t.ignores then
-            ignores = minetest.deserialize(t.ignores)
-        end
-    end
+    local ignores = minetest.deserialize(archtec_playerdata.get(name, "ignores"))
     if ignores == nil then -- no data available, do nothing
         ignores = {}
     end
