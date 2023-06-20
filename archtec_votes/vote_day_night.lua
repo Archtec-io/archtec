@@ -2,6 +2,9 @@ local function is_night()
 	return minetest.get_timeofday() < 0.2 or minetest.get_timeofday() > 0.75
 end
 
+local free_votes = 5
+archtec.free_votes = free_votes
+
 minetest.register_chatcommand("vote_day", {
 	description = "Start a vote to set the time to day",
 	privs = {interact = true},
@@ -16,6 +19,10 @@ minetest.register_chatcommand("vote_day", {
 
         if inv:contains_item("main", "ethereal:etherium_dust 3") then
             inv:remove_item("main", "ethereal:etherium_dust 3")
+        elseif archtec_playerdata.get(name, "free_votes") <= free_votes then
+            archtec_playerdata.mod(name, "free_votes", 1)
+            local counter = free_votes - archtec_playerdata.get(name, "free_votes")
+            minetest.chat_send_player(name, minetest.colorize("#088A08", "Used one of your free votes, remaning free votes: " .. counter))
         else
             minetest.chat_send_player(name, minetest.colorize("#FF0000", "To start a vote you must have 3 etherium dust in your inventory"))
             return
@@ -64,6 +71,10 @@ minetest.register_chatcommand("vote_night", {
 
         if inv:contains_item("main", "ethereal:etherium_dust 3") then
             inv:remove_item("main", "ethereal:etherium_dust 3")
+        elseif archtec_playerdata.get(name, "free_votes") <= free_votes then
+            archtec_playerdata.mod(name, "free_votes", 1)
+            local counter = free_votes - archtec_playerdata.get(name, "free_votes")
+            minetest.chat_send_player(name, minetest.colorize("#088A08", "Used one of your free votes, remaning free votes: " .. counter))
         else
             minetest.chat_send_player(name, minetest.colorize("#FF0000", "To start a vote you must have 3 etherium dust in your inventory"))
             return

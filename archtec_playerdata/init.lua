@@ -28,6 +28,7 @@ local struct = {
     join_count = 0,
     thank_you = 0,
     ignores = "",
+    free_votes = 0, -- we use 0 to allow later changes of the max value
     s_help_msg = true, -- help msg
     s_tbw_show = true, -- tool breakage warnings
     s_sp_show = true, -- spawnwaypoint
@@ -90,11 +91,7 @@ local function format_duration(seconds)
 end
 
 local function in_cache(name)
-    if cache[name] ~= nil then
-        return true
-    else
-        return false
-    end
+    return cache[name] ~= nil
 end
 
 local function get_session_playtime(name)
@@ -432,6 +429,7 @@ local function stats(name, target)
     local join_count = data.join_count or 1
     local thank_you = data.thank_you or 0
     local avg_playtime = format_duration(avg) or 0
+    local free_votes = (archtec.free_votes or 0) - (data.free_votes or 0)
     local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
     if privs["adv_buckets"] then priv_lava = C("#00BD00", "YES") else priv_lava = C("#FF0000", "NO") end
     if privs["archtec_chainsaw"] then priv_chainsaw = C("#00BD00", "YES") else priv_chainsaw = C("#FF0000", "NO") end
@@ -444,7 +442,7 @@ local function stats(name, target)
     end
     local formspec = {
         "formspec_version[4]",
-        "size[5.5,8.5]",
+        "size[5.5,9]",
         "label[0.375,0.5;", fs_esc("Stats of: " .. user), "]",
         "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
         "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
@@ -461,6 +459,7 @@ local function stats(name, target)
         "label[0.375,7.0;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
         "label[0.375,7.5;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
         "label[0.375,8.0;", fs_esc("Can create big areas: " .. priv_areas), "]",
+        "label[0.375,8.5;", fs_esc("Remaining free votes: " .. free_votes), "]",
     }
     minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
 end
