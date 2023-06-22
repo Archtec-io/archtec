@@ -42,9 +42,9 @@ minetest.register_craftitem("techage_cobble_generator:dry_ice_cri", {
 	groups = {powder = 1},
 	on_place = function(itemstack, placer, pointed_thing)
 		itemstack:set_name("techage_cobble_generator:dry_ice")
-        local leftover = minetest.item_place(itemstack, placer, pointed_thing)
-        leftover:set_name("techage_cobble_generator:dry_ice_cri")
-        return leftover
+		local leftover = minetest.item_place(itemstack, placer, pointed_thing)
+		leftover:set_name("techage_cobble_generator:dry_ice_cri")
+		return leftover
 	end
 })
 
