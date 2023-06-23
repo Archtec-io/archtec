@@ -51,7 +51,7 @@ minetest.register_tool(":technic:chainsaw", {
 	},
 	sound = {breaks = "default_tool_breaks"},
 	on_use = function(itemstack, digger, pointed_thing)
-		if not minetest.check_player_privs(digger, "archtec_chainsaw") then
+		if not minetest.get_player_privs(digger).archtec_chainsaw then
 			local name = digger:get_player_name()
 			if conditions(name) then
 				grant_priv(name, "archtec_chainsaw")
@@ -84,16 +84,14 @@ minetest.register_tool(":technic:chainsaw", {
 			return
 		end
 
-		if not api.is_initialized(digger) then
-			choppy.show_first_use_form(digger)
-		end
-
 		if api.is_enabled(digger) then
 			local treetop = api.find_treetop(pos, oldnode, digger)
 			api.start_process(digger, pos, treetop or pos, oldnode.name)
 		end
 	end,
 })
+
+minetest.unregister_chatcommand("toggle_choppy")
 
 anvil.make_unrepairable("technic:chainsaw")
 choppy.api.registered_axes = {}

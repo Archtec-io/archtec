@@ -130,9 +130,10 @@ minetest.register_on_mods_loaded(function()
 			local old_action = def.on_timer
 			def.on_timer = function(pos, elapsed)
 				local t0 = get_us_time()
-				old_action(pos, elapsed)
+				local res = old_action(pos, elapsed)
 				local diff = get_us_time() - t0
 				inc_nt(diff, pos)
+				return res
 			end
 		end
 	end
