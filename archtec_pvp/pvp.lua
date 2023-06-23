@@ -128,8 +128,8 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 		return true
 	end
 
-	if archtec.ignore_check(localname, hitter) then
-		archtec.ignore_msg(nil, localname, hitter)
+	if archtec.ignore_check(localname, hittername) then
+		archtec.ignore_msg(nil, localname, hittername)
 		return true
 	end
 

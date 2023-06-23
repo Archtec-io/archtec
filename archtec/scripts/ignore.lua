@@ -33,6 +33,7 @@ minetest.register_globalstep(function(dtime)
 end)
 
 local function is_ignored(name, target)
+    if type(name) ~= "string" then return false end
     local ignores = get_list(name)
     return ignores[target] ~= nil
 end
