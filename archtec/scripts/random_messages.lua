@@ -19,6 +19,7 @@ local random_messages = {
 	"Get a free mailbox at the spawn post",
 	"Do you like christmas? Place your stocking at spawn's christmas area",
 	"Diamond powder can be used to build cobble stone generators",
+	"Moving is slow? Get Mithril Boots to move much faster",
 }
 
 local function show_random_message()

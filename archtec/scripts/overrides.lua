@@ -116,3 +116,11 @@ if minetest.get_modpath("castle_gates") then
 		}
 	})
 end
+
+if minetest.get_modpath("homedecor_fences") then
+	local def = table.copy(minetest.registered_nodes["homedecor:fence_wrought_iron_2"])
+	def.can_dig = nil
+	def.groups = {cracky = 1, not_in_creative_inventory = 1}
+	def.description = def.description .. " (slow dig)"
+	minetest.register_node(":" .. def.name .. "_slow", def)
+end
