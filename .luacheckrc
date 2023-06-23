@@ -8,81 +8,78 @@ ignore = {
 }
 
 globals = {
+	-- new globals
 	"archtec",
-	"notifyTeam",
-	"archtec_pvp",
-	"archtec_teleport",
-	"vote",
-	"archtec_vpn_blocker",
+	-- deps
 	"player_api",
-	"ranks",
 	"biome_lib",
-	"stairs",
 	"choppy",
-	"archtec_matterbridge",
-	"discord"
 }
 
 read_globals = {
-	"core",
+	-- minetest/lua
+	"minetest",
 	"DIR_DELIM",
 	"dump",
 	"dump2",
-	"minetest",
-	"xban",
-	"homedecor",
 	"vector",
-	"mesecon",
-	"unified_inventory",
-	"default",
-	"techage",
-	"signs_bot",
-	"auroras",
-	"font_api",
-	"anvil",
-	"unifieddyes",
 	"ItemStack",
+	"table",
+	"string",
+	-- deps
+	"auroras",
+	"anvil",
+	"choppy",
+	"default",
+	"font_api",
+	"futil",
+	"homedecor",
+	"mesecon",
+	"stairs",
+	"signs_bot",
+	"techage",
+	"unified_inventory",
+	"unifieddyes",
+	"xban",
 
-	string = {fields = {"split"}},
-	table = {fields = {"copy"}},
 }
 
 files["archtec/scripts/status.lua"] = {
-	globals = { "minetest.get_server_status" },
+	globals = {"minetest.get_server_status"},
 }
 
 files["archtec_pvp/pvp.lua"] = {
-	globals = { "minetest.calculate_knockback" },
+	globals = {"minetest.calculate_knockback"},
 }
 
 files["archtec/scripts/privs_cache.lua"] = {
-	globals = { "minetest.set_player_privs", "minetest.get_player_privs" },
-}
-
-files["archtec/scripts/item_drop.lua"] = {
-	read_globals = { "ItemStack" },
+	globals = {"minetest.set_player_privs", "minetest.get_player_privs"},
 }
 
 files["stamina/init.lua"] = {
-	globals = { "minetest.do_item_eat" },
+	globals = {"minetest.do_item_eat"},
 }
 
 files["archtec/scripts/mvps_stopper.lua"] = {
-	globals = { "mesecon" },
+	globals = {"mesecon"},
 }
 
 files["archtec_matterbridge/tx.lua"] = {
-	globals = { "minetest.send_join_message", "minetest.send_leave_message" },
+	globals = {"minetest.send_join_message", "minetest.send_leave_message"},
 }
 
 files["archtec_matterbridge/rx.lua"] = {
-	globals = { "minetest.chat_send_player" },
+	globals = {"minetest.chat_send_player"},
 }
 
 files["archtec/scripts/common.lua"] = {
-	globals = { "core.kick_player" },
+	globals = {"core.kick_player", "core.disconnect_player"},
 }
 
 files["archtec/scripts/overrides.lua"] = {
-	globals = { "minetest.registered_entities" },
+	globals = {"minetest.registered_entities"},
+}
+
+files["archtec/init.lua"] = {
+	globals = {"futil"},
 }
