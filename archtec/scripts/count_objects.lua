@@ -1,4 +1,4 @@
-local pairs_by_key = archtec.pairs_by_key
+local pairs_by_key = futil.table.pairs_by_key
 
 local function count_object()
     local ret = {}

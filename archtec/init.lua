@@ -40,7 +40,6 @@ dofile(scriptsPath.."abm.lua")
 dofile(scriptsPath.."random_things.lua")
 dofile(scriptsPath.."watch.lua")
 dofile(scriptsPath.."fakedrawer.lua")
-dofile(scriptsPath.."pairs_by_key.lua")
 dofile(scriptsPath.."count_objects.lua")
 dofile(scriptsPath.."instrument_mod.lua")
 dofile(scriptsPath.."chainsaw.lua")
@@ -76,6 +75,10 @@ minetest.register_on_mods_loaded(function()
         discord.send = function(...)
             -- dummy function
         end
+    end
+    if not minetest.global_exists("futil") then
+        futil = {table = {}}
+        futil.table.pairs_by_key = function(...) return ... end
     end
 end)
 

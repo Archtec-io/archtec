@@ -12,7 +12,7 @@ minetest.register_alias("feldweg:feldweg_slope", "cottages:feldweg_slope")
 minetest.register_alias("feldweg:feldweg_slope_long", "cottages:feldweg_slope_long")
 minetest.register_alias("feldweg:feldweg_t_junction", "cottages:feldweg_t_junction")
 
--- replacer rhotator w/ omnidriver
+-- replaced rhotator w/ omnidriver
 minetest.register_alias("rhotator:screwdriver", "omnidriver:omnidriver")
 minetest.register_alias("rhotator:screwdriver_alt", "omnidriver:omnidriver")
 minetest.register_alias("rhotator:screwdriver_multi", "omnidriver:omnidriver")

@@ -67,7 +67,7 @@ end
 local known_recipes = {}
 
 local function run(pname)
-    for name, def in archtec.pairs_by_key(minetest.registered_items) do
+    for name, def in futil.table.pairs_by_key(minetest.registered_items) do
         if (not def.groups.not_in_creative_inventory or
         def.groups.not_in_creative_inventory == 0) and
         def.description and def.description ~= "" then  -- check valide entrys only
