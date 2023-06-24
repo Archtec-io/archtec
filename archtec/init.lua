@@ -54,6 +54,7 @@ dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."lock.lua")
 dofile(scriptsPath.."lagometer.lua")
 dofile(scriptsPath.."waypoints.lua")
+dofile(scriptsPath.."luac_logging.lua")
 
 if minetest.get_modpath("caverealms") then
     dofile(scriptsPath.."caverealms.lua")
