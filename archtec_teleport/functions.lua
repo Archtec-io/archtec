@@ -54,7 +54,7 @@ function archtec_teleport.tpr_send(sender, receiver)
 		if archtec.is_ignored(sender, receiver) then -- TPR uses an extra message coloring and design system
 			send_message(sender, S("You are ignoring @1. You can't interact with them!", receiver))
 		else
-			send_message(sender, S(target .. " ignores you. You can't interact with them!", receiver))
+			send_message(sender, S(receiver .. " ignores you. You can't interact with them!", receiver))
 		end
 		return
 	end
@@ -99,7 +99,7 @@ function archtec_teleport.tp2me_send(sender, receiver)
 		if archtec.is_ignored(sender, receiver) then -- TPR uses an extra message coloring and design system
 			send_message(sender, S("You are ignoring @1. You can't interact with them!", receiver))
 		else
-			send_message(sender, S(target .. " ignores you. You can't interact with them!", receiver))
+			send_message(sender, S(receiver .. " ignores you. You can't interact with them!", receiver))
 		end
 		return
 	end
