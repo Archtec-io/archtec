@@ -27,17 +27,17 @@ end
 
 -- y + 0.5
 local function show_settings(name)
-    local formspec = {
-        "formspec_version[4]",
-        "size[8,8.5]",
-        "label[0.3,0.4;", fs_esc("Chat"), "]",
-        "checkbox[0.6,0.9;s_help_msg;Show help messages in chat;" .. get(name, "help_msg") .. "]",
-        "checkbox[0.6,1.4;s_tbw_show;Show tool breakage warnings;" .. get(name, "tbw_show") .. "]",
-        "label[0.3,1.9;", fs_esc("Misc"), "]",
-        "checkbox[0.6,2.4;s_sp_show;Show a waypoint to the spawn;" .. get(name, "sp_show") .. "]",
-        "checkbox[0.6,2.9;s_r_id;Collect dropped items automatically;" .. get(name, "r_id") .. "]",
-    }
-    minetest.show_formspec(name, "archtec:settings", table.concat(formspec, ""))
+    local formspec = [[
+        formspec_version[4]
+        size[8,8.5]
+        label[0.3,0.4;]] .. fs_esc("Chat") .. [[]
+        checkbox[0.6,0.9;s_help_msg;Show help messages in chat;]] .. get(name, "help_msg") .. [[]
+        checkbox[0.6,1.4;s_tbw_show;Show tool breakage warnings;]] .. get(name, "tbw_show") .. [[]
+        label[0.3,1.9;]] .. fs_esc("Misc") .. [[]
+        checkbox[0.6,2.4;s_sp_show;Show a waypoint to the spawn;]] .. get(name, "sp_show") .. [[]
+        checkbox[0.6,2.9;s_r_id;Collect dropped items automatically;]] .. get(name, "r_id") .. [[]
+    ]]
+    minetest.show_formspec(name, "archtec:settings", formspec)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)

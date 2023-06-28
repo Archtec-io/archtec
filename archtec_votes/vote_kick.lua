@@ -73,15 +73,15 @@ minetest.register_chatcommand("vote_kick", {
 			return
 		end
 
-		local formspec = {
-			"formspec_version[4]",
-			"size[8,4]",
-			"label[1,0.5;", minetest.formspec_escape("Warning: Abusing a vote-kick can result in a ban for you!"), "]",
-			"button[2,1;4,1;continue;Yes, Continue]",
-			"button[2,2.5;4,1;abort;Abort]",
-		}
+		local formspec = [[
+			formspec_version[4]
+			size[8,4]
+			label[1,0.5;]] .. minetest.formspec_escape("Warning: Abusing a vote-kick can result in a ban for you!") .. [[]
+			button[2,1;4,1;continue;Yes, Continue]
+			button[2,2.5;4,1;abort;Abort]
+		]]
 		pending[name] = param
-		minetest.show_formspec(name, "archtec_votes:kick", table.concat(formspec, ""))
+		minetest.show_formspec(name, "archtec_votes:kick", formspec)
 	end
 })
 

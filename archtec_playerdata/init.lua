@@ -7,7 +7,8 @@ archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 local cache = {}
 local playtime_current = {}
-local fs_esc = minetest.formspec_escape
+local S = minetest.get_translator("archtec_playerdata")
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 local floor, time, date, type, C = math.floor, os.time, os.date, type, minetest.colorize
 local sql = minetest.get_mod_storage()
 -- config
@@ -448,28 +449,28 @@ local function stats(name, target)
     else
         last_login = "unknown"
     end
-    local formspec = {
-        "formspec_version[4]",
-        "size[5.5,9]",
-        "label[0.375,0.5;", fs_esc("Stats of: " .. user), "]",
-        "label[0.375,1.0;", fs_esc("Dug: " .. nodes_dug), "]",
-        "label[0.375,1.5;", fs_esc("Placed: " .. nodes_placed), "]",
-        "label[0.375,2.0;", fs_esc("Crafted: " .. crafted), "]",
-        "label[0.375,2.5;", fs_esc("Died: " .. died), "]",
-        "label[0.375,3.0;", fs_esc("Playtime: " .. playtime), "]",
-        "label[0.375,3.5;", fs_esc("Average playtime: " .. avg_playtime), "]",
-        "label[0.375,4.0;", fs_esc("Chatmessages: " .. chatmessages), "]",
-        "label[0.375,4.5;", fs_esc("Thank you: " .. thank_you), "]",
-        "label[0.375,5.0;", fs_esc("Join date: " .. first_join), "]",
-        "label[0.375,5.5;", fs_esc("Join count: " .. join_count), "]",
-        "label[0.375,6.0;", fs_esc("Last login: " .. last_login), "]",
-        "label[0.375,6.5;", fs_esc("Can spill lava: " .. priv_lava), "]",
-        "label[0.375,7.0;", fs_esc("Can use the chainsaw: " .. priv_chainsaw), "]",
-        "label[0.375,7.5;", fs_esc("Can place forceload blocks: " .. priv_forceload), "]",
-        "label[0.375,8.0;", fs_esc("Can create big areas: " .. priv_areas), "]",
-        "label[0.375,8.5;", fs_esc("Remaining free votes: " .. free_votes), "]",
-    }
-    minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec, ""))
+    local formspec = [[
+        formspec_version[4]
+        size[5.5,9]
+        label[0.375,0.5;]] .. FS("Stats of: @1", user) .. [[]
+        label[0.375,1.0;]] .. FS("Dug: @1", nodes_dug) .. [[]
+        label[0.375,1.5;]] .. FS("Placed: @1", nodes_placed) .. [[]
+        label[0.375,2.0;]] .. FS("Crafted: @1", crafted) .. [[]
+        label[0.375,2.5;]] .. FS("Died: @1", died) .. [[]
+        label[0.375,3.0;]] .. FS("Playtime: @1", playtime) .. [[]
+        label[0.375,3.5;]] .. FS("Average playtime: @1", avg_playtime) .. [[]
+        label[0.375,4.0;]] .. FS("Chatmessages: @1", chatmessages) .. [[]
+        label[0.375,4.5;]] .. FS("Thank you: @1", thank_you) .. [[]
+        label[0.375,5.0;]] .. FS("Join date: @1", first_join) .. [[]
+        label[0.375,5.5;]] .. FS("Join count: @1", join_count) .. [[]
+        label[0.375,6.0;]] .. FS("Last login: @1", last_login) .. [[]
+        label[0.375,6.5;]] .. FS("Can spill lava: @1", priv_lava) .. [[]
+        label[0.375,7.0;]] .. FS("Can use the chainsaw: @1", priv_chainsaw) .. [[]
+        label[0.375,7.5;]] .. FS("Can place forceload blocks: @1", priv_forceload) .. [[]
+        label[0.375,8.0;]] .. FS("Can create big areas: @1", priv_areas) .. [[]
+        label[0.375,8.5;]] .. FS("Remaining free votes: @1", free_votes) .. [[]
+    ]]
+    minetest.show_formspec(name, "archtec_playerdata:stats", formspec)
 end
 
 minetest.register_chatcommand("stats", {
