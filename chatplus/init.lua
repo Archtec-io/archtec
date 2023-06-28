@@ -133,7 +133,10 @@ minetest.register_on_chat_message(function(name, message)
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message)
 		local cdef = archtec_chat.channel.get_cdef("main")
 		for uname, _ in pairs(cdef.users) do
-			minetest.chat_send_player(uname, msg)
+			-- Do not send messages to blocked players
+			if not archtec.ignore_check(name, uname) then
+				minetest.chat_send_player(uname, msg)
+			end
 		end
 		discord.send(('**%s**: '):format(name), message)
 	else
