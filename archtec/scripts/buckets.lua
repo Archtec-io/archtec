@@ -1,5 +1,6 @@
 -- based on https://github.com/wsor4035/liquid_restriction
--- registering priv
+
+local S = archtec.S
 minetest.register_privilege("adv_buckets", ("Able to use all liquids."))
 
 local liquid_list = {
@@ -10,11 +11,11 @@ local function try_grant_lava_priv(name)
     local playtime = archtec_playerdata.get(name, "playtime")
     if playtime > 180000 then -- 50 h playtime
         archtec.grant_priv(name, "adv_buckets")
-        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[request_lava] Congratulations! You have been granted the 'adv_buckets' privilege"))
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[request_lava] Congratulations! You have been granted the 'adv_buckets' privilege")))
         notifyTeam("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")
         return true
     else
-        minetest.chat_send_player(name, minetest.colorize("#FF0000", "[request_lava] You don't have 50 hours (or more) playtime."))
+        minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava] You don't have 50 hours (or more) playtime.")))
         return false
     end
 end

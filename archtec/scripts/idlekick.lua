@@ -1,9 +1,8 @@
+local S = archtec.S
 local timeout = 1800 -- kick after 30 mins
 local timer = 0
 
-local times = {}
-local tag = {}
-local ppos = {}
+local times, tag, ppos = {}, {}, {}
 
 local function now() return minetest.get_us_time() / 1000000 end
 local function bumpn(name) times[name] = now() return name end
@@ -29,7 +28,7 @@ minetest.register_on_joinplayer(function(player)
 	if hp == 0 then
 		local name = player:get_player_name()
 		minetest.log("action", "[archtec] Respawned dead player '" .. name .. "' on join")
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Server respawned you (you were dead without respawn option)"))
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Server respawned you (you were dead without respawn option)")))
 		player:respawn()
 	end
 	-- create entrie

@@ -1,5 +1,6 @@
 if not minetest.get_modpath("choppy") then return end
 
+local S = archtec.S
 local api = choppy.api
 
 local function joined(name)
@@ -51,12 +52,12 @@ minetest.register_tool(":technic:chainsaw", {
 	},
 	sound = {breaks = "default_tool_breaks"},
 	on_use = function(itemstack, digger, pointed_thing)
-		if not minetest.get_player_privs(digger).archtec_chainsaw then
-			local name = digger:get_player_name()
+		local name = digger:get_player_name()
+		if not minetest.get_player_privs(name).archtec_chainsaw then
 			if conditions(name) then
 				grant_priv(name, "archtec_chainsaw")
 			else
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account"))
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account")))
 				return
 			end
 		end

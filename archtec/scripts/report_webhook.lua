@@ -1,4 +1,5 @@
 local http = assert(...)
+local S = archtec.S
 local webhook_url = minetest.settings:get("archtec.webhook_url")
 local report_gpg_key = minetest.settings:get("archtec.report_gpg_key")
 
@@ -117,14 +118,14 @@ minetest.register_chatcommand("report", {
 		minetest.log("action", "[/report] executed by '" .. name .. "' with param '" .. (params or "") .. "'")
 		local param = params:trim()
 		if param == "" then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Error: You have to provide a report text."))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Error: You have to provide a report text.")))
 			return
 		end
 		if not test_json(name, param) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000",  "Error: Creating report failed. You are using illegal characters and/or symbols."))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000",  S("Error: Creating report failed. You are using illegal characters and/or symbols.")))
 			return
 		end
 		send_report(name, param)
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Report successfully created."))
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Report successfully created.")))
 	end,
 })

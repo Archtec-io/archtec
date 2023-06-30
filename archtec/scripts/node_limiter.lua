@@ -1,3 +1,4 @@
+local S = archtec.S
 local function generate_vector(pos, rad)
     return vector.new(pos.x + rad, pos.y + rad, pos.z + rad)
 end
@@ -24,7 +25,7 @@ local function ov_node(node, t, rad, max)
                 local pname = placer:get_player_name()
                 minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
                 local n = minetest.registered_nodes[node].description or node
-                minetest.chat_send_player(pname, minetest.colorize("#FF0000", "You can't place more '" .. n .. "' in this area!"))
+                minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more '@1' in this area!", n)))
             end
         end,
     })
@@ -70,7 +71,7 @@ local function ov_drawer(node)
             if #objs > 70 then
                 local pname = placer:get_player_name()
                 minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
-                minetest.chat_send_player(pname, minetest.colorize("#FF0000", "You can't place more 'Drawers' in this area! (Too many entities)"))
+                minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more 'Drawers' in this area! (Too many entities)")))
             else
                 return old_place(itemstack, placer, pointed_thing)
             end

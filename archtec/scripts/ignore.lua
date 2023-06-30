@@ -1,3 +1,4 @@
+local S = archtec.S
 local cache = {}
 
 local function get_list(name)
@@ -109,89 +110,89 @@ minetest.register_chatcommand("ignore", {
             local target = archtec.get_and_trim(params[2])
             if minetest.player_exists(target) then
                 if is_ignored(name, target) then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You ignore " .. target .. " already!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You ignore @1 already!", target)))
                     return
                 end
                 if minetest.get_player_privs(target).staff then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You can't ignore staff members!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore staff members!")))
                     return
                 end
                 if minetest.get_player_privs(name).staff then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] Staff members can't ignore other players!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] Staff members can't ignore other players!")))
                     return
                 end
                 if name == target then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You can't ignore yourself!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore yourself!")))
                     return
                 end
                 if count_ignored_players(name) >= 10 then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You can't ignore more than 10 players!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore more than 10 players!")))
                     return
                 end
                 ignore_player(name, target)
-                minetest.chat_send_player(name, C("#00BD00", "[ignore] You are ignoring " .. target .. " now"))
+                minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are ignoring @1 now", target)))
                 return
             elseif target == "" then
-                minetest.chat_send_player(name, C("#FF0000", "[ignore] You must specify a player name!"))
+                minetest.chat_send_player(name, C("#FF0000", S("[ignore] You must specify a player name!")))
                 return
             else
-                minetest.chat_send_player(name, C("#FF0000", "[ignore] Player " .. target .. " is not a registered player!"))
+                minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 is not a registered player!", target)))
                 return
             end
         elseif action == "unignore" or action == "remove" then
             local target = archtec.get_and_trim(params[2])
             if minetest.player_exists(target) then
                 if not is_ignored(name, target) then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You aren't ignoring " .. target .. "!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You aren't ignoring @1!", target)))
                     return
                 end
                 unignore_player(name, target)
-                minetest.chat_send_player(name, C("#00BD00", "[ignore] You are no longer ignoring " .. target))
+                minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are no longer ignoring @1", target)))
                 return
             elseif target == "" then
-                minetest.chat_send_player(name, C("#FF0000", "[ignore] You must specify a player name!"))
+                minetest.chat_send_player(name, C("#FF0000", S("[ignore] You must specify a player name!")))
                 return
             else
-                minetest.chat_send_player(name, C("#FF0000", "[ignore] Player " .. target .. " is not a registered player!"))
+                minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 is not a registered player!", target)))
                 return
             end
         elseif action == "" or action == nil or action == "list" then
             local target = archtec.get_and_trim(params[2])
             if target ~= "" and target ~= name then
                 if not minetest.get_player_privs(name).staff then
-                    minetest.chat_send_player(name, C("#FF0000", "[ignore] You aren't authorized to query this data!"))
+                    minetest.chat_send_player(name, C("#FF0000", S("[ignore] You aren't authorized to query this data!")))
                     return
                 end
                 local list = list_ignored_players(target)
                 if list == "" then
-                    minetest.chat_send_player(name, C("#00BD00", "[ignore] " .. target .. " isn't ignoring anyone"))
+                    minetest.chat_send_player(name, C("#00BD00", S("[ignore] @1 isn't ignoring anyone", target)))
                     return
                 end
-                minetest.chat_send_player(name, C("#00BD00", "[ignore] List of players " .. target .. " ignores: " .. list))
+                minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players @1 ignores: @2", target, list)))
                 return
             else
                 local list = list_ignored_players(name)
                 if list == "" then
-                    minetest.chat_send_player(name, C("#00BD00", "[ignore] You aren't ignoring anyone"))
+                    minetest.chat_send_player(name, C("#00BD00", S("[ignore] You aren't ignoring anyone")))
                     return
                 end
-                minetest.chat_send_player(name, C("#00BD00", "[ignore] List of players you ignore: " .. list))
+                minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players you ignore: @1", target)))
                 return
             end
         end
-        minetest.chat_send_player(name, C("#FF0000", "[ignore] Unknown subcommand!"))
+        minetest.chat_send_player(name, C("#FF0000", S("[ignore] Unknown subcommand!")))
 	end
 })
 
 function archtec.ignore_msg(cmdname, name, target)
     if cmdname then
-        cmdname = "[" .. cmdname .. "] "
+        cmdname = "[" .. cmdname .. "]"
     else
         cmdname = ""
     end
     if is_ignored(name, target) then
-        minetest.chat_send_player(name, C("#FF0000", cmdname .. "You are ignoring " .. target .. ". You can't interact with them!"))
+        minetest.chat_send_player(name, C("#FF0000", S("@1 You are ignoring @2. You can't interact with them!", cmdname, target)))
     else
-        minetest.chat_send_player(name, C("#FF0000", cmdname .. target .. " ignores you. You can't interact with them!"))
+        minetest.chat_send_player(name, C("#FF0000", S("@1 @2 ignores you. You can't interact with them!", cmdname, target)))
     end
 end

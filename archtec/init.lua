@@ -3,10 +3,12 @@ local modPath = minetest.get_modpath(minetest.get_current_modname())
 local scriptsPath = modPath .. DIR_DELIM .. "scripts" .. DIR_DELIM
 
 archtec = {}
+archtec.S = minetest.get_translator(minetest.get_current_modname())
 
 dofile(scriptsPath.."common.lua")
 dofile(scriptsPath.."notifyTeam.lua")
 dofile(scriptsPath.."settings.lua")
+dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."privs.lua")
 dofile(scriptsPath.."userlimit.lua")
 dofile(scriptsPath.."stats.lua")
@@ -17,9 +19,8 @@ dofile(scriptsPath.."aliases.lua")
 dofile(scriptsPath.."unregister.lua")
 dofile(scriptsPath.."spawn.lua")
 dofile(scriptsPath.."skybox.lua")
-if minetest.get_modpath("mesecons") then
-    dofile(scriptsPath.."mvps_stopper.lua")
-end
+dofile(scriptsPath.."mvps_stopper.lua")
+dofile(scriptsPath.."techage.lua")
 dofile(scriptsPath.."death_messages.lua")
 dofile(scriptsPath.."buckets.lua")
 dofile(scriptsPath.."redef.lua")
@@ -50,19 +51,10 @@ dofile(scriptsPath.."ranks.lua")
 dofile(scriptsPath.."music.lua")
 dofile(scriptsPath.."node_limiter.lua")
 dofile(scriptsPath.."news.lua")
-dofile(scriptsPath.."ignore.lua")
 dofile(scriptsPath.."lock.lua")
 dofile(scriptsPath.."lagometer.lua")
 dofile(scriptsPath.."waypoints.lua")
 dofile(scriptsPath.."luac_logging.lua")
-
-if minetest.get_modpath("caverealms") then
-    dofile(scriptsPath.."caverealms.lua")
-end
-
-if minetest.get_modpath("techage") then
-    dofile(scriptsPath.."techage.lua")
-end
 
 local http = minetest.request_http_api()
 if http then
