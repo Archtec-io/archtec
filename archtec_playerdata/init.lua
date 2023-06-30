@@ -105,7 +105,8 @@ end
 
 local function stats_dump()
     local d = sql:to_table()
-    minetest.safe_file_write(datadir .. "/dump." .. time(), minetest.serialize(d))
+    local ts = date("!%Y-%m-%dT%H:%M:%SZ", time())
+    minetest.safe_file_write(datadir .. "/dump." .. ts, minetest.serialize(d))
 end
 
 archtec_playerdata.dump = stats_dump

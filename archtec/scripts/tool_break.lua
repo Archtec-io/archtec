@@ -24,15 +24,17 @@ local function break_warning(itemstack, user, node, digparams)
     return itemstack
 end
 
+local function blacklisted(tool)
+    if string.sub(tool, 1, 8) == "3d_armor" or
+        string.sub(tool, 1, 15) == "christmas_decor" or
+        string.sub(tool, 1, 7) == "shields" then return false
+    end
+    return true
+end
+
 minetest.register_on_mods_loaded(function()
     for _, tool in pairs(minetest.registered_tools) do
-        if string.sub(tool.name, 1, 8) == "default:" or
-            string.sub(tool.name, 1, 9) == "ethereal:" or
-            string.sub(tool.name, 1, 8) == "farming:" or
-            string.sub(tool.name, 1, 9) == "moreores:" or
-            string.sub(tool.name, 1, 9) == "titanium:" or
-            string.sub(tool.name, 1, 8) == "techage:"
-        then
+        if not blacklisted(tool.name) then
             if tool.on_use then
                 local old_on_use = minetest.registered_tools[tool.name].on_use
                 minetest.override_item(tool.name, {
