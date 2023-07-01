@@ -164,7 +164,7 @@ minetest.register_chatcommand("namecolor", {
 
 		if valid_color then
 			set_color(name, param)
-			minetest.chat_send_player(name, S("Color of your name changed. (").. minetest.colorize(color_table[get_color(name)], name) .. ")")
+			minetest.chat_send_player(name, S("Color of your name changed.") .. " (" .. minetest.colorize(color_table[get_color(name)], name) .. ")")
 		else
 			minetest.chat_send_player(name, "Usage: " .. minetest.colorize("#00ff00", "/namecolor ") .. minetest.colorize("#ffff00", "<color>") )
 			minetest.chat_send_player(name, color_description_string )
@@ -192,8 +192,8 @@ local function private_message(name, param)
 		archtec.ignore_msg("chatplus", name, to)
 		return
 	end
-	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To ") .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
-	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From ") .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
+	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To") .. " " .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
+	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
 	minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg)
 	minetest.sound_play("chatplus_incoming_msg", {to_player = to})
 	last_priv_msg_name[name] = to
