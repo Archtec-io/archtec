@@ -204,6 +204,9 @@ local function stats_get(name, key)
     if cache[name] == nil then
         stats_load(name, false)
         clean = true
+        if cache[name] == nil then -- Player does not exist
+            return struct[key] -- This is a *little* hack
+        end
     end
     if cache[name][key] == nil then
         val = struct[key]
@@ -229,6 +232,10 @@ local function stats_set(name, key, value)
     if cache[name] == nil then
         stats_load(name, false)
         clean = true
+        if cache[name] == nil then -- Player does not exist
+            log_warning("set: tried to modify not existing player '" .. name .. "'!")
+            return false
+        end
     end
     if value == struct[key] then
         value = nil
@@ -259,6 +266,10 @@ local function stats_mod(name, key, value)
     else
         stats_load(name, false)
         clean = true
+        if cache[name] == nil then -- Player does not exist
+            log_warning("mod: tried to modify not existing player '" .. name .. "'!")
+            return false
+        end
         if cache[name][key] then
             old = cache[name][key]
         else
@@ -414,6 +425,10 @@ local function stats(name, target)
         is_online = true
     else
         stats_load(target, false) -- we won't create new stats files
+        if cache[target] == nil then
+            minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
+            return
+        end
         data = table.copy(cache[target])
         cache[target] = nil -- unload
         is_online = false
