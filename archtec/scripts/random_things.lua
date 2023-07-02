@@ -1,3 +1,4 @@
+local S = archtec.S
 -- remove building category
 if minetest.get_modpath("unified_inventory") then
 	unified_inventory.remove_category("building")
@@ -8,15 +9,15 @@ if minetest.get_modpath("biome_lib") then
 end
 
 if minetest.get_modpath("moreblocks") then
-	local S = minetest.get_translator("moreblocks")
+	local S2 = minetest.get_translator("moreblocks")
 	local def = minetest.registered_nodes["moreblocks:empty_shelf"]
 	stairs.register_stair_and_slab(
 		"moreblocks:empty_shelf",
 		"moreblocks:empty_shelf",
 		def.groups,
 		def.tiles,
-		S("@1 Stair", def.description),
-		S("@1 Slab", def.description),
+		S2("@1 Stair", def.description),
+		S2("@1 Slab", def.description),
 		def.sounds,
 		true
 	)
@@ -30,11 +31,11 @@ minetest.register_chatcommand("thankyou", {
 		minetest.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = archtec.get_target(name, param)
 		if target == name then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank yourself"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank yourself")))
 			return
 		end
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't thank someone who is offline"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank someone who is offline")))
 			return
 		end
 		if archtec.ignore_check(name, target) then
@@ -42,7 +43,7 @@ minetest.register_chatcommand("thankyou", {
 			return
 		end
 		archtec_playerdata.mod(target, "thank_you", 1)
-		minetest.chat_send_all(minetest.colorize("#00BD00", name .. " said thank you to " .. target))
+		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2", name, target)))
 		discord.send(nil, ":wave: **" .. name .. "** said thank you to **" .. target .. "**")
     end
 })

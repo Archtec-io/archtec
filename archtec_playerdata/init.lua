@@ -9,7 +9,7 @@ local cache = {}
 local playtime_current = {}
 local S = minetest.get_translator("archtec_playerdata")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
-local floor, time, date, type, C = math.floor, os.time, os.date, type, minetest.colorize
+local floor, type, C = math.floor, type, minetest.colorize
 local sql = minetest.get_mod_storage()
 -- config
 local save_interval = 60
@@ -97,7 +97,7 @@ end
 
 local function get_session_playtime(name)
     if playtime_current[name] then
-        return time() - playtime_current[name]
+        return os.time() - playtime_current[name]
     else
         return 0
     end
@@ -105,7 +105,7 @@ end
 
 local function stats_dump()
     local d = sql:to_table()
-    local ts = date("!%Y-%m-%dT%H:%M:%SZ", time())
+    local ts = os.date("!%Y-%m-%dT%H:%M:%SZ", os.time())
     minetest.safe_file_write(datadir .. "/dump." .. ts, minetest.serialize(d))
 end
 
@@ -129,9 +129,9 @@ local function string2timestap(s)
     end
     local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
     local month = MON[month]
-    local offset = time() - time(date("!*t"))
+    local offset = os.time() - os.time(os.date("!*t"))
     -- Todo: fix possible crashes here
-    return(time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
+    return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
 archtec_playerdata.string2timestap = string2timestap
@@ -139,7 +139,7 @@ archtec_playerdata.string2timestap = string2timestap
 -- load/create data
 local function stats_create(name)
     if sql:contains(name) then
-        log_warning("stats_create: stats file for '" .. dump(name) .. "' already exsists!")
+        log_warning("stats_create: stats file for '" .. name .. "' already exsists!")
         return false
     end
     sql:set_string(name, minetest.serialize({}))
@@ -150,7 +150,7 @@ local function stats_load(name, create)
     if not valid_player(name) then return end
     if create == nil then create = true end
     if cache[name] then
-        log_action("load: stats of '" .. dump(name) .. "' already loaded")
+        log_action("load: stats of '" .. name .. "' already loaded")
         return
     end
     local raw = sql:get_string(name)
@@ -161,19 +161,19 @@ local function stats_load(name, create)
         if stats_create(name) then
             raw = sql:get_string(name) -- try again
         else
-            log_warning("load: cannot create stats entry for '" .. dump(name) .. "'!")
+            log_warning("load: cannot create stats entry for '" .. name .. "'!")
             return
         end
     end
     local data = minetest.deserialize(raw)
-    if date == nil then
-        log_warning("load: failed to deserialize stats of '" .. dump(name) .. "'!")
+    if data == nil then
+        log_warning("load: failed to deserialize stats of '" .. name .. "'!")
         return
     end
     -- remove unknown keys
     for key, _ in pairs(data) do
         if not (in_struct(key)) then
-            log_action("load: removing unknown key '" .. dump(key) .. "' of player '" .. dump(name))
+            log_action("load: removing unknown key '" .. key .. "' of player '" .. name)
             data[key] = nil
         end
     end
@@ -186,12 +186,12 @@ local function stats_save(name)
     -- save data
     local data = cache[name]
     if data == nil then
-        log_warning("save: cache for '" .. dump(name) .. "' is nil! Saving will be aborted!")
+        log_warning("save: cache for '" .. name .. "' is nil! Saving will be aborted!")
         return
     end
     local raw = minetest.serialize(data)
     if raw == nil or raw == "" then
-        log_warning("save: raw data of '" .. dump(name) .. "' is nil!")
+        log_warning("save: raw data of '" .. name .. "' is nil!")
         return
     end
     sql:set_string(name, raw)
@@ -211,7 +211,7 @@ local function stats_get(name, key)
         val = cache[name][key]
     end
     if val == nil then
-        log_warning("get: key '" .. dump(key) .. "' is unknown!")
+        log_warning("get: key '" .. key .. "' is unknown!")
         return
     end
     if clean then
@@ -246,7 +246,7 @@ archtec_playerdata.set = stats_set
 local function stats_mod(name, key, value)
     if not valid_player(name) then return false end
     if type(value) ~= "number" then
-        log_warning("mod: value '" .. dump(value) .. "' is not a number!")
+        log_warning("mod: value " .. dump(value) .. " is not a number!")
         return false
     end
     local old, clean
@@ -266,7 +266,7 @@ local function stats_mod(name, key, value)
         end
     end
     if old == nil then
-        log_warning("mod: get returned nil for key '" .. dump(key) .. "' of '" .. dump(name) .. "'!")
+        log_warning("mod: get returned nil for key '" .. key .. "' of '" .. name .. "'!")
         return false
     end
     value = old + value
@@ -287,7 +287,7 @@ local function stats_save_all()
         local name = player:get_player_name()
         -- update playtime
         stats_mod(name, "playtime", get_session_playtime(name))
-        playtime_current[name] = time()
+        playtime_current[name] = os.time()
         stats_save(name)
     end
     local after = minetest.get_us_time()
@@ -301,7 +301,7 @@ local function stats_save_all_shutdown()
         local name = player:get_player_name()
         -- update playtime
         stats_mod(name, "playtime", get_session_playtime(name))
-        playtime_current[name] = time()
+        playtime_current[name] = os.time()
         stats_save(name)
         cache[name] = nil
         playtime_current[name] = nil
@@ -330,7 +330,7 @@ minetest.register_on_joinplayer(function(player)
         if stats_get(name, "playtime") == 0 then
             stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
             player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
-            log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. dump(name) .. "'")
+            log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
         end
         -- first join data migration
 		if stats_get(name, "first_join") == 0 then -- move legacy data
@@ -339,12 +339,12 @@ minetest.register_on_joinplayer(function(player)
                 local int = string2timestap(string)
                 stats_set(name, "first_join", int)
                 player:get_meta():set_string("archtec:joined", nil)
-                log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. dump(name) .. "'")
+                log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")
             end
         end
         -- add first join
         if stats_get(name, "first_join") == 0 then
-            stats_set(name, "first_join", time())
+            stats_set(name, "first_join", os.time())
         end
         -- show spawn waypoint
         if stats_get(name, "s_sp_show") == true then
@@ -406,7 +406,7 @@ local function stats(name, target)
         target = name
     end
     if not minetest.player_exists(target) or not valid_player(target) then
-        minetest.chat_send_player(name, C("#FF0000", "[stats] Unknown player!"))
+        minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
         return
     end
     if in_cache(target) then
@@ -419,7 +419,7 @@ local function stats(name, target)
         is_online = false
     end
     if data == nil then
-        minetest.chat_send_player(name, C("#FF0000", "[stats] Can't read stats!"))
+        minetest.chat_send_player(name, C("#FF0000", S("[stats] Can't read stats!")))
         return
     end
     local privs = minetest.get_player_privs(target) or {}
@@ -427,26 +427,26 @@ local function stats(name, target)
     local playtime_int = data.playtime or 1
     local avg = playtime_int / data.join_count or 1
     -- stats
-    if is_online then user = target .. C("#00BD00", " [Online]") else user = target .. C("#FF0000", " [Offline]") end
-    if privs["staff"] then user = user .. C("#FF8800", " [Staff]") end
+    if is_online then user = target .. " " .. C("#00BD00", S("[Online]")) else user = target .. " " .. C("#FF0000", S("[Offline]")) end
+    if privs["staff"] then user = user .. " " .. C("#FF8800", S("[Staff]")) end
     local nodes_dug = data.nodes_dug or 0
     local nodes_placed = data.nodes_placed or 0
     local crafted = data.items_crafted or 0
     local died = data.died or 0
     local playtime = format_duration(playtime_int) or 0
     local chatmessages = data.chatmessages or 0
-    local first_join = date("!%Y-%m-%dT%H:%M:%SZ", data.first_join) .. " UTC"
+    local first_join = os.date("!%Y-%m-%dT%H:%M:%SZ", data.first_join) .. " UTC"
     local join_count = data.join_count or 1
     local thank_you = data.thank_you or 0
     local avg_playtime = format_duration(avg) or 0
     local free_votes = (archtec.free_votes or 0) - (data.free_votes or 0)
     local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
-    if privs["adv_buckets"] then priv_lava = C("#00BD00", "YES") else priv_lava = C("#FF0000", "NO") end
-    if privs["archtec_chainsaw"] then priv_chainsaw = C("#00BD00", "YES") else priv_chainsaw = C("#FF0000", "NO") end
-    if privs["forceload"] then priv_forceload = C("#00BD00", "YES") else priv_forceload = C("#FF0000", "NO") end
-    if privs["areas_high_limit"] then priv_areas = C("#00BD00", "YES") else priv_areas = C("#FF0000", "NO") end
+    if privs["adv_buckets"] then priv_lava = C("#00BD00", S("YES")) else priv_lava = C("#FF0000", S("NO")) end
+    if privs["archtec_chainsaw"] then priv_chainsaw = C("#00BD00", S("YES")) else priv_chainsaw = C("#FF0000", S("NO")) end
+    if privs["forceload"] then priv_forceload = C("#00BD00", S("YES")) else priv_forceload = C("#FF0000", S("NO")) end
+    if privs["areas_high_limit"] then priv_areas = C("#00BD00", S("YES")) else priv_areas = C("#FF0000", S("NO")) end
     if pauth and pauth.last_login and pauth.last_login ~= -1 then
-        last_login = date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
+        last_login = os.date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
     else
         last_login = "unknown"
     end

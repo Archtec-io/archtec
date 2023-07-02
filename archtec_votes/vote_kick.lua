@@ -1,5 +1,7 @@
 -- vote_kick
 local pending = {}
+local S = minetest.get_translator(minetest.get_current_modname())
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 local function run_vote(name, param)
 	discord.send(nil, ":warning: **" .. name .. "** started a voting: Kick " .. param)
@@ -54,31 +56,31 @@ minetest.register_chatcommand("vote_kick", {
 		if param then param = param:trim() end
 
 		if not minetest.get_player_by_name(param) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "There is no player called '" .. param .. "'!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("There is no player called '@1'!", param)))
 			return
 		end
 
 		if param == name then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't vote-kick yourself!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't vote-kick yourself!")))
 			return
 		end
 
 		if minetest.check_player_privs(param, "staff") then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You can't vote-kick staff members!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't vote-kick staff members!")))
 			return
 		end
 
 		if #minetest.get_connected_players() <= 3 then -- min 4 players
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Not enough players online to start a vote-kick!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Not enough players online to start a vote-kick!")))
 			return
 		end
 
 		local formspec = [[
 			formspec_version[4]
 			size[8,4]
-			label[1,0.5;]] .. minetest.formspec_escape("Warning: Abusing a vote-kick can result in a ban for you!") .. [[]
-			button[2,1;4,1;continue;Yes, Continue]
-			button[2,2.5;4,1;abort;Abort]
+			label[1,0.5;]] .. FS("Warning: Abusing a vote-kick can result in a ban for you!") .. [[]
+			button[2,1;4,1;continue;]] .. FS("Yes, Continue") .. [[]
+			button[2,2.5;4,1;abort;]] .. FS("Abort") .. [[]
 		]]
 		pending[name] = param
 		minetest.show_formspec(name, "archtec_votes:kick", formspec)

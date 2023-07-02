@@ -1,3 +1,5 @@
+local S = archtec.S
+
 local function break_warning(itemstack, user, node, digparams)
     if not user then return itemstack end
     local name = user:get_player_name()
@@ -14,7 +16,7 @@ local function break_warning(itemstack, user, node, digparams)
     end
     if itemstack:get_wear() > 60135 and wdef.sound and wdef.sound.breaks then
         if archtec_playerdata.get(name, "s_tbw_show") then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Your tool is about to break!")))
             minetest.sound_play(wdef.sound.breaks, {
                 to_player = name,
                 gain = 2.0,
@@ -43,7 +45,7 @@ minetest.register_on_mods_loaded(function()
                         if itemstack:get_wear() > 60135 and wdef.sound and wdef.sound.breaks then
                             local name = user:get_player_name()
                             if archtec_playerdata.get(name, "s_tbw_show") then
-                                minetest.chat_send_player(name, minetest.colorize("#FF0000", "Your tool is about to break!"))
+                                minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Your tool is about to break!")))
                                 minetest.sound_play(wdef.sound.breaks, {
                                     to_player = name,
                                     gain = 2.0,

@@ -1,3 +1,4 @@
+local S = archtec.S
 local music = {}
 local current = {}
 
@@ -44,31 +45,31 @@ minetest.register_chatcommand("music_play", {
 	func = function(name, param)
         minetest.log("action", "[/music_play] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] No arguments provided!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] No arguments provided!")))
             return
         end
         local title, playersraw
 		title, playersraw = param:match("([^ ]+) *(.*)")
         if playersraw:trim() == "" or playersraw:trim() == nil then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] No player names provided!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] No player names provided!")))
             return
         end
         if not file_exists(title) then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] Unknown title!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] Unknown title!")))
             return
         end
         local players = archtec.string_to_table(playersraw)
         for _, player in pairs(players) do
             if not archtec.is_online(player) then
-                minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_play] Player " .. player .. " is not online!"))
+                minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] Player @1 is not online!", player)))
                 return
             end
             music.play(player, title)
             if name ~= player then
-                minetest.chat_send_player(player, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to you (started by " .. name .. ")"))
+                minetest.chat_send_player(player, minetest.colorize("#00BD00", S("[music_play] Playing @1 to you (started by @2)", title, name)))
             end
         end
-        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_play] Playing " .. title .. " to " .. playersraw:trim()))
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_play] Playing @1 to @2", title, playersraw:trim())))
 
 	end
 })
@@ -80,21 +81,21 @@ minetest.register_chatcommand("music_stop", {
 	func = function(name, param)
         minetest.log("action", "[/music_stop] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
         if param:trim() == "" or param:trim() == nil then
-            minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_stop] No player names provided!"))
+            minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_stop] No player names provided!")))
             return
         end
         local players = archtec.string_to_table(param)
         for _, player in pairs(players) do
             if not archtec.is_online(player) then
-                minetest.chat_send_player(name, minetest.colorize("#FF0000", "[music_stop] Player " .. player .. " is not online!"))
+                minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_stop] Player @1 is not online!", player)))
                 return
             end
             music.stop(player)
             if name ~= player then
-                minetest.chat_send_player(player, minetest.colorize("#00BD00", "[music_stop] " .. name .. " stopped your music"))
+                minetest.chat_send_player(player, minetest.colorize("#00BD00", S("[music_stop] @1 stopped your music", name)))
             end
         end
-        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_stop] Stopped music for " .. param:trim()))
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_stop] Stopped music for @1", param:trim())))
 	end
 })
 
@@ -103,7 +104,7 @@ minetest.register_chatcommand("music_list", {
 	privs = {staff = true},
 	func = function(name)
         minetest.log("action", "[/music_list] executed by '" .. name .. "'")
-        minetest.chat_send_player(name, minetest.colorize("#00BD00", "[music_list] " .. get_music_list()))
+        minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_list] @1", get_music_list())))
 	end
 })
 

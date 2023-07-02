@@ -80,8 +80,8 @@ end
 local get_us_time, P2S = minetest.get_us_time, minetest.pos_to_string
 
 local abm_max_time = 5000 -- 5 ms
-local nt_max_time = 2000 -- 2 ms
-local lbm_max_time = 2000 -- 2 ms
+local nt_max_time = 5000 -- 5 ms
+local lbm_max_time = 4000 -- 4 ms
 
 function archtec.abm_max_time(t)
 	abm_max_time = t

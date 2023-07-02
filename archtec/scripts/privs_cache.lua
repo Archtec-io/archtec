@@ -8,8 +8,14 @@ minetest.get_player_privs = function(name)
 	local privs = cache[name]
 	if privs == nil then
 		miss_count =  miss_count + 1
-		privs = old_get_player_privs(name)
-		cache[name] = privs
+		if type(name) == "string" then
+			privs = old_get_player_privs(name)
+			cache[name] = privs
+		else
+			local d = debug.getinfo(2, "nS")
+			minetest.log("error", "[archtec] was called with wrong data type '" .. type(name) .. "' called from " .. (d.source or "") .. "@" .. (d.linedefined or ""))
+			privs = {}
+		end
 	else
 		hit_count = hit_count + 1
 	end

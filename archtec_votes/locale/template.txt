@@ -1,0 +1,12 @@
+# textdomain: archtec_votes
+You can't start a new vote, it's already day!=
+Used one of your free votes, remaning free votes: @1=
+To start a vote you must have 3 etherium dust in your inventory=
+You can't start a new vote, it's already night!=
+There is no player called '@1'!=
+You can't vote-kick yourself!=
+You can't vote-kick staff members!=
+Not enough players online to start a vote-kick!=
+Warning: Abusing a vote-kick can result in a ban for you!=
+Yes, Continue=
+Abort=

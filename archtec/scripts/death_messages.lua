@@ -1,10 +1,4 @@
---[[
-death_messages - A Minetest mod which sends a chat message when a player dies.
-Copyright (C) 2016  EvergreenTree
-GNU General Public License v3
-Modified by Niklp and debagos (Juri)
---]]
-
+local S = archtec.S
 local messages = {}
 
 -- Fall damage
@@ -76,19 +70,17 @@ local function send_death_message(cause, player, killer)
 
     if killer then
         if killer:is_player() then
-            death_message = string.gsub(random_selection, "@1", name)
-            death_message = string.gsub(death_message, "@2", killer:get_player_name())
+            death_message = S(random_selection, name, killer:get_player_name())
         else
             -- Get entity name, excluding mod name ("mymod:enemy" -> "enemy")
             local entity_name = killer:get_luaentity().name
             local index, _ = string.find(entity_name, ":")
             local entity_name = string.sub(entity_name, index + 1)
             entity_name = string.gsub(entity_name, "_", " ") -- remove _'s from mob names
-            death_message = string.gsub(random_selection, "@1", name)
-            death_message = string.gsub(death_message, "@2", entity_name)
+            death_message = S(random_selection, name, entity_name)
         end
     else
-        death_message = string.gsub(random_selection, "@1", name)
+        death_message = S(random_selection, name)
     end
 
     minetest.chat_send_all(minetest.colorize("#FF0000", death_message))

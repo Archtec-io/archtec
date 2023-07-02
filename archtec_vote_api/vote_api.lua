@@ -1,3 +1,4 @@
+local S = minetest.get_translator(minetest.get_current_modname())
 vote = {
 	active = {},
 }
@@ -10,7 +11,7 @@ function vote.new_vote(creator, voteset)
 		voteset.results.voted[creator] = true
 		vote.check_vote(voteset)
 	elseif creator then
-		minetest.chat_send_player(creator, "Can't start a new vote! A vote is already in progress.")
+		minetest.chat_send_player(creator, S("Can't start a new vote! A vote is already in progress."))
 	end
 end
 
@@ -129,16 +130,16 @@ minetest.register_chatcommand("vote_clear", {
 local function vote_yes(name, params)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
-		minetest.chat_send_player(name, "There is no vote currently running!")
+		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
 	elseif voteset == 0 then
-		minetest.chat_send_player(name, "You've already voted!")
+		minetest.chat_send_player(name, S("You've already voted!"))
 		return
 	elseif not voteset.results.yes then
-		minetest.chat_send_player(name, "The vote is not a y/n one.")
+		minetest.chat_send_player(name, S("The vote is not a yes/no one."))
 		return
 	elseif voteset.can_vote and not voteset:can_vote(name) then
-		minetest.chat_send_player(name, "You can't vote in the currently active vote!")
+		minetest.chat_send_player(name, S("You can't vote in the currently active vote!"))
 		return
 	end
 	vote.vote(voteset, name, "yes")
@@ -159,16 +160,16 @@ minetest.register_chatcommand("y", {
 local function vote_no(name, params)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
-		minetest.chat_send_player(name, "There is no vote currently running!")
+		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
 	elseif voteset == 0 then
-		minetest.chat_send_player(name, "You've already voted!")
+		minetest.chat_send_player(name, S("You've already voted!"))
 		return
 	elseif not voteset.results.no then
-		minetest.chat_send_player(name, "The vote is not a yes/no one.")
+		minetest.chat_send_player(name, S("The vote is not a yes/no one."))
 		return
 	elseif voteset.can_vote and not voteset:can_vote(name) then
-		minetest.chat_send_player(name, "You can't vote in the currently active vote!")
+		minetest.chat_send_player(name, S("You can't vote in the currently active vote!"))
 		return
 	end
 	vote.vote(voteset, name, "no")

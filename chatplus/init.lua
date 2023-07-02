@@ -87,12 +87,12 @@ end
 -- Hard depend chatplus on archtec mod to run archtec's on_chat_message callbacks (HACK)
 minetest.register_on_chat_message(function(name, message)
 	if not minetest.get_player_privs(name).shout then
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] You don't have the shout priv!"))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You don't have the shout priv!")))
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (player does not have 'shout')")
 		return true
 	end
 	if message:sub(1, 4) == "7msg" then
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] Anti leak detection blocked this message!"))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] Anti leak detection blocked this message!")))
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
 		return true
 	end
@@ -107,25 +107,25 @@ minetest.register_on_chat_message(function(name, message)
 		local cname, msg = string.match(message, "^#(%S+) ?(.*)")
 		cname = archtec_chat.channel.get_cname(cname)
 		if not cname then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] No channelname provided!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] No channelname provided!")))
 			return true
 		end
 		if not msg then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] Don't forget to add a message!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] Don't forget to add a message!")))
 			return true
 		end
 		if archtec_chat.channels[cname] and archtec_chat.channels[cname].users[name] then
 			channel = cname
 			message = msg
 		else
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] #" .. cname .. " does not exist or you aren't a channel member!"))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] #@1 does not exist or you aren't a channel member!", cname)))
 			return true
 		end
 	elseif archtec_chat.users[name].main then -- normal message
 		channel = "main"
 	end
 	if not channel then
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", "[chatplus] You aren't in any channel! (try '/c j main')"))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')")))
 		return true
 	end
 	if channel == "main" then
@@ -164,7 +164,7 @@ minetest.register_chatcommand("namecolor", {
 
 		if valid_color then
 			set_color(name, param)
-			minetest.chat_send_player(name, S("Color of your name changed. (").. minetest.colorize(color_table[get_color(name)], name) .. ")")
+			minetest.chat_send_player(name, S("Color of your name changed.") .. " (" .. minetest.colorize(color_table[get_color(name)], name) .. ")")
 		else
 			minetest.chat_send_player(name, "Usage: " .. minetest.colorize("#00ff00", "/namecolor ") .. minetest.colorize("#ffff00", "<color>") )
 			minetest.chat_send_player(name, color_description_string )
@@ -192,8 +192,8 @@ local function private_message(name, param)
 		archtec.ignore_msg("chatplus", name, to)
 		return
 	end
-	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To ") .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
-	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From ") .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
+	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To") .. " " .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
+	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
 	minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg)
 	minetest.sound_play("chatplus_incoming_msg", {to_player = to})
 	last_priv_msg_name[name] = to

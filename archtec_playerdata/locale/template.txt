@@ -1,0 +1,25 @@
+# textdomain: archtec_playerdata
+[stats] Unknown player!=
+[stats] Can't read stats!=
+[Online]=
+[Offline]=
+[Staff]=
+YES=
+NO=
+Stats of: @1=
+Dug: @1=
+Placed: @1=
+Crafted: @1=
+Died: @1=
+Playtime: @1=
+Average playtime: @1=
+Chatmessages: @1=
+Thank you: @1=
+Join date: @1=
+Join count: @1=
+Last login: @1=
+Can spill lava: @1=
+Can use the chainsaw: @1=
+Can place forceload blocks: @1=
+Can create big areas: @1=
+Remaining free votes: @1=

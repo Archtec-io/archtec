@@ -1,6 +1,8 @@
 local modname = minetest.get_current_modname()
 local fpath = minetest.get_worldpath() .. "/news.txt"
-local news = "No news available"
+local S = archtec.S
+local FS = function(...) return minetest.formspec_escape(S(...)) end
+local news = S("No news available")
 
 local function read_file()
 	local file = io.open(fpath, "rb")
@@ -19,7 +21,7 @@ local function show_formspec(name)
 	.. "textarea[0.3,0;" .. fsw .. "," .. fsh .. ";;;"
 	.. minetest.formspec_escape(news)
 	.. "]button_exit[0," .. (fsh - 0.75) .. ";" .. fsw
-	.. ",1;ok;" .. "Continue" .. "]")
+	.. ",1;ok;" .. FS("Continue") .. "]")
 end
 
 minetest.register_on_joinplayer(function(player)
