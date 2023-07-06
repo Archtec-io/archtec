@@ -38,13 +38,6 @@ fix_craft("homedecor:table", {
     { "", "group:stick", "" }
 })
 
--- doors:prison_door/xpanes:door_steel_bar
-fix_craft("xpanes:door_steel_bar", {
-    {"xpanes:bar_flat", "default:steel_ingot"},
-    {"default:steel_ingot", "xpanes:bar_flat"},
-    {"xpanes:bar_flat", "default:steel_ingot"}
-})
-
 -- jonez palace windows had the same recipe
 fix_craft("xpanes:palace_window_top_flat", {
     {"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
@@ -71,12 +64,6 @@ fix_craft("xdecor:pressure_wood_off", {
 fix_craft("xdecor:tatami", {
     {"farming:wheat", "farming:wheat", "farming:wheat"},
     {"", "farming:wheat", ""}
-})
-
--- xdecor:packed_ice/ethereal:icebrick
-fix_craft("xdecor:packed_ice", {
-    {"ethereal:icebrick", "ethereal:icebrick"},
-    {"ethereal:icebrick", "ethereal:icebrick"}
 })
 
 -- xdecor:bowl/farming:bowl
