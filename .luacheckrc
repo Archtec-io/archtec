@@ -37,11 +37,11 @@ read_globals = {
 	"mesecon",
 	"stairs",
 	"signs_bot",
+	"signs_lib",
 	"techage",
 	"unified_inventory",
 	"unifieddyes",
 	"xban",
-
 }
 
 files["archtec/scripts/status.lua"] = {
