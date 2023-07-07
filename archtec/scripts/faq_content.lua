@@ -217,3 +217,36 @@ Inventory home:
 - Use the homebutton with the red arrow to set the homepoint to your current postion
 ]]
 })
+
+-- Other
+archtec.faq.register("Node placement limits", {
+    header = "Other",
+    pos = 1,
+    description = [[
+Drawers:
+Minetest limits the static entitities per mapblock (16x16x16 nodes). Every drawer adds 1-4 extra entities, that's why we must limit the drawers per mapblock count.
+
+Hoppers:
+Every hopper adds much server load. You can place 10 hoppers in a 24 node radius. Note: The hoppers from the 'minecart' mod are much faster than the normal ones.
+
+TA quarrys:
+Many players build big cobble generator factories with quarrys, to limit the factory size a bit you can only place 3 quarrys in a 24 node radius.
+
+Sign bots:
+This small cute bots are sometimes big cruel lag bots :-P. You can place 7 sign bots in a 24 node radius.
+]]
+})
+
+archtec.faq.register("Towercrane", {
+    header = "Other",
+    pos = 2,
+    description = [[
+Towercranes can be hard to understand, but there pretty simple.
+
+1. Place the crane and rightclick it
+2. Enter the height and width comma seperated. E.g. '20,30' will build a 20 nodes high and 30 nodes width crane.
+3. To start flying, rightlick the big red button on the crane and press "K" on your keyboard.
+
+To stop flying, press the big green button on the crane.
+]]
+})
