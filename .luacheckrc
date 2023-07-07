@@ -48,7 +48,7 @@ files["archtec/scripts/status.lua"] = {
 	globals = {"minetest.get_server_status"},
 }
 
-files["archtec_pvp/pvp.lua"] = {
+files["archtec_pvp/init.lua"] = {
 	globals = {"minetest.calculate_knockback"},
 }
 

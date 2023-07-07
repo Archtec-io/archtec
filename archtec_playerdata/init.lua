@@ -520,11 +520,11 @@ local function migrate_old()
     end
     -- read and delete
     for _, name in ipairs(flist) do
-        local file = io.open(datadir .. "/" .. name .. ".txt", "r")
+        local file = io.open(datadir .. DIR_DELIM .. name .. ".txt", "r")
         local raw = file:read("*a")
         file:close()
         sql:set_string(name, raw)
-        os.remove(datadir .. "/" .. name .. ".txt")
+        os.remove(datadir .. DIR_DELIM .. name .. ".txt")
     end
     if #flist > 0 then
         log_action("migrated " .. #flist .. " files")

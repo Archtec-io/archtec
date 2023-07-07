@@ -35,7 +35,7 @@ function channel.send(cname, message)
     -- minetest.log("action", "[archtec_chat] Send message '" .. message .. "' into channel '" .. cname .. "'")
     if message == "" then return end
     local cdef = get_cdef(cname)
-    local msg = minetest.colorize("#FF8800", "#" .. cname .. " | " .. message)
+    local msg = C("#FF8800", "#" .. cname .. " | " .. message)
     for name, _ in pairs(cdef.users) do
         minetest.chat_send_player(name, msg)
     end

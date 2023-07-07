@@ -94,3 +94,11 @@ function archtec.get_and_trim(string)
     end
     return ""
 end
+
+function archtec.parse_params(param)
+    local params = {}
+    for p in string.gmatch(param, "[^%s]+") do
+        table.insert(params, p)
+    end
+    return params
+end

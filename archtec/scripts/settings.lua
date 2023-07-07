@@ -9,8 +9,8 @@ function archtec.settings.add_callback(func)
 end
 
 local function on_setting_change(name, setting, newvalue)
-    for _, c in ipairs(callbacks) do
-        c(name, setting, newvalue)
+    for _, callback in ipairs(callbacks) do
+        callback(name, setting, newvalue)
     end
 end
 
@@ -53,15 +53,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     end
 end)
 
-minetest.register_chatcommand("settings", {
-    description = "Change your settings",
-	privs = {interact = true},
-    func = function(name, param)
-        minetest.log("action", "[/settings] executed by '" .. name .. "'")
-        show_settings(name)
-    end
-})
-
 if minetest.get_modpath("unified_inventory") then
     unified_inventory.register_button("settings", {
 		type = "image",
@@ -70,7 +61,7 @@ if minetest.get_modpath("unified_inventory") then
         action = function(player)
             if player then
                 local name = player:get_player_name()
-                minetest.log("action", "[archtec_settings] UI button pressed by '" .. name .. "'")
+                -- minetest.log("action", "[archtec_settings] UI button pressed by '" .. name .. "'")
                 show_settings(name)
             end
         end
