@@ -41,13 +41,9 @@ function core.kick_player(player_name, reason)
     return core.disconnect_player(player_name, reason)
 end
 
-function archtec.get_modname_by_itemname(itemname)
+function archtec.split_itemname(itemname)
     local delimpos = string.find(itemname, ":")
-    if delimpos then
-        return string.sub(itemname, 1,  delimpos - 1)
-    else
-        return nil
-    end
+    return itemname:sub(1,  delimpos - 1), itemname:sub(delimpos + 1, #itemname)
 end
 
 function archtec.string_to_table(str, delim)

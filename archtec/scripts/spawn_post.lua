@@ -32,9 +32,7 @@ end
 
 -- sign
 local cbox = signs_lib.make_selection_boxes(35, 25, true, 0, 0, 0, true)
-local S = minetest.get_translator("basic_signs")
-
-local groups = signs_lib.standard_steel_groups
+local groups = table.copy(signs_lib.standard_steel_groups)
 groups["not_in_creative_inventory"] = 1
 
 signs_lib.register_sign("archtec:sign_wall_steel_white_black", {

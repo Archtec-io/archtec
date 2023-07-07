@@ -56,6 +56,7 @@ dofile(scriptsPath.."lagometer.lua")
 dofile(scriptsPath.."waypoints.lua")
 dofile(scriptsPath.."luac_logging.lua")
 dofile(scriptsPath.."faq.lua")
+dofile(scriptsPath.."faq_content.lua")
 dofile(scriptsPath.."spawn_post.lua")
 
 local http = minetest.request_http_api()
