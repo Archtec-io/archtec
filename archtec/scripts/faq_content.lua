@@ -162,10 +162,29 @@ Run '/stats <name>' to get <name>'s stats.
 ]]
 })
 
+archtec.faq.register("Thankyou", {
+    header = "Player interaction",
+    pos = 6,
+    description = [[
+The are many helpful player's on Archtec, you may want to say thankyou to them.
+
+Run '/thankyou <name>'. '/stats' counts the thankyou's of every player :-).
+]]
+})
+
 -- Spawn
-archtec.faq.register("Unprotected areas", {
+archtec.faq.register("Come back to spawn", {
     header = "Spawn",
     pos = 1,
+    description = [[
+- '/spawn' or '/s' teleport you back to spawn
+- '/spawn_old' or '/s_o' teleport you to the old spawn
+]]
+})
+
+archtec.faq.register("Unprotected areas", {
+    header = "Spawn",
+    pos = 2,
     description = [[
 Yes, our spawn area is really big (>2000x2000 nodes).
 There are different ways to find a nice place:
@@ -218,6 +237,17 @@ Inventory home:
 ]]
 })
 
+archtec.faq.register("Settings", {
+    header = "Player related",
+    pos = 3,
+    description = [[
+- Main settings: Press the cogwheel button in your inventory
+- Namecolor: See FAQ/Chat/Namecolor
+- Skin: Press the face button in your inventory
+- Hotbar size: Run '/hotbar <size>' to change the size of your hotbar
+]]
+})
+
 -- Other
 archtec.faq.register("Node placement limits", {
     header = "Other",
@@ -248,5 +278,48 @@ Towercranes can be hard to understand, but there pretty simple.
 3. To start flying, rightlick the big red button on the crane and press "K" on your keyboard.
 
 To stop flying, press the big green button on the crane.
+]]
+})
+
+archtec.faq.register("Dry ice / cobble generators", {
+    header = "Other",
+    pos = 3,
+    description = [[
+Techage replaces the default cobble generator mechanism (-> basalt generator). Normal ice in contact with lava will form basalt too.
+To allow players to build cobble generators anyway, you need Dry ice:
+
+- Dry ice is produced from water and Diamond powder with a TA4 Chemical reactor
+- Diamond powder drops in TA Rinsers with probability 1/300
+]]
+})
+
+archtec.faq.register("Ores and Tools", {
+    header = "Other",
+    pos = 4,
+    description = [[
+- Titanium doesn't drop in TA Gravelsieves
+
+- Bauxit spawns between -50 and -500
+- Baborium spawns between -250 and -340
+- Titanium spawns between -1500 and -30000
+
+Titanium tools are a much more durable than Diamand or Mithril tools, but they're slower.
+]]
+})
+
+archtec.faq.register("Helpful chatcommands", {
+    header = "Other",
+    pos = 5,
+    description = [[
+- '/discord' will send you a link to our Discord
+- '/faq' show this FAQ again
+- '/news' show the news from join again
+- '/report' report an bug/feature-request/etc. to the server staff (Will create an issue on GitHub)
+- '/area_flak' close the airspace above your area for hanggliders
+
+Techage:
+- '/my_expoints' show your TA 5 experience points
+- '/ta_color' show a color pallete for controller
+- '/ta_limit' show your TA command limit
 ]]
 })

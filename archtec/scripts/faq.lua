@@ -18,6 +18,7 @@ local FORMSPEC = [[
 
 local defs = {}
 local entries = {}
+local default_description = S("For more information, click on any entry in the list.")
 
 local function faq_tree()
 	for name, def in pairs(defs) do
@@ -39,9 +40,8 @@ minetest.after(0, faq_tree)
 
 local function faq_formspec(name, sel)
 	local rows = {}
-	rows[1] = "#FFF,0," .. FS("Title")
 
-	local description = S("For more information, click on any entry in the list.")
+	local description = default_description
 
 	for i, data in ipairs(entries) do
 		rows[#rows + 1] = COLOR_BLUE .. ",0," .. F(data[1])
@@ -83,4 +83,8 @@ minetest.register_chatcommand("faq", {
 
 function archtec.faq.register(name, def)
     defs[name] = def
+end
+
+function archtec.faq.default_description(description)
+	default_description = description
 end
