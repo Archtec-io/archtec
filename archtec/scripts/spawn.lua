@@ -1,16 +1,12 @@
-minetest.register_privilege("spawn", {
-	description = "Allows player to teleport to spawn."
-})
-
-local function movePlayerToSpawn(playerName)
-	local player = minetest.get_player_by_name(playerName)
+local function move_to_spawn(name)
+	local player = minetest.get_player_by_name(name)
 	if player ~= nil then
 		player:set_pos({x = 236.5, y = 17, z = -2033.5})
 	end
 end
 
-local function movePlayerToOldSpawn(playerName)
-	local player = minetest.get_player_by_name(playerName)
+local function move_to_old_spawn(name)
+	local player = minetest.get_player_by_name(name)
 	if player ~= nil then
 		player:set_pos({x = 325, y = 12, z = 1120})
 	end
@@ -18,24 +14,14 @@ end
 
 minetest.register_chatcommand("spawn", {
 	description = "Teleport to spawn",
-	privs = {spawn = true},
-	func = movePlayerToSpawn
+	privs = {interact = true},
+	func = move_to_spawn
 })
-
-minetest.register_chatcommand("s", {
-	description = "Teleport to spawn",
-	privs = {spawn = true},
-	func = movePlayerToSpawn
-})
+archtec.register_chatcommand_alias("spawn", "s")
 
 minetest.register_chatcommand("spawn_old", {
 	description = "Teleport to old spawn",
-	privs = {spawn = true},
-	func = movePlayerToOldSpawn
+	privs = {interact = true},
+	func = move_to_old_spawn
 })
-
-minetest.register_chatcommand("s_o", {
-	description = "Teleport to old spawn",
-	privs = {spawn = true},
-	func = movePlayerToOldSpawn
-})
+archtec.register_chatcommand_alias("spawn_old", "s_o")

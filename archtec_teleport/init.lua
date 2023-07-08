@@ -5,10 +5,6 @@ archtec_teleport = {
 	tp2me_list = {}
 }
 
-minetest.register_privilege("archtec_teleport", {
-	description = S("Let players teleport to other players (request will be sent)"),
-})
-
 -- Clear requests when the player leaves
 minetest.register_on_leaveplayer(function(name)
 	if archtec_teleport.tpr_list[name] then
@@ -190,19 +186,19 @@ end
 minetest.register_chatcommand("tpr", {
 	description = S("Request teleport to another player"),
 	params = "<playername>",
-	privs = {interact = true, archtec_teleport = true},
+	privs = {interact = true},
 	func = archtec_teleport.tpr_send
 })
 
 minetest.register_chatcommand("tp2me", {
 	description = S("Request player to teleport to you"),
 	params = "<playername>",
-	privs = {interact = true, archtec_teleport = true},
+	privs = {interact = true},
 	func = archtec_teleport.tp2me_send
 })
 
 minetest.register_chatcommand("ok", {
 	description = S("Accept teleport requests from another player"),
-	privs = {interact = true, archtec_teleport = true},
+	privs = {interact = true},
 	func = archtec_teleport.tpr_accept
 })

@@ -10,8 +10,6 @@ archtec_pvp = {}
 
 local S = minetest.get_translator(minetest.get_current_modname())
 
-minetest.register_privilege("pvp", ("Can change own PvP state"))
-
 function archtec_pvp.pvp_set(player_name, state)
 	if type(state) ~= "boolean" then
 		return false, S("The state parameter has to be a boolean.")

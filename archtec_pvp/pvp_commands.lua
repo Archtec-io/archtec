@@ -6,9 +6,6 @@ if minetest.get_modpath("unified_inventory") then
 		type = "image",
 		image = "pvp.png",
 		tooltip = "PvP",
-		condition = function(player)
-			return minetest.check_player_privs(player, "pvp")
-		end,
 		action = function(player)
 			archtec_pvp.pvp_toggle(player:get_player_name())
 		end
