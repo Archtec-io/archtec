@@ -33,7 +33,6 @@ local function faq_tree()
 	end
 	table.sort(sorted_entries, function(a, b) return a[1] < b[1] end)
 	entries = sorted_entries
-    print(dump(entries))
 end
 
 minetest.after(0, faq_tree)

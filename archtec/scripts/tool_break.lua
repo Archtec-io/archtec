@@ -29,9 +29,12 @@ end
 local function blacklisted(tool)
     if string.sub(tool, 1, 8) == "3d_armor" or
         string.sub(tool, 1, 15) == "christmas_decor" or
-        string.sub(tool, 1, 7) == "shields" then return false
+        string.sub(tool, 1, 7) == "shields" or
+        string.sub(tool, 1, 18) == "invisible_3d_armor" or
+        string.sub(tool, 1, 17) == "unified_inventory" or
+        string.sub(tool, 1, 17) == "invisible_shields" then return true
     end
-    return true
+    return false
 end
 
 minetest.register_on_mods_loaded(function()
