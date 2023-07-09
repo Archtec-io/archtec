@@ -25,18 +25,18 @@ local function run_vote(name, param)
 			end
 
 			if result == "yes" then
-				minetest.chat_send_all("Vote passed, " .. minetest.colorize("#088A08", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
+				minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
 				discord.send(nil, ":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
 				xban.ban_player(self.name, "/vote_kick", os.time() + 3600, "vote-kicked")
 			else
-				minetest.chat_send_all("Vote failed, " .. minetest.colorize("#088A08", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " remains ingame.")
+				minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " remains ingame.")
 				discord.send(nil, ":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
 			end
 		end,
 
 		on_vote = function(self, name, value)
 			if value == "yes" then
-				minetest.chat_send_all(name .. " voted " .. minetest.colorize("#088A08", "YES") .. " to " .. self.description)
+				minetest.chat_send_all(name .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
 				discord.send(nil, ":green_square: **" .. name .. "** voted YES")
 			else
 				minetest.chat_send_all(name .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
