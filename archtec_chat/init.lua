@@ -5,8 +5,8 @@ archtec_chat = {
 
 archtec_chat.channel = dofile(minetest.get_modpath("archtec_chat") .. "/channels.lua")
 
-archtec_chat.channel.create("main", "priv.staff", true)
-archtec_chat.channel.create("staff", "priv.staff", true)
+archtec_chat.channel.create("main", "", true)
+archtec_chat.channel.create("staff", "", true)
 
 minetest.register_on_joinplayer(function(player)
     local name = player:get_player_name()

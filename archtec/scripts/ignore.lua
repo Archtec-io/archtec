@@ -176,7 +176,7 @@ minetest.register_chatcommand("ignore", {
                     minetest.chat_send_player(name, C("#00BD00", S("[ignore] You aren't ignoring anyone")))
                     return
                 end
-                minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players you ignore: @1", target)))
+                minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players you ignore: @1", list)))
                 return
             end
         end

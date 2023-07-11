@@ -22,22 +22,25 @@ local function is_channel_owner(cdef, name)
     if cdef.owner == name then
         return true
     end
-    if cdef.owner:sub(1, 5) == "priv." then
-        local priv = cdef.owner:sub(6, #cdef.owner)
-        if minetest.get_player_privs(name)[priv] then
-            return true
-        end
+    if minetest.get_player_privs(name).staff then
+        return true
     end
     return false
 end
 
-function channel.send(cname, message)
+function channel.send(cname, message, sender)
     -- minetest.log("action", "[archtec_chat] Send message '" .. message .. "' into channel '" .. cname .. "'")
     if message == "" then return end
     local cdef = get_cdef(cname)
     local msg = C("#FF8800", "#" .. cname .. " | " .. message)
     for name, _ in pairs(cdef.users) do
-        minetest.chat_send_player(name, msg)
+        if sender then
+            if not archtec.ignore_check(sender, name) then -- don't send if ignored
+                minetest.chat_send_player(name, msg)
+            end
+        else
+            minetest.chat_send_player(name, msg)
+        end
     end
 end
 
@@ -77,7 +80,7 @@ function channel.leave(cname, name, msg)
         channel.send(cname, name .. " left the channel.")
     end
     if archtec.count_keys(cdef.users) == 1 then -- channel cleanup
-        channel.delete(cname, "Service")
+        channel.delete(cname, "")
     end
     cdef.users[name] = nil
     archtec_chat.users[name][cname] = nil
@@ -256,26 +259,10 @@ minetest.register_chatcommand("c", {
             -- is player invited?
             local is_owner = is_channel_owner(cdef, name)
             if cdef.invites[name] or is_owner then
-                -- is ignored player in channel?
-                local kicks = {}
-                for user, _ in pairs(cdef.users) do
-                    if archtec.ignore_check(name, user) then
-                        if not is_channel_owner(cdef, user) and is_owner then
-                            table.insert(kicks, user)
-                        else
-                            archtec.ignore_msg("c/join", name, user)
-                            return
-                        end
-                    end
-                end
                 if cdef.invites[name] then
                     channel.invite_accept(c, name)
                 else
                     channel.join(c, name)
-                end
-                -- kick later to prevent automatic channel deletions
-                for _, user in pairs(kicks) do
-                    channel.leave(c, user, name .. " (channelowner) kicked " .. user .. ". (automatic kick to allow owner join)")
                 end
             else
                 minetest.chat_send_player(name, C("#FF0000", S("[c/join] You aren't invited!")))
