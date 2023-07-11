@@ -7,9 +7,11 @@ local liquid_list = {
     "bucket:bucket_lava",
 }
 
+archtec.adv_buckets_playtime = 180000 -- 50 h playtime
+
 local function try_grant_lava_priv(name)
     local playtime = archtec_playerdata.get(name, "playtime")
-    if playtime > 180000 then -- 50 h playtime
+    if playtime > archtec.adv_buckets_playtime then
         archtec.grant_priv(name, "adv_buckets")
         minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[request_lava] Congratulations! You have been granted the 'adv_buckets' privilege")))
         notifyTeam("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")

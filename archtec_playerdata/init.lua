@@ -68,6 +68,16 @@ local function valid_player(name)
     end
 end
 
+local function add_defaults(t)
+    local table = table.copy(t)
+    for k, v in pairs(struct) do
+        if not table[k] then
+            table[k] = v
+        end
+    end
+    return table
+end
+
 local function in_struct(key)
     return struct[key] ~= nil
 end
@@ -411,6 +421,38 @@ minetest.register_on_dieplayer(function(player, _)
     end
 end)
 
+-- 0 = conditions not fulfilled + w/o priv; 1 = conditions fulfilled + w/o priv; 2 = conditions fulfilled + w/ priv
+local function colorize_privs(name, data, privs)
+    local t = {priv_lava = 0, priv_chainsaw = 0, priv_forceload = 0, priv_areas = 0}
+    if data.playtime > archtec.adv_buckets_playtime then -- priv_lava
+        t.priv_lava = 1
+        if privs.adv_bucktes then t.priv_lava = 2 end
+    end
+    if archtec.chainsaw_conditions(name) then -- priv_chainsaw
+        t.priv_chainsaw = 1
+        if privs.archtec_chainsaw then t.priv_chainsaw = 2 end
+    end
+    if true then -- priv_forceload (no check needed)
+        t.priv_forceload = 1
+        if privs.forceload then t.priv_forceload = 2 end
+    end
+    if data.playtime > archtec.big_areas_playtime then -- priv_areas
+        t.priv_areas = 1
+        if privs.areas_high_limit then t.priv_areas = 2 end
+    end
+    local colorized = {}
+    for priv, v in pairs(t) do
+        if v == 0 then
+            colorized[priv] = C("#FF0000", "NO")
+        elseif v == 1 then
+            colorized[priv] = C("#FF0", "PENDING")
+        elseif v == 2 then
+            colorized[priv] = C("#00BD00", "YES")
+        end
+    end
+    return colorized.priv_lava or "", colorized.priv_chainsaw or "", colorized.priv_forceload or "", colorized.priv_areas or ""
+end
+
 local function stats(name, target)
     local data, is_online, user
     if target == "" or target == nil then
@@ -437,29 +479,27 @@ local function stats(name, target)
         minetest.chat_send_player(name, C("#FF0000", S("[stats] Can't read stats!")))
         return
     end
+    -- prevent nil crashes
+    data = add_defaults(data)
+    -- get auth
     local privs = minetest.get_player_privs(target) or {}
     local pauth = minetest.get_auth_handler().get_auth(target)
-    local playtime_int = data.playtime or 1
-    local avg = playtime_int / data.join_count or 1
     -- stats
     if is_online then user = target .. " " .. C("#00BD00", S("[Online]")) else user = target .. " " .. C("#FF0000", S("[Offline]")) end
     if privs["staff"] then user = user .. " " .. C("#FF8800", S("[Staff]")) end
-    local nodes_dug = data.nodes_dug or 0
-    local nodes_placed = data.nodes_placed or 0
-    local crafted = data.items_crafted or 0
-    local died = data.died or 0
-    local playtime = format_duration(playtime_int) or 0
-    local chatmessages = data.chatmessages or 0
+    local nodes_dug = data.nodes_dug
+    local nodes_placed = data.nodes_placed
+    local crafted = data.items_crafted
+    local died = data.died
+    local playtime = format_duration(data.playtime)
+    local chatmessages = data.chatmessages
     local first_join = os.date("!%Y-%m-%dT%H:%M:%SZ", data.first_join) .. " UTC"
-    local join_count = data.join_count or 1
-    local thank_you = data.thank_you or 0
-    local avg_playtime = format_duration(avg) or 0
-    local free_votes = (archtec.free_votes or 0) - (data.free_votes or 0)
-    local priv_lava, priv_chainsaw, priv_forceload, priv_areas, last_login
-    if privs["adv_buckets"] then priv_lava = C("#00BD00", S("YES")) else priv_lava = C("#FF0000", S("NO")) end
-    if privs["archtec_chainsaw"] then priv_chainsaw = C("#00BD00", S("YES")) else priv_chainsaw = C("#FF0000", S("NO")) end
-    if privs["forceload"] then priv_forceload = C("#00BD00", S("YES")) else priv_forceload = C("#FF0000", S("NO")) end
-    if privs["areas_high_limit"] then priv_areas = C("#00BD00", S("YES")) else priv_areas = C("#FF0000", S("NO")) end
+    local join_count = data.join_count
+    local thank_you = data.thank_you
+    local avg_playtime = format_duration(data.playtime / data.join_count)
+    local free_votes = archtec.free_votes - data.free_votes
+    local priv_lava, priv_chainsaw, priv_forceload, priv_areas = colorize_privs(target, data, privs)
+    local last_login
     if pauth and pauth.last_login and pauth.last_login ~= -1 then
         last_login = os.date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
     else

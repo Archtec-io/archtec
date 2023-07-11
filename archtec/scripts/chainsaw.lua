@@ -6,39 +6,21 @@ local api = choppy.api
 -- disable is_enabled() since we don't use the initialized function
 choppy.api.is_enabled = function(...) return true end
 
-local function joined(name)
-	local timestap = archtec_playerdata.get(name, "first_join")
-	if timestap < (os.time() - 604800) then -- one week ago
-		return true
-	else
-		return false
-	end
-end
-
 local function conditions(name)
 	local playtime = archtec_playerdata.get(name, "playtime")
 	local nodes_dug = archtec_playerdata.get(name, "nodes_dug")
 	local nodes_placed = archtec_playerdata.get(name, "nodes_placed")
-	local old_enough = joined(name)
-	if old_enough ~= true then
-		return false
-	end
-	if playtime < 86400 then -- 24h playtime
-		return false
-	end
-	if nodes_dug < 20000 then
-		return false
-	end
-	if nodes_placed < 10000 then
+	local timestap = archtec_playerdata.get(name, "first_join")
+	if timestap < os.time() - 604800 or playtime < 86400 or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
 		return false
 	end
 	return true
 end
 
+archtec.chainsaw_conditions = conditions
+
 local function grant_priv(name, priv)
-    local privs = minetest.get_player_privs(name)
-    privs[priv] = true
-    minetest.set_player_privs(name, privs)
+    archtec.grant_priv(name, priv)
 	notifyTeam("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 

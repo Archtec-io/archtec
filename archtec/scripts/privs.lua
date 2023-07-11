@@ -5,6 +5,7 @@ minetest.register_privilege("forceload", (S("Allows you to forceload your machin
 minetest.register_privilege("archtec_chainsaw", (S("Allows you to use the chainsaw")))
 
 local C = minetest.colorize
+archtec.big_areas_playtime = 108000 -- 30h playtime
 
 minetest.register_chatcommand("request_areas_high_limit", {
 	params = "",
@@ -16,7 +17,7 @@ minetest.register_chatcommand("request_areas_high_limit", {
             return
         end
         local playtime = archtec_playerdata.get(name, "playtime") or 0
-        if playtime > 108000 then -- 30 h playtime
+        if playtime > archtec.big_areas_playtime then
             archtec.grant_priv(name, "areas_high_limit")
             minetest.chat_send_player(name, C("#00BD00", S("[request_areas_high_limit] Congratulations! You have been granted the 'areas_high_limit' privilege")))
             notifyTeam("[request_areas_high_limit] Granted '" .. name .. "' the 'areas_high_limit' priv")
