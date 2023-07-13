@@ -1,11 +1,12 @@
 # textdomain: archtec_playerdata
+NO=
+PENDING=
+YES=
 [stats] Unknown player!=
 [stats] Can't read stats!=
 [Online]=
 [Offline]=
 [Staff]=
-YES=
-NO=
 Stats of: @1=
 Dug: @1=
 Placed: @1=

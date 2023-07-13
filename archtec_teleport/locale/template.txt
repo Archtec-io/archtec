@@ -1,5 +1,4 @@
 # textdomain: archtec_teleport
-Let players teleport to other players (request will be sent)=
 Usage: /tpr <Player name>=
 There is no player with this name!=
 You can't teleport you to yourself!=

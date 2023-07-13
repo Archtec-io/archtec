@@ -31,6 +31,8 @@ archtec.faq.register("Use and manage channels", {
     header = "Chat",
     pos = 3,
     description = [[
+Send a message to a channel with adding '#' and the channelname to the message. (e.g. '#staff hiho')
+
 Join a channel:
 '/c join <channel>' or
 '/c j <channel>'

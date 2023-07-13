@@ -5,7 +5,6 @@
 Discord server link: @1=
 For more information, click on any entry in the list.=
 View ingame FAQ=
-Title=
 Archtec FAQ (/faq)=
 Close=
 Server respawned you (you were dead without respawn option)=
@@ -66,6 +65,7 @@ Get a free mailbox at the spawn post=
 Do you like christmas? Place your stocking at spawn's christmas area=
 Diamond powder can be used to build cobble stone generators=
 Moving is slow? Get Mithril Boots to move much faster=
+Any questions? Take a look at our FAQ/Wiki using '/faq'=
 [Info]:=
 You can't thank yourself=
 You can't thank someone who is offline=

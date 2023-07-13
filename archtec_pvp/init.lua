@@ -17,7 +17,7 @@ function archtec_pvp.pvp_set(player_name, state)
 
 	local player = minetest.get_player_by_name(player_name)
 	if not player then
-		return false, string.format(S("Player %s does not exist or is not currently connected."), player_name)
+		return false, S("Player @1 does not exist or is not currently connected.", player_name)
 	end
 	pvptable[player_name].state = state
 
@@ -81,7 +81,7 @@ end
 
 function archtec_pvp.is_pvp(playername)
 	if not pvptable[playername] then
-		return false, string.format(S("Player %s does not exist or is not currently connected."), playername)
+		return false, S("Player @1 does not exist or is not currently connected.", playername)
 	end
 	return pvptable[playername].state or false
 end
@@ -122,11 +122,11 @@ minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, 
 	end
 
 	if not pvptable[localname].state then
-		minetest.chat_send_player(hittername, string.format(S("You can't hit %s because their PvP is disabled."), localname))
+		minetest.chat_send_player(hittername, S("You can't hit @1 because their PvP is disabled.", localname))
 		return true
 	end
 	if not pvptable[hittername].state then
-		minetest.chat_send_player(hittername, string.format(S("You can't hit %s because your PvP is disabled."), localname))
+		minetest.chat_send_player(hittername, S("You can't hit @1 because your PvP is disabled.", localname))
 		return true
 	end
 

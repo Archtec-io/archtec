@@ -443,11 +443,11 @@ local function colorize_privs(name, data, privs)
     local colorized = {}
     for priv, v in pairs(t) do
         if v == 0 then
-            colorized[priv] = C("#FF0000", "NO")
+            colorized[priv] = C("#FF0000", S("NO"))
         elseif v == 1 then
-            colorized[priv] = C("#FF0", "PENDING")
+            colorized[priv] = C("#FF0", S("PENDING"))
         elseif v == 2 then
-            colorized[priv] = C("#00BD00", "YES")
+            colorized[priv] = C("#00BD00", S("YES"))
         end
     end
     return colorized.priv_lava or "", colorized.priv_chainsaw or "", colorized.priv_forceload or "", colorized.priv_areas or ""
