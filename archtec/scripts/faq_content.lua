@@ -33,7 +33,7 @@ archtec.faq.register("Use and manage channels", {
     description = [[
 Send a message to a channel with adding '#' and the channelname to the message. (e.g. '#staff hiho')
 
-Join a channel:
+Join/create a channel: (Add 'yes' to your command to make new the created channel public)
 '/c join <channel>' or
 '/c j <channel>'
 

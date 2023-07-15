@@ -7,7 +7,8 @@ local cdef_default = {
     owner = "",
     users = {},
     invites = {},
-    keep = false
+    keep = false,
+    public = false
 }
 ]]--
 
@@ -44,12 +45,9 @@ function channel.send(cname, message, sender)
     end
 end
 
-function channel.create(cname, owner, keep)
-    minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. owner .. "'")
-    local def = {owner = owner, users = {}, invites = {}, keep = false}
-    if keep then
-        def.keep = true
-    end
+function channel.create(cname, params)
+    minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. params.owner or "" .. "'")
+    local def = {owner = params.owner or "", keep = params.keep or false, public = params.public or false, users = {}, invites = {}}
     archtec_chat.channels[cname] = def
 end
 
@@ -142,10 +140,10 @@ channel.get_cname = get_cname
 local help_list = {
     join = {
         name = "join",
-        description = "Join a channel (# is optional)",
-        param = "<channel>",
+        description = "Join or create a channel. Add 'yes' to your command to make new the created channel public (# is optional)",
+        param = "<channel> <keep public>",
         shortcut = "j",
-        usage = "/c join #mychannel"
+        usage = "/c join #mychannel (yes)"
     },
     leave = {
         name = "leave",
@@ -242,8 +240,9 @@ minetest.register_chatcommand("c", {
             end
             -- create if not registered
             if not cdef then
+                local public = archtec.get_and_trim(params[3]) == "yes"
                 if type(c) == "string" and string.len(c) <= 15 then
-                    channel.create(c, name)
+                    channel.create(c, {owner = name, public = public})
                     channel.join(c, name, name .. " created the channel.")
                     return
                 else
@@ -258,7 +257,7 @@ minetest.register_chatcommand("c", {
             end
             -- is player invited?
             local is_owner = is_channel_owner(cdef, name)
-            if cdef.invites[name] or is_owner then
+            if cdef.invites[name] or is_owner or cdef.public then
                 if cdef.invites[name] then
                     channel.invite_accept(c, name)
                 else
@@ -309,6 +308,10 @@ minetest.register_chatcommand("c", {
             end
             if target == "" then
                 minetest.chat_send_player(name, C("#FF0000", S("[c/invite] No target provided!")))
+                return
+            end
+            if name == target then
+                minetest.chat_send_player(name, C("#FF0000", S("[c/invite] Yo can't invite yourself!")))
                 return
             end
             if not archtec.is_online(target) then
@@ -398,4 +401,5 @@ minetest.register_chatcommand("c", {
         end
     end
 })
+
 return channel
