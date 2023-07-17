@@ -1,10 +1,10 @@
 --[[ Format guide
 archtec.faq.register("My nice title", { <- Title of the entry
-    header = "Cool stuff", <- Name of the associated category
-    pos = 1, <- Pos inside the category
+    header = "Cool stuff", <- Name of the associated chat section
+    pos = 1, <- Position inside the section
     description = [[
-My cool text" <- Content of the entry
-]*] -- The * is not needed!
+My cool text" <- Description of the section content
+]*] -- The * is not needed
 })
 ]]--
 
@@ -13,8 +13,8 @@ archtec.faq.register("Namecolor", {
     header = "Chat",
     pos = 1,
     description = [[
-You can change your namecolor in the #main channel via '/namecolor <color'.
-To see a list of supported colors, run '/namecolor' without params.
+You can change your namecolor in the #main channel via '/namecolor <color>'.
+To see a list of supported colors, use '/namecolor' without params.
 ]]
 })
 
@@ -22,8 +22,8 @@ archtec.faq.register("Private messages", {
     header = "Chat",
     pos = 2,
     description = [[
-Run '/msg <name> <message>' to send <name> a message.
-Run '/m <message>' to send the same person a message you sent your last message too.
+Use '/msg <name> <message>' to message another player.
+Use '/m <message>' to message the same person your last message was sent to.
 ]]
 })
 
@@ -31,17 +31,19 @@ archtec.faq.register("Use and manage channels", {
     header = "Chat",
     pos = 3,
     description = [[
-Send a message to a channel with adding '#' and the channelname to the message. (e.g. '#staff hiho')
+To send a message to a channel prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
 
-Join/create a channel: (Add 'yes' to your command to make new the created channel public)
-'/c join <channel>' or
-'/c j <channel>'
+Required arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}
+
+Join/Create a channel: (Add 'yes' to your command to make new the created channel public)
+'/c join <channel> {yes}' or
+'/c j <channel> {yes}'
 
 Leave a channel:
 '/c leave <channel>' or
 '/c l <channel>'
 
-Invite someone in a channel:
+Invite someone to a channel:
 '/c invite <channel> <name>' or
 '/c i <channel> <name>'
 
@@ -49,17 +51,17 @@ List all channels:
 '/c list' or
 '/c li'
 
-Find all channels where someone is:
+List all channels a player is currently in:
 '/c find <name>' or
 '/c f <name>'
 
-Kick someone from a channel. Can be used by channelowners and staff:
+Kick a player from a channel. Can only be used by channel owners and staff:
 '/c kick <channel> <name>' or
 '/c k <channel> <name>'
 
-Get help:
-'/c help <command>' or
-'/c h <command>' (command is optional)
+Show help:
+'/c help {command}' or
+'/c h {command}'
 ]]
 })
 
@@ -67,36 +69,38 @@ archtec.faq.register("Chatbridge to Discord", {
     header = "Chat",
     pos = 4,
     description = [[
-Since we use Matterbridge, we might add support for new platforms later.
+The Discord chart bridge uses Matterbridge facilitating additional platform
+    integrations in the future.
 
-The bridge supports the following commands and chat formats:
-- Normal chat messages
-- '/me' Shows ingame what you're doing (formatted like regular '/me')
-- '!status' Shows the server status (like '/status' ingame)
+The following commands and chat formats are supported:
+- Regular chat messages
+- '/me' Used in conjunction with a verb do indicate you as a player performing
+    an action as described by a 3rd person, e.g. /me talks -> Player talks
+- '!status' Shows the server status
 - '!cmd' Remote command execution (staff only)
 ]]
 })
 
--- Player interaction
-archtec.faq.register("Ignoring", {
+-- Player blocking
+archtec.faq.register("Ignore", {
     header = "Player interaction",
     pos = 1,
     description = [[
-You can ignore other players resp. other players can ignore you. This means you can no longer act together.
-Not all functions on the server support ignoring, but most do :).
+Allows you to block other players from interacting and communicating with you.
+Currently ignore isn't supported by all features/functions but most are. :).
 
-Ignore a player:
+Block/Ignore a player:
 '/ignore add <name>' or
 '/ignore ignore <name>'
 
-Unignore a player:
+Unblock/Un-ignore player:
 '/ignore remove <name>' or
 '/ignore unignore <name>'
 
-List ignored players:
+List blocked/ignored players:
 '/ignore list' or
-'/ignore list <name>' (lists ignored players of <name>; staff only)
-'/ignore' (without params)
+'/ignore list {name}' (lists ignored players of <name>; staff only)
+'/ignore'
 ]]
 })
 
@@ -104,16 +108,16 @@ archtec.faq.register("Teleport requests", {
     header = "Player interaction",
     pos = 2,
     description = [[
-Send a teleport request to another player:
+Request to teleport to another players position:
 '/tpr <name>'
 
-Send a teleport to-me request to another player:
+Offer another player to teleport to your position:
 '/tp2me <name>'
 
 Accept a teleport request:
 '/ok'
 
-All teleport requests have a 60 seconds timeout.
+All teleport requests time out after 60 seconds.
 ]]
 })
 
@@ -121,36 +125,42 @@ archtec.faq.register("PvP", {
     header = "Player interaction",
     pos = 3,
     description = [[
-Everyone on Archtec can decide if they want to fight aggainst other players or not.
+Each player on Archtec can opt in or out of PvP mode, opting into PvP mode
+    allows other players to harm/fight you and allows you to harm/fight other
+    players that have opted into PvP mode.
 
-To enable PvP, press in your inventory the button with the sword.
-To disable PvP, press the button again.
+- To enable PvP, toggle the sword button in your inventory screen.
+- To disable PvP, toggle the button again.
 
-PvP gets automatically disabled when you rejoin.
+PvP mode gets reset on login and has to be re-enabled for each login session.
 ]]
 })
 
-archtec.faq.register("Votings", {
+archtec.faq.register("Voting", {
     header = "Player interaction",
     pos = 4,
     description = [[
-Since new players often don't have etherium dust, each player can start 5 votings for free. The remaining free votings are shown in '/stats'.
+There are three kinds of votes a player on Archtec can initiate:
 
-Vote day:
-- A vote to make day ingame
+Each player starts with 5 free votes since it might take new player a while to
+    get etherium dust. To check how many free votes you have remaining use the
+    '/stats' command.
+
+Vote to make it day:
+- Turns in-game night into day
 - Costs 3 etherium dust
-- 60% needed majority
+- Requires 60% of votes to be YES to succeed
 
-Vote night:
-- A vote to make night ingame
+Vote to make it night:
+- Turns in-game day into night
 - Costs 3 etherium dust
-- 60% needed majority
+- Requires 60% of votes to be YES to succeed
 
-Vote kick:
-- A vote to kick players who misbehave
+Vote to kick a player:
+- Kicks a mis-behaving player off the server
 - Costs nothing
-- 80% needed majority
-- To prevent abuse, there must be at least 4 players online to start the vote
+- Requires 80% of votes to be YES to succeed
+- To prevent abuse there must be at least 4 players online to initate the vote
 ]]
 })
 
@@ -158,84 +168,128 @@ archtec.faq.register("Stats", {
     header = "Player interaction",
     pos = 5,
     description = [[
-We record precise stats about all players. Stats recording is activated since 2023-02-01. Previously only playtime and first join date were saved.
+Archtec records certain statistics on all players. To see statistics for a player
+    you can use the stats command.
 
-Run '/stats <name>' to get <name>'s stats.
+To show a players statistics use:
+- '/stats <name>'
 ]]
 })
 
-archtec.faq.register("Thankyou", {
+archtec.faq.register("Thank you", {
     header = "Player interaction",
     pos = 6,
     description = [[
-The are many helpful player's on Archtec, you may want to say thankyou to them.
+The are many helpful players on Archtec, if someone has been helpful and you
+    want to thank them and call them out for their assistance use the '/thankyou'
+    command. To see how many 'thankyou's a player has received use the '/stats' command.
 
-Run '/thankyou <name>'. '/stats' counts the thankyou's of every player :-).
+    :-)
+
+To thank a player:
+'/thankyou <name>'
 ]]
 })
 
 -- Spawn
-archtec.faq.register("Come back to spawn", {
+archtec.faq.register("Teleport to spawn", {
     header = "Spawn",
     pos = 1,
     description = [[
-- '/spawn' or '/s' teleport you back to spawn
-- '/spawn_old' or '/s_o' teleport you to the old spawn
+
+To teleport back to Spawn:
+- '/spawn' or '/s'
+
+To teleport back to Old Spawn:
+- '/spawn_old' or '/s_o'
 ]]
 })
 
-archtec.faq.register("Unprotected areas", {
+archtec.faq.register("Areas without protection", {
     header = "Spawn",
     pos = 2,
     description = [[
-Yes, our spawn area is really big (>2000x2000 nodes).
-There are different ways to find a nice place:
 
-- Make a long trek out of the spawn area
-- In the Teleporter house is a "Free area Travelnet", it can teleport you to different unprotected areas where you can build with others
+The Archtec spawn area is very large (>2000x2000 nodes) and most players will
+want to find a place where they can mine, build or interact with the environtment.
+
+Players can choose one of several ways to get out of the protected spawn area
+and find a nice place to make their own.
+
+- There is a white "Teleporter" house adjacent to spawn platform, inside you will
+    find several teleporters that will instantly transport you to mining and
+    building sites where you can start your build/mine/journey. If at any time
+    you want to return to spawn just type '/spawn'
+- Walking out of spawn can be a rewarding experience since you can see all the
+    fantastic bulids and structures other players have created. Note that it
+    will take a while and be prepared to walk a bit further than the edge of
+    spawn to find a nice place. You might want to consider using the '/sethome'
+    command to save your progress so if you have an accident you can return to
+    where your bones and pick up your stuff
+- If you want to build far from others you might want to check out the online
+    Archtec Map http://map.archtec.freemyip.com:8585
+- Some players have created their own personal travel nets that go to the very
+    edges of the universe, ask around if your curios and want to discover just
+    how big our server is.
 ]]
 })
 
 -- Player related
-archtec.faq.register("Automatic priv granting", {
+archtec.faq.register("Privileges", {
     header = "Player related",
     pos = 1,
     description = [[
-We don't grant players special priv's, but the server will do that automatically.
+Some actions and block interactions require special privileges due to having the potential
+    of being very destructive or negatively impacting other players or server performance.
 
-Forceloading priv ('forceload'):
-- You'll get the priv when you enter TA3 (just place a TA3 Oil Drillbox)
+Admins will not grant individual player privileges but some privileges are
+    automatically granted as players reach certain milestones or gain experience.
 
-Using Lava buckets ('adv_buckets'):
-- You must have 50 hours or more playtime
-- Try to place a Lava bucket, you'll get the priv
+Forceload ('forceload'):
+- The ability to place forceload blocks
+- Granted when a player reaches Techage Level 3 (places first TA3 Oil Drillbox) 
+- Forceload blocks cause the mapblock (16x16x16) area they are placed in to be
+    continously loaded while a player is logged in regardless of where they are.
 
-More and bigger areas ('areas_high_limit'):
-- You must have 30 hours or more playtime
-- Run '/request_areas_high_limit' to get the priv
+Lava buckets ('adv_buckets'):
+- Requires 50 hours of playtime (player being logged in and playing on the server)
+- Granted when you place/pour your first lava bucket which you'll be able to do
+    after reaching 50 hours of play time.
 
-Using the chainsaw ('archtec_chainsaw'):
-- You must have 24 hours or more playtime
-- You must have 20k nodes dug
-- You must have 10k nodes placed
-- Your account must be older than 7 days
-- Try to use a chainsaw, you'll get the priv
+Bigger and more protected areas ('areas_high_limit'):
+- Requires 30 hours of playtime (player being logged in and playing on the server)
+- Execute the '/request_areas_high_limit' command to be granted the privilege
+
+Chainsaw ('archtec_chainsaw'):
+- Requires 24 hours of playtime (player being logged in and playing on the server)
+- Requires a player to have mined/dug/chopped 20000 nodes (see '/stats' command)
+- Requires a player to have placed 10000 nodes (see '/stats' command)
+- The player account must be at least 7 days old
+- When all those conditions are met you'll be granted the privilege by using the
+    chainsaw for the first time.
 ]]
 })
 
-archtec.faq.register("Homepoints", {
+archtec.faq.register("Teleport Home", {
     header = "Player related",
     pos = 2,
     description = [[
-There are two homepoints, you can set them independent of each other.
 
-Home/Sethome:
-- Run '/home' to teleport to the homepoint
-- Run '/sethome' to set the homepoint to your current position
+Archtec supports two separate systems by which a player can save their home
+    location and instantly teleport to that location. The first system uses the
+    command console with '/sethome' and '/home' while the other system uses
+    the red/green arrow home buttons in the player inventory GUI.
 
-Inventory home:
-- Use the homebutton with the green arrow in your inventory to teleport to the homepoint
-- Use the homebutton with the red arrow to set the homepoint to your current postion
+The two home positions are completly independent which allows a player to have
+    two home positions set.
+
+System 1 - Home/Sethome:
+- Execute '/home' to teleport to your home position
+- Execute '/sethome' to set your home position to your current position
+
+System 2 - Inventory home:
+- Use the green arrow home button in the inventory window to teleport to the home position
+- Use the red arrow home button in the inventory window to set your home to your current postion
 ]]
 })
 
@@ -243,10 +297,10 @@ archtec.faq.register("Settings", {
     header = "Player related",
     pos = 3,
     description = [[
-- Main settings: Press the cogwheel button in your inventory
+- Main settings: Press the cog/sprocket button in your inventory window
 - Namecolor: See FAQ/Chat/Namecolor
-- Skin: Press the face button in your inventory
-- Hotbar size: Run '/hotbar <size>' to change the size of your hotbar
+- Skin: Press the "face" button in your inventory
+- Hotbar size: Execute '/hotbar <size>' to change the size of your hotbar
 ]]
 })
 
@@ -256,42 +310,69 @@ archtec.faq.register("Node placement limits", {
     pos = 1,
     description = [[
 Drawers:
-Minetest limits the static entitities per mapblock (16x16x16 nodes). Every drawer adds 1-4 extra entities, that's why we must limit the drawers per mapblock count.
+Minetest has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
+Each drawer adds 1-4 entities resulting in the number of drawers per mapblock being restricted.
 
 Hoppers:
-Every hopper adds much server load. You can place 10 hoppers in a 24 node radius. Note: The hoppers from the 'minecart' mod are much faster than the normal ones.
+Hoppers add a significant amount of server load and for performance reasons each
+player is restricted to 10 hoppers in any given 24 node radius.
+Where possible it's recommended to use the hoppers from the 'minecart' mod rather than
+the default hoppers.
 
-TA quarrys:
-Many players build big cobble generator factories with quarrys, to limit the factory size a bit you can only place 3 quarrys in a 24 node radius.
+Techage (TA) quarries:
+To prevent oversize factories there is a hard limit of 3 on the number of Techage (TA)
+Quarries each player is allowed to place within a 24 node radius.
 
 Sign bots:
-This small cute bots are sometimes big cruel lag bots :-P. You can place 7 sign bots in a 24 node radius.
+These cute little bots while being very useful can also cause a significant
+amount of lag and performance issues. To prevent this from impacting other players
+each player is limted to placing 7 signs bots within a 24 node radius.
 ]]
 })
 
-archtec.faq.register("Towercrane", {
+archtec.faq.register("Tower cranes", {
     header = "Other",
     pos = 2,
     description = [[
-Towercranes can be hard to understand, but there pretty simple.
+Tower cranes allow a player to freely move within the boundaries set during the
+crane construction (similar to how players can move/fly in creative mode).
 
-1. Place the crane and rightclick it
-2. Enter the height and width comma seperated. E.g. '20,30' will build a 20 nodes high and 30 nodes width crane.
-3. To start flying, rightlick the big red button on the crane and press "K" on your keyboard.
+1. Place the crane and right-click it to enter the crane menu.
+2. Enter the desired height/length comma separated. e.g. '20,30', this will build a crane 20 nodes high and 30 nodes long.
+3. To start flying right-click the red button on the crane and press "K" on your keyboard.
 
-To stop flying, press the big green button on the crane.
+To stop flying press the green button on the crane.
 ]]
 })
 
-archtec.faq.register("Dry ice / cobble generators", {
+archtec.faq.register("Lava solidification", {
     header = "Other",
     pos = 3,
     description = [[
-Techage replaces the default cobble generator mechanism (-> basalt generator). Normal ice in contact with lava will form basalt too.
-To allow players to build cobble generators anyway, you need Dry ice:
+Lava can turn into several other node types when it solidifies depending on whether
+it's still or flowing and which cooling block it comes into contact with.
 
-- Dry ice is produced from water and Diamond powder with a TA4 Chemical reactor
-- Diamond powder drops in TA Rinsers with probability 1/300
+Cooling blocks can be:
+- Water
+- Ice
+- Thin Ice
+- Dry Ice
+
+Archtec behaviour:
+- All still lava ('lava_source') turns into obsidian regardless of which cooling block it comes into contact with.
+- Flowing lava that comes into contact with water, ice or thin ice turns into basalt cobble.
+- Flowing lava that comes into contact with dry ice turns into cobblestone
+
+This differs significantly from the default minetest behaviour where all flowing
+lava turns into cobblestone when it comes into contact with water or ice.
+
+For players building cobblestone generators you will have to use dry ice instead
+    of water or ice for your generator to yield regular cobblestone.
+
+- Dry ice is produced from water and diamond powder with a Techage (TA4) chemical reactor
+- Diamond powder drops in Techage (TA) gravel rinsers with probability 1/300
+
+For more information see the Techage manual or in-game guide.
 ]]
 })
 
@@ -299,25 +380,28 @@ archtec.faq.register("Ores and Tools", {
     header = "Other",
     pos = 4,
     description = [[
-- Titanium doesn't drop in TA Gravelsieves
 
-- Bauxit spawns between -50 and -500
-- Baborium spawns between -250 and -340
-- Titanium spawns between -1500 and -30000
+Special ores:
+- Bauxite can be found at depths between -50 and -500
+- Baborium can be found at depths between -250 and -340
+- Titanium can be found at depths between -1500 and -30000
 
-Titanium tools are a much more durable than Diamand or Mithril tools, but they're slower.
+- Titanium doesn't drop in Techage (TA) gravel sieves
+
+Titanium tools are more durable than diamond or mithril tools but they tend to be
+    slower.
 ]]
 })
 
-archtec.faq.register("Helpful chatcommands", {
+archtec.faq.register("Useful chat commands", {
     header = "Other",
     pos = 5,
     description = [[
-- '/discord' will send you a link to our Discord
-- '/faq' show this FAQ again
-- '/news' show the news from join again
-- '/report' report an bug/feature-request/etc. to the server staff (Will create an issue on GitHub)
-- '/area_flak' close the airspace above your area for hanggliders
+- '/discord' will send you a link to our Discord server
+- '/faq' shows this Frequenty Asked Questions section
+- '/news' show the news from join again (staff only)
+- '/report' report an bug/issue/feature-request to the server staff (Creates a GitHub issue, see discord for links to issues)
+- '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
 
 Techage:
 - '/my_expoints' show your TA 5 experience points
