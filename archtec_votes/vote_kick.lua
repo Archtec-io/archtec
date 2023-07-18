@@ -34,13 +34,13 @@ local function run_vote(name, param)
 			end
 		end,
 
-		on_vote = function(self, name, value)
+		on_vote = function(self, name_voter, value)
 			if value == "yes" then
-				minetest.chat_send_all(name .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
-				discord.send(nil, ":green_square: **" .. name .. "** voted YES")
+				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
+				discord.send(nil, ":green_square: **" .. name_voter .. "** voted YES")
 			else
-				minetest.chat_send_all(name .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
-				discord.send(nil, ":red_square: **" .. name .. "** voted NO")
+				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
+				discord.send(nil, ":red_square: **" .. name_voter .. "** voted NO")
 			end
 		end
 	})

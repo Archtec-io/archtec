@@ -138,7 +138,7 @@ local function string2timestap(s)
         _, month, day, hour, min, sec, year = s:match(p2)
     end
     local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
-    local month = MON[month]
+    month = MON[month]
     local offset = os.time() - os.time(os.date("!*t"))
     -- Todo: fix possible crashes here
     return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)

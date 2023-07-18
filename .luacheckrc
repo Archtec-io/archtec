@@ -2,9 +2,7 @@ unused_args = false
 allow_defined_top = true
 
 ignore = {
-	"431", -- Shadowing an upvalue
-	"432", -- Shadowing an upvalue argument
-	"411", -- Redefining a local variable
+	"631", -- Line is too long
 }
 
 globals = {

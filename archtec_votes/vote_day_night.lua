@@ -45,11 +45,11 @@ minetest.register_chatcommand("vote_day", {
                 end
             end,
 
-            on_vote = function(self, name, value)
+            on_vote = function(self, name_voter, value)
                 if value == "yes" then
-                    minetest.chat_send_all(name .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
+                    minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
                 else
-                    minetest.chat_send_all(name .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
+                    minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
                 end
             end
         })
@@ -97,11 +97,11 @@ minetest.register_chatcommand("vote_night", {
                 end
             end,
 
-            on_vote = function(self, name, value)
+            on_vote = function(self, name_voter, value)
                 if value == "yes" then
-                    minetest.chat_send_all(name .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
+                    minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
                 else
-                    minetest.chat_send_all(name .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
+                    minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
                 end
             end
         })

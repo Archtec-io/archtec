@@ -124,10 +124,10 @@ local function mult_fold(elems)
 	return tot
 end
 
-local monoid = player_monoids.make_monoid
+local make_monoid = player_monoids.make_monoid
 
 -- Speed monoid. Effect values are speed multipliers. Must be nonnegative numbers.
-player_monoids.speed = monoid({
+player_monoids.speed = make_monoid({
 	combine = mult,
 	fold = mult_fold,
 	identity = 1,
@@ -139,7 +139,7 @@ player_monoids.speed = monoid({
 })
 
 -- Jump monoid. Effect values are jump multipliers. Must be nonnegative numbers.
-player_monoids.jump = monoid({
+player_monoids.jump = make_monoid({
 	combine = mult,
 	fold = mult_fold,
 	identity = 1,
@@ -151,7 +151,7 @@ player_monoids.jump = monoid({
 })
 
 -- Gravity monoid. Effect values are gravity multipliers.
-player_monoids.gravity = monoid({
+player_monoids.gravity = make_monoid({
 	combine = mult,
 	fold = mult_fold,
 	identity = 1,

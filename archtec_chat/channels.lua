@@ -100,10 +100,10 @@ function channel.invite(cname, target, inviter)
     minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited  '" .. target .. "' to channel '" .. cname .. "'")
     minetest.chat_send_player(target, C("#FF8800", S("@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.", inviter, cname, cname)))
     cdef.invites[target] = os.time()
-    minetest.after(60, function(cname, target)
-        local cdef = get_cdef(cname)
-        if cdef and cdef.invites[target] then
-            channel.invite_delete(cname, target, true)
+    minetest.after(60, function(cname_new, target_new)
+        local cdef_new = get_cdef(cname_new)
+        if cdef_new and cdef_new.invites[target_new] then
+            channel.invite_delete(cname_new, target_new, true)
         end
     end, cname, target)
 end

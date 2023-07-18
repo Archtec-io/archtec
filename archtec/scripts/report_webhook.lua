@@ -89,21 +89,21 @@ local function send_report(name, report)
 		if not parse.html_url then
 			parse.html_url = "Unknown URL"
 		end
-		local json = minetest.write_json({
+		local json_dc = minetest.write_json({
 			embeds = {{
 				title = "Report by " .. name .. ":",
 				description = report .. "\n\n**Position:**\n" .. pos .. "\n\n**GitHub Issue:**\n" .. parse.html_url,
 			}}
 		})
 
-		if json == nil then
+		if json_dc == nil then
 			return false
 		else
 			http.fetch({
 				url = webhook_url,
 				method = "POST",
 				extra_headers = {"Content-Type: Application/JSON"},
-				data = json,
+				data = json_dc,
 			}, function() end)
 			return true
 		end

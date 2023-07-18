@@ -15,7 +15,7 @@ minetest.override_item("techage:forceload", {
     end
 })
 
-local old_on_place = minetest.registered_nodes["techage:forceloadtile"].on_place or function() end
+local old_on_place2 = minetest.registered_nodes["techage:forceloadtile"].on_place or function() end
 minetest.override_item("techage:forceloadtile", {
     on_place = function(itemstack, placer, pointed_thing)
         local pname = placer:get_player_name()
@@ -24,12 +24,12 @@ minetest.override_item("techage:forceloadtile", {
             minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("[Forceload Restriction]: 'forceload' priv required to use this node")))
             return
         else
-            return old_on_place(itemstack, placer, pointed_thing)
+            return old_on_place2(itemstack, placer, pointed_thing)
         end
     end
 })
 
-local old_on_place = minetest.registered_nodes["techage:ta3_drillbox_pas"].on_place or function() end
+local old_on_place3 = minetest.registered_nodes["techage:ta3_drillbox_pas"].on_place or function() end
 minetest.override_item("techage:ta3_drillbox_pas", {
     on_place = function(itemstack, placer, pointed_thing)
         local pname = placer:get_player_name()
@@ -38,9 +38,9 @@ minetest.override_item("techage:ta3_drillbox_pas", {
             archtec.grant_priv(pname, "forceload")
             minetest.chat_send_player(pname, minetest.colorize("#00BD00", S("Congratulations! You have been granted the 'forceload' privilege")))
             notifyTeam("[techage] Granted '" .. pname .. "' the 'forceload' priv")
-            return old_on_place(itemstack, placer, pointed_thing)
+            return old_on_place3(itemstack, placer, pointed_thing)
         else
-            return old_on_place(itemstack, placer, pointed_thing)
+            return old_on_place3(itemstack, placer, pointed_thing)
         end
     end
 })
@@ -60,9 +60,9 @@ local flowers = {
 }
 
 minetest.after(1, function()
-    for _, flowers in pairs(flowers) do
-        techage.register_flower(flowers)
-        signs_bot.register_flower(flowers)
+    for _, flower in pairs(flowers) do
+        techage.register_flower(flower)
+        signs_bot.register_flower(flower)
     end
 end)
 
