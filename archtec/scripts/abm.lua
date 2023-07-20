@@ -32,9 +32,9 @@ for _, ab in ipairs(minetest.registered_abms) do
 	local label = ab.label or ""
 	local node1 = ab.nodenames and ab.nodenames[1] or ""
 
-    if label == "spawn bee hives" and node1 == "group:leaves" then
+	if label == "spawn bee hives" and node1 == "group:leaves" then
 		ab.nodenames = {"default:leaves"}
-    end
+	end
 
 	if label == "mobs_animal:bunny spawning" then
 		ab.chance = ab.chance * 0.75
@@ -96,34 +96,34 @@ function archtec.lbm_max_time(t)
 end
 
 local function inc_abm(label, diff, pos, nn)
-    if diff > abm_max_time then
-        minetest.log("action", "ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
-    end
+	if diff > abm_max_time then
+		minetest.log("action", "ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+	end
 end
 
 local function inc_nt(diff, pos)
-    if diff > nt_max_time then
+	if diff > nt_max_time then
 		local nn = minetest.get_node(pos).name
-        minetest.log("action", "NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
-    end
+		minetest.log("action", "NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+	end
 end
 
 local function inc_lbm(label, diff, pos, nn)
-    if diff > lbm_max_time then
-        minetest.log("action", "LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
-    end
+	if diff > lbm_max_time then
+		minetest.log("action", "LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+	end
 end
 
 minetest.register_on_mods_loaded(function()
-    for _, abm in ipairs(minetest.registered_abms) do
-        local old_action = abm.action
-        abm.action = function(pos, node, active_object_count, active_object_count_wider)
-            local t0 = get_us_time()
-            old_action(pos, node, active_object_count, active_object_count_wider)
-            local diff = get_us_time() - t0
-            inc_abm(abm.label or "??", diff, pos, node.name)
-        end
-    end
+	for _, abm in ipairs(minetest.registered_abms) do
+		local old_action = abm.action
+		abm.action = function(pos, node, active_object_count, active_object_count_wider)
+			local t0 = get_us_time()
+			old_action(pos, node, active_object_count, active_object_count_wider)
+			local diff = get_us_time() - t0
+			inc_abm(abm.label or "??", diff, pos, node.name)
+		end
+	end
 
 	for _, def in pairs(minetest.registered_nodes) do
 		if def.on_timer then

@@ -61,21 +61,21 @@ dofile(scriptsPath.."spawn_post.lua")
 
 local http = minetest.request_http_api()
 if http then
-    assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
-    assert(loadfile(scriptsPath.."/geoip.lua"))(http)
+	assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
+	assert(loadfile(scriptsPath.."/geoip.lua"))(http)
 end
 
 minetest.register_on_mods_loaded(function()
-    if not minetest.global_exists("discord") then
-        discord = {}
-        discord.send = function(...)
-            -- dummy function
-        end
-    end
-    if not minetest.global_exists("futil") then
-        futil = {table = {}}
-        futil.table.pairs_by_key = function(...) return ... end
-    end
+	if not minetest.global_exists("discord") then
+		discord = {}
+		discord.send = function(...)
+			-- dummy function
+		end
+	end
+	if not minetest.global_exists("futil") then
+		futil = {table = {}}
+		futil.table.pairs_by_key = function(...) return ... end
+	end
 end)
 
 local after = minetest.get_us_time()

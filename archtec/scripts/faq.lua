@@ -46,7 +46,7 @@ local function faq_formspec(name, sel)
 	for i, data in ipairs(entries) do
 		rows[#rows + 1] = COLOR_BLUE .. ",0," .. F(data[1])
 		for j, content in ipairs(data[2]) do
-            rows[#rows + 1] = COLOR_GREEN .. ",1," .. content[1]
+			rows[#rows + 1] = COLOR_GREEN .. ",1," .. content[1]
 			if sel == #rows then
 				description = content[2].description
 			end
@@ -77,12 +77,12 @@ minetest.register_chatcommand("faq", {
 	privs = {interact = true},
 	func = function(name)
 		minetest.log("action", "[/faq] executed by '" .. name .. "'")
-        minetest.show_formspec(name, "archtec:faq", faq_formspec(name))
+		minetest.show_formspec(name, "archtec:faq", faq_formspec(name))
 	end
 })
 
 function archtec.faq.register(name, def)
-    defs[name] = def
+	defs[name] = def
 end
 
 function archtec.faq.default_description(description)

@@ -40,25 +40,25 @@ local function register_drawer(name, def)
 end
 
 register_drawer("archtec:acacia_wood", {
-    description = ("Acacia Wood"),
-    tiles1 = node_tiles_front_other("drawers_acacia_wood_front_1.png",
-        "drawers_acacia_wood.png"),
-    tiles2 = node_tiles_front_other("drawers_acacia_wood_front_2.png",
-        "drawers_acacia_wood.png"),
-    tiles4 = node_tiles_front_other("drawers_acacia_wood_front_4.png",
-        "drawers_acacia_wood.png"),
-    groups = {choppy = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
-    sounds = default.node_sound_wood_defaults(),
+	description = ("Acacia Wood"),
+	tiles1 = node_tiles_front_other("drawers_acacia_wood_front_1.png",
+		"drawers_acacia_wood.png"),
+	tiles2 = node_tiles_front_other("drawers_acacia_wood_front_2.png",
+		"drawers_acacia_wood.png"),
+	tiles4 = node_tiles_front_other("drawers_acacia_wood_front_4.png",
+		"drawers_acacia_wood.png"),
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
+	sounds = default.node_sound_wood_defaults(),
 })
 
 register_drawer("archtec:aspen_wood", {
-    description = ("Aspen Wood"),
-    tiles1 = node_tiles_front_other("drawers_aspen_wood_front_1.png",
-        "drawers_aspen_wood.png"),
-    tiles2 = node_tiles_front_other("drawers_aspen_wood_front_2.png",
-        "drawers_aspen_wood.png"),
-    tiles4 = node_tiles_front_other("drawers_aspen_wood_front_4.png",
-        "drawers_aspen_wood.png"),
-    groups = {choppy = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
-    sounds = default.node_sound_wood_defaults(),
+	description = ("Aspen Wood"),
+	tiles1 = node_tiles_front_other("drawers_aspen_wood_front_1.png",
+		"drawers_aspen_wood.png"),
+	tiles2 = node_tiles_front_other("drawers_aspen_wood_front_2.png",
+		"drawers_aspen_wood.png"),
+	tiles4 = node_tiles_front_other("drawers_aspen_wood_front_4.png",
+		"drawers_aspen_wood.png"),
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
+	sounds = default.node_sound_wood_defaults(),
 })

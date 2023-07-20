@@ -10,10 +10,10 @@ function minetest.get_server_status(player_name, login)
 	end
 
 	return ("Archtec: %s uptime: %s clients (%i/%i): %s"):format(
-        text,
-        uptime,
+		text,
+		uptime,
 		#minetest.get_connected_players(),
 		max_users,
-        names
-    )
+		names
+	)
 end

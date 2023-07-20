@@ -20,7 +20,7 @@ end
 archtec.chainsaw_conditions = conditions
 
 local function grant_priv(name, priv)
-    archtec.grant_priv(name, priv)
+	archtec.grant_priv(name, priv)
 	notifyTeam("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 

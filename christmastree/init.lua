@@ -70,37 +70,37 @@ minetest.register_node("christmastree:christmas_wreath", {
 })
 
 minetest.register_craft({
-    output = "christmastree:indoortree",
-    recipe = {
-        { "","default:gold_ingot","" },
-        { "","default:sapling","" },
-        { "default:sapling","default:sapling","default:sapling" },
-    },
-})
-
-minetest.register_craft({
-    output = "christmastree:outdoortree",
-    recipe = {
-        { "","default:sapling","" },
+	output = "christmastree:indoortree",
+	recipe = {
 		{ "","default:gold_ingot","" },
-        { "default:sapling","default:sapling","default:sapling" },
-    },
+		{ "","default:sapling","" },
+		{ "default:sapling","default:sapling","default:sapling" },
+	},
 })
 
 minetest.register_craft({
-    output = "christmastree:outdoortree_snow",
-    recipe = {
-        { "","default:gold_ingot","" },
-        { "default:snow","default:sapling","default:snow" },
-        { "default:sapling","default:sapling","default:sapling" },
-    },
+	output = "christmastree:outdoortree",
+	recipe = {
+		{ "","default:sapling","" },
+		{ "","default:gold_ingot","" },
+		{ "default:sapling","default:sapling","default:sapling" },
+	},
 })
 
 minetest.register_craft({
-    output = "christmastree:christmas_wreath",
-    recipe = {
-        { "","default:sapling","" },
-        { "default:sapling","","default:sapling" },
-        { "","default:sapling","" },
-    },
+	output = "christmastree:outdoortree_snow",
+	recipe = {
+		{ "","default:gold_ingot","" },
+		{ "default:snow","default:sapling","default:snow" },
+		{ "default:sapling","default:sapling","default:sapling" },
+	},
+})
+
+minetest.register_craft({
+	output = "christmastree:christmas_wreath",
+	recipe = {
+		{ "","default:sapling","" },
+		{ "default:sapling","","default:sapling" },
+		{ "","default:sapling","" },
+	},
 })

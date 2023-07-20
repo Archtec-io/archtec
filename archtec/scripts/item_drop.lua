@@ -74,18 +74,18 @@ end
 minetest.after(3.0, pickup_step)
 
 local function update(name, setting, newvalue)
-    if setting ~= "r_id" then return end
-    if newvalue == true then
-        enabled[name] = true
-    else
-        enabled[name] = false -- yes, this is intentional
-    end
+	if setting ~= "r_id" then return end
+	if newvalue == true then
+		enabled[name] = true
+	else
+		enabled[name] = false -- yes, this is intentional
+	end
 end
 
 archtec.settings.add_callback(update)
 
 minetest.register_on_leaveplayer(function(player)
-    if player then
-        enabled[player:get_player_name()] = nil
-    end
+	if player then
+		enabled[player:get_player_name()] = nil
+	end
 end)

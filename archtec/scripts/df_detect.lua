@@ -233,10 +233,10 @@ minetest.register_on_joinplayer(function(player)
 	if dfv then
 		local msg = "Unsupported client detected: " .. dfv .. " player: " .. name
 		minetest.log("action", "[df_detect] " .. msg)
-        notifyTeam("[archtec] Detected use of Dragonfireclient by '" .. name .. "' auto ban in 30 seconds")
-        minetest.after(30.0, function()
-            xban.ban_player(name, "Server", nil, "Cheating")
-            notifyTeam("[archtec] Auto banned '" .. name .. "'")
-        end)
+		notifyTeam("[archtec] Detected use of Dragonfireclient by '" .. name .. "' auto ban in 30 seconds")
+		minetest.after(30.0, function()
+			xban.ban_player(name, "Server", nil, "Cheating")
+			notifyTeam("[archtec] Auto banned '" .. name .. "'")
+		end)
 	end
 end)

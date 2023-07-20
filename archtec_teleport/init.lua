@@ -46,7 +46,7 @@ end
 
 -- Teleport Request System
 function archtec_teleport.tpr_send(sender, receiver)
-    receiver = receiver:trim()
+	receiver = receiver:trim()
 	if receiver == "" then
 		send_message(sender, S("Usage: /tpr <Player name>"))
 		return
@@ -91,7 +91,7 @@ function archtec_teleport.tpr_send(sender, receiver)
 end
 
 function archtec_teleport.tp2me_send(sender, receiver)
-    receiver = receiver:trim()
+	receiver = receiver:trim()
 	if receiver == "" then
 		send_message(sender, S("Usage: /tp2me <Player name>"))
 		return
@@ -142,7 +142,7 @@ function archtec_teleport.tpr_accept(name)
 		send_message(name, S("Usage: /ok allows you to accept teleport requests sent to you by other players."))
 		return
 	end
-    local name2, source, target, chatmsg
+	local name2, source, target, chatmsg
 
 	-- Teleport requests.
 	if archtec_teleport.tpr_list[name] then
@@ -169,12 +169,12 @@ function archtec_teleport.tpr_accept(name)
 		return
 	end
 
-    local pos = find_free_position_near(source:get_pos())
-    if not pos then
-        send_message(name, S("@1 is not at a safe teleport position. Ask them for move to another spot!", name2))
+	local pos = find_free_position_near(source:get_pos())
+	if not pos then
+		send_message(name, S("@1 is not at a safe teleport position. Ask them for move to another spot!", name2))
 		send_message(name2, S("@1 tried to teleport to you but you aren't at a safe teleport position. Please move to another spot!", name))
-        return
-    end
+		return
+	end
 
 	tpr_teleport_player(source, target, pos)
 
