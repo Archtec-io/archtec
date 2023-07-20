@@ -32,7 +32,7 @@ end)
 
 minetest.register_chatcommand("news", {
 	description = "Read the server news",
-	privs = {staff = true},
+	privs = {interact = true},
 	func = function(name)
 		minetest.log("action", "[/news] executed by '" .. name .. "'")
 		show_formspec(name)
