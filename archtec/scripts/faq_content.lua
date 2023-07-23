@@ -262,7 +262,7 @@ archtec.faq.register("Settings", {
 	pos = 3,
 	description = [[
 - Main settings: Press the cog/sprocket button in your inventory window
-- Namecolor: See FAQ/Chat/Namecolor
+- Namecolor: See FAQ->Chat->Namecolor
 - Skin: Press the "face" button in your inventory
 - Hotbar size: Execute '/hotbar <size>' to change the size of your hotbar
 ]]

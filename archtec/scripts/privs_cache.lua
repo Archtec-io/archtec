@@ -13,7 +13,7 @@ minetest.get_player_privs = function(name)
 			cache[name] = privs
 		else
 			local d = debug.getinfo(2, "nS")
-			minetest.log("error", "[archtec] was called with wrong data type '" .. type(name) .. "' called from " .. (d.source or "") .. "@" .. (d.linedefined or ""))
+			minetest.log("error", "[archtec] called 'get_player_privs' with wrong data type '" .. type(name) .. "' called from " .. (d.source or "") .. "@" .. (d.linedefined or ""))
 			privs = {}
 		end
 	else

@@ -46,7 +46,7 @@ function channel.send(cname, message, sender)
 end
 
 function channel.create(cname, params)
-	minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. params.owner or "" .. "'")
+	minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. (params.owner or "") .. "'")
 	local def = {owner = params.owner or "", keep = params.keep or false, public = params.public or false, users = {}, invites = {}}
 	archtec_chat.channels[cname] = def
 end
@@ -311,7 +311,7 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			if name == target then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] Yo can't invite yourself!")))
+				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite yourself!")))
 				return
 			end
 			if not archtec.is_online(target) then

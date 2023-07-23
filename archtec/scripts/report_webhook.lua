@@ -35,8 +35,8 @@ end
 
 local function clean_meta(m)
 	local meta = table.copy(m) -- not sure if we need this...
-	if meta.ui_waypoints then -- waypoints may contain private data
-		meta.ui_waypoints = nil
+	if meta.fields.ui_waypoints then -- waypoints may contain private data
+		meta.fields.ui_waypoints = nil
 	end
 	return meta
 end
@@ -127,5 +127,5 @@ minetest.register_chatcommand("report", {
 		end
 		send_report(name, param)
 		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Report successfully created.")))
-	end,
+	end
 })

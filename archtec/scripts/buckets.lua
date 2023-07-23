@@ -8,6 +8,7 @@ local liquid_list = {
 }
 
 archtec.adv_buckets_playtime = 180000 -- 50 h playtime
+local hours = archtec.adv_buckets_playtime / 60
 
 local function try_grant_lava_priv(name)
 	local playtime = archtec_playerdata.get(name, "playtime")
@@ -17,7 +18,7 @@ local function try_grant_lava_priv(name)
 		notifyTeam("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")
 		return true
 	else
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava] You don't have 50 hours (or more) playtime.")))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava] You don't have @1 hours (or more) playtime.", hours)))
 		return false
 	end
 end

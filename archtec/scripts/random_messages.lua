@@ -3,7 +3,7 @@ local S = archtec.S
 
 local random_messages = {
 	S("To check someone's stats use '/stats <name>'"),
-	S("Visit our Discord server: https://discord.gg/txCMTMwBWm"),
+	S("Visit our Discord server: @1", archtec.discord_link),
 	S("Abusing '/vote_kick' will result in a ban for you"),
 	S("Read our rules at the spawn"),
 	S("If you find a bug use '/report <message>'"),

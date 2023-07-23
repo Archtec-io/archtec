@@ -11,10 +11,6 @@ archtec_pvp = {}
 local S = minetest.get_translator(minetest.get_current_modname())
 
 function archtec_pvp.pvp_set(player_name, state)
-	if type(state) ~= "boolean" then
-		return false, S("The state parameter has to be a boolean.")
-	end
-
 	local player = minetest.get_player_by_name(player_name)
 	if not player then
 		return false, S("Player @1 does not exist or is not currently connected.", player_name)

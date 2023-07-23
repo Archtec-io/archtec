@@ -18,7 +18,7 @@ local FORMSPEC = [[
 
 local defs = {}
 local entries = {}
-local default_description = S("For more information, click on any entry in the list.")
+local default_description = S("For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.")
 
 local function faq_tree()
 	for name, def in pairs(defs) do
@@ -83,8 +83,4 @@ minetest.register_chatcommand("faq", {
 
 function archtec.faq.register(name, def)
 	defs[name] = def
-end
-
-function archtec.faq.default_description(description)
-	default_description = description
 end

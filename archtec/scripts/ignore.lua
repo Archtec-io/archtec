@@ -1,5 +1,6 @@
 local S = archtec.S
 local cache = {}
+local max_ignored = 10
 
 local function get_list(name)
 	if not name or name == "" then return {} end
@@ -125,8 +126,8 @@ minetest.register_chatcommand("ignore", {
 					minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore yourself!")))
 					return
 				end
-				if count_ignored_players(name) >= 10 then
-					minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore more than 10 players!")))
+				if count_ignored_players(name) >= max_ignored then
+					minetest.chat_send_player(name, C("#FF0000", S("[ignore] You can't ignore more than @1 players!", max_ignored)))
 					return
 				end
 				ignore_player(name, target)

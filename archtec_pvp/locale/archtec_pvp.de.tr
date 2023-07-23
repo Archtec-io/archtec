@@ -1,5 +1,4 @@
 # textdomain: archtec_pvp
-The state parameter has to be a boolean.=Der Status-Parameter muss ein boolescher Wert sein.
 Player @1 does not exist or is not currently connected.=Spieler @1 existiert nicht oder ist nicht angemeldet.
 Your PvP has been enabled=Dein PvP wurde aktiviert
 Your PvP has been disabled=Dein PvP wurde deaktiviert
