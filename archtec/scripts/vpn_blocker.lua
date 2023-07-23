@@ -1,8 +1,13 @@
-local http = minetest.request_http_api()
+local http = assert(...)
 local iphub_key = minetest.settings:get("iphub_key")
-assert(http ~= nil, "You need to add archtec_vpn_blocker to secure.http_mods")
 
-local cache, ttl = {}, 14400 -- 4 h
+if not iphub_key or iphub_key == "" then
+	minetest.log("warning", "[archtec] No IPHub key provided!")
+	return
+end
+
+local cache = {}
+local ttl = 14400 -- 4 h
 
 local function cleanup()
 	local expire = os.time() - ttl
@@ -15,7 +20,6 @@ local function cleanup()
 end
 minetest.after(ttl, cleanup)
 
---  Add the main ipcheckup function
 local function check_ip(name, ip)
 	local request = {
 		["url"] = "https://v2.api.iphub.info/ip/" .. ip,
@@ -31,9 +35,9 @@ local function check_ip(name, ip)
 		local data = minetest.parse_json(result.data)
 		if result.completed and result.succeeded and data and data.block then
 			if data.block == 0 then
-				minetest.log("action", "archtec_vpn_blocker: Passing good-ip-player " .. name .. " [" .. ip .. "]")
+				minetest.log("action", "[archtec_vpn_blocker] Passing good-ip-player " .. name .. " [" .. ip .. "]")
 			else
-				minetest.log("action", "archtec_vpn_blocker: Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
+				minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
 				notifyTeam("[archtec_vpn_blocker] Kicking bad-ip-player ".. name .."' (IP: " .. ip .. ")")
 				minetest.after(0.01, function()
 					if minetest.get_player_by_name(name) then
@@ -42,24 +46,17 @@ local function check_ip(name, ip)
 					end
 				end)
 			end
-			cache[ip] = {}
-			cache[ip].result = data.block
-			cache[ip].expire = os.time()
+			cache[ip] = {result = data.block, expire = os.time()}
 		else
 			return
 		end
 	end)
 end
 
-local function handle_player(name, ip)
-	if not ip or not name then
-		return
-	end
-	check_ip(name, ip)
-end
-
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local ip = minetest.get_player_ip(name)
-	handle_player(name, ip)
+	if name and ip then
+		check_ip(name, ip)
+	end
 end)

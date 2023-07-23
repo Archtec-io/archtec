@@ -63,6 +63,7 @@ local http = minetest.request_http_api()
 if http then
 	assert(loadfile(scriptsPath.."/report_webhook.lua"))(http)
 	assert(loadfile(scriptsPath.."/geoip.lua"))(http)
+	assert(loadfile(scriptsPath.."/vpn_blocker.lua"))(http)
 end
 
 minetest.register_on_mods_loaded(function()

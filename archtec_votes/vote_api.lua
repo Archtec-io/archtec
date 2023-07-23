@@ -119,9 +119,12 @@ minetest.register_chatcommand("vote_clear", {
 	description = "Clear the active vote",
 	privs = {staff = true},
 	func = function(name, params)
+		if not next(vote.active) then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "There are no active votes!"))
+		end
 		vote.active = {}
 		minetest.chat_send_all(minetest.colorize("#FF0000", name .. " canceled all active votes!"))
-		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes!")
+		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes")
 	end
 })
 

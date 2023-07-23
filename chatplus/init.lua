@@ -77,13 +77,6 @@ local function set_color(name, color)
 	color_cache[name] = color
 end
 
-local function get_first_key(t)
-	-- luacheck: ignore (512)
-	for k, _ in pairs(t) do
-		return k
-	end
-end
-
 -- Hard depend chatplus on archtec mod to run archtec's on_chat_message callbacks (HACK)
 minetest.register_on_chat_message(function(name, message)
 	if not minetest.get_player_privs(name).shout then
@@ -100,8 +93,7 @@ minetest.register_on_chat_message(function(name, message)
 	-- channelname resolver
 	local channel
 	if cc == 1 then
-		-- luacheck: ignore (211)
-		channel = get_first_key(archtec_chat.users[name])
+		channel = next(archtec_chat.users[name])
 	end
 	if message:sub(1, 1) == "#" then
 		local cname, msg = string.match(message, "^#(%S+) ?(.*)")

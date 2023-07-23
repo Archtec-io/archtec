@@ -1,6 +1,0 @@
-# textdomain: archtec_vote_api
-Can't start a new vote! A vote is already in progress.=
-There is no vote currently running!=
-You've already voted!=
-The vote is not a yes/no one.=
-You can't vote in the currently active vote!=

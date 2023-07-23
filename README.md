@@ -20,4 +20,18 @@ unified color for a command "#FF8800" (orange)
 (replace `command` with the command name)
 
 # settings
-'archtec.webhook_url' Discord webhook url
+`archtec.webhook_url` Discord webhook url
+
+`archtec.report_gpg_key` GitHub create issue gpg key
+
+`iphub_key` IPHub api key
+
+`mapserver.url` Mapserver URL
+
+`mapserver.key` Mapserver API key
+
+`mapserver.send_interval` Mapserver JSON push interval
+
+`archtec_matterbridge.url` Matterbridge url
+
+`archtec_matterbridge.token` Matterbridge API token
