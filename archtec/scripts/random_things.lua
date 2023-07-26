@@ -86,3 +86,6 @@ minetest.register_chatcommand("falling_nodes_cleanup", {
 		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Removed " .. counter .. " falling node(s)"))
 	end
 })
+
+stairsplus.api.register_alias_all("xdecor:stone_tile", "xdecor:stone_tile_x")
+stairsplus.api.register_alias_all("xdecor:wood_tile", "xdecor:wood_tile_x")

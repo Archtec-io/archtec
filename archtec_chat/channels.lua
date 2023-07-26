@@ -78,7 +78,7 @@ function channel.leave(cname, name, msg)
 		channel.send(cname, name .. " left the channel.")
 	end
 	if archtec.count_keys(cdef.users) == 1 then -- channel cleanup
-		channel.delete(cname, "")
+		channel.delete(cname, "Service")
 	end
 	cdef.users[name] = nil
 	archtec_chat.users[name][cname] = nil

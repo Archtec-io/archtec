@@ -34,6 +34,7 @@ read_globals = {
 	"homedecor",
 	"mesecon",
 	"stairs",
+	"stairsplus",
 	"signs_bot",
 	"signs_lib",
 	"techage",
