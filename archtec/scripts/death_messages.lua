@@ -96,30 +96,24 @@ minetest.register_on_dieplayer(function(player, reason)
 		if reason.object:is_player() then
 			-- Player was killed by player
 			send_death_message("pvp", player, reason.object)
-
 		else
 			-- Player was killed by mob
 			send_death_message("mob", player, reason.object)
-
 		end
 	else
 		if reason.type == "fall" then
 			-- Player was killed by fall damage
 			send_death_message("fall", player)
-
 		elseif reason.type == "drown" then
 			-- Player drowned
 			send_death_message("drown", player)
-
 		elseif reason.type == "node_damage" then
 			if string.match(reason.node, "lava") then
 				-- Player burned in lava
 				send_death_message("lava", player)
-
 			elseif string.match(reason.node, "fire") then
 				-- Player burned in fire
 				send_death_message("burn", player)
-
 			else
 				-- Reason not detected, send general death message
 				send_death_message("other", player)
