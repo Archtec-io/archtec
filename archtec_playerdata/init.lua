@@ -426,7 +426,7 @@ local function colorize_privs(name, data, privs)
 	local t = {priv_lava = 0, priv_chainsaw = 0, priv_forceload = 0, priv_areas = 0}
 	if data.playtime > archtec.adv_buckets_playtime then -- priv_lava
 		t.priv_lava = 1
-		if privs.adv_bucktes then t.priv_lava = 2 end
+		if privs.adv_buckets then t.priv_lava = 2 end
 	end
 	if archtec.chainsaw_conditions(name) then -- priv_chainsaw
 		t.priv_chainsaw = 1
