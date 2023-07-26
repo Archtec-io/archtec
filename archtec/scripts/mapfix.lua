@@ -3,8 +3,6 @@ local function mapfix(minp, maxp)
 	vm:update_liquids()
 	vm:write_to_map()
 	vm:update_map()
-	local emin, emax = vm:get_emerged_area()
-	print(minetest.pos_to_string(emin), minetest.pos_to_string(emax))
 end
 
 local default_size = 24

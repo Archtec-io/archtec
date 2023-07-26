@@ -7,7 +7,7 @@ local old_get_player_privs = minetest.get_player_privs
 minetest.get_player_privs = function(name)
 	local privs = cache[name]
 	if privs == nil then
-		miss_count =  miss_count + 1
+		miss_count = miss_count + 1
 		if type(name) == "string" then
 			privs = old_get_player_privs(name)
 			cache[name] = privs

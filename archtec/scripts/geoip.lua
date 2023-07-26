@@ -12,8 +12,8 @@ if not minetest.get_player_ip then
 	return
 end
 
---  TTL for cached results: 1 hour
-local cache_ttl = 3600
+-- TTL for cached results: 4 hours
+local cache_ttl = 14400
 local cache = {}
 
 -- Execute cache cleanup every cache_ttl seconds
@@ -40,7 +40,7 @@ function geoip.lookup(ip, callback, playername)
 	http.fetch({
 		url = "https://tools.keycdn.com/geo.json?host=" .. ip,
 		extra_headers = {
-			"User-Agent: keycdn-tools:https://minetest.net"
+			"User-Agent: keycdn-tools:https://archtec.niklp.net"
 		},
 		timeout = 1,
 	}, function(res)
@@ -89,6 +89,27 @@ local function format_result(result)
 		return false
 	end
 end
+
+-- query ip on join, record in logs and execute callback
+minetest.register_on_joinplayer(function(player, last_login)
+	local name = player:get_player_name()
+	local ip = minetest.get_player_ip(name)
+	if not ip then
+		minetest.log("warning", "[geoip] get player IP address failed: " .. name)
+		return
+	end
+
+	if ip == "127.0.0.1" then return end
+
+	geoip.lookup(ip, function(data)
+		local txt = format_result(data)
+		if txt then
+			notifyTeam("[geoip] Result for player '" .. name .. "': " .. txt)
+		else
+			notifyTeam("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description))
+		end
+	end, name)
+end)
 
 local function format_message(name, result)
 	local txt = format_result(result)

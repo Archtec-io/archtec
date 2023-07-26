@@ -122,7 +122,7 @@ minetest.register_chatcommand("report", {
 			return
 		end
 		if not test_json(name, param) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000",  S("Error: Creating report failed. You are using illegal characters and/or symbols.")))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Error: Creating report failed. You are using illegal characters and/or symbols.")))
 			return
 		end
 		send_report(name, param)

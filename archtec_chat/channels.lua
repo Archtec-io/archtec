@@ -97,7 +97,7 @@ end
 
 function channel.invite(cname, target, inviter)
 	local cdef = get_cdef(cname)
-	minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited  '" .. target .. "' to channel '" .. cname .. "'")
+	minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited '" .. target .. "' to channel '" .. cname .. "'")
 	minetest.chat_send_player(target, C("#FF8800", S("@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.", inviter, cname, cname)))
 	cdef.invites[target] = os.time()
 	minetest.after(60, function(cname_new, target_new)
@@ -189,7 +189,7 @@ local help_list = {
 	}
 }
 
-local tab = "   "
+local tab = "	"
 
 local function parse_help(d)
 	local s = ""

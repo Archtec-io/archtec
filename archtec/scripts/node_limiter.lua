@@ -23,7 +23,7 @@ local function ov_node(node, t, rad, max)
 				return old_place(itemstack, placer, pointed_thing)
 			else
 				local pname = placer:get_player_name()
-				minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
+				minetest.log("action", "[node_limiter] " .. pname .. " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
 				local n = minetest.registered_nodes[node].description or node
 				minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more '@1' in this area!", n)))
 			end
@@ -70,7 +70,7 @@ local function ov_drawer(node)
 			local objs = minetest.get_objects_in_area(p1, p2)
 			if #objs > 70 then
 				local pname = placer:get_player_name()
-				minetest.log("action", "[node_limiter] " .. pname ..  " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
+				minetest.log("action", "[node_limiter] " .. pname .. " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
 				minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more 'Drawers' in this area! (Too many entities)")))
 			else
 				return old_place(itemstack, placer, pointed_thing)

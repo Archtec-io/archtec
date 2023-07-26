@@ -33,15 +33,15 @@ function send_stats()
 		post_data = json
 	}, function(res)
 
-	local t2 = minetest.get_us_time()
-	local post_time = t2 - t1
-	if post_time > 1000000 then -- warn if over a second
-		minetest.log("warning", "[mapserver-bridge] post took " .. post_time .. " us")
-	end
+		local t2 = minetest.get_us_time()
+		local post_time = t2 - t1
+		if post_time > 1000000 then -- warn if over a second
+			minetest.log("warning", "[mapserver-bridge] post took " .. post_time .. " us")
+		end
 
-	-- TODO: error-handling
-	minetest.after(mapserver.send_interval, send_stats)
-  end)
+		-- TODO: error-handling
+		minetest.after(mapserver.send_interval, send_stats)
+	end)
 
 end
 

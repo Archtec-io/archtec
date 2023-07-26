@@ -215,7 +215,7 @@ local function stats_get(name, key)
 		stats_load(name, false)
 		clean = true
 		if cache[name] == nil then -- Player does not exist
-			return struct[key] -- This is a *little* hack
+			return struct[key]
 		end
 	end
 	if cache[name][key] == nil then
@@ -556,7 +556,7 @@ local function migrate_old()
 	end
 	-- create backup
 	if #flist > 0 then
-		minetest.cpdir(datadir,  minetest.get_worldpath() .. "/archtec_playerdata_backup")
+		minetest.cpdir(datadir, minetest.get_worldpath() .. "/archtec_playerdata_backup")
 	end
 	-- read and delete
 	for _, name in ipairs(flist) do

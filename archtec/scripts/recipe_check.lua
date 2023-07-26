@@ -17,7 +17,7 @@ local function is_same_item(item1, item2)
 	-- group check
 	if item1:sub(1, 6) == "group:" then
 		chkgroup = item1:sub(7)
-		chkitem  = item2
+		chkitem = item2
 	end
 
 	if item2:sub(1, 6) == "group:" then
@@ -25,7 +25,7 @@ local function is_same_item(item1, item2)
 			return false
 		else
 			chkgroup = item2:sub(7)
-			chkitem  = item1
+			chkitem = item1
 		end
 	end
 
@@ -46,21 +46,21 @@ end
 
 local function is_same_recipe(rec1, rec2)
 	-- Maybe TODO? : recalculation to universal format (width=0). same recipes can be defined in different ways (no samples)
-	if not (rec1.items or rec2.items) then  -- nil means no recipe that is never the same oO
+	if not (rec1.items or rec2.items) then -- nil means no recipe that is never the same oO
 		return false
 	end
 
-	if rec1.type  ~= rec2.type or
-	   rec1.width ~= rec2.width then
+	if rec1.type ~= rec2.type or
+		rec1.width ~= rec2.width then
 		return false
 	end
 
-	for i =1, 9 do  -- check all fields. max recipe is  3x3e
+	for i =1, 9 do -- check all fields. max recipe is 3x3e
 		if not is_same_item(rec1.items[i], rec2.items[i]) then
 			return false
 		end
 	end
-	return true  -- checks passed, no differences found
+	return true -- checks passed, no differences found
 end
 
 
@@ -70,7 +70,7 @@ local function run(pname)
 	for name, def in futil.table.pairs_by_key(minetest.registered_items) do
 		if (not def.groups.not_in_creative_inventory or
 		def.groups.not_in_creative_inventory == 0) and
-		def.description and def.description ~= "" then  -- check valide entrys only
+		def.description and def.description ~= "" then -- check valide entrys only
 
 			local recipes_for_node = minetest.get_all_craft_recipes(name)
 			if recipes_for_node ~= nil then

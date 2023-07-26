@@ -43,7 +43,7 @@ local function auto_revoke(name)
 	if next(revoke) ~= nil then
 		local privs_string = table.concat(revoke, ", ")
 		minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. privs_string .. ")"))
-		minetest.log("action", "[auto_revoke] updated privs of '" .. name ..  "' (revoked: " .. privs_string .. ")")
+		minetest.log("action", "[auto_revoke] updated privs of '" .. name .. "' (revoked: " .. privs_string .. ")")
 	end
 end
 

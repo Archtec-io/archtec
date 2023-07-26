@@ -80,4 +80,4 @@ end)
 
 local after = minetest.get_us_time()
 
-print("Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")
+minetest.log("action", "Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")

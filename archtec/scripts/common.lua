@@ -43,7 +43,7 @@ end
 
 function archtec.split_itemname(itemname)
 	local delimpos = string.find(itemname, ":")
-	return itemname:sub(1,  delimpos - 1), itemname:sub(delimpos + 1, #itemname)
+	return itemname:sub(1, delimpos - 1), itemname:sub(delimpos + 1, #itemname)
 end
 
 function archtec.string_to_table(str, delim)

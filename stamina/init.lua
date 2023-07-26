@@ -74,7 +74,7 @@ end
 function archtec_stamina.update_saturation(player, level)
 	local old = archtec_stamina.get_saturation(player)
 
-	if level == old then  -- To suppress HUD update
+	if level == old then -- To suppress HUD update
 		return
 	end
 
@@ -186,7 +186,7 @@ local function health_tick()
 		local hp = player:get_hp() or 20
 		local saturation = archtec_stamina.get_saturation(player) or 20
 
-		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0  and not archtec_stamina.is_poisoned(player) then
+		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0 and not archtec_stamina.is_poisoned(player) then
 			player:set_hp(hp + settings.heal, {type = "set_hp", cause = "stamina:heal"})
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
 		elseif saturation < settings.starve_lvl and hp > 0 then -- or damage player by 1 hp if saturation is < 2 (of 20)
@@ -263,7 +263,7 @@ function minetest.do_item_eat(hp_change, replace_with_item, itemstack, player, p
 		end
 	end
 
-	return nil  -- don't overwrite wield item a second time
+	return nil -- don't overwrite wield item a second time
 end
 
 minetest.register_on_joinplayer(function(player)
