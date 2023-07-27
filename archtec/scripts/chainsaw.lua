@@ -11,7 +11,7 @@ local function conditions(name)
 	local nodes_dug = archtec_playerdata.get(name, "nodes_dug")
 	local nodes_placed = archtec_playerdata.get(name, "nodes_placed")
 	local timestap = archtec_playerdata.get(name, "first_join")
-	if timestap < os.time() - 604800 or playtime < 86400 or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
+	if timestap > (os.time() - 604800) or playtime < 86400 or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
 		return false
 	end
 	return true
@@ -21,6 +21,7 @@ archtec.chainsaw_conditions = conditions
 
 local function grant_priv(name, priv)
 	archtec.grant_priv(name, priv)
+	minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege", "archtec_chainsaw")))
 	notifyTeam("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 

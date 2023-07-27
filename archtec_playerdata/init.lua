@@ -129,7 +129,7 @@ end
 
 archtec_playerdata.restore = stats_restore
 
-local function string2timestap(s)
+local function string2timestamp(s)
 	if type(s) ~= "string" then return end
 	local p = "(%a+) (%a+) (%d+) (%d+):(%d+):(%d+) (%d+)"
 	local p2 = "(%a+) (%a+)  (%d+) (%d+):(%d+):(%d+) (%d+)"
@@ -144,7 +144,7 @@ local function string2timestap(s)
 	return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
-archtec_playerdata.string2timestap = string2timestap
+archtec_playerdata.string2timestamp = string2timestamp
 
 -- load/create data
 local function stats_create(name)
@@ -357,7 +357,7 @@ minetest.register_on_joinplayer(function(player)
 		if stats_get(name, "first_join") == 0 then -- move legacy data
 			local string = player:get_meta():get_string("archtec:joined")
 			if string ~= "" or string == nil then
-				local int = string2timestap(string)
+				local int = string2timestamp(string)
 				stats_set(name, "first_join", int)
 				player:get_meta():set_string("archtec:joined", nil)
 				log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")

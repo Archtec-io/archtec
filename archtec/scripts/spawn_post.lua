@@ -21,9 +21,10 @@ local node_list = {
 	"jonez:romantic_base",
 	"jonez:romantic_shaft",
 	"jonez:romantic_architrave",
-	"xdecor:ivy",
+	"jonez:romanic_architrave",
 	"jonez:ruin_vine",
 	"jonez:ruin_creeper",
+	"xdecor:ivy",
 }
 
 for _, node in ipairs(node_list) do

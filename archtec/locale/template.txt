@@ -2,6 +2,7 @@
 [request_lava] Congratulations! You have been granted the 'adv_buckets' privilege=
 [request_lava] You don't have @1 hours (or more) playtime.=
 [chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account=
+Congratulations! You have been granted the '@1' privilege=
 Discord server link: @1=
 For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.=
 View ingame FAQ=
@@ -81,5 +82,4 @@ Show a waypoint to the spawn=
 Collect dropped items automatically=
 @1 requested a server shutdown in @2 seconds.=
 [Forceload Restriction]: 'forceload' priv required to use this node=
-Congratulations! You have been granted the 'forceload' privilege=
 Your tool is about to break!=

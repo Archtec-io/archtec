@@ -36,7 +36,7 @@ minetest.override_item("techage:ta3_drillbox_pas", {
 
 		if not minetest.check_player_privs(pname, "forceload") then
 			archtec.grant_priv(pname, "forceload")
-			minetest.chat_send_player(pname, minetest.colorize("#00BD00", S("Congratulations! You have been granted the 'forceload' privilege")))
+			minetest.chat_send_player(pname, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege", "forceload")))
 			notifyTeam("[techage] Granted '" .. pname .. "' the 'forceload' priv")
 			return old_on_place3(itemstack, placer, pointed_thing)
 		else
