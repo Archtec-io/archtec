@@ -36,7 +36,7 @@ end)
 
 minetest.register_chatcommand("lock", {
 	description = "Lock the server",
-	params = "<mode> [<keep>]",
+	params = "<mode> [<keep (list of names)>]",
 	privs = {staff = true},
 	func = function(name, param)
 		minetest.log("action", "[/lock] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
