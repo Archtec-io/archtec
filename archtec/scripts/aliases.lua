@@ -17,7 +17,3 @@ minetest.register_alias("rhotator:screwdriver", "omnidriver:omnidriver")
 minetest.register_alias("rhotator:screwdriver_alt", "omnidriver:omnidriver")
 minetest.register_alias("rhotator:screwdriver_multi", "omnidriver:omnidriver")
 minetest.register_alias("rhotator:memory", "omnidriver:omnidriver")
-
--- xdecor stone/wood tiles https://codeberg.org/Wuzzy/xdecor-libre/issues/29
-stairsplus.api.register_alias_all("xdecor:stone_tile", "xdecor:stone_tile_x")
-stairsplus.api.register_alias_all("xdecor:wood_tile", "xdecor:wood_tile_x")

@@ -365,3 +365,15 @@ Techage:
 - '/ta_limit' show your TA command limit
 ]]
 })
+
+archtec.faq.register("TNT and explosions", {
+	header = "Other",
+	pos = 6,
+	description = [[
+There is no way for players to use TNT on Archtec, if you want to clear large areas, you should use techage quarries.
+
+The following mobs can cause explosions:
+- Dugeon master (DM), when it hits a node, radius 1
+- Tree monster, when it spawns near Acacia Bush Leaves (default:acacia_bush_leaves), radius 6
+]]
+})
