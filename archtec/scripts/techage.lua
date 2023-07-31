@@ -68,3 +68,16 @@ end)
 
 -- Disable titanium drops
 techage.register_ore_for_gravelsieve("titanium:titanium", 99999)
+
+-- Biofuel support
+if minetest.get_modpath("biofuel") then
+	minetest.override_item("biofuel:fuel_can", {stack_max = 1})
+
+	minetest.register_craftitem(":biofuel:fuel_can_empty", {
+		description = "Empty Canister of Biofuel",
+		inventory_image = "biofuel_fuel_can_empty.png",
+		stack_max = 1
+	})
+
+	techage.register_liquid("biofuel:fuel_can", "biofuel:fuel_can_empty", 1, "techage:gasoline")
+end

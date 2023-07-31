@@ -354,7 +354,7 @@ archtec.faq.register("Useful chat commands", {
 	description = [[
 General:
 - '/discord' will send you a link to our Discord server
-- '/faq' shows this Frequenty Asked Questions section
+- '/faq' show this Frequenty Asked Questions section
 - '/news' show the news from join again (staff only)
 - '/report' report an bug/issue/feature-request to the server staff (Creates a GitHub issue, see discord for links to issues)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
@@ -375,5 +375,19 @@ There is no way for players to use TNT on Archtec, if you want to clear large ar
 The following mobs can cause explosions:
 - Dugeon master (DM), when it hits a node, radius 1
 - Tree monster, when it spawns near Acacia Bush Leaves (default:acacia_bush_leaves), radius 6
+]]
+})
+
+archtec.faq.register("Biofuel", {
+	header = "Other",
+	pos = 7,
+	description = [[
+Biofuel is produced in the Biofuel Refinery.
+
+Biofuel has multiple use cases:
+- As fuel for the chainsaw
+- As fuel for the TA3 Tiny Power Generator
+
+- As craft ingredient, search in your inventory after "group:biofuel"
 ]]
 })

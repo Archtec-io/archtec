@@ -1,7 +1,6 @@
-# archtec
-Archtec custom
+# Archtec
 
-# chat message colors
+### chat message colors
 error/important "#FF0000" (red)
 
 true/ok/works "#00BD00" (green)
@@ -19,7 +18,7 @@ unified color for a command "#FF8800" (orange)
 
 (replace `command` with the command name)
 
-# settings
+### settings
 `archtec.webhook_url` Discord webhook url
 
 `archtec.report_gpg_key` GitHub create issue gpg key
@@ -35,3 +34,24 @@ unified color for a command "#FF8800" (orange)
 `archtec_matterbridge.url` Matterbridge url
 
 `archtec_matterbridge.token` Matterbridge API token
+
+### License
+
+##### Code: 
+- My (Niklp) own code: LGPL v2.1
+- Uses code of many others, all licensed under OSI approved licenses
+
+##### Media:
+- `item_drop_pickup.ogg` - PilzAdam, CC BY-SA 3.0 (modified by Niklp)
+- `archtec_settings_icon.png` - unknown, unknown (modified by Niklp)
+- `biofuel_fuel_can_empty.png` - Bla based on work of El-Naso, CC BY-SA 4.0
+- `technic_chainsaw.png` - RealBadAngel, LGPL v2.1 or later
+- `mapserver_poi_*` - El-Naso, CC BY-SA 3.0
+- `pvp.png` - paly2, MPL 2.0
+- `nopvp.png` - paly2, MPL 2.0
+- `tpr_warp.ogg` - Panquesito7, CC BY-SA 4.0
+- `chatplus_incoming_msg.ogg` - unknown, unknown (modified by Niklp)
+- `archtec_stamina_eat.ogg` - Wuzzy, MIT License
+- `stamina_hud_poison.png` - BlockMen, CC-BY 3.0
+- `stamina_hud_fg.png` - PilzAdam, WTFPL (modified by BlockMen)
+- `stamina_hud_bg.png` - PilzAdam, WTFPL (modified by BlockMen)

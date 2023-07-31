@@ -41,7 +41,7 @@ local register_poi = function(color, dye)
 	minetest.register_node(":mapserver:poi_" .. color, {
 		description = "Mapserver POI (" .. color .. ")",
 		tiles = {
-			"[combine:16x16:0,0=mapserver_gold_block.png:3,2=mapserver_poi_" .. color .. ".png"
+			"[combine:16x16:0,0=default_gold_block.png:3,2=mapserver_poi_" .. color .. ".png"
 		},
 		groups = {cracky=3,oddly_breakable_by_hand=3},
 		sounds = default.node_sound_glass_defaults(),

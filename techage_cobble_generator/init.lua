@@ -1,6 +1,6 @@
 minetest.register_node("techage_cobble_generator:dry_ice", {
 	description = ("Dry ice"),
-	tiles = {"techage_cobble_generator_dry_ice.png"},
+	tiles = {"default_ice.png"},
 	is_ground_content = false,
 	paramtype = "light",
 	groups = {cracky = 3, slippery = 3, not_in_creative_inventory = 1},
@@ -38,7 +38,7 @@ minetest.register_craftitem("techage_cobble_generator:diamond_powder", {
 
 minetest.register_craftitem("techage_cobble_generator:dry_ice_cri", {
 	description = ("Dry ice"),
-	inventory_image = "techage_cobble_generator_dry_ice.png",
+	inventory_image = "default_ice.png",
 	groups = {powder = 1},
 	on_place = function(itemstack, placer, pointed_thing)
 		itemstack:set_name("techage_cobble_generator:dry_ice")
