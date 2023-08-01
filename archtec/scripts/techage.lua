@@ -71,11 +71,11 @@ techage.register_ore_for_gravelsieve("titanium:titanium", 99999)
 
 -- Biofuel support
 if minetest.get_modpath("biofuel") then
-	minetest.override_item("biofuel:fuel_can", {stack_max = 1})
+	minetest.override_item("biofuel:fuel_can", {stack_max = 1, inventory_image = "archtec_biofuel_fuel_can.png"})
 
 	minetest.register_craftitem(":biofuel:fuel_can_empty", {
 		description = "Empty Canister of Biofuel",
-		inventory_image = "biofuel_fuel_can_empty.png",
+		inventory_image = "archtec_biofuel_fuel_can_empty.png",
 		stack_max = 1
 	})
 
