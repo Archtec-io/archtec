@@ -62,7 +62,7 @@ for _, ab in ipairs(minetest.registered_abms) do
 	elseif label == "mobs_monster:dungeon_master spawning" then
 		ab.chance = ab.chance * 0.5
 	elseif label == "mobs_monster:mese_monster spawning" then
-		ab.chance =	ab.chance * 0.5
+		ab.chance = ab.chance * 0.5
 	elseif label == "mobs_monster:oerkki spawning" then
 		ab.chance = ab.chance * 0.5
 	elseif label == "mobs_monster:sand_monster spawning" then

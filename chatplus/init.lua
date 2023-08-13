@@ -208,7 +208,7 @@ minetest.unregister_chatcommand("msg")
 minetest.register_chatcommand("msg", {func = private_message})
 
 minetest.register_on_leaveplayer(function(player)
-	if not 	player then return end
+	if not player then return end
 	local name = player:get_player_name()
 	last_priv_msg_name[name] = nil
 	color_cache[name] = nil

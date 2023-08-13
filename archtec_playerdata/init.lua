@@ -239,6 +239,10 @@ local function stats_set(name, key, value)
 	if not valid_player(name) then return false end
 	if not is_valid(value) then return false end
 	local clean
+	if not struct[key] then
+		log_warning("set: tried to set unknown key '" .. key .. "'!")
+		return false
+	end
 	if cache[name] == nil then
 		stats_load(name, false)
 		clean = true
@@ -267,6 +271,10 @@ local function stats_mod(name, key, value)
 		return false
 	end
 	local old, clean
+	if not struct[key] then
+		log_warning("mod: tried to mod unknown key '" .. key .. "'!")
+		return false
+	end
 	if cache[name] then
 		if cache[name][key] then
 			old = cache[name][key]
@@ -285,10 +293,6 @@ local function stats_mod(name, key, value)
 		else
 			old = struct[key]
 		end
-	end
-	if old == nil then
-		log_warning("mod: get returned nil for key '" .. key .. "' of '" .. name .. "'!")
-		return false
 	end
 	value = old + value
 	cache[name][key] = value
