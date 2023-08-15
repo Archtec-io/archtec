@@ -197,12 +197,12 @@ archtec.faq.register("Areas without protection", {
 	header = "Spawn",
 	pos = 2,
 	description = [[
-The Archtec spawn area is very large (>2000x2000 nodes) and most players want to find a place where they can mine, build or interact with the environtment.
+The Archtec spawn area is very large (>2000x2000 nodes) and most players want to find a place where they can mine, build or interact with the environment.
 
 Players can choose one of several ways to get out of the protected spawn area and find a nice place to make their own.
 
 - There is a white "Teleporter" house adjacent to spawn platform, inside you will find several teleporters that will instantly transport you to mining and building sites where you can start your build/mine/journey. If at any time you want to return to spawn just type '/spawn'
-- Walking out of spawn can be a rewarding experience since you can see all the fantastic bulids and structures other players have created. Note that it will take a while and be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident you can return to where your bones and pick up your stuff
+- Walking out of spawn can be a rewarding experience since you can see all the fantastic builds and structures other players have created. Note that it will take a while and be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident you can return to where your bones and pick up your stuff
 - If you want to build far from others you might want to check out the online Archtec Map http://map.archtec.freemyip.com:8585
 - Some players have created their own personal travel nets that go to the very edges of the universe, ask around if your curios and want to discover just how big our server is.
 ]]
@@ -370,7 +370,7 @@ archtec.faq.register("TNT and explosions", {
 	header = "Other",
 	pos = 6,
 	description = [[
-There is no way for players to use TNT on Archtec, if you want to clear large areas, you should use techage quarries.
+There is no way for players to use TNT on Archtec, if you want to clear large areas, you should use techage quarries instead.
 
 The following mobs can cause explosions:
 - Dugeon master (DM), when it hits a node, radius 1
