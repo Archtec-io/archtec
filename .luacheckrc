@@ -5,6 +5,10 @@ ignore = {
 	"631", -- Line is too long
 }
 
+exclude_files = {
+	"**/spec/**",
+}
+
 globals = {
 	-- new globals
 	"archtec",

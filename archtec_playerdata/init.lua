@@ -358,7 +358,7 @@ minetest.register_on_joinplayer(function(player)
 		if stats_get(name, "playtime") == 0 then
 			local time = player:get_meta():get_int("archtec:playtime")
 			if time ~= nil and time ~= 0 and type(time) == "number" then
-				stats_set(name, "playtime", int)
+				stats_set(name, "playtime", time)
 				player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
 				log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
 			end
