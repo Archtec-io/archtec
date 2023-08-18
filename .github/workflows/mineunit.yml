@@ -10,6 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - id: mineunit-archtec
+      uses: mt-mods/mineunit-actions@master
+      with:
+        working-directory: ./archtec
+        mineunit-args: --engine-version 5.7.0
+
     - id: mineunit-archtec-playerdata
       uses: mt-mods/mineunit-actions@master
       with:
