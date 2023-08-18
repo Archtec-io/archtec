@@ -1,0 +1,17 @@
+name: mineunit
+
+on: [push, pull_request]
+
+jobs:
+  mineunit:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - id: mineunit-archtec-playerdata
+      uses: mt-mods/mineunit-actions@master
+      with:
+        working-directory: ./archtec_playerdata
+        mineunit-args: --engine-version 5.7.0
