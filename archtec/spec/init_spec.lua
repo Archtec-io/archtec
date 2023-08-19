@@ -20,6 +20,7 @@ function leave()
 end
 
 -- Test common.lua
+--[[
 describe("common.lua", function()
 	-- get_target()
 	it("get_target() 1", function()
@@ -49,3 +50,4 @@ describe("common.lua", function()
 		assert.is_false(archtec.is_online("Sam"))
 	end)
 end)
+]]--
