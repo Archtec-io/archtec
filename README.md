@@ -35,6 +35,8 @@ unified color for a command "#FF8800" (orange)
 
 `archtec_matterbridge.token` Matterbridge API token
 
+`archtec_playerdata.debug_mode` Enable debug mode
+
 ### License
 
 ##### Code: 

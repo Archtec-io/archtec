@@ -13,7 +13,7 @@ local floor, type, C = math.floor, type, minetest.colorize
 local sql = minetest.get_mod_storage()
 -- config
 local save_interval = 60
-local debug_mode = false
+local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
 local shutdown_mode = false
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
@@ -60,10 +60,10 @@ end
 
 local function valid_player(name)
 	if name ~= nil and name ~= "" and type(name) == "string" then
-		log_debug("valid_player: '" .. dump(name) .. "' is valid!")
+		log_debug("valid_player: " .. dump(name) .. " is valid")
 		return true
 	else
-		log_action("valid_player: '" .. dump(name) .. "' is not valid!") -- log_warning() would trigger staff notifications
+		log_action("valid_player: " .. dump(name) .. " is not valid!") -- log_warning() would trigger staff notifications
 		return false
 	end
 end
@@ -230,6 +230,7 @@ local function stats_get(name, key)
 	if clean then
 		cache[name] = nil
 	end
+	log_debug("get: return '" .. key .. "' of '" .. name .. "' with value '" .. dump(val) .. "'")
 	return val
 end
 
@@ -259,6 +260,7 @@ local function stats_set(name, key, value)
 		stats_save(name)
 		cache[name] = nil
 	end
+	log_debug("set: set '" .. key .. "' of '" .. name .. "' to value '" .. dump(value) .. "'")
 	return true
 end
 
@@ -294,12 +296,13 @@ local function stats_mod(name, key, value)
 			old = struct[key]
 		end
 	end
-	value = old + value
-	cache[name][key] = value
+	local newval = old + value
+	cache[name][key] = newval
 	if clean then
 		stats_save(name)
 		cache[name] = nil
 	end
+	log_debug("mod: modify '" .. key .. "' of '" .. name .. "' to value '" .. newval .. "' (prev: '" .. old .. "' add: '" .. value .. "')")
 	return true
 end
 
@@ -353,9 +356,12 @@ minetest.register_on_joinplayer(function(player)
 		stats_mod(name, "join_count", 1)
 		-- playtime data migration
 		if stats_get(name, "playtime") == 0 then
-			stats_set(name, "playtime", player:get_meta():get_int("archtec:playtime"))
-			player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
-			log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
+			local time = player:get_meta():get_int("archtec:playtime")
+			if time ~= nil and time ~= 0 and type(time) == "number" then
+				stats_set(name, "playtime", time)
+				player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
+				log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
+			end
 		end
 		-- first join data migration
 		if stats_get(name, "first_join") == 0 then -- move legacy data
