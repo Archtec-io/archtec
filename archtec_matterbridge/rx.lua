@@ -5,6 +5,8 @@ local function handle_data(data)
 	if not data or not data.username or not data.text or not data.gateway or not data.protocol or not data.userid then
 		return
 	end
+	local bridge = data.gateway
+	print(bridge)
 
 	if data.event == "user_action" then
 		minetest.log("action", "[archtec_matterbridge] User action '" .. data.text .. "' by '" .. data.username)

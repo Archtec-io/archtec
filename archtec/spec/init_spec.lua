@@ -4,6 +4,11 @@ mineunit("common/misc_helpers")
 
 fixture("archtec")
 
+-- Hack
+function string:trim()
+	return self:match("^%s*(.-)%s*$")
+end
+
 local Sam = Player("Sam")
 
 function join()
