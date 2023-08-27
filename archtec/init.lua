@@ -1,6 +1,6 @@
 local before = minetest.get_us_time()
-local modPath = minetest.get_modpath(minetest.get_current_modname())
-local path = modPath .. DIR_DELIM .. "scripts" .. DIR_DELIM
+local modpath = minetest.get_modpath(minetest.get_current_modname())
+local path = modpath .. "/scripts/"
 
 archtec = {}
 archtec.S = minetest.get_translator(minetest.get_current_modname())

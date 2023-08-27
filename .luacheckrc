@@ -17,7 +17,6 @@ globals = {
 read_globals = {
 	-- minetest/lua
 	"minetest",
-	"DIR_DELIM",
 	"dump",
 	"dump2",
 	"vector",

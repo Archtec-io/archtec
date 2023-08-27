@@ -2,7 +2,7 @@ local S = archtec.S
 local music = {}
 local current = {}
 
-local path = minetest.get_worldpath() .. DIR_DELIM .. "music" .. DIR_DELIM
+local path = minetest.get_worldpath() .. "/music/"
 
 function music.play(name, title)
 	minetest.dynamic_add_media({filepath = path .. title .. ".ogg", ephemeral = false, to_player = name}, function(player)
