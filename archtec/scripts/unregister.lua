@@ -1,13 +1,13 @@
-if minetest.get_modpath("atm") then
-	minetest.unregister_item("atm:atm")
-	minetest.unregister_item("atm:atm2")
-end
-
 minetest.unregister_chatcommand("ban")
 minetest.unregister_chatcommand("unban")
 minetest.unregister_chatcommand("rollback")
 minetest.unregister_chatcommand("rollback_check")
 minetest.unregister_chatcommand("set")
+
+if minetest.get_modpath("atm") then
+	minetest.unregister_item("atm:atm")
+	minetest.unregister_item("atm:atm2")
+end
 
 if minetest.get_modpath("currency") then
 	minetest.unregister_item("currency:minegeld_bundle")
@@ -31,4 +31,8 @@ end
 if minetest.get_modpath("shields") then
 	minetest.unregister_item("shields:shield_nether")
 	minetest.unregister_item("invisible_shields:shield_nether")
+end
+
+if minetest.get_modpath("ambience") then
+	minetest.unregister_chatcommand("mvol")
 end
