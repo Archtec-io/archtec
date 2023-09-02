@@ -5,12 +5,14 @@
 
 archtec_playerdata = {}
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
-local cache = {}
-local playtime_current = {}
+local cache, playtime_current, rank = {}, {}, {}
+local rank_gentime = 0
 local S = minetest.get_translator("archtec_playerdata")
-local FS = function(...) return minetest.formspec_escape(S(...)) end
+local F = minetest.formspec_escape
+local FS = function(...) return F(S(...)) end
 local floor, type, C = math.floor, type, minetest.colorize
 local sql = minetest.get_mod_storage()
+
 -- config
 local save_interval = 60
 local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
@@ -111,6 +113,17 @@ local function get_session_playtime(name)
 	else
 		return 0
 	end
+end
+
+local function format_int(number)
+	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
+
+	-- reverse the int-string and append a comma to all blocks of 3 digits
+	int = int:reverse():gsub("(%d%d%d)", "%1,")
+
+	-- reverse the int-string back remove an optional comma and put the
+	-- optional minus and fractional part back
+	return minus .. int:reverse():gsub("^,", "") .. fraction
 end
 
 local function stats_dump()
@@ -434,22 +447,27 @@ end)
 -- 0 = conditions not fulfilled + w/o priv; 1 = conditions fulfilled + w/o priv; 2 = conditions fulfilled + w/ priv
 local function colorize_privs(name, data, privs)
 	local t = {priv_lava = 0, priv_chainsaw = 0, priv_forceload = 0, priv_areas = 0}
-	if data.playtime > archtec.adv_buckets_playtime then -- priv_lava
+	-- priv_lava
+	if data.playtime > archtec.adv_buckets_playtime then
 		t.priv_lava = 1
-		if privs.adv_buckets then t.priv_lava = 2 end
 	end
-	if archtec.chainsaw_conditions(name) then -- priv_chainsaw
+	if privs.adv_buckets then t.priv_lava = 2 end
+	-- priv_chainsaw
+	if archtec.chainsaw_conditions(name) then
 		t.priv_chainsaw = 1
-		if privs.archtec_chainsaw then t.priv_chainsaw = 2 end
 	end
-	if true then -- priv_forceload (no check needed)
+	if privs.archtec_chainsaw then t.priv_chainsaw = 2 end
+	-- priv_forceload (no check needed)
+	if true then
 		t.priv_forceload = 1
-		if privs.forceload then t.priv_forceload = 2 end
 	end
-	if data.playtime > archtec.big_areas_playtime then -- priv_areas
+	if privs.forceload then t.priv_forceload = 2 end
+	-- priv_areas
+	if data.playtime > archtec.big_areas_playtime then
 		t.priv_areas = 1
-		if privs.areas_high_limit then t.priv_areas = 2 end
 	end
+	if privs.areas_high_limit then t.priv_areas = 2 end
+
 	local colorized = {}
 	for priv, v in pairs(t) do
 		if v == 0 then
@@ -463,7 +481,7 @@ local function colorize_privs(name, data, privs)
 	return colorized.priv_lava or "", colorized.priv_chainsaw or "", colorized.priv_forceload or "", colorized.priv_areas or ""
 end
 
-local function stats(name, target)
+local function stats_fs(name, target)
 	local data, is_online, user
 	if target == "" or target == nil then
 		target = name
@@ -550,7 +568,7 @@ minetest.register_chatcommand("stats", {
 			archtec.ignore_msg("stats", name, target)
 			return
 		end
-		stats(name, target)
+		stats_fs(name, target)
 	end
 })
 
@@ -591,10 +609,96 @@ minetest.register_chatcommand("stats_dump", {
 	end
 })
 
+local function calc_xp(data)
+	local xp = 0
+	xp = xp + data.nodes_dug * 1.1
+	xp = xp + data.nodes_placed * 1.6
+	xp = xp + data.items_crafted * 0.7
+	xp = xp - data.died * 25
+	xp = xp + data.playtime * 0.1 -- 0.1 xp per second = 360 XP per hour
+	xp = xp + data.chatmessages * 2
+	xp = xp + data.thank_you * 100
+	return floor(xp)
+end
+
+local function gen_ranking()
+	rank_gentime = os.time()
+	-- collect data
+	local data = sql:to_table().fields
+	local users = {}
+	for user, entry in pairs(data) do
+		users[user] = add_defaults(minetest.deserialize(entry) or {})
+		users[user].xp = calc_xp(users[user])
+	end
+	-- sort data
+	local sorted = {}
+	for user, stats in pairs(users) do
+		table.sort(stats, function(a, b) return a.xp > b.xp end)
+		sorted[#sorted + 1] = {user, stats.xp}
+	end
+	table.sort(sorted, function(a, b) return a[2] > b[2] end)
+	-- pre generate formspec entries for the first 100 players
+	local place = 1
+	for i = 1, 100 do
+		if  sorted[i] then
+			local newstr = place .. ". " .. sorted[i][1] .. " - " .. format_int(sorted[i][2]) .. " XP"
+			place = place + 1
+			table.insert(rank, newstr)
+		end
+	end
+end
+
+local function rank_fs(sel)
+	if rank_gentime < (os.time() - (60 * 60 * 6)) then -- re-generate after 6h
+		print("regen")
+		gen_ranking()
+	end
+
+	local rows = {}
+	local label = FS("Ranking generated at @1", os.date("!%Y-%m-%dT%H:%M:%SZ", rank_gentime) .. " UTC")
+
+	local formspec = [[
+		formspec_version[4]
+		size[6,10]
+		label[0.1,0.3;%s]
+		tablecolumns[color;tree;text]
+		table[0.1,0.5;5.8,9.4;list;%s;%i]
+	]]
+
+	-- add entries
+	for _, str in ipairs(rank) do
+		rows[#rows + 1] = "#7F7,0," .. F(str)
+	end
+
+	return formspec:format(label, table.concat(rows, ","), sel or 0)
+end
+
+minetest.register_chatcommand("rank", {
+	description = "Get the XP of the best 100 players",
+	privs = {interact = true},
+	func = function(name)
+		minetest.log("action", "[/rank] executed by '" .. name .. "'")
+		minetest.show_formspec(name, "archtec_playerdata:rank", rank_fs())
+	end
+})
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "archtec_playerdata:rank" or fields.quit then
+		return
+	end
+
+	local event = minetest.explode_table_event(fields.list)
+	if event.type ~= "INV" then
+		local name = player:get_player_name()
+		minetest.show_formspec(name, "archtec_playerdata:rank", rank_fs(event.row))
+	end
+end)
+
 minetest.register_on_mods_loaded(function()
 	if not minetest.mkdir(datadir) then
 		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
 	end
 	migrate_old()
 	stats_dump()
+	gen_ranking()
 end)
