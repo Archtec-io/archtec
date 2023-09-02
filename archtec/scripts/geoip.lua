@@ -1,14 +1,9 @@
 local http = assert(...)
 
-geoip = {}
+local geoip = {}
 
 if not minetest.get_player_ip then
 	minetest.log("error", "[geoip] minetest.get_player_ip not available!")
-	setmetatable(geoip, {
-		__index = function()
-			return function() minetest.log("warning", "[geoip] API disabled, see load time errors!") end
-		end
-	})
 	return
 end
 

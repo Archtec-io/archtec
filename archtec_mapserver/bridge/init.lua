@@ -4,7 +4,7 @@ dofile(MP .. "/bridge/players.lua")
 
 local http, url, key
 
-function send_stats()
+local function send_stats()
 	local t0 = minetest.get_us_time()
 
 	-- data to send to mapserver

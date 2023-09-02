@@ -1,17 +1,21 @@
 unused_args = false
-allow_defined_top = true
 
 ignore = {
 	"631", -- Line is too long
 }
 
 globals = {
-	-- new globals
 	"archtec",
-	-- deps
-	"player_api",
-	"biome_lib",
-	"choppy",
+	"archtec_chat",
+	"archtec_matterbridge",
+	"archtec_playerdata",
+	"archtec_pvp",
+	"archtec_teleport",
+	"discord",
+	"mapserver",
+	"notifyTeam",
+	"player_monoids",
+	"vote",
 }
 
 read_globals = {
@@ -24,18 +28,18 @@ read_globals = {
 	"table",
 	"string",
 	-- deps
-	"auroras",
 	"anvil",
+	"auroras",
 	"choppy",
 	"default",
 	"font_api",
 	"futil",
 	"homedecor",
 	"mesecon",
-	"stairs",
-	"stairsplus",
 	"signs_bot",
 	"signs_lib",
+	"stairs",
+	"stairsplus",
 	"techage",
 	"unified_inventory",
 	"unifieddyes",
@@ -80,4 +84,16 @@ files["archtec/scripts/overrides.lua"] = {
 
 files["archtec/init.lua"] = {
 	globals = {"futil"},
+}
+
+files["archtec/scripts/chainsaw.lua"] = {
+	globals = {"choppy.api"},
+}
+
+files["archtec/scripts/random_things.lua"] = {
+	globals = {"biome_lib"},
+}
+
+files["archtec/scripts/watch.lua"] = {
+	globals = {"player_api"},
 }
