@@ -10,7 +10,7 @@ local function allow_skybox_change(name)
 	return true
 end
 
-if not auroras then
+if not minetest.global_exists("auroras") then
 	allow_skybox_change = function(name)
 		return true
 	end
