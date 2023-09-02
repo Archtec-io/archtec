@@ -86,7 +86,7 @@ local function format_result(result)
 end
 
 -- query ip on join, record in logs and execute callback
-minetest.register_on_joinplayer(function(player, last_login)
+minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local ip = minetest.get_player_ip(name)
 	if not ip then

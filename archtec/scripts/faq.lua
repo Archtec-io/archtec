@@ -38,14 +38,14 @@ end
 
 minetest.after(0, faq_tree)
 
-local function faq_formspec(name, sel)
+local function faq_formspec(sel)
 	local rows = {}
 
 	local description = default_description
 
-	for i, data in ipairs(entries) do
+	for _, data in ipairs(entries) do
 		rows[#rows + 1] = COLOR_BLUE .. ",0," .. F(data[1])
-		for j, content in ipairs(data[2]) do
+		for _, content in ipairs(data[2]) do
 			rows[#rows + 1] = COLOR_GREEN .. ",1," .. content[1]
 			if sel == #rows then
 				description = content[2].description
@@ -68,7 +68,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local event = minetest.explode_table_event(fields.list)
 	if event.type ~= "INV" then
 		local name = player:get_player_name()
-		minetest.show_formspec(name, "archtec:faq", faq_formspec(name, event.row))
+		minetest.show_formspec(name, "archtec:faq", faq_formspec(event.row))
 	end
 end)
 
@@ -77,7 +77,7 @@ minetest.register_chatcommand("faq", {
 	privs = {interact = true},
 	func = function(name)
 		minetest.log("action", "[/faq] executed by '" .. name .. "'")
-		minetest.show_formspec(name, "archtec:faq", faq_formspec(name))
+		minetest.show_formspec(name, "archtec:faq", faq_formspec())
 	end
 })
 

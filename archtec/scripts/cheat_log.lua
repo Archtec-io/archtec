@@ -11,7 +11,7 @@ end
 local times = {}
 local pd_cache = {}
 
-local function get_pd(player, name)
+local function get_pd(name)
 	local t = os.time()
 	if pd_cache[name] and times[name] and times[name] > t - 2 then -- get info all 2 sec
 		return pd_cache[name]
@@ -34,7 +34,7 @@ local function handle_cheat(player, cheat)
 	for i, x in pairs(pos) do
 		pos[i] = round(x)
 	end
-	local info = get_pd(player, name)
+	local info = get_pd(name)
 	notifyTeam("[archtec] Anticheat: player '" .. name .. "' ('" .. cheat.type .. "') speed: " .. tostring(speed) .. " pos: " .. tostring(pos) .. " lag: " .. lag .. " jitter: " .. short(info.avg_jitter, 7) .. " rtt: " .. short(info.avg_rtt, 5), false)
 end
 

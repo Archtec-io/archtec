@@ -602,7 +602,7 @@ end
 minetest.register_chatcommand("stats_dump", {
 	description = "Dump all stats",
 	privs = {server = true},
-	func = function(name, param)
+	func = function(name)
 		minetest.log("action", "[/stats_dump] executed by '" .. name .. "'")
 		stats_dump()
 		minetest.chat_send_player(name, C("#00BD00", "Dumped all stats"))
@@ -632,9 +632,9 @@ local function gen_ranking()
 	end
 	-- sort data
 	local sorted = {}
-	for user, stats in pairs(users) do
+	for name, stats in pairs(users) do
 		table.sort(stats, function(a, b) return a.xp > b.xp end)
-		sorted[#sorted + 1] = {user, stats.xp}
+		sorted[#sorted + 1] = {name, stats.xp}
 	end
 	table.sort(sorted, function(a, b) return a[2] > b[2] end)
 	-- pre generate formspec entries for the first 100 players
@@ -650,7 +650,6 @@ end
 
 local function rank_fs(sel)
 	if rank_gentime < (os.time() - (60 * 60 * 6)) then -- re-generate after 6h
-		print("regen")
 		gen_ranking()
 	end
 

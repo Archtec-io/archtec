@@ -118,7 +118,7 @@ end
 minetest.register_chatcommand("vote_clear", {
 	description = "Clear the active vote",
 	privs = {staff = true},
-	func = function(name, params)
+	func = function(name)
 		if not next(vote.active) then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "There are no active votes!"))
 		end
@@ -130,7 +130,7 @@ minetest.register_chatcommand("vote_clear", {
 
 -- Vote /y and /n functions
 
-local function vote_yes(name, params)
+local function vote_yes(name)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))
@@ -160,7 +160,7 @@ minetest.register_chatcommand("y", {
 	func = vote_yes
 })
 
-local function vote_no(name, params)
+local function vote_no(name)
 	local voteset = vote.get_next_vote(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))

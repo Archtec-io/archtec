@@ -74,7 +74,7 @@ end
 minetest.register_chatcommand("falling_nodes_cleanup", {
 	description = "Remove stuck falling nodes",
 	privs = {staff = true},
-	func = function(name, param)
+	func = function(name)
 		minetest.log("action", "[/falling_nodes_cleanup] executed by '" .. name)
 		local counter
 		local player = minetest.get_player_by_name(name)
