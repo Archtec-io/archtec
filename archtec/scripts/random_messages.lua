@@ -9,7 +9,6 @@ local random_messages = {
 	S("If you find a bug use '/report <message>'"),
 	S("Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)"),
 	S("Change the color of your name with '/namecolor <color>'"),
-	S("Use '/request_areas_high_limit' if you need more or bigger areas"),
 	S("You get the 'forceload' privilege automatically when you enter TA3"),
 	S("To start vote day/night you must have 3 etherium dust in your inventory"),
 	S("Change your PvP state with the sword symbol in your inventory"),

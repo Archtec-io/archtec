@@ -7,25 +7,22 @@ minetest.register_privilege("archtec_chainsaw", (S("Allows you to use the chains
 local C = minetest.colorize
 archtec.big_areas_playtime = 108000 -- 30h playtime
 
-minetest.register_chatcommand("request_areas_high_limit", {
-	params = "",
-	description = ("Request the areas_high_limit priv"),
-	func = function(name)
-		minetest.log("action", "[/request_areas_high_limit] executed by '" .. name .. "'")
-		if minetest.check_player_privs(name, "areas_high_limit") then
-			minetest.chat_send_player(name, C("#00BD00", S("[request_areas_high_limit] You already have the 'areas_high_limit' privilege")))
-			return
-		end
-		local playtime = archtec_playerdata.get(name, "playtime") or 0
-		if playtime > archtec.big_areas_playtime then
-			archtec.grant_priv(name, "areas_high_limit")
-			minetest.chat_send_player(name, C("#00BD00", S("[request_areas_high_limit] Congratulations! You have been granted the 'areas_high_limit' privilege")))
-			notifyTeam("[request_areas_high_limit] Granted '" .. name .. "' the 'areas_high_limit' priv")
-		else
-			minetest.chat_send_player(name, C("#FF0000", S("[request_areas_high_limit] You do not have 30 hours (or more) playtime.")))
-		end
+function archtec.check_areas_high_limit(name, privs)
+	if privs.areas_high_limit then
+		return true
 	end
-})
+
+	local playtime = archtec_playerdata.get(name, "playtime")
+	if playtime > archtec.big_areas_playtime then
+		archtec.grant_priv(name, "areas_high_limit")
+		minetest.chat_send_player(name, C("#00BD00", S("[request_areas_high_limit] Congratulations! You have been granted the 'areas_high_limit' privilege")))
+		notifyTeam("[request_areas_high_limit] Granted '" .. name .. "' the 'areas_high_limit' priv")
+		return true
+	else
+		minetest.chat_send_player(name, C("#FF0000", S("[request_areas_high_limit] You do not have 30 hours (or more) playtime.")))
+		return
+	end
+end
 
 -- revoke unknown privs
 local reg_privs = minetest.registered_privileges

@@ -304,7 +304,7 @@ Lava buckets ('adv_buckets'):
 
 Bigger and more protected areas ('areas_high_limit'):
 - Requires 30 hours of playtime (player being logged in and playing on the server)
-- Execute the '/request_areas_high_limit' command to be granted the privilege
+- When the condition is met you'll be granted the privilege when needed automatically.
 
 Chainsaw ('archtec_chainsaw'):
 - Requires 24 hours of playtime (player being logged in and playing on the server)
