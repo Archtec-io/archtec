@@ -89,7 +89,7 @@ function archtec.register_chatcommand_alias(newname, original)
 end
 
 function archtec.get_and_trim(string)
-	if string then
+	if string and type(string) == "string" then
 		return string:trim()
 	end
 	return ""

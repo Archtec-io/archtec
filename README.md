@@ -5,7 +5,7 @@ error/important "#FF0000" (red)
 
 true/ok/works "#00BD00" (green)
 
-help message/staff notifications "#666" (grey)
+help message/staff notifications "#999" (grey)
 
 important messages for all players "#FF0" (yellow)
 

@@ -39,7 +39,7 @@ function vote.start_vote(voteset, creator)
 		end)
 	end
 
-	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. minetest.colorize("#666", " (" .. voteset.help .. ")"))
+	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. minetest.colorize("#999", " (" .. voteset.help .. ")"))
 end
 
 function vote.end_vote(voteset)

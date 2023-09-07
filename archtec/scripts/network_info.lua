@@ -1,5 +1,5 @@
 local function C(text)
-	return minetest.colorize("#666", text)
+	return minetest.colorize("#999", text)
 end
 
 minetest.register_chatcommand("network_info", {

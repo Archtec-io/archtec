@@ -12,6 +12,7 @@ local F = minetest.formspec_escape
 local FS = function(...) return F(S(...)) end
 local floor, type, C = math.floor, type, minetest.colorize
 local sql = minetest.get_mod_storage()
+local min_xp = 2000 -- modify by hand
 
 -- config
 local save_interval = 60
@@ -627,8 +628,13 @@ local function gen_ranking()
 	local data = sql:to_table().fields
 	local users = {}
 	for user, entry in pairs(data) do
-		users[user] = add_defaults(minetest.deserialize(entry) or {})
-		users[user].xp = calc_xp(users[user])
+		local stats = add_defaults(minetest.deserialize(entry) or {})
+		local xp = calc_xp(stats)
+		if xp >= min_xp then
+			users[user] = {}
+			users[user].name = user
+			users[user].xp = xp
+		end
 	end
 	-- sort data
 	local sorted = {}
@@ -640,7 +646,7 @@ local function gen_ranking()
 	-- pre generate formspec entries for the first 100 players
 	local place = 1
 	for i = 1, 100 do
-		if  sorted[i] then
+		if sorted[i] then
 			local newstr = place .. ". " .. sorted[i][1] .. " - " .. format_int(sorted[i][2]) .. " XP"
 			place = place + 1
 			table.insert(rank, newstr)

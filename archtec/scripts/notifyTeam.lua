@@ -1,6 +1,6 @@
 function notifyTeam(message, dc)
 	minetest.log("action", message)
-	local colored_message = minetest.colorize("#666", message)
+	local colored_message = minetest.colorize("#999", message)
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 		if name then

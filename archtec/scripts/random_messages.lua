@@ -23,7 +23,7 @@ local random_messages = {
 }
 
 local function show_random_message()
-	local message = minetest.colorize("#666", S("[Info]:") .. " " .. random_messages[math.random(1, #random_messages)])
+	local message = minetest.colorize("#999", S("[Info]:") .. " " .. random_messages[math.random(1, #random_messages)])
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 		if archtec_playerdata.get(name, "s_help_msg") then

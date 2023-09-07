@@ -279,7 +279,7 @@ Players can choose one of several ways to get out of the protected spawn area an
 
 - There is a white "Teleporter" house adjacent to spawn platform, inside you will find several teleporters that will instantly transport you to mining and building sites where you can start your build/mine/journey. If at any time you want to return to spawn just type '/spawn'
 - Walking out of spawn can be a rewarding experience since you can see all the fantastic builds and structures other players have created. Note that it will take a while and be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident you can return to where your bones and pick up your stuff
-- If you want to build far from others you might want to check out the online Archtec Map http://map.archtec.freemyip.com:8585
+- If you want to build far from others you might want to check out the online Archtec Map https://archmap.niklp.net
 - Some players have created their own personal travel nets that go to the very edges of the universe, ask around if your curios and want to discover just how big our server is.
 ]]
 })
