@@ -82,6 +82,10 @@ function channel.leave(cname, name, msg)
 	end
 	cdef.users[name] = nil
 	archtec_chat.users[name][cname] = nil
+	-- unset default channel
+	if archtec_chat.users[name].default == cname then
+		archtec_chat.users[name].default = nil
+	end
 end
 
 function channel.invite_delete(cname, target, timed_out)
@@ -140,10 +144,10 @@ channel.get_cname = get_cname
 local help_list = {
 	join = {
 		name = "join",
-		description = "Join or create a channel. Add 'yes' to your command to make new the created channel public (# is optional)",
+		description = "Join or create a channel. Add 'public' to your command to make new the created channel public. Add 'default' to your command to make the new created channel your default channel. (# is optional)",
 		param = "<channel> <keep public>",
 		shortcut = "j",
-		usage = "/c join #mychannel (yes)"
+		usage = "/c join #mychannel {public} {default}"
 	},
 	leave = {
 		name = "leave",
@@ -186,6 +190,13 @@ local help_list = {
 		param = "<sub-command>",
 		shortcut = "h",
 		usage = "/c help join"
+	},
+	default = {
+		name = "default",
+		description = "Sets your default channel (# is optional)",
+		param = "<channel>",
+		shortcut = "d",
+		usage = "/c default #mychannel"
 	}
 }
 
@@ -240,10 +251,20 @@ minetest.register_chatcommand("c", {
 			end
 			-- create if not registered
 			if not cdef then
-				local public = archtec.get_and_trim(params[3]) == "yes"
+				local public = archtec.get_and_trim(params[3]) == "public" or archtec.get_and_trim(params[4]) == "public"
+				local default_channel = archtec.get_and_trim(params[3]) == "default" or archtec.get_and_trim(params[4]) == "default"
 				if type(c) == "string" and string.len(c) <= 15 then
 					channel.create(c, {owner = name, public = public})
-					channel.join(c, name, name .. " created the channel.")
+					if public then
+						channel.join(c, name, name .. " created the public channel.")
+					else
+						channel.join(c, name, name .. " created the channel.")
+					end
+					-- change default channel
+					if default_channel then
+						archtec_chat.users[name].default = c
+						channel.send(c, "Set your default channel to " .. c)
+					end
 					return
 				else
 					minetest.chat_send_player(name, C("#FF0000", S("[c/join] Channelname contains forbidden characters or is too long!")))
@@ -396,6 +417,25 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			minetest.chat_send_player(name, C("#00BD00", parse_help(hd)))
+		elseif action == "default" or action == "d" then
+			local c = archtec.get_and_trim(p1)
+			if c == "" then
+				minetest.chat_send_player(name, C("#FF0000", S("[c/default] No channelname provided!")))
+				return
+			end
+			c = get_cname(c) -- remove channel prefix
+			local cdef = get_cdef(c)
+			-- check if player is in channel
+			if not cdef or not cdef.users[name] then
+				minetest.chat_send_player(name, C("#FF0000", S("[c/default] You are not in this channel!")))
+				return
+			end
+			if archtec_chat.users[name].default == c then
+				minetest.chat_send_player(name, C("#FF0000", S("[c/default] #@1 is already your default channel!", c)))
+				return
+			end
+			archtec_chat.users[name].default = c
+			minetest.chat_send_player(name, C("#00BD00", S("[c/default] Set your default channel to #@1", c)))
 		else
 			minetest.chat_send_player(name, C("#FF0000", S("[c] Unknown sub-command! (try '/c help')")))
 		end

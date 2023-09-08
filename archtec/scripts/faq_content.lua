@@ -35,13 +35,17 @@ To send a message to a channel prepend the message with '#' followed by the chan
 
 Required arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.
 
-Join/Create a channel: (Add 'yes' to your command to make new the created channel public)
-'/c join <channel> {yes}' or
-'/c j <channel> {yes}'
+Join/Create a channel: (Add 'public' to your command to make the new created channel public. Add 'default' to your command to make the new created channel your default channel)
+'/c join <channel> {public} {default}' or
+'/c j <channel> {public} {default}'
 
 Leave a channel:
 '/c leave <channel>' or
 '/c l <channel>'
+
+Make a channel your default channel:
+'/c default <channel>' or
+'/c def <channel>'
 
 Invite someone to a channel:
 '/c invite <channel> <name>' or
