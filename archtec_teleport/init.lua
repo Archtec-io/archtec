@@ -22,18 +22,27 @@ local function send_message(name, message)
 	minetest.chat_send_player(name, minetest.colorize("#FF8800", message))
 end
 
+local tries = {}
+local rad = 1
+
+for x = -rad, rad do
+	for y = -rad, rad do
+		for z = -rad, rad do
+			table.insert(tries, vector.new(x, y, z))
+		end
+	end
+end
+
 local function find_free_position_near(pos)
-	local tries = {
-		{x=1,y=0,z=0},
-		{x=-1,y=0,z=0},
-		{x=0,y=0,z=1},
-		{x=0,y=0,z=-1},
-	}
-	for _, d in pairs(tries) do
-		local p = vector.add(pos, d)
-		local def = minetest.registered_nodes[minetest.get_node(p).name]
-		if def and not def.walkable then
-			return p
+	local lpos = vector.new(pos.x, pos.y - 0.5, pos.z)
+	for _, try in ipairs(tries) do
+		local vec = vector.round(vector.add(try, lpos))
+		local node = minetest.get_node_or_nil(vec)
+		if node then
+			local def = minetest.registered_nodes[node.name]
+			if def and (def.walkable or (def.liquidtype ~= "none" and def.damage_per_second <= 0)) then
+				return pos
+			end
 		end
 	end
 end
@@ -116,7 +125,7 @@ function archtec_teleport.tp2me_send(sender, receiver)
 		return
 	end
 
-	minetest.log("action", "[archtec_teleport] " .. sender .. " requested to teleport " .. receiver .. " to " .. sender)
+	minetest.log("action", "[archtec_teleport] " .. sender .. " requested to teleport " .. receiver .. " to them")
 	send_message(receiver, S("@1 is requesting that you teleport to them. /ok to accept.", sender))
 	send_message(sender, S("Teleport request sent! It will timeout in @1 seconds.", timeout_delay))
 
@@ -142,7 +151,7 @@ function archtec_teleport.tpr_accept(name)
 		send_message(name, S("Usage: /ok allows you to accept teleport requests sent to you by other players."))
 		return
 	end
-	local name2, source, target, chatmsg
+	local name2, source, target, chatmsg, mode
 
 	-- Teleport requests.
 	if archtec_teleport.tpr_list[name] then
@@ -150,13 +159,13 @@ function archtec_teleport.tpr_accept(name)
 		source = minetest.get_player_by_name(name)
 		target = minetest.get_player_by_name(name2)
 		chatmsg = S("@1 is teleporting to you.", name2)
-		archtec_teleport.tpr_list[name] = nil
+		mode = "tpr"
 	elseif archtec_teleport.tp2me_list[name] then
 		name2 = archtec_teleport.tp2me_list[name]
 		source = minetest.get_player_by_name(name2)
 		target = minetest.get_player_by_name(name)
 		chatmsg = S("You are teleporting to @1.", name2)
-		archtec_teleport.tp2me_list[name] = nil
+		mode = "tp2me"
 	else
 		return
 	end
@@ -171,8 +180,13 @@ function archtec_teleport.tpr_accept(name)
 
 	local pos = find_free_position_near(source:get_pos())
 	if not pos then
-		send_message(name, S("@1 is not at a safe teleport position. Ask them for move to another spot!", name2))
-		send_message(name2, S("@1 tried to teleport to you but you aren't at a safe teleport position. Please move to another spot!", name))
+		if mode == "tpr" then
+			send_message(name, S("You can't accept the teleport request because you are not at a safe spot!"))
+			send_message(name2, S("@1 tried to accept the teleport request but isn't at a safe spot!", name))
+		elseif mode == "tp2me" then
+			send_message(name2, S("@1 tried to accept the teleport request but you aren't at a safe spot. Please move to another spot!", name))
+			send_message(name, S("You can't accept the teleport request because @1 is not at a safe spot!", name2))
+		end
 		return
 	end
 
@@ -181,6 +195,14 @@ function archtec_teleport.tpr_accept(name)
 	send_message(name, chatmsg)
 	-- Immediate_teleport
 	send_message(name2, S("Request Accepted!"))
+	if mode == "tpr" then
+		minetest.log("action", "[archtec_teleport] " .. name .. " accepted a tpr by " .. name2)
+	elseif mode == "tp2me" then
+		minetest.log("action", "[archtec_teleport] " .. name .. " accepted a tp2me by " .. name2)
+	end
+
+	archtec_teleport.tpr_list[name] = nil
+	archtec_teleport.tp2me_list[name] = nil
 end
 
 minetest.register_chatcommand("tpr", {
