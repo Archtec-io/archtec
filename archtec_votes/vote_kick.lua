@@ -4,7 +4,7 @@ local S = minetest.get_translator(minetest.get_current_modname())
 local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 local function run_vote(name, param)
-	discord.send(nil, ":warning: **" .. name .. "** started a voting: Kick " .. param)
+	discord.send(":warning: **" .. name .. "** started a voting: Kick " .. param)
 	vote.new_vote(name, {
 		description = "Kick " .. param,
 		help = "/yes or /no",
@@ -26,21 +26,21 @@ local function run_vote(name, param)
 
 			if result == "yes" then
 				minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
-				discord.send(nil, ":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
+				discord.send(":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
 				xban.ban_player(self.name, "/vote_kick", os.time() + 3600, "vote-kicked")
 			else
 				minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " remains ingame.")
-				discord.send(nil, ":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
+				discord.send(":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
 			end
 		end,
 
 		on_vote = function(self, name_voter, value)
 			if value == "yes" then
 				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
-				discord.send(nil, ":green_square: **" .. name_voter .. "** voted YES")
+				discord.send(":green_square: **" .. name_voter .. "** voted YES")
 			else
 				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
-				discord.send(nil, ":red_square: **" .. name_voter .. "** voted NO")
+				discord.send(":red_square: **" .. name_voter .. "** voted NO")
 			end
 		end
 	})

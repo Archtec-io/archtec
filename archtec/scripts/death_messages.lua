@@ -85,9 +85,9 @@ local function send_death_message(cause, player, killer)
 
 	minetest.chat_send_all(minetest.colorize("#FF0000", death_message))
 	if cause == "pvp" then
-		discord.send(nil, ":crossed_swords: " .. minetest.get_translated_string("en", death_message))
+		discord.send(":crossed_swords: " .. minetest.get_translated_string("en", death_message))
 	else
-		discord.send(nil, ":skull_and_crossbones: " .. minetest.get_translated_string("en", death_message))
+		discord.send(":skull_and_crossbones: " .. minetest.get_translated_string("en", death_message))
 	end
 end
 

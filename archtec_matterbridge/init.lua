@@ -28,8 +28,7 @@ end
 local MP = minetest.get_modpath("archtec_matterbridge")
 
 if http and archtec_matterbridge.token then
-	-- load web stuff
-	minetest.log("action", "[archtec_matterbridge] connecting to proxy-endpoint at: " .. archtec_matterbridge.url)
+	minetest.log("action", "[archtec_matterbridge] connecting to matterbridge at: " .. archtec_matterbridge.url)
 
 	discord = {}
 
