@@ -11,6 +11,6 @@ function notifyTeam(message, dc)
 	end
 	if dc == false then return end
 	if discord then -- discord API maybe isn't initialized now (calling on server startup)
-		discord.send(nil, message, "log")
+		discord.send(message, "log")
 	end
 end

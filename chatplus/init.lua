@@ -133,7 +133,7 @@ minetest.register_on_chat_message(function(name, message)
 				minetest.chat_send_player(uname, msg)
 			end
 		end
-		discord.send(("**%s**: "):format(name), message)
+		discord.send(("**%s**: %s"):format(name, message))
 	else
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (#" .. channel .. ")")
 		archtec_chat.channel.send(channel, name .. ": " .. message, name)

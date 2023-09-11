@@ -3,11 +3,11 @@ local can_join = true
 local function lock_server(mode, keep, locker)
 	if mode == "new" then
 		minetest.chat_send_all(minetest.colorize("#FF0000", locker .. " closed the server. Only staff members can join."))
-		discord.send(nil, ":lock: " .. locker .. " closed the server. Only staff members can join.")
+		discord.send(":lock: " .. locker .. " closed the server. Only staff members can join.")
 		can_join = false
 	elseif mode == "kick" then
 		minetest.chat_send_all(minetest.colorize("#FF0000", locker .. " closed the server. Only staff members can join."))
-		discord.send(nil, ":lock: " .. locker .. " closed the server. Only staff members can join.")
+		discord.send(":lock: " .. locker .. " closed the server. Only staff members can join.")
 		can_join = false
 		for _, player in ipairs(minetest.get_connected_players()) do
 			local name = player:get_player_name()
@@ -20,7 +20,7 @@ end
 
 local function open_server(opener)
 	minetest.chat_send_all(minetest.colorize("#00BD00", opener .. " opened the server. Everyone can join again, including new players."))
-	discord.send(nil, ":unlock: " .. opener .. " opened the server. Everyone can join again, including new players.")
+	discord.send(":unlock: " .. opener .. " opened the server. Everyone can join again, including new players.")
 	can_join = true
 end
 
@@ -28,7 +28,7 @@ minetest.register_on_prejoinplayer(function(name)
 	if name and not can_join then
 		if not minetest.get_player_privs(name).staff then
 			minetest.chat_send_all(minetest.colorize("#FF0000", name .. " tried to connect, but the server is closed for anyone except staff members."))
-			discord.send(nil, ":no_entry: " .. name .. " tried to connect, but the server is closed for anyone except staff members.")
+			discord.send(":no_entry: " .. name .. " tried to connect, but the server is closed for anyone except staff members.")
 			return "The server is closed. Only staff members can join."
 		end
 	end
