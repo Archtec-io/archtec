@@ -27,7 +27,7 @@ Use '/m <message>' to message the same person your last message was sent to.
 ]]
 })
 
-archtec.faq.register("Use and manage channels", {
+archtec.faq.register("Channels", {
 	header = "Chat",
 	pos = 3,
 	description = [[
@@ -69,11 +69,13 @@ Show help:
 ]]
 })
 
-archtec.faq.register("Chatbridge to Discord", {
+archtec.faq.register("Chatbridge to Discord/Matrix/IRC", { -- we can't use ',' in titles
 	header = "Chat",
 	pos = 4,
 	description = [[
-The Discord chat bridge uses Matterbridge facilitating additional platform integrations in the future.
+The chat bridge uses Matterbridge facilitating additional platform integrations in the future.
+
+Links to the platforms are in '/news'.
 
 The following commands and chat formats are supported:
 - Regular chat messages
@@ -162,7 +164,7 @@ Vote to kick a player:
 ]]
 })
 
-archtec.faq.register("Stats", {
+archtec.faq.register("Stats & Ranking", {
 	header = "Player interaction",
 	pos = 5,
 	description = [[
@@ -170,6 +172,12 @@ Archtec records certain statistics on all players. To see statistics for a playe
 
 To show a players statistics use:
 - '/stats <name>'
+
+
+To show a ranking of the players with the most XP*:
+- '/rank'
+
+* XP points are calculated from various other values (e.g. dug nodes) and ranked.
 ]]
 })
 
@@ -177,7 +185,7 @@ archtec.faq.register("Thank you", {
 	header = "Player interaction",
 	pos = 6,
 	description = [[
-The are many helpful players on Archtec, if someone has been helpful and you want to thank them and call them out for their assistance use the '/thankyou' command. To see how many 'thankyou's a player has received use the '/stats' command. :-)
+The are many helpful players on Archtec, if someone has been helpful and you want to thank them and call them out for their assistance use the '/thankyou' command. To see how many thankyou's a player has received use the '/stats' command. :-)
 
 To thank a player:
 '/thankyou <name>'
@@ -273,7 +281,7 @@ To teleport back to Old Spawn:
 ]]
 })
 
-archtec.faq.register("Areas without protection", {
+archtec.faq.register("Find areas without protection", {
 	header = "Spawn",
 	pos = 2,
 	description = [[
@@ -300,7 +308,7 @@ Admins will not grant individual player privileges but some privileges are autom
 Forceload ('forceload'):
 - The ability to place forceload blocks
 - Granted when a player reaches Techage Level 3 (places first TA3 Oil Drillbox)
-- Forceload blocks cause the mapblock (16x16x16) area they are placed in to be continously loaded while a player is logged in regardless of where they are.
+- Forceload blocks cause the mapblock (16x16x16 nodes) area they are placed in to be continously loaded while a player is logged in regardless of where they are.
 
 Lava buckets ('adv_buckets'):
 - Requires 50 hours of playtime (player being logged in and playing on the server)
@@ -397,12 +405,12 @@ Cooling blocks can be:
 - Thin Ice
 - Dry Ice
 
-Archtec behaviour:
+Archtec behavior:
 - All still lava ('lava_source') turns into obsidian regardless of which cooling block it comes into contact with.
 - Flowing lava that comes into contact with water, ice or thin ice turns into basalt stone.
 - Flowing lava that comes into contact with dry ice turns into cobblestone
 
-This differs significantly from the default minetest behaviour where all flowing lava turns into cobblestone when it comes into contact with water or ice.
+This differs significantly from the default minetest behavior where all flowing lava turns into cobblestone when it comes into contact with water or ice.
 
 For players building cobblestone generators you will have to use dry ice instead of water or ice for your generator to yield regular cobblestone.
 
@@ -433,10 +441,9 @@ archtec.faq.register("Useful chat commands", {
 	pos = 5,
 	description = [[
 General:
-- '/discord' will send you a link to our Discord server
 - '/faq' show this Frequenty Asked Questions section
 - '/news' show the news from join again (staff only)
-- '/report' report an bug/issue/feature-request to the server staff (Creates a GitHub issue, see discord for links to issues)
+- '/report <msg>' report an bug/issue/feature-request to the server staff (Creates a GitHub issue, see discord for links to issues)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
 
 Techage:

@@ -1,9 +1,12 @@
 local MESSAGE_INTERVAL = 600
 local S = archtec.S
+local discord_link = "https://discord.gg/txCMTMwBWm"
+local matrix_link = "https://matrix.to/#/#archtec:matrix.org"
 
 local random_messages = {
 	S("To check someone's stats use '/stats <name>'"),
-	S("Visit our Discord server: @1", archtec.discord_link),
+	S("Visit our Discord server: @1", discord_link),
+	S("Visit our Matrix space: @1", matrix_link),
 	S("Abusing '/vote_kick' will result in a ban for you"),
 	S("Read our rules at the spawn"),
 	S("If you find a bug use '/report <message>'"),
@@ -15,7 +18,7 @@ local random_messages = {
 	S("Say someone thank you with '/thankyou <name>'"),
 	S("Start a day/night vote with '/vote_day' or '/vote_night'"),
 	S("Ask Niklp or LonnySophie to get a free shop at spawn"),
-	S("Get a free mailbox at the spawn post"),
+	S("Get a mailbox for 20MG at the spawn post"),
 	S("Do you like christmas? Place your stocking at spawn's christmas area"),
 	S("Diamond powder can be used to build cobble stone generators"),
 	S("Moving is slow? Get Mithril Boots to move much faster"),
