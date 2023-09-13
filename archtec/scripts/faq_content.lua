@@ -173,7 +173,6 @@ Archtec records certain statistics on all players. To see statistics for a playe
 To show a players statistics use:
 - '/stats <name>'
 
-
 To show a ranking of the players with the most XP*:
 - '/rank'
 
