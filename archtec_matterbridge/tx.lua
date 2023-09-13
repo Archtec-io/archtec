@@ -23,8 +23,13 @@ end
 -- /me message in chat channel
 minetest.override_chatcommand("me", {
 	func = function(name, param)
-		minetest.chat_send_all("* " .. name .. " " .. param)
-		discord.send(":speech_left: " .. ('%s *%s*'):format(name, param))
+		local msg = archtec.get_and_trim(param)
+		if msg ~= "" then
+			minetest.chat_send_all("* " .. name .. " " .. param)
+			discord.send(":speech_left: " .. ('%s *%s*'):format(name, param))
+		else
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[/me] No message provided!"))
+		end
 		return true
 	end
 })
