@@ -44,7 +44,7 @@ minetest.register_chatcommand("lock", {
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[lock] The server is already locked!"))
 			return
 		end
-		if param:trim() == "" or param:trim() == nil then
+		if param:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[lock] No arguments provided!"))
 			return
 		end

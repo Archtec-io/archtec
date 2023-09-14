@@ -89,11 +89,11 @@ minetest.register_on_chat_message(function(name, message)
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
 		return true
 	end
-	local cc = archtec.count_keys(archtec_chat.users[name])
+	local cc = archtec.count_keys(archtec_chat.users[name].channels)
 	-- channelname resolver
 	local channel
 	if cc == 1 then
-		channel = next(archtec_chat.users[name])
+		channel = next(archtec_chat.users[name].channels)
 	end
 	if message:sub(1, 1) == "#" then
 		local cname, msg = string.match(message, "^#(%S+) ?(.*)")
@@ -113,11 +113,11 @@ minetest.register_on_chat_message(function(name, message)
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] #@1 does not exist or you aren't a channel member!", cname)))
 			return true
 		end
-	elseif archtec_chat.users[name].main then -- normal message
+	elseif archtec_chat.users[name].channels.main then -- normal message
 		channel = "main"
 	end
 	if archtec_chat.users[name].default then
-		channel = archtec_chat.users[name].default
+		channel = archtec_chat.users[name].channels.default
 	end
 	if not channel then
 		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')")))

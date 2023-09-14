@@ -102,10 +102,7 @@ minetest.register_chatcommand("ignore", {
 	privs = {interact = true},
 	func = function(name, param)
 		minetest.log("action", "[/ignore] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		local params = {}
-		for p in string.gmatch(param, "[^%s]+") do
-			table.insert(params, p)
-		end
+		local params = archtec.parse_params(param)
 		local action = params[1]
 		if action == "ignore" or action == "add" then
 			local target = archtec.get_and_trim(params[2])

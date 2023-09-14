@@ -44,13 +44,13 @@ minetest.register_chatcommand("music_play", {
 	privs = {staff = true},
 	func = function(name, param)
 		minetest.log("action", "[/music_play] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		if param:trim() == "" or param:trim() == nil then
+		if param:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] No arguments provided!")))
 			return
 		end
 		local title, playersraw
 		title, playersraw = param:match("([^ ]+) *(.*)")
-		if playersraw:trim() == "" or playersraw:trim() == nil then
+		if playersraw:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] No player names provided!")))
 			return
 		end
@@ -80,7 +80,7 @@ minetest.register_chatcommand("music_stop", {
 	privs = {staff = true},
 	func = function(name, param)
 		minetest.log("action", "[/music_stop] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		if param:trim() == "" or param:trim() == nil then
+		if param:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_stop] No player names provided!")))
 			return
 		end
