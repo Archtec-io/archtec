@@ -116,8 +116,12 @@ minetest.register_on_chat_message(function(name, message)
 	elseif archtec_chat.users[name].channels.main then -- normal message
 		channel = "main"
 	end
-	if archtec_chat.users[name].default and channel == nil then
-		channel = archtec_chat.users[name].default
+	-- default channel
+	local default_channel = archtec_chat.users[name].default
+	if default_channel and channel == nil then
+		if archtec_chat.channels[default_channel] and archtec_chat.channels[default_channel][name] then
+			channel = default_channel
+		end
 	end
 	if not channel then
 		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')")))

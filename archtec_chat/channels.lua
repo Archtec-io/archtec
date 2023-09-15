@@ -53,6 +53,10 @@ function archtec_chat.user.open(name)
 			data.channels[cname] = nil
 		end
 	end
+	-- cleanup default channel
+	if not get_cdef(data.default) then
+		data.default = nil
+	end
 
 	archtec_chat.users[name] = data
 
