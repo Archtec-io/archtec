@@ -82,12 +82,7 @@ local function list_ignored_players(name)
 	if next(ignores) == nil then
 		return ""
 	end
-	local string = ""
-	for key, _ in pairs(ignores) do
-		string = string .. key .. ", "
-	end
-	string = string:sub(1, #string - 2)
-	return string
+	return archtec.keys_to_string(ignores)
 end
 
 local function count_ignored_players(name)
@@ -102,10 +97,7 @@ minetest.register_chatcommand("ignore", {
 	privs = {interact = true},
 	func = function(name, param)
 		minetest.log("action", "[/ignore] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		local params = {}
-		for p in string.gmatch(param, "[^%s]+") do
-			table.insert(params, p)
-		end
+		local params = archtec.parse_params(param)
 		local action = params[1]
 		if action == "ignore" or action == "add" then
 			local target = archtec.get_and_trim(params[2])

@@ -2,15 +2,22 @@ local channel = {}
 local C = minetest.colorize
 local S = minetest.get_translator(minetest.get_current_modname())
 
+local max_channel_lenght = 15
+local max_user_channels = 10
+
 --[[
 local cdef_default = {
 	owner = "",
 	users = {},
 	invites = {},
-	keep = false,
 	public = false
 }
 ]]--
+
+local user_table = {
+	channels = {}
+	-- default = "staff"
+}
 
 local function get_cdef(cname)
 	if not archtec_chat.channels[cname] then return nil end
@@ -27,6 +34,45 @@ local function is_channel_owner(cdef, name)
 		return true
 	end
 	return false
+end
+
+function archtec_chat.user.open(name)
+	local data = minetest.deserialize(archtec_playerdata.get(name, "channels"))
+	if data == nil then
+		data = user_table -- init
+	end
+	-- add missing sub tables
+	for k, v in pairs(user_table) do
+		if not data[k] then
+			data[k] = v
+		end
+	end
+	-- remove old channels
+	for cname, _ in pairs(data.channels) do
+		if not get_cdef(cname) then
+			data.channels[cname] = nil
+		end
+	end
+	-- cleanup default channel
+	if not get_cdef(data.default) then
+		data.default = nil
+	end
+
+	archtec_chat.users[name] = data
+
+	-- join channels
+	for cname, _ in pairs(data.channels) do
+		channel.join(cname, name, "")
+	end
+end
+
+function archtec_chat.user.save(name)
+	archtec_playerdata.set(name, "channels", minetest.serialize(archtec_chat.users[name]))
+	for cname, _ in pairs(archtec_chat.users[name].channels) do
+		channel.leave(cname, name, "")
+	end
+
+	archtec_chat.users[name] = nil
 end
 
 function channel.send(cname, message, sender)
@@ -47,13 +93,11 @@ end
 
 function channel.create(cname, params)
 	minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. (params.owner or "") .. "'")
-	local def = {owner = params.owner or "", keep = params.keep or false, public = params.public or false, users = {}, invites = {}}
+	local def = {owner = params.owner or "", public = params.public or false, users = {}, invites = {}}
 	archtec_chat.channels[cname] = def
 end
 
 function channel.delete(cname, name)
-	local cdef = get_cdef(cname)
-	if cdef.keep then return end
 	minetest.log("action", "[archtec_chat] Delete channel '" .. cname .. "' by '" .. name .. "'")
 	channel.send(cname, name .. " deleted the channel.")
 	archtec_chat.channels[cname] = nil
@@ -67,7 +111,7 @@ function channel.join(cname, name, msg)
 	else
 		channel.send(cname, name .. " joined the channel.")
 	end
-	archtec_chat.users[name][cname] = true
+	archtec_chat.users[name].channels[cname] = true
 end
 
 function channel.leave(cname, name, msg)
@@ -77,11 +121,8 @@ function channel.leave(cname, name, msg)
 	else
 		channel.send(cname, name .. " left the channel.")
 	end
-	if archtec.count_keys(cdef.users) == 1 then -- channel cleanup
-		channel.delete(cname, "Service")
-	end
 	cdef.users[name] = nil
-	archtec_chat.users[name][cname] = nil
+	archtec_chat.users[name].channels[cname] = nil
 	-- unset default channel
 	if archtec_chat.users[name].default == cname then
 		archtec_chat.users[name].default = nil
@@ -122,12 +163,7 @@ local function list_table(t)
 	if next(t) == nil then
 		return ""
 	end
-	local string = ""
-	for key, _ in pairs(t) do
-		string = string .. key .. ", "
-	end
-	string = string:sub(1, #string - 2)
-	return string
+	return archtec.keys_to_string(t)
 end
 
 local function get_cname(c)
@@ -145,7 +181,7 @@ local help_list = {
 	join = {
 		name = "join",
 		description = "Join or create a channel. Add 'public' to your command to make new the created channel public. Add 'default' to your command to make the new created channel your default channel. (# is optional)",
-		param = "<channel> <keep public>",
+		param = "<channel> <public> <default>",
 		shortcut = "j",
 		usage = "/c join #mychannel {public} {default}"
 	},
@@ -226,14 +262,11 @@ minetest.register_chatcommand("c", {
 	privs = {interact = true, shout = true},
 	func = function(name, param)
 		minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		if param:trim() == "" or param:trim() == nil then
+		if archtec.get_and_trim(param) == "" then
 			minetest.chat_send_player(name, help_all())
 			return
 		end
-		local params = {}
-		for p in string.gmatch(param, "[^%s]+") do
-			table.insert(params, p)
-		end
+		local params = archtec.parse_params(param)
 		local action, p1, p2 = params[1], params[2], params[3]
 		if action == "join" or action == "j" then
 			local c = archtec.get_and_trim(p1)
@@ -249,11 +282,16 @@ minetest.register_chatcommand("c", {
 				minetest.chat_send_player(name, C("#00BD00", S("[c/join] Joined #main")))
 				return
 			end
+			-- limit channels per user
+			if #archtec_chat.users[name].channels >= max_user_channels then
+				minetest.chat_send_player(name, C("#00BD00", S("[c/join] You can't be in more than @1 channels!", max_user_channels)))
+				return
+			end
 			-- create if not registered
 			if not cdef then
 				local public = archtec.get_and_trim(params[3]) == "public" or archtec.get_and_trim(params[4]) == "public"
 				local default_channel = archtec.get_and_trim(params[3]) == "default" or archtec.get_and_trim(params[4]) == "default"
-				if type(c) == "string" and string.len(c) <= 15 then
+				if type(c) == "string" and c:len() <= max_channel_lenght then
 					channel.create(c, {owner = name, public = public})
 					if public then
 						channel.join(c, name, name .. " created the public channel.")
@@ -399,7 +437,7 @@ minetest.register_chatcommand("c", {
 				minetest.chat_send_player(name, C("#FF0000", S("[c/find] @1 is not online!", target)))
 				return
 			end
-			local channels = archtec_chat.users[target]
+			local channels = archtec_chat.users[target].channels
 			if next(channels) == nil then
 				minetest.chat_send_player(name, C("#FF0000", S("[c/find] @1 is in no channels!", target)))
 				return

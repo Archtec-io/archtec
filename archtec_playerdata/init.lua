@@ -27,11 +27,11 @@ local struct = {
 	died = 0,
 	playtime = 0,
 	chatmessages = 0,
-	-- joined = 0, -- legacy -> use 'first_join'
 	first_join = 0,
 	join_count = 0,
 	thank_you = 0,
 	ignores = "",
+	channels = "",
 	free_votes = 0, -- we use 0 to allow later changes of the max value
 	s_help_msg = true, -- help msg
 	s_tbw_show = true, -- tool breakage warnings
@@ -71,14 +71,14 @@ local function valid_player(name)
 	end
 end
 
-local function add_defaults(t)
-	local table = table.copy(t)
+local function add_defaults(stats)
+	local t = table.copy(stats)
 	for k, v in pairs(struct) do
-		if not table[k] then
-			table[k] = v
+		if not t[k] then
+			t[k] = v
 		end
 	end
-	return table
+	return t
 end
 
 local function in_struct(key)
