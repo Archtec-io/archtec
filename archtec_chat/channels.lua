@@ -39,7 +39,7 @@ end
 function archtec_chat.user.open(name)
 	local data = minetest.deserialize(archtec_playerdata.get(name, "channels"))
 	if data == nil then
-		data = {channels = {}} -- init
+		data = user_table -- init
 	end
 	-- add missing sub tables
 	for k, v in pairs(user_table) do

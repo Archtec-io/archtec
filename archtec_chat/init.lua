@@ -11,9 +11,9 @@ archtec_chat.channel.create("staff", {owner = "", public = false})
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-
 	archtec_chat.user.open(name)
 	archtec_chat.channel.join("main", name, "")
+
 	if minetest.get_player_privs(name).staff then
 		archtec_chat.channel.join("staff", name, "")
 	end
