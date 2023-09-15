@@ -87,17 +87,6 @@ minetest.register_chatcommand("falling_nodes_cleanup", {
 	end
 })
 
-archtec.discord_link = "https://discord.gg/txCMTMwBWm"
-
-minetest.register_chatcommand("discord", {
-	description = "Discord server link",
-	privs = {interact = true},
-	func = function(name)
-		minetest.log("action", "[/discord] executed by '" .. name .. "'")
-		minetest.chat_send_player(name, S("Discord server link: @1", archtec.discord_link))
-	end
-})
-
 minetest.register_chatcommand("sd", {
 	description = "Shuts the server down after a 10 seconds delay.",
 	privs = {staff = true},
