@@ -82,12 +82,7 @@ local function list_ignored_players(name)
 	if next(ignores) == nil then
 		return ""
 	end
-	local string = ""
-	for key, _ in pairs(ignores) do
-		string = string .. key .. ", "
-	end
-	string = string:sub(1, #string - 2)
-	return string
+	return archtec.keys_to_string(ignores)
 end
 
 local function count_ignored_players(name)

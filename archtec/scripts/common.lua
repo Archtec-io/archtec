@@ -102,3 +102,12 @@ function archtec.parse_params(param)
 	end
 	return params
 end
+
+function archtec.keys_to_string(keys, delim)
+	local list = {}
+	delim = delim or ", "
+	for key, _ in pairs(keys) do
+		list[#list + 1] = key
+	end
+	return table.concat(list, delim)
+end

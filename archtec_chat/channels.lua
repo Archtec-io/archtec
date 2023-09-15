@@ -159,12 +159,7 @@ local function list_table(t)
 	if next(t) == nil then
 		return ""
 	end
-	local string = ""
-	for key, _ in pairs(t) do
-		string = string .. key .. ", "
-	end
-	string = string:sub(1, #string - 2)
-	return string
+	return archtec.keys_to_string(t)
 end
 
 local function get_cname(c)

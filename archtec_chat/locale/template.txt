@@ -8,6 +8,7 @@ Usage: @1=
 Archtec chat command reference=
 [c/join] No channelname provided!=
 [c/join] Joined #main=
+[c/join] You can't be in more than @1 channels!=
 [c/join] Channelname contains forbidden characters or is too long!=
 [c/join] You are already in this channel!=
 [c/join] You aren't invited!=
