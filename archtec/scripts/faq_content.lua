@@ -363,6 +363,7 @@ archtec.faq.register("Node placement limits", {
 Drawers:
 Minetest has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
 Each drawer adds 1-4 entities resulting in the number of drawers per mapblock being restricted.
+You can't place new drawers when the mapblock contains more than 70 entities.
 
 Hoppers:
 Hoppers add a significant amount of server load and for performance reasons each player is restricted to 10 hoppers in any given 24 node radius.

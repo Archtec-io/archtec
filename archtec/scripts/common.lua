@@ -66,7 +66,7 @@ end
 
 function archtec.count_keys(table)
 	local c = 0
-	for k, _ in pairs(table) do
+	for _ in pairs(table) do
 		c = c + 1
 	end
 	return c

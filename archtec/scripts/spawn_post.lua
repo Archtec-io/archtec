@@ -26,6 +26,8 @@ local node_list = {
 	"jonez:ruin_vine",
 	"jonez:ruin_creeper",
 	"xdecor:ivy",
+	"homedecor:carboard_box",
+	"homedecor:carboard_box_big",
 }
 
 for _, node in ipairs(node_list) do
@@ -65,5 +67,22 @@ if minetest.get_modpath("signs_lib") then
 		allow_yard = true,
 		use_texture_alpha = "clip",
 		locked = true, -- main difference
+	})
+end
+
+if minetest.get_modpath("xdecor") then
+	local mod = "^[multiply:#8c8c8c"
+	local tiles = {}
+	for k, v in pairs(minetest.registered_nodes["xdecor:mailbox"].tiles) do
+		tiles[k] = v .. mod
+	end
+	minetest.register_node("archtec:mailbox_fake", {
+		description = "Mailbox (Fake)",
+		tiles = tiles,
+		groups = {cracky = 3, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
+		is_ground_content = false,
+		sounds = default.node_sound_metal_defaults(),
+		buildable_to = true,
+		paramtype2 = "facedir",
 	})
 end
