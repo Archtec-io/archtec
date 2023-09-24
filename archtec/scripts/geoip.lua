@@ -1,8 +1,9 @@
 local http = assert(...)
-
 local geoip = {}
+archtec.geoip_enabled = true
 
 if not minetest.get_player_ip then
+	archtec.geoip_enabled = false
 	minetest.log("error", "[geoip] minetest.get_player_ip not available!")
 	return
 end
@@ -87,6 +88,8 @@ end
 
 -- query ip on join, record in logs and execute callback
 minetest.register_on_joinplayer(function(player)
+	if not archtec.geoip_enabled then return end -- Kill switch
+
 	local name = player:get_player_name()
 	local ip = minetest.get_player_ip(name)
 	if not ip then
