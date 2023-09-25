@@ -96,6 +96,8 @@ local function send_report(name, report)
 			}}
 		})
 
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Report successfully created. GitHub url: @1", parse.html_url)))
+
 		if json_dc == nil then
 			return false
 		else
@@ -126,6 +128,5 @@ minetest.register_chatcommand("report", {
 			return
 		end
 		send_report(name, param)
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Report successfully created.")))
 	end
 })

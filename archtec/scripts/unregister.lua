@@ -36,3 +36,7 @@ end
 if minetest.get_modpath("ambience") then
 	minetest.unregister_chatcommand("mvol")
 end
+
+if minetest.get_modpath("prefab") then
+	minetest.unregister_item("prefab:boat")
+end
