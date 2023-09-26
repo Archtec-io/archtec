@@ -53,6 +53,7 @@ dofile(path.."luac_logging.lua")
 dofile(path.."faq.lua")
 dofile(path.."faq_content.lua")
 dofile(path.."spawn_post.lua")
+dofile(path.."playerlist.lua")
 
 local http = minetest.request_http_api()
 if http then

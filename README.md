@@ -45,6 +45,7 @@ unified color for a command "#FF8800" (orange)
 
 ##### Media:
 - `item_drop_pickup.ogg` - PilzAdam, CC BY-SA 3.0 (modified by Niklp)
+- `archtec_background.png` - LizzyFleckenstein, GPL-3.0-only
 - `archtec_settings_icon.png` - unknown, unknown (modified by Niklp)
 - `archtec_biofuel_fuel_can.png` - Bla based on work of El-Naso, CC BY-SA 4.0
 - `archtec_biofuel_fuel_can_empty.png` - Bla based on work of El-Naso, CC BY-SA 4.0
