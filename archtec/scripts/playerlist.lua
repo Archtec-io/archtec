@@ -61,7 +61,7 @@ end
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	playerlist.controls[name] = {
-		aux1 = false
+		zoom = false
 	}
 end)
 
@@ -87,14 +87,14 @@ minetest.register_globalstep(function(dtime)
 		end
 
 		-- Press
-		if controls.aux1 == true and playerlist.controls[name].aux1 == false then
-			playerlist.controls[name].aux1 = true
+		if controls.zoom == true and playerlist.controls[name].zoom == false then
+			playerlist.controls[name].zoom = true
 			hud_show(player)
 		end
 
 		-- Release
-		if controls.aux1 == false and playerlist.controls[name].aux1 == true then
-			playerlist.controls[name].aux1 = false
+		if controls.zoom == false and playerlist.controls[name].zoom == true then
+			playerlist.controls[name].zoom = false
 			hud_remove(player)
 		end
 	end

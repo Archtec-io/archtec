@@ -134,6 +134,10 @@ player_monoids.speed = make_monoid({
 	apply = function(multiplier, player)
 		local ov = player:get_physics_override()
 		ov.speed = multiplier
+		-- Limit max speed (may causes issues, remove when needed)
+		if ov.speed > 5 then
+			ov.speed = 5
+		end
 		player:set_physics_override(ov)
 	end,
 })
