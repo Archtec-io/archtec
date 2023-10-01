@@ -92,6 +92,14 @@ minetest.register_on_chat_message(function(name, message)
 	local cc = archtec.count_keys(archtec_chat.users[name].channels)
 	-- channelname resolver
 	local channel
+	-- default channel
+	local default_channel = archtec_chat.users[name].default
+	if default_channel then
+		if archtec_chat.channels[default_channel] and archtec_chat.channels[default_channel].users[name] then
+			channel = default_channel
+		end
+	end
+
 	if cc == 1 then
 		channel = next(archtec_chat.users[name].channels)
 	end
@@ -113,16 +121,10 @@ minetest.register_on_chat_message(function(name, message)
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] #@1 does not exist or you aren't a channel member!", cname)))
 			return true
 		end
-	elseif archtec_chat.users[name].channels.main then -- normal message
+	elseif archtec_chat.users[name].channels.main and channel == nil then -- normal message
 		channel = "main"
 	end
-	-- default channel
-	local default_channel = archtec_chat.users[name].default
-	if default_channel and channel == nil then
-		if archtec_chat.channels[default_channel] and archtec_chat.channels[default_channel][name] then
-			channel = default_channel
-		end
-	end
+
 	if not channel then
 		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')")))
 		return true
