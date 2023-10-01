@@ -61,7 +61,7 @@ end
 local function vpn_check(name, ip, query)
 	if not archtec.vpn_enabled then return end -- Kill switch
 	if not cache[ip] and query then
-		query_ip(ip)
+		query_ip(name, ip)
 		return
 	end
 	check_ip()

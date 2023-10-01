@@ -26,8 +26,8 @@ local node_list = {
 	"jonez:ruin_vine",
 	"jonez:ruin_creeper",
 	"xdecor:ivy",
-	"homedecor:carboard_box",
-	"homedecor:carboard_box_big",
+	"homedecor:cardboard_box",
+	"homedecor:cardboard_box_big",
 }
 
 for _, node in ipairs(node_list) do
