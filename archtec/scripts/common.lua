@@ -111,3 +111,17 @@ function archtec.keys_to_string(keys, delim)
 	end
 	return table.concat(list, delim)
 end
+
+archtec.time = {}
+
+function archtec.time.minutes(minutes)
+	return 60 * minutes
+end
+
+function archtec.time.hours(hours)
+	return 60 * 60 * hours
+end
+
+function archtec.time.days(days)
+	return 60 * 60 * 24 * days
+end

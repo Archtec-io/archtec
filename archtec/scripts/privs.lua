@@ -5,7 +5,7 @@ minetest.register_privilege("forceload", (S("Allows you to forceload your machin
 minetest.register_privilege("archtec_chainsaw", (S("Allows you to use the chainsaw")))
 
 local C = minetest.colorize
-archtec.big_areas_playtime = 108000 -- 30h playtime
+archtec.big_areas_playtime = archtec.time.hours(30) -- 30h playtime
 
 function archtec.check_areas_high_limit(name, privs)
 	if privs.areas_high_limit then

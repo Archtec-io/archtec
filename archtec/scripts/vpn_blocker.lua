@@ -10,7 +10,7 @@ if not iphub_key or iphub_key == "" then
 end
 
 local cache = {}
-local ttl = 14400 -- 4 h
+local ttl = archtec.time.hours(4)
 
 local function cleanup()
 	local expire = os.time() - ttl

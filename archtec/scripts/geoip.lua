@@ -9,7 +9,7 @@ if not minetest.get_player_ip then
 end
 
 -- TTL for cached results: 4 hours
-local cache_ttl = 14400
+local cache_ttl = archtec.time.hours(4)
 local cache = {}
 
 -- Execute cache cleanup every cache_ttl seconds

@@ -1,4 +1,4 @@
-local MESSAGE_INTERVAL = 600
+local MESSAGE_INTERVAL = archtec.time.minutes(10)
 local S = archtec.S
 local discord_link = "https://discord.gg/txCMTMwBWm"
 local matrix_link = "https://matrix.to/#/#archtec:matrix.org"

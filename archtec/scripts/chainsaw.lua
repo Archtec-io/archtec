@@ -2,6 +2,8 @@ if not minetest.get_modpath("choppy") then return end
 
 local S = archtec.S
 local api = choppy.api
+local ptime_min = archtec.time.hours(24)
+local days_played = archtec.time.days(7)
 
 -- disable is_enabled() since we don't use the initialized function
 choppy.api.is_enabled = function(...) return true end
@@ -11,7 +13,7 @@ local function conditions(name)
 	local nodes_dug = archtec_playerdata.get(name, "nodes_dug")
 	local nodes_placed = archtec_playerdata.get(name, "nodes_placed")
 	local timestap = archtec_playerdata.get(name, "first_join")
-	if timestap > (os.time() - 604800) or playtime < 86400 or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
+	if timestap > (os.time() - days_played) or playtime < ptime_min or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
 		return false
 	end
 	return true

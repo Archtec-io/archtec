@@ -1,6 +1,7 @@
 local S = archtec.S
 local cache = {}
 local max_ignored = 10
+local cache_ttl = archtec.time.hours(7)
 
 local function get_list(name)
 	if not name or name == "" then return {} end
@@ -28,7 +29,7 @@ end
 local time = 0
 minetest.register_globalstep(function(dtime)
 	time = time + dtime
-	if time > 25200 then -- 7h
+	if time > cache_ttl then
 		purge_cache()
 		time = 0
 	end

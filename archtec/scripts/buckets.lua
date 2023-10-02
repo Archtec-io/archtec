@@ -7,8 +7,8 @@ local liquid_list = {
 	"bucket:bucket_lava",
 }
 
-archtec.adv_buckets_playtime = 180000 -- 50 h playtime
-local hours = archtec.adv_buckets_playtime / 60
+local hours = 50
+archtec.adv_buckets_playtime = archtec.time.hours(hours) -- 50 h playtime
 
 local function try_grant_lava_priv(name)
 	local playtime = archtec_playerdata.get(name, "playtime")

@@ -1,5 +1,5 @@
 local S = archtec.S
-local timeout = 1800 -- kick after 30 mins
+local timeout = archtec.time.hours(1) -- kick after 1h
 local timer = 0
 
 local times, tag, ppos = {}, {}, {}
