@@ -12,7 +12,7 @@ local F = minetest.formspec_escape
 local FS = function(...) return F(S(...)) end
 local floor, type, C = math.floor, type, minetest.colorize
 local sql = minetest.get_mod_storage()
-local min_xp = 2000 -- modify by hand
+local min_xp = 10000 -- modify by hand
 
 -- config
 local save_interval = 60
@@ -623,6 +623,7 @@ local function calc_xp(data)
 end
 
 local function gen_ranking()
+	rank = {}
 	rank_gentime = os.time()
 	-- collect data
 	local data = sql:to_table().fields
