@@ -138,3 +138,7 @@ if minetest.get_modpath("caverealms") then
 		drop = "caverealms:stone_with_moss"
 	})
 end
+
+if minetest.get_modpath("carts") then
+	carts.speed_max = 8
+end

@@ -11,11 +11,10 @@ globals = {
 	"archtec_playerdata",
 	"archtec_pvp",
 	"archtec_teleport",
-	"discord",
+	"archtec_votes",
 	"mapserver",
 	"notifyTeam",
 	"player_monoids",
-	"vote",
 }
 
 read_globals = {
@@ -79,7 +78,7 @@ files["archtec/scripts/common.lua"] = {
 }
 
 files["archtec/scripts/overrides.lua"] = {
-	globals = {"minetest.registered_entities"},
+	globals = {"minetest.registered_entities", "carts"},
 }
 
 files["archtec/init.lua"] = {

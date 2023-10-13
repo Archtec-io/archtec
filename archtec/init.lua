@@ -63,9 +63,9 @@ if http then
 end
 
 minetest.register_on_mods_loaded(function()
-	if not minetest.global_exists("discord") then
-		discord = {}
-		discord.send = function(...)
+	if not minetest.global_exists("archtec_matterbridge") then
+		archtec_matterbridge = {}
+		archtec_matterbridge.send = function(...)
 			-- dummy function
 		end
 	end

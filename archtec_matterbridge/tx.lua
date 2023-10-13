@@ -1,7 +1,7 @@
 local http = ...
 
 -- normal message in chat channel
-discord.send = function(message, channel, event)
+archtec_matterbridge.send = function(message, channel, event)
 	http.fetch({
 		url = archtec_matterbridge.url .. "/api/message",
 		method = "POST",
@@ -26,7 +26,7 @@ minetest.override_chatcommand("me", {
 		local msg = archtec.get_and_trim(param)
 		if msg ~= "" then
 			minetest.chat_send_all("* " .. name .. " " .. param)
-			discord.send(":speech_left: " .. ('%s *%s*'):format(name, param))
+			archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(name, param))
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[/me] No message provided!"))
 		end
@@ -37,7 +37,7 @@ minetest.override_chatcommand("me", {
 -- join player message
 local old_join = minetest.send_join_message
 function minetest.send_join_message(player_name)
-	discord.send(":information_source: " .. player_name .. " joined the game.")
+	archtec_matterbridge.send(":information_source: " .. player_name .. " joined the game.")
 	old_join(player_name)
 end
 
@@ -49,19 +49,19 @@ function minetest.send_leave_message(player_name, timed_out)
 		return
 	end
 	if timed_out then
-		discord.send(":information_source: " .. player_name .. " lost the connection.")
+		archtec_matterbridge.send(":information_source: " .. player_name .. " lost the connection.")
 	else
-		discord.send(":information_source: " .. player_name .. " left the game.")
+		archtec_matterbridge.send(":information_source: " .. player_name .. " left the game.")
 	end
 	old_leave(player_name, timed_out)
 end
 
 -- initial message on start
 minetest.after(0.1, function()
-	discord.send(":green_circle: Server is back online.")
+	archtec_matterbridge.send(":green_circle: Server is back online.")
 end)
 
 -- shutdown message
 minetest.register_on_shutdown(function()
-	discord.send(":warning: Server is shutting down...")
+	archtec_matterbridge.send(":warning: Server is shutting down...")
 end)

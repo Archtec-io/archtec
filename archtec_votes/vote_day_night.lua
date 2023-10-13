@@ -29,7 +29,7 @@ minetest.register_chatcommand("vote_day", {
 			return
 		end
 
-		vote.new_vote(name, {
+		archtec_votes.new_vote(name, {
 			description = "Make day",
 			help = "/yes or /no",
 			name = nil,
@@ -81,7 +81,7 @@ minetest.register_chatcommand("vote_night", {
 			return
 		end
 
-		vote.new_vote(name, {
+		archtec_votes.new_vote(name, {
 			description = "Make night",
 			help = "/yes or /no",
 			name = nil,

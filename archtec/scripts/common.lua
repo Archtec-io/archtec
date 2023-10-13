@@ -35,7 +35,7 @@ function core.kick_player(player_name, reason)
 	end
 	if archtec.is_online(player_name) then -- xban kicks also offline players
 		minetest.chat_send_all(minetest.colorize("#FF0000", player_name .. " got kicked! Reason: " .. reason))
-		discord.send(":bangbang: " .. player_name .. " got kicked! Reason: " .. reason)
+		archtec_matterbridge.send(":bangbang: " .. player_name .. " got kicked! Reason: " .. reason)
 		archtec.silent_leave[player_name] = true
 	end
 	return core.disconnect_player(player_name, reason)

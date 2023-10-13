@@ -30,8 +30,6 @@ local MP = minetest.get_modpath("archtec_matterbridge")
 if http and archtec_matterbridge.token then
 	minetest.log("action", "[archtec_matterbridge] connecting to matterbridge at: " .. archtec_matterbridge.url)
 
-	discord = {}
-
 	loadfile(MP .. "/tx.lua")(http)
 	loadfile(MP .. "/rx.lua")(http)
 end

@@ -22,7 +22,7 @@ local function hud_show(player)
 	})}
 	huds[#huds + 1] = player:hud_add({
 		hud_elem_type = "text",
-		position  = {x = 0.5, y = 0},
+		position = {x = 0.5, y = 0},
 		offset = {x = 0, y = 23},
 		text = #players .. "/" .. max_players,
 		alignment = {x = 0, y = 1},

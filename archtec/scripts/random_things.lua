@@ -44,7 +44,7 @@ minetest.register_chatcommand("thankyou", {
 		end
 		archtec_playerdata.mod(target, "thank_you", 1)
 		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2", name, target)))
-		discord.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**")
+		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**")
 	end
 })
 
@@ -95,7 +95,7 @@ minetest.register_chatcommand("sd", {
 		-- notify all
 		local logmsg = name .. " requested a server shutdown in " .. delay .. " seconds."
 		minetest.log("warning", logmsg)
-		discord.send(":anger: " .. logmsg)
+		archtec_matterbridge.send(":anger: " .. logmsg)
 		minetest.chat_send_all(minetest.colorize("#FF0", S("@1 requested a server shutdown in @2 seconds.", name, delay)))
 		-- shutdown, ask for reconnect
 		minetest.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, tonumber(delay))
