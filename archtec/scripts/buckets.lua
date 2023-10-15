@@ -18,7 +18,7 @@ local function try_grant_lava_priv(name)
 		notifyTeam("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")
 		return true
 	else
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava] You don't have @1 hours (or more) playtime.", hours)))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava] You don't have @1 hours (or more) playtime", hours)))
 		return false
 	end
 end

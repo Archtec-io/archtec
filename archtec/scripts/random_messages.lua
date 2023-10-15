@@ -8,7 +8,7 @@ local random_messages = {
 	S("Visit our Discord server: @1", discord_link),
 	S("Join our Matrix space: @1", matrix_link),
 	S("Abusing '/vote_kick' will result in a ban for you"),
-	S("Read our rules at the spawn"),
+	S("Read our rules in '/news' or at the spawn"),
 	S("If you find a bug use '/report <message>'"),
 	S("Server staff: Niklp (Admin), LonnySophie (Mod), HomerJayS (Mod)"),
 	S("Change the color of your name with '/namecolor <color>'"),

@@ -1,7 +1,7 @@
 local S = archtec.S
 local cache = {}
 local max_ignored = 10
-local cache_ttl = archtec.time.hours(7)
+local cache_ttl = archtec.time.hours(10)
 
 local function get_list(name)
 	if not name or name == "" then return {} end

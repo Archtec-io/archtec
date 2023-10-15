@@ -59,3 +59,9 @@ unified color for a command "#FF8800" (orange)
 - `stamina_hud_poison.png` - BlockMen, CC-BY 3.0
 - `stamina_hud_fg.png` - PilzAdam, WTFPL (modified by BlockMen)
 - `stamina_hud_bg.png` - PilzAdam, WTFPL (modified by BlockMen)
+
+### Notes for translators
+
+Please use informal voice in translations. (E.g. "Du" instead of "Sie").
+
+Since there is no equivalent to the English "they" (as singular form) in German, replace "they" by "ihr/sein" ("her/his").
