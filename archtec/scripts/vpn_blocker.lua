@@ -1,5 +1,7 @@
 local http = assert(...)
 local iphub_key = minetest.settings:get("iphub_key")
+local ret_val = nil
+local kick_msg = "Please turn off your VPN."
 
 archtec.vpn_enabled = true
 
@@ -28,14 +30,19 @@ local function check_ip(name, ip)
 	if cache[ip].result == 0 then
 		minetest.log("action", "[archtec_vpn_blocker] Passing good-ip-player " .. name .. " [" .. ip .. "]")
 	else
-		minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
-		notifyTeam("[archtec_vpn_blocker] Kicking bad-ip-player ".. name .."' (IP: " .. ip .. ")")
-		minetest.after(0.01, function()
-			if minetest.get_player_by_name(name) then
-				minetest.log("action", "[archtec_vpn_blocker] kicked '" .. name .. "'")
-				minetest.kick_player(name, "Please turn off your VPN.")
-			end
-		end)
+		if archtec.is_online(name) then
+			minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
+			notifyTeam("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+			minetest.after(0.01, function()
+				if minetest.get_player_by_name(name) then
+					minetest.kick_player(name, kick_msg)
+				end
+			end)
+		else -- player is joining right now
+			minetest.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
+			notifyTeam("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+			ret_val = kick_msg
+		end
 	end
 end
 
@@ -64,7 +71,7 @@ local function vpn_check(name, ip, query)
 		query_ip(name, ip)
 		return
 	end
-	check_ip()
+	check_ip(name, ip)
 end
 
 minetest.register_on_joinplayer(function(player)
@@ -75,12 +82,13 @@ minetest.register_on_joinplayer(function(player)
 	end
 end)
 
---[[ Won't work yet
-minetest.register_on_authplayer(function(name, ip, is_success)
-	if is_success then
-		if name and ip then
-			vpn_check(name, ip, false) -- Don't query a http request but block if in cache
+minetest.register_on_prejoinplayer(function(name, ip) -- on_authplayer won't work
+	if name and ip then
+		vpn_check(name, ip, false) -- Don't query a http request but block if in cache
+		if ret_val then
+			local msg = ret_val
+			ret_val = nil
+			return msg
 		end
 	end
 end)
-]]---
