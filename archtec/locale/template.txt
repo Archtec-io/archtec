@@ -1,8 +1,8 @@
 # textdomain: archtec
-[request_lava] Congratulations! You have been granted the 'adv_buckets' privilege=
-[request_lava] You don't have @1 hours (or more) playtime=
-[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account=
+[request_lava]=
+You don't have @1 hours (or more) playtime=
 Congratulations! You have been granted the '@1' privilege=
+[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account=
 For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.=
 Archtec FAQ (/faq)=
 Close=
@@ -44,7 +44,7 @@ You can't place more 'Drawers' in this area! (Too many entities)=
 Archtec staff member priv=
 Allows you to forceload your machines=
 Allows you to use the chainsaw=
-[request_areas_high_limit] Congratulations! You have been granted the 'areas_high_limit' privilege=
+[request_areas_high_limit]=
 [request_areas_high_limit] You do not have 30 hours (or more) playtime=
 To check someone's stats use '/stats <name>'=
 Visit our Discord server: @1=
