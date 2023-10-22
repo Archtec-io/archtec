@@ -1,0 +1,11 @@
+local metric_nodes = monitoring.gauge("registered_node_count", "number of registered nodes")
+local metric_items = monitoring.gauge("registered_items_count", "number of registered items")
+local metric_entities = monitoring.gauge("registered_entities_count", "number of registered entities")
+local metric_abm = monitoring.gauge("registered_abm_count", "number of registered abm's")
+
+minetest.after(5, function()
+	metric_nodes.set(archtec.count_keys(minetest.registered_nodes))
+	metric_items.set(archtec.count_keys(minetest.registered_items))
+	metric_entities.set(archtec.count_keys(minetest.registered_entities))
+	metric_abm.set(archtec.count_keys(minetest.registered_abms))
+end)
