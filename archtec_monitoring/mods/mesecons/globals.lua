@@ -15,7 +15,7 @@ monitoring.wrap_global({"mesecon", "vm_begin"}, "mesecons_vm_begin")
 monitoring.wrap_global({"mesecon", "vm_abort"}, "mesecons_vm_abort")
 monitoring.wrap_global({"mesecon", "vm_commit"}, "mesecons_vm_commit")
 
-if minetest.settings:get_bool("monitoring.mesecons.verbose") then
+if minetest.settings:get_bool("monitoring.verbose_mesecons") then
 	monitoring.wrap_global({"mesecon", "get_node_force"}, "mesecons_get_node_force")
 	monitoring.wrap_global({"mesecon", "activate"}, "mesecons_activate")
 	monitoring.wrap_global({"mesecon", "deactivate"}, "mesecons_deactivate")

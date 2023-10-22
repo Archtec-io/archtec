@@ -1,4 +1,3 @@
-
 monitoring = {
 	version_major = 23,
 	version_minor = 11,

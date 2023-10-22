@@ -13,7 +13,7 @@ local metric_time = monitoring.counter(
 local metric_time_max = monitoring.gauge(
 	"mesecons_luacontroller_nodetimer_time_max",
 	"max time of luac nodetimer calls",
-	{ autoflush=true }
+	{autoflush = true}
 );
 
 for a = 0, 1 do -- 0 = off  1 = on
