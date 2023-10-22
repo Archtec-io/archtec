@@ -35,6 +35,12 @@ unified color for a command "#FF8800" (orange)
 
 `archtec_matterbridge.token` Matterbridge API token
 
+`monitoring.prometheus_push_url` Prometheus push url
+
+`monitoring.verbose` Verbose monitoring of builtin functions
+
+`monitoring.verbose_mesecons` Verbose monitoring of mesecons functions
+
 `archtec_playerdata.debug_mode` Enable debug mode
 
 ### License
