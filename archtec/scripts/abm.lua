@@ -1,80 +1,66 @@
-local group_grass = {
-	"default:dry_grass_1",
-	"default:dry_grass_2",
-	"default:dry_grass_3",
-	"default:dry_grass_4",
-	"default:dry_grass_5",
-	"default:fern_1",
-	"default:fern_2",
-	"default:fern_3",
-	"default:grass_1",
-	"default:grass_2",
-	"default:grass_3",
-	"default:grass_4",
-	"default:grass_5",
-	"default:junglegrass",
-	"default:marram_grass_1",
-	"default:marram_grass_2",
-	"default:marram_grass_3",
-}
-
-local group_dry_grass = {
-	"default:dry_grass_1",
-	"default:dry_grass_2",
-	"default:dry_grass_3",
-	"default:dry_grass_4",
-	"default:dry_grass_5",
-}
-
--- override abms
-for _, ab in ipairs(minetest.registered_abms) do
-
-	local label = ab.label or ""
-	local node1 = ab.nodenames and ab.nodenames[1] or ""
-
-	if label == "spawn bee hives" and node1 == "group:leaves" then
-		ab.nodenames = {"default:leaves"}
+local function replace_groups(group)
+	if group:sub(1, 6) ~= "group:" then -- simple item
+		return group
 	end
 
-	if label == "mobs_animal:bunny spawning" then
-		ab.chance = ab.chance * 0.75
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:chicken spawning" then
-		ab.chance = ab.chance * 0.75
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:cow spawning" then
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:kitten spawning" then
-		ab.chance = ab.chance * 0.75
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:panda spawning" then
-		ab.chance = ab.chance * 0.75
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:sheep_white spawning" then
-		ab.neighbours = group_grass
-	elseif label == "mobs_animal:pumba spawning" then
-		ab.chance = ab.chance * 0.75
-		ab.neighbours = group_dry_grass
+	local matches = {}
+	local groupname = group:sub(7, #group)
+	for name, def in pairs(minetest.registered_nodes) do
+		for g, _ in pairs(def.groups) do
+			if g == groupname then
+				table.insert(matches, name)
+			end
+		end
 	end
 
-	if label == "mobs_monster:dirt_monster spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:dungeon_master spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:mese_monster spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:oerkki spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:sand_monster spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:spider spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:stone_monster spawning" then
-		ab.chance = ab.chance * 0.5
-	elseif label == "mobs_monster:tree_monster spawning" then
-		ab.chance = ab.chance * 0.5
+	return matches
+end
+
+local function replace(input)
+	local nodenames = {}
+
+	if type(input) == "table" then
+		for _, group in ipairs(input) do
+			local new_nodenames = replace_groups(group)
+			if type(new_nodenames) == "table" then
+				table.insert_all(nodenames, new_nodenames)
+			else
+				table.insert(nodenames, new_nodenames)
+			end
+		end
+	else
+		local new_nodenames = replace_groups(input)
+		if type(new_nodenames) == "table" then
+			table.insert_all(nodenames, new_nodenames)
+		else
+			table.insert(nodenames, new_nodenames)
+		end
+	end
+
+	if nodenames ~= "" then
+		return nodenames
 	end
 end
+
+-- override abms
+minetest.register_on_mods_loaded(function()
+	for _, ab in ipairs(minetest.registered_abms) do
+		local label = ab.label or ""
+
+		-- optimize group resolving
+		ab.nodenames = replace(ab.nodenames or "")
+		ab.neighbors = replace(ab.neighbors or "")
+
+		-- modify spawn chances of mobs
+		if label:sub(1, 12) == "mobs_animal:" then
+			ab.chance = ab.chance * 0.75
+		end
+
+		if label:sub(1, 13) == "mobs_monster:" then
+			ab.chance = ab.chance * 0.5
+		end
+	end
+end)
 
 -- Slow ABM/NodeTimer/LBM logger
 local get_us_time, P2S = minetest.get_us_time, minetest.pos_to_string
