@@ -46,12 +46,12 @@ dofile(MP.."/builtin/uptime.lua")
 dofile(MP.."/builtin/settings.lua")
 
 if minetest.get_modpath("digilines") then
-	minetest.log("action", "[archtec_monitoring] enabling digilines integrations")
+	minetest.log("action", "[archtec_monitoring] Enabling digilines integrations")
 	dofile(MP.."/mods/digilines/init.lua")
 end
 
 if minetest.get_modpath("mesecons") then
-	minetest.log("action", "[archtec_monitoring] enabling mesecons integrations")
+	minetest.log("action", "[archtec_monitoring] Enabling mesecons integrations")
 	dofile(MP.."/mods/mesecons/action_on.lua")
 	dofile(MP.."/mods/mesecons/functions.lua")
 	dofile(MP.."/mods/mesecons/globals.lua")
@@ -59,11 +59,13 @@ if minetest.get_modpath("mesecons") then
 	dofile(MP.."/mods/mesecons/queue.lua")
 end
 
-if monitoring.settings.prom_push_url then
+if monitoring.settings.prom_push_url ~= "" then
 	if not http then
 		error("[archtec_monitoring] No HTTP available!")
 	end
 
-	minetest.log("action", "[archtec_monitoring] enabling prometheus push")
+	minetest.log("action", "[archtec_monitoring] Enabling prometheus push")
 	monitoring.prometheus_push_init()
+else
+	minetest.log("warning", "[archtec_monitoring] No push URL provided, monitoring disabled!")
 end

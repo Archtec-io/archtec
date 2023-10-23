@@ -37,9 +37,7 @@ local function replace(input)
 		end
 	end
 
-	if nodenames ~= "" then
-		return nodenames
-	end
+	return nodenames
 end
 
 -- override abms
