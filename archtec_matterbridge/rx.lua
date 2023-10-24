@@ -1,5 +1,6 @@
 local http = ...
 local C = minetest.colorize
+local emojis = archtec_matterbridge.emojis
 
 local protocol = {
 	irc = "Libera",
@@ -12,6 +13,11 @@ local function handle_data(data)
 		return
 	end
 	local bridge = protocol[data.protocol]
+
+	-- replace common emojis
+	for emoji, name in pairs(emojis) do
+		data.text = data.text:gsub(emoji, ":" .. name .. ":")
+	end
 
 	if data.event == "user_action" then
 		minetest.log("action", "[archtec_matterbridge] User action '" .. data.text .. "' by '" .. data.username)

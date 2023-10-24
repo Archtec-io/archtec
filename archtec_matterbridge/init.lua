@@ -1,4 +1,5 @@
 local http = minetest.request_http_api()
+local MP = minetest.get_modpath("archtec_matterbridge")
 
 archtec_matterbridge = {
 	-- settings
@@ -11,7 +12,9 @@ archtec_matterbridge = {
 		LonnySophie = "882021148186009620",
 		HomerJayS = "751543903940903034",
 		Juri = "298742788865130498"
-	}
+	},
+
+	emojis = dofile(MP .. "/emoji.lua")
 }
 
 if not archtec_matterbridge.token then
@@ -24,8 +27,6 @@ function archtec_matterbridge.staff_user(name, id)
 	end
 	return false
 end
-
-local MP = minetest.get_modpath("archtec_matterbridge")
 
 if http and archtec_matterbridge.token then
 	minetest.log("action", "[archtec_matterbridge] connecting to matterbridge at: " .. archtec_matterbridge.url)
