@@ -73,13 +73,13 @@ minetest.register_on_mods_loaded(function()
 		futil = {table = {}}
 		futil.table.pairs_by_key = function(...) return ... end
 	end
+	-- ci pipeline
+	if minetest.settings:get("archtec.ci") then
+		minetest.log("action", "Server will shutdown in a few seconds!")
+		minetest.after(20, minetest.request_shutdown("CI"))
+	end
 end)
 
 local after = minetest.get_us_time()
 
 minetest.log("action", "Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")
-
--- CI
-if minetest.settings:get("archtec.ci") == true then
-	minetest.after(10, minetest.request_shutdown("CI"))
-end
