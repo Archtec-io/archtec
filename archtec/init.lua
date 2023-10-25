@@ -76,7 +76,9 @@ minetest.register_on_mods_loaded(function()
 	-- ci pipeline
 	if minetest.settings:get("archtec.ci") then
 		minetest.log("action", "Server will shutdown in a few seconds!")
-		minetest.after(20, minetest.request_shutdown("CI"))
+		minetest.after(20, function()
+			minetest.request_shutdown("CI")
+		end)
 	end
 end)
 
