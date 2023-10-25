@@ -10,7 +10,7 @@ function notifyTeam(message, dc)
 		end
 	end
 	if dc == false then return end
-	if archtec_matterbridge.send then -- Matterbridge API maybe isn't initialized now (calling on server startup)
+	if archtec_matterbridge and archtec_matterbridge.send then -- Matterbridge API maybe isn't initialized now (calling on server startup)
 		archtec_matterbridge.send(message, "log")
 	end
 end
