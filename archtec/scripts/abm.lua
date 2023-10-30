@@ -17,6 +17,10 @@ local function replace_groups(group)
 end
 
 local function replace(input)
+	if input == nil or input == "" or archtec.count_keys(input) == 0 then
+		return input
+	end
+
 	local nodenames = {}
 
 	if type(input) == "table" then
@@ -46,8 +50,8 @@ minetest.register_on_mods_loaded(function()
 		local label = ab.label or ""
 
 		-- optimize group resolving
-		ab.nodenames = replace(ab.nodenames or "")
-		ab.neighbors = replace(ab.neighbors or "")
+		ab.nodenames = replace(ab.nodenames)
+		ab.neighbors = replace(ab.neighbors)
 
 		-- modify spawn chances of mobs
 		if label:sub(1, 12) == "mobs_animal:" then
