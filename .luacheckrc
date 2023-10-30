@@ -29,6 +29,7 @@ read_globals = {
 	"string",
 	-- deps
 	"anvil",
+	"armor",
 	"auroras",
 	"choppy",
 	"default",

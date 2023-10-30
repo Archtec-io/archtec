@@ -60,7 +60,6 @@ Change your PvP state with the sword symbol in your inventory=
 Say someone thank you with '/thankyou <name>'=
 Start a day/night vote with '/vote_day' or '/vote_night'=
 Ask Niklp or LonnySophie to get a free shop at spawn=
-Get a mailbox for 20MG at the spawn post=
 Do you like christmas? Place your stocking at spawn's christmas area=
 Diamond powder can be used to build cobble stone generators=
 Moving is slow? Get Mithril Boots to move much faster=

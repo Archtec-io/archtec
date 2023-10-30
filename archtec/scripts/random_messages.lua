@@ -18,7 +18,6 @@ local random_messages = {
 	S("Say someone thank you with '/thankyou <name>'"),
 	S("Start a day/night vote with '/vote_day' or '/vote_night'"),
 	S("Ask Niklp or LonnySophie to get a free shop at spawn"),
-	S("Get a mailbox for 20MG at the spawn post"),
 	S("Do you like christmas? Place your stocking at spawn's christmas area"),
 	S("Diamond powder can be used to build cobble stone generators"),
 	S("Moving is slow? Get Mithril Boots to move much faster"),

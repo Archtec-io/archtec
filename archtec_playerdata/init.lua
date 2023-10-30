@@ -4,20 +4,20 @@
 ]]--
 
 archtec_playerdata = {}
+local sql = minetest.get_mod_storage()
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 local cache, playtime_current, rank = {}, {}, {}
-local rank_gentime = 0
 local S = minetest.get_translator("archtec_playerdata")
 local F = minetest.formspec_escape
 local FS = function(...) return F(S(...)) end
 local floor, type, C = math.floor, type, minetest.colorize
-local sql = minetest.get_mod_storage()
-local min_xp = 10000 -- modify by hand
+local rank_gentime = 0
 
 -- config
 local save_interval = 60
 local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
 local shutdown_mode = false
+local min_xp = 10000 -- modify by hand
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
 local struct = {
@@ -41,21 +41,21 @@ local struct = {
 
 -- helper funtions
 local function log_action(message)
-	if message ~= nil and message ~= "" then
+	if message ~= "" then
 		minetest.log("action", "[archtec_playerdata] " .. message)
 	end
 end
 
 local function log_warning(message)
-	if message ~= nil and message ~= "" then
+	if message ~= "" then
 		minetest.log("warning", "[archtec_playerdata] " .. message)
-		notifyTeam("[archtec_player] Critical error! Please read the server logs!")
+		notifyTeam("[archtec_playerdata] Critical error! Please read the server logs!")
 	end
 end
 
 local function log_debug(message)
 	if debug_mode then
-		if message ~= nil and message ~= "" then
+		if message ~= "" then
 			minetest.log("warning", "[archtec_playerdata] " .. message)
 		end
 	end
@@ -89,9 +89,8 @@ local function is_valid(value)
 	local valtype = type(value)
 	if valtype == "number" or valtype == "string" or valtype == "boolean" then
 		return true
-	else
-		return false
 	end
+	return false
 end
 
 local function divmod(a, b)
@@ -133,6 +132,16 @@ local function stats_dump()
 	minetest.safe_file_write(datadir .. "/dump." .. ts, minetest.serialize(d))
 end
 
+minetest.register_chatcommand("stats_dump", {
+	description = "Dump all stats",
+	privs = {server = true},
+	func = function(name)
+		minetest.log("action", "[/stats_dump] executed by '" .. name .. "'")
+		stats_dump()
+		minetest.chat_send_player(name, C("#00BD00", "Dumped all stats"))
+	end
+})
+
 archtec_playerdata.dump = stats_dump
 
 local function stats_restore(name, table)
@@ -157,8 +166,6 @@ local function string2timestamp(s)
 	-- Todo: fix possible crashes here
 	return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
-
-archtec_playerdata.string2timestamp = string2timestamp
 
 -- load/create data
 local function stats_create(name)
@@ -445,6 +452,7 @@ minetest.register_on_dieplayer(function(player, _)
 	end
 end)
 
+-- Stats formspec
 -- 0 = conditions not fulfilled + w/o priv; 1 = conditions fulfilled + w/o priv; 2 = conditions fulfilled + w/ priv
 local function colorize_privs(name, data, privs)
 	local t = {priv_lava = 0, priv_chainsaw = 0, priv_forceload = 0, priv_areas = 0}
@@ -573,43 +581,7 @@ minetest.register_chatcommand("stats", {
 	end
 })
 
-local function migrate_old()
-	-- generate list of files
-	local files = minetest.get_dir_list(datadir, false)
-	local flist = {}
-	for _, filename in ipairs(files) do
-		if not filename:find("dump.") then
-			local name, _ = filename:match("(.*)(.txt)$")
-			table.insert(flist, name)
-		end
-	end
-	-- create backup
-	if #flist > 0 then
-		minetest.cpdir(datadir, minetest.get_worldpath() .. "/archtec_playerdata_backup")
-	end
-	-- read and delete
-	for _, name in ipairs(flist) do
-		local file = io.open(datadir .. "/" .. name .. ".txt", "r")
-		local raw = file:read("*a")
-		file:close()
-		sql:set_string(name, raw)
-		os.remove(datadir .. "/" .. name .. ".txt")
-	end
-	if #flist > 0 then
-		log_action("migrated " .. #flist .. " files")
-	end
-end
-
-minetest.register_chatcommand("stats_dump", {
-	description = "Dump all stats",
-	privs = {server = true},
-	func = function(name)
-		minetest.log("action", "[/stats_dump] executed by '" .. name .. "'")
-		stats_dump()
-		minetest.chat_send_player(name, C("#00BD00", "Dumped all stats"))
-	end
-})
-
+-- Ranking by XP
 local function calc_xp(data)
 	local xp = 0
 	xp = xp + data.nodes_dug * 1.1
@@ -704,7 +676,6 @@ minetest.register_on_mods_loaded(function()
 	if not minetest.mkdir(datadir) then
 		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
 	end
-	migrate_old()
 	stats_dump()
 	gen_ranking()
 end)
