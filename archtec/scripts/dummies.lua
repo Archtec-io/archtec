@@ -1,15 +1,19 @@
 local dummy_objs = {}
 local light_levels = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
 
--- Halloween custumes (textures are provided by the halloween mod)
+-- Costume definitions (textures are provided by the halloween/christmas mod)
 local costumes = {
+	-- halloween
 	frank = {texture = "halloween_suit_frank.png", name = "Frank"},
 	ghost = {texture = "halloween_suit_ghost.png", name = "Ghost"},
 	pumpkin = {texture = "halloween_suit_pumpkin.png", name = "Pumpkin"},
 	reaper = {texture = "halloween_suit_reaper.png", name = "Reaper"},
 	skeleton = {texture = "halloween_suit_skeleton.png", name = "Skeleton"},
 	vampire = {texture = "halloween_suit_vampire.png", name = "Vampire"},
-	wearwolf = {texture = "halloween_suit_wearwolf.png", name = "Wearwolf"}
+	wearwolf = {texture = "halloween_suit_wearwolf.png", name = "Wearwolf"},
+	-- christmas
+	mrs_claus = {texture = "christmas_decor_mrs_claus.png", name = "Mrs. Claus"},
+	santa_claus = {texture = "christmas_decor_santa.png", name = "Santa Claus"}
 }
 
 -- Formspec menu design
@@ -109,7 +113,7 @@ local function show_fs(name, active_tab)
 	if props.mesh then
 		local textures = dummy:get_properties().textures
 		formspec = formspec ..
-			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,180;false;true;0,0]"
+			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,150;false;true;0,0]"
 	end
 
 	-- Show tab content
@@ -136,6 +140,13 @@ local function show_fs(name, active_tab)
 
 		formspec = formspec ..
 			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_luminosity;Set]"
+
+		y = y + 1.5
+		-- Enable animation
+		local enable_animation = dummy:get_luaentity()._enable_animation
+		if enable_animation == nil then enable_animation = false end
+		formspec = formspec ..
+			"checkbox[" .. x .. "," .. y .. ";model_enable_aninmation;Enable standing animation;" .. tostring(enable_animation) .. "]"
 
 	elseif active_tab == "nametag" then
 		-- Set nametag string
@@ -224,6 +235,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if not active_tab then return true end
 
 	local name = player:get_player_name()
+
+	-- Priv check
+	if not minetest.get_player_privs(name).builder then
+		return true
+	end
+
 	local dummy = dummy_objs[name]
 	if not valid_ref(dummy) then return true end
 
@@ -234,6 +251,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		dummy:remove()
 		minetest.close_formspec(name, formname)
 		return true
+
+	-- Enable animation
+	elseif fields.model_enable_aninmation then
+		if fields.model_enable_aninmation == "true" then
+			dummy:set_animation({x = 0, y = 79}, 30, 0, true)
+			dummy:get_luaentity()._enable_animation = true
+		else
+			dummy:set_animation()
+			dummy:get_luaentity()._enable_animation = false
+		end
 
 	-- Set nametag string
 	elseif fields.nametag_str and fields.act_set_nametag_str then
@@ -296,9 +323,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	-- Write props back
-	if valid_ref(dummy) then
-		dummy:set_properties(props)
-	end
+	dummy:set_properties(props)
 
 	-- Switch tab
 	for _, tab in pairs(form.tabs) do
@@ -329,7 +354,7 @@ minetest.register_entity(":dummies:dummy", {
 
 	on_punch = function(self, player)
 		local name = player:get_player_name()
-		if minetest.get_player_privs(name).staff then
+		if minetest.get_player_privs(name).builder then
 			if player:get_player_control().sneak then
 				self.object:remove()
 			else
@@ -354,12 +379,19 @@ minetest.register_entity(":dummies:dummy", {
 		if data.show_armor ~= nil then self._skin_show_armor = data.show_armor end
 		if data.show_wielditem ~= nil then self._skin_show_wielditem = data.show_wielditem end
 
+		if data.enable_animation ~= nil then
+			self._enable_animation = data.enable_animation
+			if data.enable_animation == true then
+				self.object:set_animation({x = 0, y = 79}, 30, 0, true)
+			end
+		end
+
 		self.object:set_properties(props)
 	end,
 
 	on_rightclick = function(self, player)
 		local name = player:get_player_name()
-		if minetest.get_player_privs(name).staff then
+		if minetest.get_player_privs(name).builder then
 			if player:get_player_control().sneak then
 				dummy_objs[name] = self.object
 				show_fs(name)
@@ -377,7 +409,8 @@ minetest.register_entity(":dummies:dummy", {
 			nametag = props.nametag,
 			nametag_color = props.nametag_color,
 			show_armor = self._skin_show_armor,
-			show_wielditem = self._skin_show_wielditem
+			show_wielditem = self._skin_show_wielditem,
+			enable_animation = self._enable_animation
 		})
 	end,
 })
@@ -388,8 +421,7 @@ local function spawndummy(pos, textures)
 			textures[1],
 			textures[2],
 			textures[3]
-		},
-		nametag_color = "white"
+		}
 	}))
 
 	return dummy -- Return dummy object
@@ -398,7 +430,7 @@ end
 minetest.register_chatcommand("spawndummy", {
 	params = "<name> | <costume>",
 	description = "Spawn a Dummy",
-	privs = {staff = true},
+	privs = {builder = true},
 	func = function(name, param)
 		minetest.log("action", "[/spawndummy] executed by '" .. name .. "' with param '" .. param .. "'")
 
@@ -406,10 +438,10 @@ minetest.register_chatcommand("spawndummy", {
 		local player = minetest.get_player_by_name(name)
 		local textures = {}
 
-		-- Search for custome
+		-- Search for costume
 		if p ~= "" and costumes[p] ~= nil then
-			local custome = costumes[p]
-			textures[1] = custome.texture
+			local costume = costumes[p]
+			textures[1] = costume.texture
 			textures[2] = nil
 			textures[3] = nil -- custom wielditem
 		end

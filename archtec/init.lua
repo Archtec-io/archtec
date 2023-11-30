@@ -1,9 +1,11 @@
 local before = minetest.get_us_time()
-local modpath = minetest.get_modpath(minetest.get_current_modname())
+local modpath = minetest.get_modpath("archtec")
 local path = modpath .. "/scripts/"
 
 archtec = {}
-archtec.S = minetest.get_translator(minetest.get_current_modname())
+archtec.S = minetest.get_translator("archtec")
+archtec.version_major = 23
+archtec.version_minor = 12
 
 dofile(path.."common.lua")
 dofile(path.."notifyTeam.lua")
@@ -74,10 +76,10 @@ minetest.register_on_mods_loaded(function()
 		futil = {table = {}}
 		futil.table.pairs_by_key = function(...) return ... end
 	end
-	-- ci pipeline
+	-- CI pipeline
 	if minetest.settings:get("archtec.ci") then
 		minetest.log("action", "Server will shutdown in a few seconds!")
-		minetest.after(20, function()
+		minetest.after(10, function()
 			minetest.request_shutdown("CI")
 		end)
 	end

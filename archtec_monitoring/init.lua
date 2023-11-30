@@ -1,6 +1,4 @@
 monitoring = {
-	version_major = 23,
-	version_minor = 11,
 	metrics = {},
 	metrics_mapped = {}, -- metrics mapped by name as key
 	settings = {

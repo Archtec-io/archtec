@@ -44,6 +44,7 @@ You can't place more 'Drawers' in this area! (Too many entities)=
 Archtec staff member priv=
 Allows you to forceload your machines=
 Allows you to use the chainsaw=
+Priv for builders on Archtec=
 [request_areas_high_limit]=
 [request_areas_high_limit] You do not have 30 hours (or more) playtime=
 To check someone's stats use '/stats <name>'=

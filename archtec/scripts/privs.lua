@@ -3,6 +3,7 @@ local S = archtec.S
 minetest.register_privilege("staff", (S("Archtec staff member priv")))
 minetest.register_privilege("forceload", (S("Allows you to forceload your machines")))
 minetest.register_privilege("archtec_chainsaw", (S("Allows you to use the chainsaw")))
+minetest.register_privilege("builder", (S("Priv for builders on Archtec")))
 
 local C = minetest.colorize
 archtec.big_areas_playtime = archtec.time.hours(30) -- 30h playtime
