@@ -57,6 +57,7 @@ unified color for a command "#FF8800" (orange)
 - `archtec_settings_icon.png` - unknown, unknown (modified by Niklp)
 - `archtec_biofuel_fuel_can.png` - Bla based on work of El-Naso, CC BY-SA 4.0
 - `archtec_biofuel_fuel_can_empty.png` - Bla based on work of El-Naso, CC BY-SA 4.0
+- `archtec_snowflakes.png` - paramat, CC BY-SA 3.0
 - `technic_chainsaw.png` - RealBadAngel, LGPL v2.1 or later
 - `mapserver_poi_*` - El-Naso, CC BY-SA 3.0
 - `pvp.png` - paly2, MPL 2.0

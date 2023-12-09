@@ -1,5 +1,5 @@
 --[[
-	Copyright (C) 2023 Niklp
+	Copyright (C) 2023 Niklp <nik@niklp.net>
 	GNU Lesser General Public License v2.1 See LICENSE.txt for more information
 ]]--
 
@@ -12,11 +12,11 @@ local F = minetest.formspec_escape
 local FS = function(...) return F(S(...)) end
 local floor, type, C = math.floor, type, minetest.colorize
 local rank_gentime = 0
+local shutdown_mode = false
 
 -- config
-local save_interval = 60
+local save_interval = 180
 local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
-local shutdown_mode = false
 local min_xp = 10000 -- modify by hand
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
@@ -37,6 +37,7 @@ local struct = {
 	s_tbw_show = true, -- tool breakage warnings
 	s_sp_show = true, -- spawnwaypoint
 	s_r_id = true, -- auto item drop collection
+	s_snow = true, -- enable snow particles
 }
 
 -- helper funtions

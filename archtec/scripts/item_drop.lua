@@ -1,7 +1,6 @@
 local pickup_gain = 0.4
 local pickup_radius = 0.75
 local pickup_age = 0.5
-local enabled = {}
 
 -- adds the item to the inventory and removes the object
 local function collect_item(ent, pos, player)
@@ -55,10 +54,7 @@ local function pickup_step()
 	local got_item
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
-		if enabled[name] == nil then
-			enabled[name] = archtec_playerdata.get(name, "s_r_id")
-		end
-		if enabled[name] then
+		if archtec_playerdata.get(name, "s_r_id") == true then
 			got_item = got_item or pickupfunc(player)
 		end
 	end
@@ -72,20 +68,3 @@ local function pickup_step()
 	minetest.after(time, pickup_step)
 end
 minetest.after(3.0, pickup_step)
-
-local function update(name, setting, newvalue)
-	if setting ~= "r_id" then return end
-	if newvalue == true then
-		enabled[name] = true
-	else
-		enabled[name] = false -- yes, this is intentional
-	end
-end
-
-archtec.settings.add_callback(update)
-
-minetest.register_on_leaveplayer(function(player)
-	if player then
-		enabled[player:get_player_name()] = nil
-	end
-end)

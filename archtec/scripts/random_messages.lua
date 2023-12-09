@@ -24,6 +24,10 @@ local random_messages = {
 	S("Any questions? Take a look at our FAQ/Wiki using '/faq'"),
 }
 
+if os.date("%m") == "12" then
+	table.insert(random_messages, S("Disable snow in the settings."))
+end
+
 local function show_random_message()
 	local message = minetest.colorize("#999", S("[Info]:") .. " " .. random_messages[math.random(1, #random_messages)])
 	for _, player in ipairs(minetest.get_connected_players()) do

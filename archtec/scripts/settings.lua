@@ -36,6 +36,7 @@ local function show_settings(name)
 		label[0.3,1.9;]] .. FS("Misc") .. [[]
 		checkbox[0.6,2.4;s_sp_show;]] .. FS("Show a waypoint to the spawn") .. [[;]] .. get(name, "sp_show") .. [[]
 		checkbox[0.6,2.9;s_r_id;]] .. FS("Collect dropped items automatically") .. [[;]] .. get(name, "r_id") .. [[]
+		checkbox[0.6,3.4;s_snow;]] .. FS("Enable snow particles") .. [[;]] .. get(name, "snow") .. [[]
 	]]
 	minetest.show_formspec(name, "archtec:settings", formspec)
 end
