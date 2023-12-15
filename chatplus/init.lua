@@ -1,6 +1,11 @@
 local S = minetest.get_translator("chatplus")
-local storage = minetest.get_mod_storage()
 local has_playerdata = minetest.get_modpath("archtec_playerdata")
+
+-- @reviewer: remove after 24.01
+local storage = minetest.get_mod_storage()
+storage:from_table({})
+minetest.log("error", "Stored data of chatplus: " .. dump(storage:to_table()))
+-- @reviewer: end
 
 local color_cache = {}
 local last_priv_msg_name = {}
@@ -45,27 +50,17 @@ local function get_color(name)
 	if color_cache[name] ~= nil then
 		return color_cache[name]
 	end
-	local color
+
 	local player = minetest.get_player_by_name(name)
 	local meta = player:get_meta()
-	-- load color
-	if meta:contains("chatplus:namecolor") then
-		color = meta:get_string("chatplus:namecolor")
-	elseif storage:contains(name) then
-		color = storage:get_string(name)
-		storage:set_string(name, "") -- remove old key
-		meta:set_string("chatplus:namecolor", color)
-	end
-	-- choose random color if stored was removed
-	if color == "0" or color == "9" then
+	local color = meta:get_string("chatplus:namecolor")
+
+	-- Choose random color if stored was removed (or not created yet)
+	if color == "" or color == "0" or color == "9" then
 		color = colors[math.random(1, 13)]
 		meta:set_string("chatplus:namecolor", color)
 	end
-	-- new player
-	if not color then
-		color = colors[math.random(1, 13)]
-		meta:set_string("chatplus:namecolor", color)
-	end
+
 	color_cache[name] = color
 	return color
 end
@@ -84,6 +79,7 @@ minetest.register_on_chat_message(function(name, message)
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (player does not have 'shout')")
 		return true
 	end
+
 	if message:sub(1, 4) == "7msg" then
 		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] Anti leak detection blocked this message!")))
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
