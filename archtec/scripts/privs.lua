@@ -26,21 +26,19 @@ function archtec.check_areas_high_limit(name, privs)
 end
 
 -- revoke unknown privs
-local reg_privs = minetest.registered_privileges
-
 local function auto_revoke(name)
 	local privs = minetest.get_player_privs(name)
 	local revoke = {}
 	-- revoke unknown privs
 	for priv, _ in pairs(privs) do
-		if not reg_privs[priv] then
+		if not minetest.registered_privileges[priv] then
 			table.insert(revoke, priv)
 			archtec.revoke_priv(name, priv)
 		end
 	end
 	if next(revoke) ~= nil then
 		local privs_string = table.concat(revoke, ", ")
-		minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. privs_string .. ")"))
+		-- minetest.chat_send_player(name, C("#FF0", "[archtec] Updated your privs (revoked: " .. privs_string .. ")"))
 		minetest.log("action", "[auto_revoke] updated privs of '" .. name .. "' (revoked: " .. privs_string .. ")")
 	end
 end
@@ -53,17 +51,15 @@ end)
 
 -- error when trying to start w/ unknown privs
 minetest.register_on_mods_loaded(function()
-	local errors = {}
+	local failure = false
 	local default_privs = minetest.string_to_privs(minetest.settings:get("default_privs"))
 	for priv, _ in pairs(default_privs) do
-		if not reg_privs[priv] then
-			table.insert(errors, "[archtec] '" .. priv .. "' is marked as 'default_priv' but not registered!")
+		if not minetest.registered_privileges[priv] then
+			failure = true
+			minetest.log("error", "[archtec] '" .. priv .. "' is marked as default_priv but not registered!")
 		end
 	end
-	if next(errors) ~= nil then
-		for _, msg in ipairs(errors) do
-			minetest.log("error", msg)
-		end
-		error("Please change the server config!")
+	if failure == true then
+		error("Unknown privs in 'defaults_privs', please change the server config!")
 	end
 end)

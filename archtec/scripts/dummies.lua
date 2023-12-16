@@ -79,6 +79,14 @@ local function find_color(spec)
 	end
 end
 
+local function echo_desc(name, ownername)
+	if name == ownername or minetest.get_player_privs(name).builder then
+		minetest.chat_send_player(name, "Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is " .. (ownername or "unknown") .. ".")
+	else
+		minetest.chat_send_player(name, "Owner of this dummy is " .. (ownername or "unknown") .. ".")
+	end
+end
+
 local function show_fs(name, active_tab)
 	active_tab = active_tab or "general"
 
@@ -236,15 +244,21 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	local name = player:get_player_name()
 
-	-- Priv check
-	if not minetest.get_player_privs(name).builder then
+	local dummy = dummy_objs[name]
+	if not valid_ref(dummy) then
+		return true
+	end
+	local props = dummy:get_properties()
+
+	-- Owner check
+	if not dummy:get_luaentity()._ownername == name and not minetest.get_player_privs(name).builder then
 		return true
 	end
 
-	local dummy = dummy_objs[name]
-	if not valid_ref(dummy) then return true end
-
-	local props = dummy:get_properties()
+	-- Set next authorized player to owner
+	if not dummy:get_luaentity()._ownername then
+		dummy:get_luaentity()._ownername = name
+	end
 
 	-- Delete Dummy
 	if fields.act_del_dummy then
@@ -354,12 +368,14 @@ minetest.register_entity(":dummies:dummy", {
 
 	on_punch = function(self, player)
 		local name = player:get_player_name()
-		if minetest.get_player_privs(name).builder then
+		if self._ownername == name or minetest.get_player_privs(name).builder then
 			if player:get_player_control().sneak then
 				self.object:remove()
 			else
-				minetest.chat_send_player(name, "Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy.")
+				echo_desc(name, self._ownername)
 			end
+		else
+			echo_desc(name, self._ownername)
 		end
 	end,
 
@@ -386,18 +402,22 @@ minetest.register_entity(":dummies:dummy", {
 			end
 		end
 
+		if data.ownername ~= nil then self._ownername = data.ownername end
+
 		self.object:set_properties(props)
 	end,
 
 	on_rightclick = function(self, player)
 		local name = player:get_player_name()
-		if minetest.get_player_privs(name).builder then
+		if self._ownername == name or minetest.get_player_privs(name).builder then
 			if player:get_player_control().sneak then
 				dummy_objs[name] = self.object
 				show_fs(name)
 			else
-				minetest.chat_send_player(name, "Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy.")
+				echo_desc(name, self._ownername)
 			end
+		else
+			echo_desc(name, self._ownername)
 		end
 	end,
 
@@ -410,60 +430,31 @@ minetest.register_entity(":dummies:dummy", {
 			nametag_color = props.nametag_color,
 			show_armor = self._skin_show_armor,
 			show_wielditem = self._skin_show_wielditem,
-			enable_animation = self._enable_animation
+			enable_animation = self._enable_animation,
+			ownername = self._ownername
 		})
 	end,
 })
 
-local function spawndummy(pos, textures)
+local function spawndummy(pos, textures, name)
 	local dummy = minetest.add_entity(pos, "dummies:dummy", minetest.serialize({
 		textures = {
 			textures[1],
 			textures[2],
 			textures[3]
-		}
+		},
+		_ownername = name
 	}))
 
 	return dummy -- Return dummy object
 end
 
 minetest.register_chatcommand("spawndummy", {
-	params = "<name> | <costume>",
+	params = "",
 	description = "Spawn a Dummy",
-	privs = {builder = true},
 	func = function(name, param)
 		minetest.log("action", "[/spawndummy] executed by '" .. name .. "' with param '" .. param .. "'")
-
-		local p = archtec.get_and_trim(param)
 		local player = minetest.get_player_by_name(name)
-		local textures = {}
-
-		-- Search for costume
-		if p ~= "" and costumes[p] ~= nil then
-			local costume = costumes[p]
-			textures[1] = costume.texture
-			textures[2] = nil
-			textures[3] = nil -- custom wielditem
-		end
-
-		-- Search for player skin
-		local get_skin = name
-		if minetest.get_player_by_name(p) then
-			get_skin = p
-		end
-
-		local skin = {
-			armor.textures[get_skin].skin,
-			armor.textures[get_skin].armor,
-			armor.textures[get_skin].wielditem
-		}
-
-		-- Overwrite values
-		for k, v in ipairs(skin) do
-			if textures[k] == nil then
-				textures[k] = v
-			end
-		end
 
 		-- Calculate position
 		local look_dir = player:get_look_dir()
@@ -478,8 +469,14 @@ minetest.register_chatcommand("spawndummy", {
 			return
 		end
 
+		local textures = {
+			armor.textures[name].skin,
+			armor.textures[name].armor,
+			armor.textures[name].wielditem
+		}
+
 		local pos = pointed_thing.intersection_point
-		local dummy = spawndummy(pos, textures)
+		local dummy = spawndummy(pos, textures, name)
 
 		if dummy then
 			dummy:set_yaw(player:get_look_horizontal() + math.pi)
