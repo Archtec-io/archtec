@@ -251,7 +251,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local props = dummy:get_properties()
 
 	-- Owner check
-	if not dummy:get_luaentity()._ownername == name and not minetest.get_player_privs(name).builder then
+	if not minetest.get_player_privs(name).builder and dummy:get_luaentity()._ownername ~= name then
 		return true
 	end
 
