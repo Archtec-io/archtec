@@ -442,11 +442,13 @@ local function spawndummy(pos, textures, name)
 			textures[1],
 			textures[2],
 			textures[3]
-		},
-		_ownername = name
+		}
 	}))
 
-	return dummy -- Return dummy object
+	if dummy then
+		dummy:get_luaentity()._ownername = name
+		return dummy -- Return dummy object
+	end
 end
 
 minetest.register_chatcommand("spawndummy", {
