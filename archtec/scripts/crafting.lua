@@ -91,9 +91,9 @@ if minetest.get_modpath("homedecor_lighting") then
 	minetest.register_craft({
 		output = "homedecor:table_lamp_14",
 		recipe = {
-			{ "wool:white", "default:torch", "wool:white"},
-			{ "", "group:stick", ""},
-			{ "", "default:slab_wood_8", "" },
+			{"wool:white", "default:torch", "wool:white"},
+			{"", "group:stick", ""},
+			{"", "default:slab_wood_8", ""},
 		},
 	})
 
@@ -133,4 +133,15 @@ end
 minetest.register_craft({
 	output = "farming:wheat 3",
 	recipe = {{"farming:straw"}}
+})
+
+-- default:dry_dirt + group:water_bucket -> default:dirt (https://github.com/Archtec-io/bugtracker/issues/139)
+minetest.register_craft({
+	output = "default:dirt",
+	type = "shapeless",
+    recipe = {
+        "group:water_bucket",
+        "default:dry_dirt",
+    },
+	replacements = {{"group:water_bucket", "bucket:bucket_empty"}}
 })
