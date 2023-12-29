@@ -53,8 +53,7 @@ end
 
 minetest.register_on_mods_loaded(function()
 	for name, def in pairs(minetest.registered_nodes) do
-		if def.drawtype and (def.drawtype == "liquid" or def.drawtype == "flowingliquid")
-		and minetest.get_item_group(name, "liquid_blacklist") == 0 then
+		if def.drawtype and (def.drawtype == "liquid" or def.drawtype == "flowingliquid") and minetest.get_item_group(name, "liquid_blacklist") == 0 then
 			table.insert(liquid_list, name)
 		end
 	end

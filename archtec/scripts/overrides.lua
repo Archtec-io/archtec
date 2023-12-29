@@ -72,13 +72,29 @@ if minetest.get_modpath("xdecor") then
 	})
 end
 
--- give pandas more HP
+-- Give pandas more HP
 if minetest.get_modpath("mobs_animal") then
 	local def = minetest.registered_entities["mobs_animal:panda"]
 	def.hp_max = 30 -- default 24
 	def.hp_min = 15 -- default 10
 	minetest.registered_entities["mobs_animal:panda"] = def
 end
+
+-- Higher spawn chance for mobs
+minetest.register_on_mods_loaded(function()
+	for _, abm in ipairs(minetest.registered_abms) do
+		local label = abm.label or ""
+
+		-- Modify spawn chances of mobs
+		if label:sub(1, 12) == "mobs_animal:" then
+			abm.chance = abm.chance * 0.75
+		end
+
+		if label:sub(1, 13) == "mobs_monster:" then
+			abm.chance = abm.chance * 0.5
+		end
+	end
+end)
 
 local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
 

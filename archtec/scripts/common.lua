@@ -48,7 +48,7 @@ end
 
 function archtec.string_to_table(str, delim)
 	assert(type(str) == "string")
-	delim = delim or ','
+	delim = delim or ","
 	local table = {}
 	for _, name in pairs(string.split(str, delim)) do
 		table[name:trim()] = name:trim()

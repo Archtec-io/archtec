@@ -32,11 +32,11 @@ minetest.register_tool(":technic:chainsaw", {
 	inventory_image = "technic_chainsaw.png",
 	tool_capabilities = {
 		full_punch_interval = 0.9,
-		max_drop_level=1,
-		groupcaps={
-			choppy={times={[1]=2.10, [2]=0.90, [3]=0.50}, uses=30, maxlevel=3},
+		max_drop_level = 1,
+		groupcaps = {
+			choppy = {times = {[1] = 2.10, [2] = 0.90, [3] = 0.50}, uses = 30, maxlevel = 3},
 		},
-		damage_groups = {fleshy=7},
+		damage_groups = {fleshy = 7},
 	},
 	sound = {breaks = "default_tool_breaks"},
 	on_use = function(itemstack, digger, pointed_thing)
@@ -81,6 +81,7 @@ minetest.register_tool(":technic:chainsaw", {
 })
 
 minetest.unregister_chatcommand("toggle_choppy")
+minetest.unregister_chatcommand("visualize_choppy")
 
 anvil.make_unrepairable("technic:chainsaw")
 choppy.api.registered_axes = {}

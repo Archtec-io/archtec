@@ -446,6 +446,8 @@ local function spawndummy(pos, textures, name)
 	}))
 
 	if dummy then
+		minetest.log("action", "[archtec] Spawned dummy at " .. minetest.pos_to_string(pos) .. " for player " .. name)
+
 		dummy:get_luaentity()._ownername = name
 		return dummy -- Return dummy object
 	end
@@ -478,6 +480,13 @@ minetest.register_chatcommand("spawndummy", {
 		}
 
 		local pos = pointed_thing.intersection_point
+
+		-- Protection check
+		if minetest.is_protected(pos, name) then
+			minetest.chat_send_player(name, "This position is protected, you can't spawn a dummy here!")
+			return
+		end
+
 		local dummy = spawndummy(pos, textures, name)
 
 		if dummy then

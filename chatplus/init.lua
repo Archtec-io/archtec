@@ -1,12 +1,6 @@
 local S = minetest.get_translator("chatplus")
 local has_playerdata = minetest.get_modpath("archtec_playerdata")
 
--- @reviewer: remove after 24.01
-local storage = minetest.get_mod_storage()
-storage:from_table({})
-minetest.log("error", "Stored data of chatplus: " .. dump(storage:to_table()))
--- @reviewer: end
-
 local color_cache = {}
 local last_priv_msg_name = {}
 

@@ -443,7 +443,7 @@ archtec.faq.register("Useful chat commands", {
 General:
 - '/faq' show this Frequenty Asked Questions section
 - '/news' show the news from join again (staff only)
-- '/report <msg>' report an bug/issue/feature-request to the server staff (Creates a GitHub issue, see discord for links to issues)
+- '/report <msg>' report an bug/issue/feature-request to the server staff (Creates a GitHub issue and a Discord notification)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
 
 Techage:
