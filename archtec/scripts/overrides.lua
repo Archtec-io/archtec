@@ -1,3 +1,4 @@
+-- Make digiline chest more different from default chests
 if minetest.get_modpath("digilines") then
 	minetest.override_item("digilines:chest", {
 		tiles = {
@@ -11,12 +12,14 @@ if minetest.get_modpath("digilines") then
 	})
 end
 
+-- Make launcher more easily diggable
 if minetest.get_modpath("fireworkz") then
 	minetest.override_item("fireworkz:launcher", {
 		groups = {cracky = 2},
 	})
 end
 
+-- Don't spawn infinite fire particles
 if minetest.get_modpath("fake_fire") then
 	minetest.override_item("fake_fire:fancy_fire", {
 		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
@@ -25,6 +28,7 @@ if minetest.get_modpath("fake_fire") then
 	})
 end
 
+-- Fill hunger bar completely
 if minetest.get_modpath("ethereal") then
 	minetest.override_item("ethereal:golden_apple", {
 		on_use = function(itemstack, user, pointed_thing)
@@ -36,13 +40,14 @@ if minetest.get_modpath("ethereal") then
 	})
 end
 
--- remove torch damage
+-- Remove torch damage
 if minetest.get_modpath("3d_armor") then
 	minetest.override_item("default:torch", {damage_per_second = 0})
 	minetest.override_item("default:torch_wall", {damage_per_second = 0})
 	minetest.override_item("default:torch_ceiling", {damage_per_second = 0})
 end
 
+-- Disable wardrobe skin selector
 if minetest.get_modpath("homedecor_wardrobe") then
 	minetest.override_item("homedecor:wardrobe", {
 		on_construct = function()
@@ -57,6 +62,7 @@ if minetest.get_modpath("homedecor_wardrobe") then
 	})
 end
 
+-- Mailbox can be dug by staff members if empty
 if minetest.get_modpath("xdecor") then
 	minetest.override_item("xdecor:mailbox", {
 		can_dig = function(pos, player)
@@ -85,7 +91,6 @@ minetest.register_on_mods_loaded(function()
 	for _, abm in ipairs(minetest.registered_abms) do
 		local label = abm.label or ""
 
-		-- Modify spawn chances of mobs
 		if label:sub(1, 12) == "mobs_animal:" then
 			abm.chance = abm.chance * 0.75
 		end
@@ -96,9 +101,10 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
-local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
-
+-- Gates w/o movement
 if minetest.get_modpath("castle_gates") then
+	local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
+
 	for _, name in ipairs(gates) do
 		local def = table.copy(minetest.registered_nodes[name]) -- table.copy prevents LC warnings
 		-- remove castle_gates specific groups and functions
@@ -133,6 +139,7 @@ if minetest.get_modpath("castle_gates") then
 	})
 end
 
+-- Undigable fence
 if minetest.get_modpath("homedecor_fences") then
 	local def = table.copy(minetest.registered_nodes["homedecor:fence_wrought_iron_2"])
 	def.can_dig = nil
@@ -141,20 +148,27 @@ if minetest.get_modpath("homedecor_fences") then
 	minetest.register_node(":" .. def.name .. "_slow", def)
 end
 
+-- Caveralms stones drop themselves
 if minetest.get_modpath("caverealms") then
 	minetest.override_item("caverealms:stone_with_algae", {
-		drop = "caverealms:stone_with_algae"
+		drop = nil
 	})
 
 	minetest.override_item("caverealms:stone_with_lichen", {
-		drop = "caverealms:stone_with_lichen"
+		drop = nil
 	})
 
 	minetest.override_item("caverealms:stone_with_moss", {
-		drop = "caverealms:stone_with_moss"
+		drop = nil
 	})
 end
 
+-- Faster cart
 if minetest.get_modpath("carts") then
 	carts.speed_max = 8
+end
+
+-- Higher signs_bot accu capacity
+if minetest.get_modpath("signs_bot") then
+	signs_bot.MAX_CAPA = signs_bot.MAX_CAPA * 1.5
 end

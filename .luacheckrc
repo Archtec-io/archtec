@@ -80,7 +80,7 @@ files["archtec/scripts/common.lua"] = {
 }
 
 files["archtec/scripts/overrides.lua"] = {
-	globals = {"minetest.registered_entities", "carts"},
+	globals = {"minetest.registered_entities", "carts.speed_max", "signs_bot.MAX_CAPA"},
 }
 
 files["archtec/init.lua"] = {
