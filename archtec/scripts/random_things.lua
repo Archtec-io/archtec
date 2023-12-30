@@ -101,3 +101,15 @@ minetest.register_chatcommand("sd", {
 		minetest.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, tonumber(delay))
 	end
 })
+
+-- Stairsplus support for ethereal:glostone (https://github.com/Archtec-io/bugtracker/issues/143)
+if minetest.get_modpath("stairsplus") and minetest.get_modpath("ethereal") then
+	local def = minetest.registered_nodes["ethereal:glostone"]
+
+	stairsplus:register_all("ethereal", "glostone", "ethereal:glostone", {
+		description = def.description,
+		tiles = def.texture,
+		groups = def.groups,
+		sounds = def.sound
+	})
+end
