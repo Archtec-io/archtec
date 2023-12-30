@@ -165,7 +165,7 @@ end
 
 -- Faster cart
 if minetest.get_modpath("carts") then
-	carts.speed_max = 8
+	carts.speed_max = 9
 end
 
 -- Higher signs_bot accu capacity

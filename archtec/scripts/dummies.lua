@@ -1,5 +1,6 @@
 local dummy_objs = {}
 local light_levels = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
+local max_nametag_length = 10
 
 -- Costume definitions (textures are provided by the halloween/christmas mod)
 local costumes = {
@@ -22,7 +23,7 @@ local form = {
 		{name = "general", title = "General"},
 		{name = "style_head", title = "Style related", style = "head"},
 		{name = "skin", title = "Skin"},
-		{name = "nametag", title = "Nametag"}
+		{name = "nametag", title = "Name Tag"}
 	}
 }
 
@@ -65,12 +66,14 @@ local function valid_ref(ref)
 end
 
 local function find_color(spec)
+	-- Get color
 	local colorname = "white"
 	for cname, color in pairs(colors) do
-		if spec.r == color.r and spec.g == color.g and spec.b == spec.b then
+		if spec.a == color.a and spec.r == color.r and spec.g == color.g and spec.b == color.b then
 			colorname = cname
 		end
 	end
+	-- Get color id
 	local color_split = color_str:split(",")
 	for i, c in ipairs(color_split) do
 		if c == colorname then
@@ -159,7 +162,7 @@ local function show_fs(name, active_tab)
 	elseif active_tab == "nametag" then
 		-- Set nametag string
 		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change nametag]"
+			"label[" .. x .. "," .. y .. ";Change Name Tag (only " .. max_nametag_length .. " characters)]"
 		y = y + 0.3
 
 		formspec = formspec ..
@@ -171,7 +174,7 @@ local function show_fs(name, active_tab)
 		y = y + 1.5
 		-- Nametag color
 		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change nametag color]"
+			"label[" .. x .. "," .. y .. ";Change Name Tag color]"
 		y = y + 0.3
 
 		formspec = formspec ..
@@ -278,7 +281,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	-- Set nametag string
 	elseif fields.nametag_str and fields.act_set_nametag_str then
-		props.nametag = fields.nametag_str
+		props.nametag = fields.nametag_str:sub(1, max_nametag_length)
 
 	-- Set nametag color
 	elseif fields.nametag_color and fields.act_set_nametag_color then
