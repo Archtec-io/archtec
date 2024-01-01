@@ -4,8 +4,8 @@ local path = modpath .. "/scripts/"
 
 archtec = {}
 archtec.S = minetest.get_translator("archtec")
-archtec.version_major = 23
-archtec.version_minor = 12
+archtec.version_major = 24
+archtec.version_minor = 01
 
 dofile(path.."common.lua")
 dofile(path.."notifyTeam.lua")
