@@ -33,6 +33,7 @@ local struct = {
 	ignores = "",
 	channels = "",
 	free_votes = 0, -- we use 0 to allow later changes of the max value
+	-- settings
 	s_help_msg = true, -- help msg
 	s_tbw_show = true, -- tool breakage warnings
 	s_sp_show = true, -- spawnwaypoint
@@ -227,6 +228,11 @@ local function stats_save(name)
 		return
 	end
 	sql:set_string(name, raw)
+end
+
+-- get default (global)
+function archtec_playerdata.get_default(key)
+	return struct[key]
 end
 
 -- get/set/mod data
