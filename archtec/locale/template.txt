@@ -39,6 +39,7 @@ Server respawned you (you were dead without respawn option)=
 [music_list] @1=
 No news available=
 Continue=
+Ctrl + Click this link to open the website:=
 You can't place more '@1' in this area!=
 You can't place more 'Drawers' in this area! (Too many entities)=
 Archtec staff member priv=

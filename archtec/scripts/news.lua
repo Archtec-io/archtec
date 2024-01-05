@@ -1,4 +1,3 @@
-local modname = minetest.get_current_modname()
 local fpath = minetest.get_worldpath() .. "/news.txt"
 local S = archtec.S
 local FS = function(...) return minetest.formspec_escape(S(...)) end
@@ -16,13 +15,33 @@ local fsw = 12.5
 local fsh = 10
 
 local function show_formspec(name)
-	minetest.show_formspec(name, modname,
-	"size[" .. fsw .. "," .. fsh .. ",true]"
-	.. "textarea[0.3,0;" .. fsw .. "," .. fsh .. ";;;"
-	.. minetest.formspec_escape(news)
-	.. "]button_exit[0," .. (fsh - 0.75) .. ";" .. fsw
-	.. ",1;ok;" .. FS("Continue") .. "]")
+	local fs = ""
+	fs = fs .. "size[" .. fsw .. "," .. fsh .. ",true]"
+	fs = fs .. "hypertext[0.3,0;" .. fsw .. "," .. fsh .. ";news;" .. minetest.formspec_escape(news) .. "]"
+	fs = fs .. "button_exit[0," .. (fsh - 0.75) .. ";" .. fsw .. ",1;ok;" .. FS("Continue") .. "]"
+	minetest.show_formspec(name, "archtec:news", fs)
 end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= "archtec:news" then return end
+	if fields.news and fields.news:sub(1, 12) == "action:link_" then
+		local link = fields.news:sub(13, #fields.news)
+		local url = ""
+
+		if link == "website" then url = archtec.links.website end
+		if link == "discord" then url = archtec.links.discord end
+		if link == "matrix" then url = archtec.links.matrix end
+		if link == "grooming" then url = archtec.links.grooming end
+
+		if url ~= nil then
+			local name = player:get_player_name()
+			minetest.close_formspec(name, "archtec:news")
+			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click this link to open the website:")) .. " " .. url)
+		end
+	end
+
+	return true
+end)
 
 minetest.register_on_joinplayer(function(player)
 	if player then

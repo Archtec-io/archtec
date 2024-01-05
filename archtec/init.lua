@@ -7,6 +7,13 @@ archtec.S = minetest.get_translator("archtec")
 archtec.version_major = 24
 archtec.version_minor = 01
 
+-- Change links here
+archtec.links = {}
+archtec.links.website = "https://archtec.niklp.net"
+archtec.links.discord = "https://discord.gg/txCMTMwBWm"
+archtec.links.matrix = "https://matrix.to/#/#archtec:matrix.org"
+archtec.links.grooming = "https://en.wikipedia.org/wiki/Child_grooming"
+
 dofile(path.."common.lua")
 dofile(path.."notifyTeam.lua")
 dofile(path.."settings.lua")

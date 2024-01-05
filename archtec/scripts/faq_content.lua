@@ -69,7 +69,7 @@ Show help:
 ]]
 })
 
-archtec.faq.register("Chatbridge to Discord/Matrix/IRC", { -- we can't use ',' in titles
+archtec.faq.register("Chatbridge to Discord, Matrix and IRC", {
 	header = "Chat",
 	pos = 4,
 	description = [[

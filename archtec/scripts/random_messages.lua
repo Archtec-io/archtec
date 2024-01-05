@@ -1,12 +1,10 @@
 local MESSAGE_INTERVAL = archtec.time.minutes(10)
 local S = archtec.S
-local discord_link = "https://discord.gg/txCMTMwBWm"
-local matrix_link = "https://matrix.to/#/#archtec:matrix.org"
 
 local random_messages = {
 	S("To check someone's stats use '/stats <name>'"),
-	S("Visit our Discord server: @1", discord_link),
-	S("Join our Matrix space: @1", matrix_link),
+	S("Visit our Discord server: @1", archtec.links.discord),
+	S("Join our Matrix space: @1", archtec.links.matrix),
 	S("Abusing '/vote_kick' will result in a ban for you"),
 	S("Read our rules in '/news' or at the spawn"),
 	S("If you find a bug use '/report <message>'"),

@@ -46,7 +46,7 @@ local function faq_formspec(sel)
 	for _, data in ipairs(entries) do
 		rows[#rows + 1] = COLOR_BLUE .. ",0," .. F(data[1])
 		for _, content in ipairs(data[2]) do
-			rows[#rows + 1] = COLOR_GREEN .. ",1," .. content[1]
+			rows[#rows + 1] = COLOR_GREEN .. ",1," .. F(content[1])
 			if sel == #rows then
 				description = content[2].description
 			end
