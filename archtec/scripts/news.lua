@@ -26,7 +26,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:news" then return end
 	if fields.news and fields.news:sub(1, 12) == "action:link_" then
 		local link = fields.news:sub(13, #fields.news)
-		local url = ""
+		local url = nil
 
 		if link == "website" then url = archtec.links.website end
 		if link == "discord" then url = archtec.links.discord end

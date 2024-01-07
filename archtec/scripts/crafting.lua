@@ -139,9 +139,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "default:dirt",
 	type = "shapeless",
-    recipe = {
-        "group:water_bucket",
-        "default:dry_dirt",
-    },
+	recipe = {
+		"group:water_bucket",
+		"default:dry_dirt",
+	},
 	replacements = {{"group:water_bucket", "bucket:bucket_empty"}}
 })

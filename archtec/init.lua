@@ -16,6 +16,7 @@ archtec.links.grooming = "https://en.wikipedia.org/wiki/Child_grooming"
 
 dofile(path.."common.lua")
 dofile(path.."notifyTeam.lua")
+dofile(path.."namecolor.lua")
 dofile(path.."settings.lua")
 dofile(path.."ignore.lua")
 dofile(path.."privs.lua")

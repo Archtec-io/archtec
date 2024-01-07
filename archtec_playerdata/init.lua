@@ -33,12 +33,13 @@ local struct = {
 	ignores = "",
 	channels = "",
 	free_votes = 0, -- we use 0 to allow later changes of the max value
-	-- settings
+	-- player settings
 	s_help_msg = true, -- help msg
 	s_tbw_show = true, -- tool breakage warnings
 	s_sp_show = true, -- spawnwaypoint
 	s_r_id = true, -- auto item drop collection
 	s_snow = true, -- enable snow particles
+	s_ncolor = "", -- player namecolor
 }
 
 -- helper funtions
@@ -65,7 +66,7 @@ end
 
 local function valid_player(name)
 	if name ~= nil and name ~= "" and type(name) == "string" then
-		log_debug("valid_player: " .. dump(name) .. " is valid")
+		-- log_debug("valid_player: " .. dump(name) .. " is valid")
 		return true
 	else
 		log_action("valid_player: " .. dump(name) .. " is not valid!") -- log_warning() would trigger staff notifications

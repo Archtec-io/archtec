@@ -6,11 +6,11 @@ metric_minor.set(archtec.version_minor)
 
 local version = minetest.get_version()
 local metric_version = monitoring.gauge("minetest_version", "minetest version", {
-    labels = {
-        version = version.string,
-        project = version.project,
-        hash = version.hash
-    }
+	labels = {
+		version = version.string,
+		project = version.project,
+		hash = version.hash
+	}
 })
 
 metric_version.set(0)

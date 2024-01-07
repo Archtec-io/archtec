@@ -5,8 +5,6 @@
 [chatplus] Don't forget to add a message!=
 [chatplus] #@1 does not exist or you aren't a channel member!=
 [chatplus] You aren't in any channel! (try '/c j main')=
-Change the color of your name=
-Color of your name changed.=
 To=
 From=
 Send a private message to the same person you sent your last message to.=

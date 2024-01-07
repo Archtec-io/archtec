@@ -83,5 +83,6 @@ Show waypoint to spawn=
 Enable snow particles=
 Misc=
 Collect dropped items automatically=
+[archtec] Your new namecolor looks like this: @1.=
 [Forceload Restriction]: 'forceload' priv required to use this node=
 Your tool is about to break!=

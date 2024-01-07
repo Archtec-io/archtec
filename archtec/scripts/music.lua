@@ -1,8 +1,52 @@
 local S = archtec.S
 local music = {}
 local current = {}
-
 local path = minetest.get_worldpath() .. "/music/"
+
+--[[
+	Config file spec:
+	```
+	// Simple comment
+	title = Rain
+	length = 5:24
+	released = 1993
+	artist = Madonna
+	```
+]]--
+
+local function parse_config(file)
+	local config = {}
+	for l in file:lines() do
+		for _ = 0, 0 do
+			-- Ignore comments
+			if l:match("^//") ~= nil then break end
+
+			-- Match keys
+			if l:match("(.+)=") ~= nil then
+				-- Extract key and value
+				local key, value = l:match("(.+)=(.+)")
+				key = key:trim()
+				value = value:trim()
+
+				-- Convert numbers to integers
+				if tonumber(value) ~= nil then
+					value = tonumber(value)
+				end
+
+				-- Convert length from mm:ss to ss
+				if key == "length" then
+					local min, sec = value:match("(.+):(.+)")
+					value = (min * 60) + sec
+				end
+
+				config[key] = value
+			end
+		end
+	end
+	return config
+end
+
+-- print(dump(parse_config(io.open(path .. "rain.conf", "r"))))
 
 function music.play(name, title)
 	minetest.dynamic_add_media({filepath = path .. title .. ".ogg", ephemeral = false, to_player = name}, function(player)
