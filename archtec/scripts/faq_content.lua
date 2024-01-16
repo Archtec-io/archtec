@@ -23,7 +23,7 @@ archtec.faq.register("Private messages", {
 	pos = 2,
 	description = [[
 Use '/msg <name> <message>' to message another player.
-Use '/m <message>' to message the same person your last message was sent to.
+Use '/m <message>' to send a message to the person you sent your last message to.
 ]]
 })
 
@@ -31,11 +31,11 @@ archtec.faq.register("Channels", {
 	header = "Chat",
 	pos = 3,
 	description = [[
-To send a message to a channel prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
+To send a message to a channel, prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
 
-Required arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.
+Required arguments/parameters are indicated with angle braces <> while optional ones have curly braces {}.
 
-Join/Create a channel: (Add 'public' to your command to make the new created channel public. Add 'default' to your command to make the new created channel your default channel)
+Join/Create a channel: (Add 'public' to your command to make the newly created channel public. Add 'default' to your command to make the newly created channel your default channel)
 '/c join <channel> {public} {default}' or
 '/c j <channel> {public} {default}'
 
@@ -73,13 +73,13 @@ archtec.faq.register("Chatbridge to Discord, Matrix and IRC", {
 	header = "Chat",
 	pos = 4,
 	description = [[
-The chat bridge uses Matterbridge facilitating additional platform integrations in the future.
+The chat bridge uses Matterbridge, facilitating additional platform integrations in the future.
 
 Links to the platforms are in '/news'.
 
 The following commands and chat formats are supported:
 - Regular chat messages
-- '/me' Used in conjunction with a verb do indicate you as a player performing an action as described by a 3rd person, e.g. '/me talks' -> Player talks
+- '/me' Used in conjunction with a verb to indicate you as a player acting as described by a 3rd person, e.g., '/me talks' -> Player talks
 - '!status' Shows the server status
 - '!cmd' Remote command execution (staff only)
 ]]
@@ -90,8 +90,8 @@ archtec.faq.register("Interaction", {
 	header = "Player interaction",
 	pos = 1,
 	description = [[
-Allows you to block other players from interacting and communicating with you.
-Currently ignore isn't supported by all features/functions but most are. :).
+'/ignore' allows you to block other players from interacting and communicating with you.
+Ignore is currently not supported by all functions, but by most :).
 
 Block/Ignore a player:
 '/ignore add <name>' or
@@ -129,12 +129,12 @@ archtec.faq.register("PvP", {
 	header = "Player interaction",
 	pos = 3,
 	description = [[
-Each player on Archtec can opt in or out of PvP mode, opting into PvP mode allows other players to harm/fight you and allows you to harm/fight other players that have opted into PvP mode.
+Each player on Archtec can opt in or out of PvP mode. If you enable PvP mode, other players can hurt/fight against you, and you can fight other players who have chosen PvP mode.
 
 - To enable PvP, toggle the sword button in your inventory screen.
 - To disable PvP, toggle the button again.
 
-PvP mode gets reset on login and has to be re-enabled for each login session.
+PvP mode gets disabled when logging off. You have to re-enable it after logging back in.
 ]]
 })
 
@@ -144,23 +144,23 @@ archtec.faq.register("Voting", {
 	description = [[
 There are three kinds of votes a player on Archtec can initiate:
 
-Each player starts with 5 free votes since it might take new player a while to get etherium dust. To check how many free votes you have remaining use the '/stats' command.
+Each player starts with 5 free votes since it might take new players a while to get Etherium Dust. To check how many free votes you have remaining, use the '/stats' command.
 
-Vote to make it day:
+Vote to skip the night (switches to daytime if the voting succeeds):
 - Turns in-game night into day
 - Costs 3 etherium dust
 - Requires 60% of votes to be YES to succeed
 
-Vote to make it night:
+Vote to skip the day (switches to nighttime if the voting succeeds):
 - Turns in-game day into night
 - Costs 3 etherium dust
 - Requires 60% of votes to be YES to succeed
 
 Vote to kick a player:
-- Kicks a mis-behaving player off the server
+- Kicks a misbehaving player off the server
 - Costs nothing
 - Requires 80% of votes to be YES to succeed
-- To prevent abuse there must be at least 4 players online to initate the vote
+- To prevent abuse, there must be at least 4 players online to initiate the vote
 ]]
 })
 
@@ -168,15 +168,15 @@ archtec.faq.register("Stats & Ranking", {
 	header = "Player interaction",
 	pos = 5,
 	description = [[
-Archtec records certain statistics on all players. To see statistics for a player you can use the stats command. Stats recording is activated since 2023-02-01. Previously only playtime and first join date were saved.
+Archtec records some statistics on all players. To see the stats of a player, you can use the '/stats' command. Stats recording was enabled at 2023-02-01. Previously, only playtime and the first join date were saved.
 
-To show a players statistics use:
+To show a player's statistics use:
 - '/stats <name>'
 
 To show a ranking of the players with the most XP*:
 - '/rank'
 
-* XP points are calculated from various other values (e.g. dug nodes) and ranked.
+* XP points are calculated from various other values (e.g., dug nodes) and ranked.
 ]]
 })
 
@@ -184,7 +184,7 @@ archtec.faq.register("Thank you", {
 	header = "Player interaction",
 	pos = 6,
 	description = [[
-The are many helpful players on Archtec, if someone has been helpful and you want to thank them and call them out for their assistance use the '/thankyou' command. To see how many thankyou's a player has received use the '/stats' command. :-)
+There are many helpful players on Archtec. If someone has been helpful and you want to thank them and call them out for their assistance, use the '/thankyou' command. To see how many thankyou's a player has received, use the '/stats' command. :-)
 
 To thank a player:
 '/thankyou <name>'
@@ -212,7 +212,7 @@ Protect an area
 2. Protect the selected area
 - `/protect <Areaname>`
 
-The area name is used only for informational purposes and has no functional importance
+The area name is used only for informational purposes and has no functional importance.
 
 
 Add an owner to your area
@@ -221,7 +221,7 @@ Add an owner to your area
 - `/select_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
 
 2. Create a new area with new owner
-- `/add_owner <ID> <Name> <Areaname>` Use for `ID` the same as in 1., `Name` is the player you want to give owner rights, choose for `Areaname` a name you want
+- `/add_owner <ID> <Name> <Areaname>` Use for `ID` the same as in 1. `Name` is the player you want to give owner rights, choose for `Areaname` a name you want
 
 
 Open an area temporary
@@ -232,7 +232,7 @@ Open an area temporary
 
 Change the owner of an area
 
-1. Change the owner of an specified area
+1. Change the owner of a specified area
 - `/change_owner <ID> <Name>` Gives `Name` control over the specified area
 
 
@@ -251,12 +251,12 @@ Change the size of an area (staff only)
 - `/move_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
 
 
-Remove an area/areas
+Remove an area
 
 1. Remove an area
 - `/remove_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
 
-2. Removes an areas and all sub-areas of it
+2. Removes an area and all sub-areas of it
 - `/recursive_remove_areas <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
 
 
@@ -284,14 +284,14 @@ archtec.faq.register("Find areas without protection", {
 	header = "Spawn",
 	pos = 2,
 	description = [[
-The Archtec spawn area is very large (>2000x2000 nodes) and most players want to find a place where they can mine, build or interact with the environment.
+The Archtec spawn area is very large (>2000x2000 nodes), and most players want to find a place where they can mine, build, or interact with the environment.
 
 Players can choose one of several ways to get out of the protected spawn area and find a nice place to make their own.
 
-- There is a white "Teleporter" house adjacent to spawn platform, inside you will find several teleporters that will instantly transport you to mining and building sites where you can start your build/mine/journey. If at any time you want to return to spawn just type '/spawn'
-- Walking out of spawn can be a rewarding experience since you can see all the fantastic builds and structures other players have created. Note that it will take a while and be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident you can return to where your bones and pick up your stuff
-- If you want to build far from others you might want to check out the online Archtec Map https://archmap.niklp.net
-- Some players have created their own personal travel nets that go to the very edges of the universe, ask around if your curios and want to discover just how big our server is.
+- There is a white "Teleporter" house adjacent to the spawn platform, where you will find several teleporters that will instantly transport you to mining and building sites where you can start your build/mine/journey. If at any time you want to return to spawn, just type '/spawn'
+- Walking out of spawn can be a rewarding experience since you can see all the fantastic builds and structures other players have created. Note that it will take a while, and should be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident, you can return to where your bones are and pick up your stuff
+- If you want to build far from others, you might want to check out the online Archtec Map https://archmap.niklp.net.
+- Some players have created their own personal Travelnet Networks, that go to the very edges of the universe. Ask around if you are curious and want to discover, how big our server is.
 ]]
 })
 
@@ -302,20 +302,20 @@ archtec.faq.register("Privileges", {
 	description = [[
 Some actions and block interactions require special privileges due to having the potential of being very destructive or negatively impacting other players or server performance.
 
-Admins will not grant individual player privileges but some privileges are automatically granted as players reach certain milestones or gain experience.
+Admins will not grant individual player privileges, but some privileges are automatically granted as players reach certain milestones or gain experience.
 
 Forceload ('forceload'):
 - The ability to place forceload blocks
 - Granted when a player reaches Techage Level 3 (places first TA3 Oil Drillbox)
-- Forceload blocks cause the mapblock (16x16x16 nodes) area they are placed in to be continously loaded while a player is logged in regardless of where they are.
+- Forceload blocks cause the mapblock (16x16x16 nodes) area they are placed in to be continuously loaded while a player is logged in regardless of where they are.
 
 Lava buckets ('adv_buckets'):
 - Requires 50 hours of playtime (player being logged in and playing on the server)
-- Granted when you place/pour your first lava bucket which you'll be able to do after reaching 50 hours of play time.
+- Granted when you place/pour your first lava bucket which you'll be able to do after reaching 50 hours of playtime.
 
 Bigger and more protected areas ('areas_high_limit'):
 - Requires 30 hours of playtime (player being logged in and playing on the server)
-- When the condition is met you'll be granted the privilege when needed automatically.
+- When the condition is met, you'll be granted the privilege when needed automatically.
 
 Chainsaw ('archtec_chainsaw'):
 - Requires 24 hours of playtime (player being logged in and playing on the server)
@@ -330,9 +330,9 @@ archtec.faq.register("Teleport Home", {
 	header = "Player related",
 	pos = 2,
 	description = [[
-Archtec supports two separate systems by which a player can save their home location and instantly teleport to that location. The first system uses the command console with '/sethome' and '/home' while the other system uses the red/green arrow home buttons in the player inventory GUI.
+Archtec supports two separate systems by which players can save their home location and instantly teleport to that location. The first system uses the command console with '/sethome' and '/home'. The second system uses the red/green arrow home buttons in the player inventory GUI.
 
-The two home positions are completly independent which allows a player to have two home positions set.
+The two home positions are completely independent. That allows a player to have two home positions set.
 
 System 1 - Home/Sethome:
 - Execute '/home' to teleport to your home position
@@ -340,7 +340,7 @@ System 1 - Home/Sethome:
 
 System 2 - Inventory home:
 - Use the green arrow home button in the inventory window to teleport to the home position
-- Use the red arrow home button in the inventory window to set your home to your current postion
+- Use the red arrow home button in the inventory window to set your home to your current position
 ]]
 })
 
@@ -362,20 +362,20 @@ archtec.faq.register("Node placement limits", {
 	description = [[
 Drawers:
 Minetest has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
-Each drawer adds 1-4 entities resulting in the number of drawers per mapblock being restricted.
+Each drawer adds 1-4 entities, resulting in the number of drawers per mapblock having to be restricted.
 You can't place new drawers when the mapblock contains more than 70 entities.
 
 Hoppers:
-Hoppers add a significant amount of server load and for performance reasons each player is restricted to 10 hoppers in any given 24 node radius.
+Hoppers add a significant amount of server load, and for performance reasons, each player is restricted to 10 hoppers in any given 24-node radius.
 Where possible it's recommended to use the hoppers from the 'minecart' mod rather than the default hoppers.
 
 Techage (TA) quarries:
-To prevent oversize factories there is a hard limit of 3 on the number of Techage (TA)
-Quarries each player is allowed to place within a 24 node radius.
+To prevent oversize factories, there is a hard limit of 3 on the number of Techage (TA)
+Quarries each player is allowed to place within a 24-node radius.
 
-Sign bots:
-These cute little bots while being very useful can also cause a significant amount of lag and performance issues.
-To prevent this from impacting other players each player is limted to placing 7 signs bots within a 24 node radius.
+Sign Bots:
+While these cute little bots are very useful, they can also cause significant lag and performance issues.
+To prevent this from impacting other players, each player is limited to placing 7 Signs Bots within a 24-node radius.
 ]]
 })
 
@@ -386,10 +386,10 @@ archtec.faq.register("Tower cranes", {
 Tower cranes allow a player to freely move within the boundaries set during the crane construction (similar to how players can move/fly in creative mode).
 
 1. Place the crane and right-click it to enter the crane menu.
-2. Enter the desired height/length comma separated. e.g. '20,30', this will build a crane 20 nodes high and 30 nodes long.
-3. To start flying right-click the red button on the crane and press "K" on your keyboard.
+2. Enter the desired height/length comma separated. e.g., '20,30', this will build a crane 20 nodes high and 30 nodes long.
+3. To start flying, right-click the red button on the crane and press "K" on your keyboard.
 
-To stop flying press the green button on the crane.
+To stop flying, press the green button on the crane.
 ]]
 })
 
@@ -397,7 +397,7 @@ archtec.faq.register("Lava solidification", {
 	header = "Other",
 	pos = 3,
 	description = [[
-Lava can turn into several other node types when it solidifies depending on whether it's still or flowing and which cooling block it comes into contact with.
+Lava can turn into several other node types when it solidifies, depending on whether it's still or flowing and which cooling block it comes into contact with.
 
 Cooling blocks can be:
 - Water
@@ -407,17 +407,17 @@ Cooling blocks can be:
 
 Archtec behavior:
 - All still lava ('lava_source') turns into obsidian regardless of which cooling block it comes into contact with.
-- Flowing lava that comes into contact with water, ice or thin ice turns into basalt stone.
+- Flowing lava that comes into contact with water, ice, or thin ice turns into basalt stone.
 - Flowing lava that comes into contact with dry ice turns into cobblestone
 
-This differs significantly from the default minetest behavior where all flowing lava turns into cobblestone when it comes into contact with water or ice.
+This differs significantly from the default minetest behavior, where all flowing lava turns into cobblestone when it comes into contact with water or ice.
 
-For players building cobblestone generators you will have to use dry ice instead of water or ice for your generator to yield regular cobblestone.
+For players building cobblestone generators, you must use dry ice instead of water or ice for your generator to yield regular cobblestone.
 
 - Dry ice is produced from water and diamond powder with a Techage (TA4) chemical reactor
-- Diamond powder drops in Techage (TA) gravel rinsers with probability 1/300
+- Diamond powder drops in Techage (TA) gravel rinsers with a probability of 1/300
 
-For more information see the Techage manual or in-game guide.
+For more information, see the Techage manual or in-game guide.
 ]]
 })
 
@@ -432,7 +432,7 @@ Special ores:
 
 - Titanium doesn't drop in Techage (TA) gravel sieves
 
-Titanium tools are more durable than diamond or mithril tools but they tend to be slower.
+Titanium tools are more durable than diamond or mithril tools, but Titanium tools tend to be slower.
 ]]
 })
 
@@ -441,14 +441,14 @@ archtec.faq.register("Useful chat commands", {
 	pos = 5,
 	description = [[
 General:
-- '/faq' show this Frequenty Asked Questions section
-- '/news' show the news from join again (staff only)
-- '/report <msg>' report an bug/issue/feature-request to the server staff (Creates a GitHub issue and a Discord notification)
+- '/faq' shows this Frequently Asked Questions section
+- '/news' shows the news from join again (staff only)
+- '/report <msg>' report a bug/issue/feature request to the server staff (Creates a GitHub issue and a Discord notification)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
 
 Techage:
 - '/my_expoints' show your TA 5 experience points
-- '/ta_color' show a color pallete for controller
+- '/ta_color' shows a color palette for the controller
 - '/ta_limit' show your TA command limit
 ]]
 })
@@ -457,7 +457,7 @@ archtec.faq.register("TNT and explosions", {
 	header = "Other",
 	pos = 6,
 	description = [[
-There is no way for players to use TNT on Archtec, if you want to clear large areas, you should use techage quarries instead.
+There is no way for players to use TNT on Archtec. If you want to clear large areas, you should use techage quarries instead.
 
 The following mobs can cause explosions:
 - Dugeon master (DM), when it hits a node, radius 1
@@ -475,6 +475,6 @@ Biofuel has multiple use cases:
 - As fuel for the chainsaw
 - As fuel for the TA3 Tiny Power Generator
 
-- As craft ingredient, search in your inventory after "group:biofuel"
+- As a craft ingredient, search in your inventory after "group:biofuel"
 ]]
 })
