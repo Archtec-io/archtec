@@ -166,7 +166,7 @@ local function show_fs(name, active_tab)
 		y = y + 0.3
 
 		formspec = formspec ..
-			"field[" .. x .. "," .. y .. ";4,0.8;nametag_str;;" .. props.nametag .. "]"
+			"field[" .. x .. "," .. y .. ";4,0.8;nametag_str;;" .. minetest.formspec_escape(props.nametag) .. "]"
 
 		formspec = formspec ..
 			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_nametag_str;Set]"

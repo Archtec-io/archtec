@@ -18,7 +18,7 @@ local FORMSPEC = [[
 
 local defs = {}
 local entries = {}
-local default_description = S("For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.")
+local default_text = S("For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.")
 
 local function faq_tree()
 	for name, def in pairs(defs) do
@@ -41,14 +41,14 @@ minetest.after(0, faq_tree)
 local function faq_formspec(sel)
 	local rows = {}
 
-	local description = default_description
+	local text = default_text
 
 	for _, data in ipairs(entries) do
 		rows[#rows + 1] = COLOR_BLUE .. ",0," .. F(data[1])
 		for _, content in ipairs(data[2]) do
 			rows[#rows + 1] = COLOR_GREEN .. ",1," .. F(content[1])
 			if sel == #rows then
-				description = content[2].description
+				text = content[2].text
 			end
 		end
 	end
@@ -56,7 +56,7 @@ local function faq_formspec(sel)
 	return FORMSPEC:format(
 		FS("Archtec FAQ (/faq)"),
 		table.concat(rows, ","), sel or 0,
-		F(description), FS("Close")
+		F(text), FS("Close")
 	)
 end
 
@@ -73,7 +73,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 end)
 
 minetest.register_chatcommand("faq", {
-	description = S("View ingame FAQ"),
+	text = S("View ingame FAQ"),
 	privs = {interact = true},
 	func = function(name)
 		minetest.log("action", "[/faq] executed by '" .. name .. "'")

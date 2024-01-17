@@ -46,7 +46,7 @@ function monitoring.serialize_prometheus_metric(metric)
 				-- append labels
 				data = data .. monitoring.serialize_prometheus_labels(metric.options.labels)
 			end
-			data = data  .. " " .. metric.value .. "\n"
+			data = data .. " " .. metric.value .. "\n"
 
 			if metric.options and metric.options.autoflush then
 				-- reset metric value on export
@@ -57,7 +57,7 @@ function monitoring.serialize_prometheus_metric(metric)
 
 		if metric.type == "histogram" then
 			for k, bucket in ipairs(metric.buckets) do
-				data = data .. metric.name .. "_bucket{le=\"" .. bucket  .. "\"} " .. metric.bucketvalues[k] .. "\n"
+				data = data .. metric.name .. "_bucket{le=\"" .. bucket .. "\"} " .. metric.bucketvalues[k] .. "\n"
 			end
 			data = data .. metric.name .. "_bucket{le=\"+Inf\"} " .. metric.infcount .. "\n"
 			data = data .. metric.name .. "_sum " .. metric.sum .. "\n"

@@ -2,8 +2,8 @@
 archtec.faq.register("My nice title", { <- Title of the entry
 	header = "Cool stuff", <- Name of the associated category
 	pos = 1, <- Position inside the section
-	description = [[
-My cool text" <- Description of the section content
+	text = [[
+My cool text" <- Text of the section content
 ]*] -- The * is not needed
 })
 ]]--
@@ -12,7 +12,7 @@ My cool text" <- Description of the section content
 archtec.faq.register("Namecolor", {
 	header = "Chat",
 	pos = 1,
-	description = [[
+	text = [[
 You can change your namecolor in the #main channel via '/namecolor <color>'.
 To see a list of supported colors, use '/namecolor' without params.
 ]]
@@ -21,7 +21,7 @@ To see a list of supported colors, use '/namecolor' without params.
 archtec.faq.register("Private messages", {
 	header = "Chat",
 	pos = 2,
-	description = [[
+	text = [[
 Use '/msg <name> <message>' to message another player.
 Use '/m <message>' to send a message to the person you sent your last message to.
 ]]
@@ -30,7 +30,7 @@ Use '/m <message>' to send a message to the person you sent your last message to
 archtec.faq.register("Channels", {
 	header = "Chat",
 	pos = 3,
-	description = [[
+	text = [[
 To send a message to a channel, prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
 
 Required arguments/parameters are indicated with angle braces <> while optional ones have curly braces {}.
@@ -72,7 +72,7 @@ Show help:
 archtec.faq.register("Chatbridge to Discord, Matrix and IRC", {
 	header = "Chat",
 	pos = 4,
-	description = [[
+	text = [[
 The chat bridge uses Matterbridge, facilitating additional platform integrations in the future.
 
 Links to the platforms are in '/news'.
@@ -89,7 +89,7 @@ The following commands and chat formats are supported:
 archtec.faq.register("Interaction", {
 	header = "Player interaction",
 	pos = 1,
-	description = [[
+	text = [[
 '/ignore' allows you to block other players from interacting and communicating with you.
 Ignore is currently not supported by all functions, but by most :).
 
@@ -111,7 +111,7 @@ List blocked/ignored players:
 archtec.faq.register("Teleport requests", {
 	header = "Player interaction",
 	pos = 2,
-	description = [[
+	text = [[
 Request to teleport to another players position:
 '/tpr <name>'
 
@@ -128,7 +128,7 @@ All teleport requests time out after 60 seconds.
 archtec.faq.register("PvP", {
 	header = "Player interaction",
 	pos = 3,
-	description = [[
+	text = [[
 Each player on Archtec can opt in or out of PvP mode. If you enable PvP mode, other players can hurt/fight against you, and you can fight other players who have chosen PvP mode.
 
 - To enable PvP, toggle the sword button in your inventory screen.
@@ -141,7 +141,7 @@ PvP mode gets disabled when logging off. You have to re-enable it after logging 
 archtec.faq.register("Voting", {
 	header = "Player interaction",
 	pos = 4,
-	description = [[
+	text = [[
 There are three kinds of votes a player on Archtec can initiate:
 
 Each player starts with 5 free votes since it might take new players a while to get Etherium Dust. To check how many free votes you have remaining, use the '/stats' command.
@@ -167,7 +167,7 @@ Vote to kick a player:
 archtec.faq.register("Stats & Ranking", {
 	header = "Player interaction",
 	pos = 5,
-	description = [[
+	text = [[
 Archtec records some statistics on all players. To see the stats of a player, you can use the '/stats' command. Stats recording was enabled at 2023-02-01. Previously, only playtime and the first join date were saved.
 
 To show a player's statistics use:
@@ -183,7 +183,7 @@ To show a ranking of the players with the most XP*:
 archtec.faq.register("Thank you", {
 	header = "Player interaction",
 	pos = 6,
-	description = [[
+	text = [[
 There are many helpful players on Archtec. If someone has been helpful and you want to thank them and call them out for their assistance, use the '/thankyou' command. To see how many thankyou's a player has received, use the '/stats' command. :-)
 
 To thank a player:
@@ -194,7 +194,7 @@ To thank a player:
 archtec.faq.register("Areas", {
 	header = "Player interaction",
 	pos = 7,
-	description = [[
+	text = [[
 Based on: https://archtec.niklp.net/areas/
 
 Areas information
@@ -271,7 +271,7 @@ Rename an area
 archtec.faq.register("Teleport to spawn", {
 	header = "Spawn",
 	pos = 1,
-	description = [[
+	text = [[
 To teleport back to Spawn:
 - '/spawn' or '/s'
 
@@ -283,7 +283,7 @@ To teleport back to Old Spawn:
 archtec.faq.register("Find areas without protection", {
 	header = "Spawn",
 	pos = 2,
-	description = [[
+	text = [[
 The Archtec spawn area is very large (>2000x2000 nodes), and most players want to find a place where they can mine, build, or interact with the environment.
 
 Players can choose one of several ways to get out of the protected spawn area and find a nice place to make their own.
@@ -299,7 +299,7 @@ Players can choose one of several ways to get out of the protected spawn area an
 archtec.faq.register("Privileges", {
 	header = "Player related",
 	pos = 1,
-	description = [[
+	text = [[
 Some actions and block interactions require special privileges due to having the potential of being very destructive or negatively impacting other players or server performance.
 
 Admins will not grant individual player privileges, but some privileges are automatically granted as players reach certain milestones or gain experience.
@@ -329,7 +329,7 @@ Chainsaw ('archtec_chainsaw'):
 archtec.faq.register("Teleport Home", {
 	header = "Player related",
 	pos = 2,
-	description = [[
+	text = [[
 Archtec supports two separate systems by which players can save their home location and instantly teleport to that location. The first system uses the command console with '/sethome' and '/home'. The second system uses the red/green arrow home buttons in the player inventory GUI.
 
 The two home positions are completely independent. That allows a player to have two home positions set.
@@ -347,7 +347,7 @@ System 2 - Inventory home:
 archtec.faq.register("Settings", {
 	header = "Player related",
 	pos = 3,
-	description = [[
+	text = [[
 - Main settings: Press the cog/sprocket button in your inventory window
 - Namecolor: See FAQ->Chat->Namecolor
 - Skin: Press the "face" button in your inventory
@@ -359,7 +359,7 @@ archtec.faq.register("Settings", {
 archtec.faq.register("Node placement limits", {
 	header = "Other",
 	pos = 1,
-	description = [[
+	text = [[
 Drawers:
 Minetest has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
 Each drawer adds 1-4 entities, resulting in the number of drawers per mapblock having to be restricted.
@@ -382,7 +382,7 @@ To prevent this from impacting other players, each player is limited to placing 
 archtec.faq.register("Tower cranes", {
 	header = "Other",
 	pos = 2,
-	description = [[
+	text = [[
 Tower cranes allow a player to freely move within the boundaries set during the crane construction (similar to how players can move/fly in creative mode).
 
 1. Place the crane and right-click it to enter the crane menu.
@@ -396,7 +396,7 @@ To stop flying, press the green button on the crane.
 archtec.faq.register("Lava solidification", {
 	header = "Other",
 	pos = 3,
-	description = [[
+	text = [[
 Lava can turn into several other node types when it solidifies, depending on whether it's still or flowing and which cooling block it comes into contact with.
 
 Cooling blocks can be:
@@ -424,7 +424,7 @@ For more information, see the Techage manual or in-game guide.
 archtec.faq.register("Ores and Tools", {
 	header = "Other",
 	pos = 4,
-	description = [[
+	text = [[
 Special ores:
 - Bauxite can be found at depths between -50 and -500
 - Baborium can be found at depths between -250 and -340
@@ -439,7 +439,7 @@ Titanium tools are more durable than diamond or mithril tools, but Titanium tool
 archtec.faq.register("Useful chat commands", {
 	header = "Other",
 	pos = 5,
-	description = [[
+	text = [[
 General:
 - '/faq' shows this Frequently Asked Questions section
 - '/news' shows the news from join again (staff only)
@@ -456,7 +456,7 @@ Techage:
 archtec.faq.register("TNT and explosions", {
 	header = "Other",
 	pos = 6,
-	description = [[
+	text = [[
 There is no way for players to use TNT on Archtec. If you want to clear large areas, you should use techage quarries instead.
 
 The following mobs can cause explosions:
@@ -468,7 +468,7 @@ The following mobs can cause explosions:
 archtec.faq.register("Biofuel", {
 	header = "Other",
 	pos = 7,
-	description = [[
+	text = [[
 Biofuel is produced in the Biofuel Refinery.
 
 Biofuel has multiple use cases:
