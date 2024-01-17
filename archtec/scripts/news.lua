@@ -26,17 +26,22 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:news" then return end
 	if fields.news and fields.news:sub(1, 12) == "action:link_" then
 		local link = fields.news:sub(13, #fields.news)
-		local url = ""
+		local url = nil
 
+		-- Some hardcoded URLs
 		if link == "website" then url = archtec.links.website end
 		if link == "discord" then url = archtec.links.discord end
 		if link == "matrix" then url = archtec.links.matrix end
-		if link == "grooming" then url = archtec.links.grooming end
+
+		-- Dynamic URLs
+		if url == nil then
+			url = link
+		end
 
 		if url ~= nil then
 			local name = player:get_player_name()
 			minetest.close_formspec(name, "archtec:news")
-			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click this link to open the website:")) .. " " .. url)
+			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click the link to open your browser:")) .. " " .. url)
 		end
 	end
 

@@ -9,18 +9,9 @@ My cool text" <- Text of the section content
 ]]--
 
 -- Chat
-archtec.faq.register("Namecolor", {
-	header = "Chat",
-	pos = 1,
-	text = [[
-You can change your namecolor in the #main channel via '/namecolor <color>'.
-To see a list of supported colors, use '/namecolor' without params.
-]]
-})
-
 archtec.faq.register("Private messages", {
 	header = "Chat",
-	pos = 2,
+	pos = 1,
 	text = [[
 Use '/msg <name> <message>' to message another player.
 Use '/m <message>' to send a message to the person you sent your last message to.
@@ -29,7 +20,7 @@ Use '/m <message>' to send a message to the person you sent your last message to
 
 archtec.faq.register("Channels", {
 	header = "Chat",
-	pos = 3,
+	pos = 2,
 	text = [[
 To send a message to a channel, prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
 
@@ -71,7 +62,7 @@ Show help:
 
 archtec.faq.register("Chatbridge to Discord, Matrix and IRC", {
 	header = "Chat",
-	pos = 4,
+	pos = 3,
 	text = [[
 The chat bridge uses Matterbridge, facilitating additional platform integrations in the future.
 
@@ -349,7 +340,6 @@ archtec.faq.register("Settings", {
 	pos = 3,
 	text = [[
 - Main settings: Press the cog/sprocket button in your inventory window
-- Namecolor: See FAQ->Chat->Namecolor
 - Skin: Press the "face" button in your inventory
 - Hotbar size: Execute '/hotbar <size>' to change the size of your hotbar
 ]]
