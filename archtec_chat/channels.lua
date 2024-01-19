@@ -7,10 +7,11 @@ local max_user_channels = 10
 
 --[[
 local cdef_default = {
-	owner = "",
-	users = {},
-	invites = {},
-	public = false
+	owner = "", -- The channel operator
+	users = {}, -- All online users of the channel mapped by playername = true
+	invites = {}, -- All currently runnung invites mapped by playername = expire-timestamp
+	secured = false, -- Kicks non staff members after log out
+	public = false, -- Allows everyone to join the channel w/o invite
 }
 ]]--
 
@@ -35,6 +36,24 @@ local function is_channel_owner(cdef, name)
 	end
 	return false
 end
+
+local function list_table(t)
+	if next(t) == nil then
+		return ""
+	end
+	return archtec.keys_to_string(t)
+end
+
+local function get_cname(c)
+	if not c then return end
+	if c:sub(1, 1) == "#" then
+		return c:sub(2, #c)
+	else
+		return c
+	end
+end
+
+channel.get_cname = get_cname
 
 function archtec_chat.user.open(name)
 	local data = minetest.deserialize(archtec_playerdata.get(name, "channels"))
@@ -67,7 +86,18 @@ function archtec_chat.user.open(name)
 end
 
 function archtec_chat.user.save(name)
+	-- Permanently leave secured channels
+	for cname, _ in pairs(archtec_chat.users[name].channels) do
+		local cdef = get_cdef(cname)
+		if cdef.secured and not is_channel_owner(cdef, name) then
+			channel.leave(cname, name, name .. " left secured channel until next invite.")
+		end
+	end
+
+	-- Save channels
 	archtec_playerdata.set(name, "channels", minetest.serialize(archtec_chat.users[name]))
+
+	-- Leave all remaining channels
 	for cname, _ in pairs(archtec_chat.users[name].channels) do
 		channel.leave(cname, name, "")
 	end
@@ -93,7 +123,13 @@ end
 
 function channel.create(cname, params)
 	minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. (params.owner or "") .. "'")
-	local def = {owner = params.owner or "", public = params.public or false, users = {}, invites = {}}
+	local def = {
+		owner = params.owner or "",
+		public = params.public or false,
+		secured = params.secured or false,
+		users = {},
+		invites = {},
+	}
 	archtec_chat.channels[cname] = def
 end
 
@@ -158,24 +194,6 @@ function channel.invite_accept(cname, target)
 	channel.invite_delete(cname, target, false)
 	channel.join(cname, target)
 end
-
-local function list_table(t)
-	if next(t) == nil then
-		return ""
-	end
-	return archtec.keys_to_string(t)
-end
-
-local function get_cname(c)
-	if not c then return end
-	if c:sub(1, 1) == "#" then
-		return c:sub(2, #c)
-	else
-		return c
-	end
-end
-
-channel.get_cname = get_cname
 
 local help_list = {
 	join = {
