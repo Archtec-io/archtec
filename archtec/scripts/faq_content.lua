@@ -8,6 +8,14 @@ My cool text" <- Text of the section content
 })
 ]]--
 
+archtec.faq.register_headers({
+	["Spawn"] = 1,
+	["Chat"] = 2,
+	["Player related"] = 3,
+	["Player interaction"] = 4,
+	["Other"] = 5,
+})
+
 -- Chat
 archtec.faq.register("Private messages", {
 	header = "Chat",

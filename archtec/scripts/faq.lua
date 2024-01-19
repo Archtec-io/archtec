@@ -7,18 +7,26 @@ local S = archtec.S
 local FS = function(...) return F(S(...)) end
 
 local FORMSPEC = [[
-	size[13,7.5]
-	label[0,-0.1;%s]
+	formspec_version[3]
+	size[17,9.6]
+	label[0.4,0.4;%s]
+	tableoptions[opendepth=1]
 	tablecolumns[color;tree;text]
-	table[0,0.5;4.8,6;list;%s;%i]
-	box[5,0.5;7.7,6;#000]
-	textarea[5.3,0.5;8,7.05;;;%s]
-	button_exit[5,7;3,1;quit;%s]
+	table[0.4,0.8;5.8,7;list;%s;%i]
+	box[6.6,0.8;10,7;#000]
+	textarea[6.6,0.8;10,7;;;%s]
+	button_exit[7,8.2;3,1;quit;%s]
 ]]
 
 local defs = {}
+local order_headers = {}
 local entries = {}
-local default_text = S("For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.")
+local default_text = [[
+For more information, click on any entry in the list.
+
+Required chat command arguments/parameters are indicated with angle braces "<>",
+optional ones have curly braces "{}".
+]]
 
 local function faq_tree()
 	for name, def in pairs(defs) do
@@ -32,7 +40,7 @@ local function faq_tree()
 		table.sort(content, function(a, b) return a[2].pos < b[2].pos end) -- sort after pos
 		sorted_entries[#sorted_entries + 1] = {header, content}
 	end
-	table.sort(sorted_entries, function(a, b) return a[1] < b[1] end)
+	table.sort(sorted_entries, function(a, b) return order_headers[a[1]] < order_headers[b[1]] end)
 	entries = sorted_entries
 end
 
@@ -83,4 +91,8 @@ minetest.register_chatcommand("faq", {
 
 function archtec.faq.register(name, def)
 	defs[name] = def
+end
+
+function archtec.faq.register_headers(def)
+	order_headers = def
 end

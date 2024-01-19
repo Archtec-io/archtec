@@ -3,7 +3,6 @@
 You don't have @1 hours (or more) playtime=
 Congratulations! You have been granted the '@1' privilege=
 [chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account=
-For more information, click on any entry in the list. Required chatcommand arguments/parameters are indicated with angle braces <> while optional ones are have curly braces {}.=
 Archtec FAQ (/faq)=
 Close=
 View ingame FAQ=
