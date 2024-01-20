@@ -1,248 +1,175 @@
-local spectator_mode = {}
-local sm = spectator_mode
+local S = archtec.S
+local C = minetest.colorize
+local state = {}
 
--- cache of saved states indexed by player name
--- original_state["watcher"] = state
-local original_state = {}
-
-local function original_state_get(player)
-	if not player or not player:is_player() then return end
-
-	-- check cache
-	local state = original_state[player:get_player_name()]
-	if state then return state end
-
-	-- fallback to player's meta
-	return minetest.deserialize(player:get_meta():get_string("spectator_mode:state"))
-end
-
-local function original_state_set(player, state)
-	if not player or not player:is_player() then return end
-
-	-- save to cache
-	original_state[player:get_player_name()] = state
-
-	-- backup to player's meta
-	player:get_meta():set_string("spectator_mode:state", minetest.serialize(state))
-end
-
-local function original_state_delete(player)
-	if not player or not player:is_player() then return end
-	-- remove from cache
-	original_state[player:get_player_name()] = nil
-	-- remove backup
-	player:get_meta():set_string("spectator_mode:state", "")
-end
-
--- can be overriden to manipulate new_hud_flags
--- flags are the current hud_flags of player
-function spectator_mode.turn_off_hud_hook(player, flags, new_hud_flags)
-	new_hud_flags.breathbar = flags.breathbar
-	new_hud_flags.healthbar = flags.healthbar
-end -- turn_off_hud_hook
-
--- this doesn't hide /postool hud, hunger bar and similar
-local function turn_off_hud_flags(player)
-	local flags = player:hud_get_flags()
-	local new_hud_flags = {}
-	for flag in pairs(flags) do
-		new_hud_flags[flag] = false
+local function detach(name)
+	if not player_api.player_attached[name] then
+		return -- Player not attached
 	end
-	sm.turn_off_hud_hook(player, flags, new_hud_flags)
-	player:hud_set_flags(new_hud_flags)
-end -- turn_off_hud_flags
 
--- called by the detach command '/unwatch'
--- called on logout if player is attached at that time
--- called before attaching to another player
-local function detach(name_watcher)
-	-- nothing to do
-	if not player_api.player_attached[name_watcher] then return end
+	local player = minetest.get_player_by_name(name)
+	local props = state[name]
 
-	local watcher = minetest.get_player_by_name(name_watcher)
-	if not watcher then return end -- shouldn't ever happen
+	if not state[name] then
+		return
+	end
 
-	watcher:set_detach()
-	player_api.player_attached[name_watcher] = false
-	watcher:set_eye_offset()
+	-- Detach from any object
+	player:set_detach()
+	player:set_eye_offset()
+	player_api.player_attached[name] = false
 
-	local state = original_state_get(watcher)
-	-- nothing else to do
-	if not state then return end
-
-	-- NOTE: older versions of MT/MC may not have this
-	watcher:set_nametag_attributes({
-		color = state.nametag.color,
-		bgcolor = state.nametag.bgcolor
+	-- Restore nametag
+	player:set_nametag_attributes({
+		color = props.nametag_color,
+		bgcolor = props.nametag_bgcolor,
 	})
-	watcher:hud_set_flags(state.hud_flags)
-	watcher:set_properties({
-		visual_size = state.visual_size,
-		makes_footstep_sound = state.makes_footstep_sound,
-		collisionbox = state.collisionbox,
+
+	-- Restore player props
+	player:set_properties({
+		visual_size = props.visual_size,
+		makes_footstep_sound = props.makes_footstep_sound,
+		collisionbox = props.collisionbox,
 	})
-	archtec.ranks_update_nametag(watcher, false)
 
-	-- restore privs
-	local privs = minetest.get_player_privs(name_watcher)
-	privs.interact = state.priv_interact
+	-- Reset pos
+	props.pos.y = props.pos.y
+	player:set_pos(props.pos)
 
-	minetest.set_player_privs(name_watcher, privs)
-
-	-- set_pos seems to be very unreliable
-	-- this workaround helps though
-	minetest.after(0.1, function()
-		watcher:set_pos(state.pos)
-		-- delete state only after actually moved.
-		-- this helps re-attach after log-off/server crash
-		original_state_delete(watcher)
+	minetest.after(0, function()
+		local player2 = minetest.get_player_by_name(name)
+		if player2 then
+			player2:set_pos(props.pos)
+		end
 	end)
 
-	minetest.log("action", "[spectator_mode] '" .. name_watcher .. "' detached from '" .. state.target .. "'")
-end -- detach
+	state[name] = nil
+	minetest.log("action", "[archtec_watch] Detached '" .. name .. "' from '" .. props.target .. "'")
+end
 
--- both players are online and all checks have been done when this
--- method is called
-local function attach(name_watcher, name_target)
+local function attach(name, target)
+	-- Detach user from any kind of entity
+	detach(name)
 
-	-- detach from cart, horse, bike etc.
-	detach(name_watcher)
+	-- Save some props for detach
+	local player = minetest.get_player_by_name(name)
+	local properties = player:get_properties()
+	local nametage_attr = player:get_nametag_attributes()
 
-	local watcher = minetest.get_player_by_name(name_watcher)
-	local privs_watcher = minetest.get_player_privs(name_watcher)
-	-- back up some attributes
-	local properties = watcher:get_properties()
-	local state = {
-		collisionbox = properties.collisionbox,
-		hud_flags = watcher:hud_get_flags(),
-		makes_footstep_sound = properties.makes_footstep_sound,
-		nametag = watcher:get_nametag_attributes(),
-		pos = watcher:get_pos(),
-		priv_interact = privs_watcher.interact,
-		privs_extra = {},
-		target = name_target,
+	local props = {
+		nametag_color = nametage_attr.color,
+		nametag_bgcolor = nametage_attr.bgcolor,
 		visual_size = properties.visual_size,
+		makes_footstep_sound = properties.makes_footstep_sound,
+		collisionbox = properties.collisionbox,
+		target = target,
+		pos = player:get_pos(),
 	}
+	state[name] = props
 
-	original_state_set(watcher, state)
-
-	-- set some attributes
-	turn_off_hud_flags(watcher)
-	watcher:set_properties({
-		visual_size = { x = 0, y = 0 },
+	-- Make player invisible
+	player:set_properties({
+		visual_size = {x = 0, y = 0},
 		makes_footstep_sound = false,
-		collisionbox = { 0 }, -- TODO: is this the proper/best way?
+		collisionbox = {0},
 	})
-	watcher:set_nametag_attributes({ color = { a = 0 }, bgcolor = { a = 0 } })
+	player:set_nametag_attributes({color = {a = 0}, bgcolor = {a = 0}})
+
+	-- Attach player
+	player_api.player_attached[name] = true
+
 	local eye_pos = vector.new(0, -5, -20)
-	watcher:set_eye_offset(eye_pos)
-	-- make sure watcher can't interact
-	privs_watcher.interact = nil
-	minetest.set_player_privs(name_watcher, privs_watcher)
-	-- and attach
-	player_api.player_attached[name_watcher] = true
-	local target = minetest.get_player_by_name(name_target)
-	if type(target) ~= "userdata" then return end -- prevent crashes
-	watcher:set_attach(target, "", eye_pos)
-	minetest.log("action", "[spectator_mode] '" .. name_watcher .. "' attached to '" .. name_target .. "'")
+	local target_player = minetest.get_player_by_name(target)
 
-end
+	player:set_eye_offset(eye_pos)
+	player:set_attach(target_player, "", eye_pos)
 
--- called by '/watch' command
-local function watch(name_watcher, name_target)
-	if original_state[name_watcher] then
-		return true, "You are currently watching '" .. original_state[name_watcher].target .. "'. Say '/unwatch' first."
-	end
-	if name_watcher == name_target then
-		return true, "You may not watch yourself."
-	end
-
-	local target = minetest.get_player_by_name(name_target)
-	if not target then
-		return true, "Invalid target name '" .. name_target .. "'"
-	end
-
-	-- avoid infinite loops
-	if original_state[name_target] then
-		return true, "'" .. name_target .. "' is watching " .. original_state[name_target].target .. "'. You may not watch a watcher."
-	end
-
-	if not archtec.is_online(name_watcher) then
-		return true, "Watcher is not online."
-	end
-
-	attach(name_watcher, name_target)
-	return true, "Watching '" .. name_target .. "' at '" .. minetest.pos_to_string(vector.round(target:get_pos()))
-
-end -- watch
-
-local function unwatch(name_watcher)
-	-- nothing to do
-	if not player_api.player_attached[name_watcher] then
-		return true, "You are not observing anybody."
-	end
-
-	detach(name_watcher)
-	return true -- no message as that has been sent by detach()
-end
-
-local function on_joinplayer(watcher)
-	local state = original_state_get(watcher)
-	if not state then return end
-
-	-- attempt to move to original state after log-off
-	-- during attach or server crash
-	local name_watcher = watcher:get_player_name()
-	original_state[name_watcher] = state
-	player_api.player_attached[name_watcher] = true
-	detach(name_watcher)
-end
-
-local function on_leaveplayer(watcher)
-	local name_watcher = watcher:get_player_name()
-	-- detach before leaving
-	detach(name_watcher)
-	-- detach any that are watching this user
-	local attached = {}
-	for name, state in pairs(original_state) do
-		if name_watcher == state.target then
-			table.insert(attached, name)
-		end
-	end
-	-- we use separate loop to avoid editing a
-	-- hash while it's being looped
-	for _, name in ipairs(attached) do
-		detach(name)
-	end
-end
-
--- different servers may want different behaviour, they can
--- override this function
-function spectator_mode.on_respawnplayer(watcher)
-	local state = original_state_get(watcher)
-	if not state then return end
-
-	local name_target = state.target
-	local name_watcher = watcher:get_player_name()
-	player_api.player_attached[name_watcher] = true
-	detach(name_watcher)
-	minetest.after(4, attach, name_watcher, name_target)
-	return true
+	minetest.log("action", "[archtec_watch] Attached '" .. name .. "' to '" .. target .. "'")
 end
 
 minetest.register_chatcommand("watch", {
 	params = "<name>",
-	description = "Watch a given player",
+	description = "Watch a player",
 	privs = {staff = true},
-	func = watch,
+	func = function(name, param)
+		minetest.log("action", "[/watch] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		local target = archtec.get_and_trim(param)
+
+		if state[name] ~= nil then
+			minetest.chat_send_player(name, C("#FF0000", S("[/watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
+			return
+		end
+
+		if name == target then
+			minetest.chat_send_player(name, C("#FF0000", S("[/watch] You can't watch yourself!")))
+			return
+		end
+
+		if not archtec.is_online(target) then
+			minetest.chat_send_player(name, C("#FF0000", S("[/watch] Target '@1' is not online!", target)))
+			return
+		end
+
+		if state[target] then
+			minetest.chat_send_player(name, C("#FF0000", S("[/watch] Target '@1' is watching '@2'!", target, state[target].target)))
+			return
+		end
+
+		attach(name, target)
+		minetest.chat_send_player(name, C("#00BD00", S("[/watch] Watching @1.", target)))
+	end
 })
 
 minetest.register_chatcommand("unwatch", {
-	description = "Unwatch a player",
+	params = "",
+	description = "Disable watch mode",
 	privs = {staff = true},
-	func = unwatch,
+	func = function(name)
+		minetest.log("action", "[/unwatch] executed by '" .. name .. "'")
+
+		if not state[name] then
+			minetest.chat_send_player(name, C("#FF0000", S("[/unwatch] You aren't watching anybody!")))
+			return
+		end
+
+		local target = state[name].target
+		detach(name)
+		minetest.chat_send_player(name, C("#00BD00", S("[/unwatch] Detached you from @1.", target)))
+	end
 })
 
-minetest.register_on_joinplayer(on_joinplayer)
-minetest.register_on_leaveplayer(on_leaveplayer)
-minetest.register_on_respawnplayer(spectator_mode.on_respawnplayer)
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+
+	-- Detach (watcher left)
+	if state[name] then
+		detach(name)
+	end
+
+	-- Detach (target left)
+	for watcher, props in pairs(state) do
+		if props.target == name then
+			detach(watcher)
+		end
+	end
+
+	state[name] = nil
+end)
+
+minetest.register_on_respawnplayer(function(player)
+	local name = player:get_player_name()
+
+	if state[name] then
+		detach(name)
+	end
+end)
+
+minetest.register_on_player_hpchange(function(player, hp_change, reason)
+	local name = player:get_player_name()
+
+	-- No damage for watchers
+	if state[name] then
+		return 0, true
+	end
+	return hp_change
+end, true)
