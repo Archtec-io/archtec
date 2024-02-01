@@ -83,7 +83,14 @@ local function show_settings(name)
 					colors = colors .. C(archtec.namecolor.namecolor_refs[id], "█ ")
 				end
 
-				fs = fs .. "dropdown[0.4," .. y .. ";2.5;ncolor;" .. table.concat(archtec.namecolor.list_human, ",") .. ";" .. F(archtec.namecolor.get_idx(curr_val)) .. ";true]"
+				local idx = archtec.namecolor.get_idx(curr_val)
+
+				-- This should never happen
+				if idx == nil then
+					idx = 1
+				end
+
+				fs = fs .. "dropdown[0.4," .. y .. ";2.5;ncolor;" .. table.concat(archtec.namecolor.list_human, ",") .. ";" .. F(idx) .. ";true]"
 				fs = fs .. "label[3," .. y + 0.15 .. ";" .. F(def.title) .. "]"
 				fs = fs .. "label[3," .. y + 0.55 .. ";" .. F(colors) .. "]"
 				y = y + 1.3

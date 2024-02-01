@@ -79,3 +79,8 @@ function archtec.namecolor.get(name)
 
 	return namecolor_refs[color]
 end
+
+-- This is important to generate/migrate data to give the settings access to it
+minetest.register_on_joinplayer(function(player)
+	archtec.namecolor.get(player:get_player_name())
+end)
