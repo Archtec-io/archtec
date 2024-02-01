@@ -103,7 +103,6 @@ Unblock/Un-ignore player:
 List blocked/ignored players:
 '/ignore list' or
 '/ignore list {name}' (lists ignored players of <name>; staff only)
-'/ignore'
 ]]
 })
 
@@ -198,18 +197,18 @@ Based on: https://archtec.niklp.net/areas/
 
 Areas information
 
-1. Get information about the `areas` mod configuration
-- `/areas_info` (no params accepted)
+1. Get information about the 'areas' mod configuration
+- '/areas_info' (no params accepted)
 
 
 Protect an area
 
 1. Specify the corner positions of the area you would like to protect
-- `/area_pos1` and `/area_pos1` sets the two corner positions to your current positions
-- `/area_pos set` punch the two corner positions to set them
+- '/area_pos1' and '/area_pos1' sets the two corner positions to your current positions
+- '/area_pos set' punch the two corner positions to set them
 
 2. Protect the selected area
-- `/protect <Areaname>`
+- '/protect <Areaname>'
 
 The area name is used only for informational purposes and has no functional importance.
 
@@ -217,52 +216,52 @@ The area name is used only for informational purposes and has no functional impo
 Add an owner to your area
 
 1. Select the area to which you want to add an owner
-- `/select_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
+- '/select_area <ID>' 'ID' is the number you can see at the bottom left in square brackets ('[]')
 
 2. Create a new area with new owner
-- `/add_owner <ID> <Name> <Areaname>` Use for `ID` the same as in 1. `Name` is the player you want to give owner rights, choose for `Areaname` a name you want
+- '/add_owner <ID> <Name> <Areaname>' Use for 'ID' the same as in 1. 'Name' is the player you want to give owner rights, choose for 'Areaname' a name you want
 
 
 Open an area temporary
 
 1. Open a specified area for all players
-- `/area_open <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
+- '/area_open <ID>' 'ID' is the number you can see at the bottom left in square brackets ('[]')
 
 
 Change the owner of an area
 
 1. Change the owner of a specified area
-- `/change_owner <ID> <Name>` Gives `Name` control over the specified area
+- '/change_owner <ID> <Name>' Gives 'Name' control over the specified area
 
 
 List areas
 
 1. List all areas you own
-- `/list_areas` (no params accepted)
+- '/list_areas' (no params accepted)
 
 
 Change the size of an area (staff only)
 
 1. Set new positions
-- See `Protect an area -> 1`.
+- See 'Protect an area -> 1'.
 
 2. Change the size
-- `/move_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
+- '/move_area <ID>' 'ID' is the number you can see at the bottom left in square brackets ('[]')
 
 
 Remove an area
 
 1. Remove an area
-- `/remove_area <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
+- '/remove_area <ID>' 'ID' is the number you can see at the bottom left in square brackets ('[]')
 
 2. Removes an area and all sub-areas of it
-- `/recursive_remove_areas <ID>` `ID` is the number you can see at the bottom left in square brackets (`[]`)
+- '/recursive_remove_areas <ID>' 'ID' is the number you can see at the bottom left in square brackets ('[]')
 
 
 Rename an area
 
 1. Rename a specified area
-- `/rename_area <ID> <Areaname>` `ID` is the number you can see at the bottom left in square brackets (`[]`), choose for `Areaname` a name you want
+- '/rename_area <ID> <Areaname>' 'ID' is the number you can see at the bottom left in square brackets ('[]'), choose for 'Areaname' a name you want
 ]]
 })
 
@@ -288,8 +287,11 @@ The Archtec spawn area is very large (>2000x2000 nodes), and most players want t
 Players can choose one of several ways to get out of the protected spawn area and find a nice place to make their own.
 
 - There is a white "Teleporter" house adjacent to the spawn platform, where you will find several teleporters that will instantly transport you to mining and building sites where you can start your build/mine/journey. If at any time you want to return to spawn, just type '/spawn'
+
 - Walking out of spawn can be a rewarding experience since you can see all the fantastic builds and structures other players have created. Note that it will take a while, and should be prepared to walk a bit further than the edge of spawn to find a nice place. You might want to consider using the '/sethome' command to save your progress so if you have an accident, you can return to where your bones are and pick up your stuff
+
 - If you want to build far from others, you might want to check out the online Archtec Map https://archmap.niklp.net.
+
 - Some players have created their own personal Travelnet Networks, that go to the very edges of the universe. Ask around if you are curious and want to discover, how big our server is.
 ]]
 })
@@ -442,7 +444,7 @@ General:
 - '/faq' shows this Frequently Asked Questions section
 - '/news' shows the news from join again (staff only)
 - '/report <msg>' report a bug/issue/feature request to the server staff (Creates a GitHub issue and a Discord notification)
-- '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get ID)
+- '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get the ID)
 
 Techage:
 - '/my_expoints' show your TA 5 experience points

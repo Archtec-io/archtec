@@ -595,7 +595,7 @@ local function calc_xp(data)
 	xp = xp + data.nodes_dug * 1.1
 	xp = xp + data.nodes_placed * 1.6
 	xp = xp + data.items_crafted * 0.7
-	xp = xp - data.died * 25
+	xp = xp - data.died * 200
 	xp = xp + data.playtime * 0.1 -- 0.1 xp per second = 360 XP per hour
 	xp = xp + data.chatmessages * 2
 	xp = xp + data.thank_you * 100

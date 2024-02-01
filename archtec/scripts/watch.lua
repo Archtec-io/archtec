@@ -95,28 +95,33 @@ minetest.register_chatcommand("watch", {
 		minetest.log("action", "[/watch] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = archtec.get_and_trim(param)
 
+		if target == "" then
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] You must specify a player name!")))
+			return
+		end
+
 		if state[name] ~= nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[/watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
 			return
 		end
 
 		if name == target then
-			minetest.chat_send_player(name, C("#FF0000", S("[/watch] You can't watch yourself!")))
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] You can't watch yourself!")))
 			return
 		end
 
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, C("#FF0000", S("[/watch] Target '@1' is not online!", target)))
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is not online!", target)))
 			return
 		end
 
 		if state[target] then
-			minetest.chat_send_player(name, C("#FF0000", S("[/watch] Target '@1' is watching '@2'!", target, state[target].target)))
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is watching '@2'!", target, state[target].target)))
 			return
 		end
 
 		attach(name, target)
-		minetest.chat_send_player(name, C("#00BD00", S("[/watch] Watching @1.", target)))
+		minetest.chat_send_player(name, C("#00BD00", S("[watch] Watching @1.", target)))
 	end
 })
 
@@ -128,13 +133,13 @@ minetest.register_chatcommand("unwatch", {
 		minetest.log("action", "[/unwatch] executed by '" .. name .. "'")
 
 		if not state[name] then
-			minetest.chat_send_player(name, C("#FF0000", S("[/unwatch] You aren't watching anybody!")))
+			minetest.chat_send_player(name, C("#FF0000", S("[unwatch] You aren't watching anybody!")))
 			return
 		end
 
 		local target = state[name].target
 		detach(name)
-		minetest.chat_send_player(name, C("#00BD00", S("[/unwatch] Detached you from @1.", target)))
+		minetest.chat_send_player(name, C("#00BD00", S("[unwatch] Detached you from @1.", target)))
 	end
 })
 
