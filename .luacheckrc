@@ -37,6 +37,7 @@ read_globals = {
 	"futil",
 	"homedecor",
 	"mesecon",
+	"player_api",
 	"signs_bot",
 	"signs_lib",
 	"stairs",

@@ -63,7 +63,7 @@ unified color for a command "#FF8800" (orange)
 - `mapserver_poi_*` - El-Naso, CC BY-SA 3.0
 - `pvp.png` - paly2, MPL 2.0
 - `nopvp.png` - paly2, MPL 2.0
-- `tpr_warp.ogg` - Panquesito7, CC BY-SA 4.0
+- `archtec_teleport_warp.ogg` - Panquesito7, CC BY-SA 4.0
 - `chatplus_incoming_msg.ogg` - unknown, unknown (modified by Niklp)
 - `archtec_stamina_eat.ogg` - Wuzzy, MIT License (modified by Niklp)
 - `stamina_hud_poison.png` - BlockMen, CC-BY 3.0

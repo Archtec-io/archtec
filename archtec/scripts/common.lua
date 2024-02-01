@@ -125,3 +125,11 @@ end
 function archtec.time.days(days)
 	return 60 * 60 * 24 * days
 end
+
+function archtec.physics_locked(player)
+	local ppl = player:get_meta():get_int("player_physics_locked")
+	if ppl == 1 or player:get_physics_override().speed == 0 then
+		return true
+	end
+	return false
+end
