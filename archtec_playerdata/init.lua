@@ -40,6 +40,7 @@ local struct = {
 	s_r_id = true, -- auto item drop collection
 	s_snow = true, -- enable snow particles
 	s_ncolor = "", -- player namecolor
+	s_avd = false, -- auto-vote-day
 }
 
 -- helper funtions
@@ -269,7 +270,7 @@ local function stats_set(name, key, value)
 	if not valid_player(name) then return false end
 	if not is_valid(value) then return false end
 	local clean
-	if not struct[key] then
+	if not in_struct(key) then
 		log_warning("set: tried to set unknown key '" .. key .. "'!")
 		return false
 	end
@@ -302,7 +303,7 @@ local function stats_mod(name, key, value)
 		return false
 	end
 	local old, clean
-	if not struct[key] then
+	if not in_struct(key) then
 		log_warning("mod: tried to mod unknown key '" .. key .. "'!")
 		return false
 	end

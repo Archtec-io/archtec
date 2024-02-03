@@ -1,9 +1,10 @@
+local S = minetest.get_translator(minetest.get_current_modname())
+
 local function is_night()
 	return minetest.get_timeofday() < 0.2 or minetest.get_timeofday() > 0.75
 end
 
 local free_votes = 5
-local S = minetest.get_translator(minetest.get_current_modname())
 archtec.free_votes = free_votes
 
 minetest.register_chatcommand("vote_day", {
@@ -33,15 +34,15 @@ minetest.register_chatcommand("vote_day", {
 			description = "Make day",
 			help = "/yes or /no",
 			name = nil,
-			duration = 30,
+			duration = 20,
 			perc_needed = 0.6,
 
 			on_result = function(self, result, results)
 				if result == "yes" then
-					minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time will be set to day")
+					minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time will be set to day.")
 					minetest.set_timeofday(0.23) -- same as beds
 				else
-					minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time won't be set to day")
+					minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time won't be set to day.")
 				end
 			end,
 
@@ -85,15 +86,15 @@ minetest.register_chatcommand("vote_night", {
 			description = "Make night",
 			help = "/yes or /no",
 			name = nil,
-			duration = 30,
+			duration = 20,
 			perc_needed = 0.6,
 
 			on_result = function(self, result, results)
 				if result == "yes" then
-					minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time will be set to night")
+					minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time will be set to night.")
 					minetest.set_timeofday(0)
 				else
-					minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time won't be set to night")
+					minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", Time won't be set to night.")
 				end
 			end,
 

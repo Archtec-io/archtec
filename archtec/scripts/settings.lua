@@ -32,7 +32,7 @@ local settings = {
 	{type = "header", title = S("Chat")},
 	{type = "setting", name = "help_msg", title = S("Show help messages in chat"), description = S("Shows one message every 10 minutes.")},
 	{type = "setting", name = "tbw_show", title = S("Show tool breakage warnings"), description = ""},
-	{type = "custom", name = "ncolor", title = S("Namecolor in the #main channel"), description = S("Shows one message every 10 minutes.")},
+	{type = "custom", name = "ncolor", title = S("Namecolor in the #main channel"), description = ""},
 
 	{type = "header", title = S("Visual")},
 	{type = "setting", name = "sp_show", title = S("Show waypoint to spawn"), description = ""},
@@ -40,6 +40,7 @@ local settings = {
 
 	{type = "header", title = S("Misc")},
 	{type = "setting", name = "r_id", title = S("Collect dropped items automatically"), description = ""},
+	{type = "setting", name = "avd", title = S("Auto-vote \"YES\" on day votes"), description = ""},
 }
 
 local setting_list = {}
@@ -75,8 +76,7 @@ local function show_settings(name)
 		elseif def.type == "custom" then
 			-- Namecolor
 			if def.name == "ncolor" then
-				local s_string = "s_" .. def.name
-				local curr_val = archtec_playerdata.get(name, s_string)
+				local curr_val = archtec_playerdata.get(name, "s_ncolor")
 
 				local colors = C("#999", "List of all colors: ")
 				for _, id in ipairs(archtec.namecolor.namecolors) do

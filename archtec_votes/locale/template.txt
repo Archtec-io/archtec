@@ -1,4 +1,5 @@
 # textdomain: archtec_votes
+Auto-vote @1 by @2.=
 Can't start a new vote! A vote is already in progress.=
 There is no vote currently running!=
 You've already voted!=

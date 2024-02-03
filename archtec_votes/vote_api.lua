@@ -1,4 +1,5 @@
 local S = minetest.get_translator(minetest.get_current_modname())
+local C = minetest.colorize
 archtec_votes = {
 	active = {},
 }
@@ -10,6 +11,26 @@ function archtec_votes.new_vote(creator, voteset)
 		table.insert(voteset.results["yes"], creator)
 		voteset.results.voted[creator] = true
 		archtec_votes.check_vote(voteset)
+
+		-- Handle autovotes
+		if voteset.description == "Make day" then
+			local names = {}
+			for _, player in ipairs(minetest.get_connected_players()) do
+				local name = player:get_player_name()
+				local val = archtec_playerdata.get(name, "s_avd")
+				if val == true and name ~= creator then
+					table.insert(voteset.results["yes"], name)
+					table.insert(names, name)
+				end
+			end
+
+			local namestr = table.concat(names, ", ")
+			if #names > 0 then
+				minetest.chat_send_all(S("Auto-vote @1 by @2.", C("#00BD00", "YES"), namestr))
+				minetest.log("action", "[archtec_votes] Auto-vote 'YES' by " .. namestr .. " (" .. #names .. "x)")
+				archtec_votes.check_vote(voteset)
+			end
+		end
 	elseif creator then
 		minetest.chat_send_player(creator, S("Can't start a new vote! A vote is already in progress."))
 	end
@@ -39,7 +60,7 @@ function archtec_votes.start_vote(voteset, creator)
 		end)
 	end
 
-	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. minetest.colorize("#999", " (" .. voteset.help .. ")"))
+	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. C("#999", " (" .. voteset.help .. ")"))
 end
 
 function archtec_votes.end_vote(voteset)
@@ -94,6 +115,12 @@ function archtec_votes.check_vote(voteset)
 		end
 	end
 
+	-- Trigger vote end when the majority has been established
+	local perc_needed = voteset.perc_needed or 0.5
+	if (#voteset.results.yes / #players > perc_needed) or (#voteset.results.no / #players > perc_needed) then
+		all_players_voted = true
+	end
+
 	if all_players_voted then
 		archtec_votes.end_vote(voteset)
 	end
@@ -120,10 +147,10 @@ minetest.register_chatcommand("vote_clear", {
 	privs = {staff = true},
 	func = function(name)
 		if not next(archtec_votes.active) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "There are no active votes!"))
+			minetest.chat_send_player(name, C("#FF0000", "There are no active votes!"))
 		end
 		archtec_votes.active = {}
-		minetest.chat_send_all(minetest.colorize("#FF0000", name .. " canceled all active votes!"))
+		minetest.chat_send_all(C("#FF0000", name .. " canceled all active votes!"))
 		minetest.log("action", "[archtec_votes] " .. name .. " canceled all active votes")
 	end
 })

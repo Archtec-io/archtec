@@ -85,6 +85,7 @@ Enable snow particles=
 Snow particles must also be activated by the admin.=
 Misc=
 Collect dropped items automatically=
+Auto-vote "YES" on day votes=
 Reset to default=
 [archtec] Your new namecolor looks like this: @1.=
 [Forceload Restriction]: 'forceload' priv required to use this node=
