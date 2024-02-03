@@ -33,22 +33,22 @@ local function ov_node(node, t, rad, max)
 end
 
 
--- limit hoppers to 10 in a 24 radius
+-- limit hoppers to 10 in a 24 node radius
 ov_node("hopper:hopper", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("hopper:hopper_side", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("hopper:hopper_void", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("minecart:hopper", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 
 
--- limit quarrys to 3 in a 24 radius
+-- limit quarrys to 3 in a 24 node radius
 local quarrys = {"techage:ta2_quarry_pas", "techage:ta2_quarry_act", "techage:ta3_quarry_pas", "techage:ta3_quarry_act", "techage:ta4_quarry_pas", "techage:ta4_quarry_act"}
 
 for _, quarry in pairs(quarrys) do
 	ov_node(quarry, quarrys, 24, 3)
 end
 
--- limit signs_bots
-ov_node("signs_bot:box", {"signs_bot:box"}, 24, 7)
+-- limit signs_bots to 10 in a 16 node radius
+ov_node("signs_bot:box", {"signs_bot:box"}, 16, 10)
 
 -- limit drawers
 local function ov_drawer(node)

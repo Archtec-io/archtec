@@ -116,7 +116,7 @@ function archtec_teleport.tpr_accept(name, target) -- name gets teleported; targ
 
 	player:set_pos(pos)
 	minetest.log("action", "[archtec_teleport] '" .. target .. "' accepted a tpr by '" .. name .. "' ('" .. name .. "' gets teleported to '" .. target .. "')")
-	archtec_teleport.tpr[name] = nil
+	archtec_teleport.tpr[target] = nil
 end
 
 function archtec_teleport.tp2me_accept(name, target) -- name nothing; target /ok and gets teleported
@@ -155,7 +155,7 @@ function archtec_teleport.tp2me_accept(name, target) -- name nothing; target /ok
 
 	target_obj:set_pos(pos)
 	minetest.log("action", "[archtec_teleport] '" .. target .. "' accepted a tp2me by '" .. name .. "' ('" .. target .. "' gets teleported to '" .. name .. "')")
-	archtec_teleport.tp2me[name] = nil
+	archtec_teleport.tp2me[target] = nil
 end
 
 -- Chatcommands
@@ -184,6 +184,16 @@ minetest.register_chatcommand("tpr", {
 
 		if archtec.ignore_check(name, target) then
 			archtec.ignore_msg("tpr", name, target)
+			return
+		end
+
+		if archtec_teleport.tpr[target] then
+			minetest.chat_send_player(name, C("#FF0000", S("[tpr] Sorry, there's already a teleport request for @1 running!", target)))
+			return
+		end
+
+		if player_api.player_attached[name] or archtec.physics_locked(minetest.get_player_by_name(name)) then
+			minetest.chat_send_player(name, C("#FF0000", S("[tpr] You are attached so something, can't create teleport request!")))
 			return
 		end
 
@@ -216,6 +226,16 @@ minetest.register_chatcommand("tp2me", {
 
 		if archtec.ignore_check(name, target) then
 			archtec.ignore_msg("tp2me", name, target)
+			return
+		end
+
+		if archtec_teleport.tp2me[target] then
+			minetest.chat_send_player(name, C("#FF0000", S("[tp2me] Sorry, there's already a teleport request for @1 running!", target)))
+			return
+		end
+
+		if player_api.player_attached[name] or archtec.physics_locked(minetest.get_player_by_name(name)) then
+			minetest.chat_send_player(name, C("#FF0000", S("[tp2me] You are attached so something, can't create teleport request!")))
 			return
 		end
 
