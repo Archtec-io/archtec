@@ -43,8 +43,6 @@ unified color for a command "#FF8800" (orange)
 
 `archtec_playerdata.debug_mode` Enable debug mode
 
-`archtec.ci` Enable CI mode
-
 ### License
 
 ##### Code: 
