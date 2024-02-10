@@ -33,9 +33,6 @@ local function detach(name)
 	})
 
 	-- Reset pos
-	props.pos.y = props.pos.y
-	player:set_pos(props.pos)
-
 	minetest.after(0, function()
 		local player2 = minetest.get_player_by_name(name)
 		if player2 then

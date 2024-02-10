@@ -36,7 +36,7 @@ local function find_safe_pos(input_pos)
 		local node_up = minetest.get_node(pos_up).name
 		local node_up_2 = minetest.get_node(pos_up_2).name
 
-		if def.walkable and (def.liquidtype == nil or def.liquidtype == "none") and not def.groups.falling_node then
+		if def.walkable and (def.liquidtype == nil or def.liquidtype == "none") then
 			if node_up == "air" and node_up_2 == "air" then
 				return pos_up
 			end

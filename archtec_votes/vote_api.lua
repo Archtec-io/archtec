@@ -20,6 +20,7 @@ function archtec_votes.new_vote(creator, voteset)
 				local val = archtec_playerdata.get(name, "s_avd")
 				if val == true and name ~= creator then
 					table.insert(voteset.results["yes"], name)
+					voteset.results.voted[name] = true
 					table.insert(names, name)
 				end
 			end
