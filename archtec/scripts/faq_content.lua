@@ -366,16 +366,16 @@ Each drawer adds 1-4 entities, resulting in the number of drawers per mapblock h
 You can't place new drawers when the mapblock contains more than 70 entities.
 
 Hoppers:
-Hoppers add a significant amount of server load, and for performance reasons, each player is restricted to 10 hoppers in any given 24-node radius.
+Hoppers add a significant amount of server load, and for performance reasons, each player is restricted to 10 hoppers in any given 24 node radius.
 Where possible it's recommended to use the hoppers from the 'minecart' mod rather than the default hoppers.
 
 Techage (TA) quarries:
 To prevent oversize factories, there is a hard limit of 3 on the number of Techage (TA)
-Quarries each player is allowed to place within a 24-node radius.
+Quarries each player is allowed to place within a 24 node radius.
 
 Sign Bots:
 While these cute little bots are very useful, they can also cause significant lag and performance issues.
-To prevent this from impacting other players, each player is limited to placing 7 Signs Bots within a 24-node radius.
+To prevent this from impacting other players, each player is limited to placing 10 Signs Bots within a 16 node radius.
 ]]
 })
 
