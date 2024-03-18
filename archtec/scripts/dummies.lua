@@ -1,6 +1,6 @@
 local dummy_objs = {}
 local light_levels = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
-local max_nametag_length = 10
+local max_nametag_length = 15
 
 -- Costume definitions (textures are provided by the halloween/christmas mod)
 local costumes = {
@@ -17,15 +17,24 @@ local costumes = {
 	santa_claus = {texture = "christmas_decor_santa.png", name = "Santa Claus"}
 }
 
--- Formspec menu design
-local form = {
-	tabs = {
-		{name = "general", title = "General"},
-		{name = "style_head", title = "Style related", style = "head"},
-		{name = "skin", title = "Skin"},
-		{name = "nametag", title = "Name Tag"}
-	}
-}
+-- Costume list
+local costume_list = {}
+do
+	for name, _ in pairs(costumes) do
+		table.insert(costume_list, name)
+	end
+end
+
+-- Find costume index by texture
+local function find_costume(textures)
+	for _, tex in ipairs(textures) do
+		for i, costume in pairs(costume_list) do
+			if tex == costumes[costume].texture then
+				return i
+			end
+		end
+	end
+end
 
 -- Supported nametag colors
 local colors = {
@@ -37,34 +46,7 @@ local colors = {
 }
 local color_str = "white,red,green,blue,yellow"
 
-local costume_list = {}
-local function generate_costume_list()
-	for name, _ in pairs(costumes) do
-		table.insert(costume_list, name)
-	end
-end
-generate_costume_list()
-
-local function find_costume(textures)
-	for _, tex in ipairs(textures) do
-		for i, costume in pairs(costume_list) do
-			if tex == costumes[costume].texture then
-				return i
-			end
-		end
-	end
-end
-
-local function valid_ref(ref)
-	if ref and ref.get_properties then
-		local props = ref:get_properties()
-		if props then
-			return true
-		end
-	end
-	return false
-end
-
+-- Find color id based on spec
 local function find_color(spec)
 	-- Get color
 	local colorname = "white"
@@ -82,6 +64,50 @@ local function find_color(spec)
 	end
 end
 
+-- Animation stuff
+local animations = {
+	none = 0,
+	stand = 1,
+	sit = 2,
+	lay = 3,
+}
+local animations_str = "none,stand,sit,lay"
+
+local function set_animation(animation)
+	if animation == "none" then
+		return nil -- nil resets the animation state
+	elseif animation == "stand" then
+		return {x = 0, y = 79}, 30, 0, true
+	elseif animation == "sit" then
+		return {x = 81, y = 160}, 30, 0, true
+	elseif animation == "lay" then
+		return {x = 162, y = 166}, 30, 0, true
+	end
+end
+
+local function get_animation(animation)
+	if animation == "none" or animation == nil then
+		return {frame_begin = 0, frame_end = 0, speed = 0}
+	elseif animation == "stand" then
+		return {frame_begin = 0, frame_end = 79, speed = 30}
+	elseif animation == "sit" then
+		return {frame_begin = 81, frame_end = 160, speed = 30}
+	elseif animation == "lay" then
+		return {frame_begin = 162, frame_end = 166, speed = 30}
+	end
+end
+
+-- Check for valid entity
+local function valid_ref(ref)
+	if ref and ref.get_properties then
+		local props = ref:get_properties()
+		if props then
+			return true
+		end
+	end
+	return false
+end
+
 local function echo_desc(name, ownername)
 	if name == ownername or minetest.get_player_privs(name).builder then
 		minetest.chat_send_player(name, "Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is " .. (ownername or "unknown") .. ".")
@@ -90,6 +116,16 @@ local function echo_desc(name, ownername)
 	end
 end
 
+-- Formspec menu design
+local form = {
+	tabs = {
+		{name = "general", title = "General"},
+		{name = "skin", title = "Skin"},
+		{name = "nametag", title = "Name Tag"},
+	}
+}
+
+-- Main formspec "generator"
 local function show_fs(name, active_tab)
 	active_tab = active_tab or "general"
 
@@ -108,23 +144,18 @@ local function show_fs(name, active_tab)
 				"style[" .. tab.name .. ";bgcolor=green]"
 		end
 
-		local y = 0.3 + (i - 1) * 0.8
-		if not tab.style then
-			formspec = formspec ..
-				"button[0.3," .. y .. ";3,0.8;" .. tab.name .. ";" .. tab.title .. "]"
-
-		elseif tab.style == "head" then
-			y = y + 0.25
-			formspec = formspec ..
-				"hypertext[0.3," .. y .. ";3,0.8;head_" .. tab.name .. ";<center><b>" .. tab.title .. "</b></center>]"
-		end
+		local y = 0.3 + (i - 1) * 1
+		formspec = formspec ..
+			"button[0.3," .. y .. ";3,0.8;" .. tab.name .. ";" .. tab.title .. "]"
 	end
 
 	-- Dummy preview
 	if props.mesh then
 		local textures = dummy:get_properties().textures
+		local anim_data = get_animation(dummy:get_luaentity()._animation)
 		formspec = formspec ..
-			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,150;false;true;0,0]"
+			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,150;false;false;"
+				.. anim_data.frame_begin  .. "," .. anim_data.frame_end .. ";" .. anim_data.speed .. "]"
 	end
 
 	-- Show tab content
@@ -153,11 +184,19 @@ local function show_fs(name, active_tab)
 			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_luminosity;Set]"
 
 		y = y + 1.5
-		-- Enable animation
-		local enable_animation = dummy:get_luaentity()._enable_animation
-		if enable_animation == nil then enable_animation = false end
+		-- Select animation
+		local animation = dummy:get_luaentity()._animation
+
+		if animation == nil then animation = "none" end
 		formspec = formspec ..
-			"checkbox[" .. x .. "," .. y .. ";model_enable_aninmation;Enable standing animation;" .. tostring(enable_animation) .. "]"
+			"label[" .. x .. "," .. y .. ";Change animation]"
+		y = y + 0.3
+
+		formspec = formspec ..
+			"dropdown[" .. x .. "," .. y .. ";4,0.8;animation;" .. animations_str .. ";" .. (animations[animation] + 1) .. ";false]"
+
+		formspec = formspec ..
+			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_animation;Set]"
 
 	elseif active_tab == "nametag" then
 		-- Set nametag string
@@ -269,14 +308,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		minetest.close_formspec(name, formname)
 		return true
 
-	-- Enable animation
-	elseif fields.model_enable_aninmation then
-		if fields.model_enable_aninmation == "true" then
-			dummy:set_animation({x = 0, y = 79}, 30, 0, true)
-			dummy:get_luaentity()._enable_animation = true
-		else
-			dummy:set_animation()
-			dummy:get_luaentity()._enable_animation = false
+	-- Change animation
+	elseif fields.animation and fields.act_set_animation then
+		if animations[fields.animation] then
+			dummy:set_animation(set_animation(fields.animation))
+			dummy:get_luaentity()._animation = fields.animation
 		end
 
 	-- Set nametag string
@@ -364,9 +400,10 @@ minetest.register_entity(":dummies:dummy", {
 		visual = "mesh",
 		mesh = "3d_armor_character.b3d",
 		textures = {},
-		collisionbox = {-0.35, 0.0, -0.35, 0.35, 1.8, 0.35},
+		collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
+		visual_size = {x = 1, y = 1},
 		_skin_show_armor = true,
-		_skin_show_wielditem = true
+		_skin_show_wielditem = true,
 	},
 
 	on_punch = function(self, player)
@@ -387,6 +424,24 @@ minetest.register_entity(":dummies:dummy", {
 		local data = minetest.deserialize(staticdata) or {}
 		local props = self.object:get_properties()
 
+		-- Older dummies have no 'version' param
+		if data.version ~= nil then self._version = data.version end
+		if self._version == nil then
+			self._version = 1
+		end
+
+		-- Upgrade to v2
+		if self._version == 1 then
+			if data.enable_animation == true then
+				self._animation = "stand"
+				self.object:set_animation(set_animation("stand"))
+			else
+				self._animation = "none"
+				self.object:set_animation(set_animation("none"))
+			end
+			self._version = 2
+		end
+
 		if data.textures and type(data.textures) == "table" then
 			props.textures = data.textures
 		end
@@ -398,11 +453,9 @@ minetest.register_entity(":dummies:dummy", {
 		if data.show_armor ~= nil then self._skin_show_armor = data.show_armor end
 		if data.show_wielditem ~= nil then self._skin_show_wielditem = data.show_wielditem end
 
-		if data.enable_animation ~= nil then
-			self._enable_animation = data.enable_animation
-			if data.enable_animation == true then
-				self.object:set_animation({x = 0, y = 79}, 30, 0, true)
-			end
+		if data.animation ~= nil then
+			self._animation = data.animation
+			self.object:set_animation(set_animation(data.animation))
 		end
 
 		if data.ownername ~= nil then self._ownername = data.ownername end
@@ -427,14 +480,15 @@ minetest.register_entity(":dummies:dummy", {
 	get_staticdata = function(self)
 		local props = self.object:get_properties()
 		return minetest.serialize({
+			version = self._version,
 			textures = props.textures,
 			glow = props.glow,
 			nametag = props.nametag,
 			nametag_color = props.nametag_color,
 			show_armor = self._skin_show_armor,
 			show_wielditem = self._skin_show_wielditem,
-			enable_animation = self._enable_animation,
-			ownername = self._ownername
+			animation = self._animation,
+			ownername = self._ownername,
 		})
 	end,
 })
@@ -450,7 +504,7 @@ local function spawndummy(pos, textures, name)
 
 	if dummy then
 		minetest.log("action", "[archtec] Spawned dummy at " .. minetest.pos_to_string(pos) .. " for player " .. name)
-
+		dummy:get_luaentity()._animation = "none"
 		dummy:get_luaentity()._ownername = name
 		return dummy -- Return dummy object
 	end
