@@ -82,9 +82,10 @@ function archtec.table_contains(table, element)
 end
 
 function archtec.register_chatcommand_alias(newname, original)
-	local cmd = minetest.registered_chatcommands[original]
+	local cmd = table.copy(minetest.registered_chatcommands[original])
 	if cmd then
 		minetest.register_chatcommand(newname, cmd)
+		minetest.registered_chatcommands[newname].mod_origin = minetest.registered_chatcommands[original].mod_origin
 	end
 end
 

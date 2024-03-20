@@ -77,7 +77,7 @@ files["archtec_matterbridge/rx.lua"] = {
 }
 
 files["archtec/scripts/common.lua"] = {
-	globals = {"core.kick_player", "core.disconnect_player"},
+	globals = {"core.kick_player", "core.disconnect_player", "minetest.registered_chatcommands.?.mod_origin"},
 }
 
 files["archtec/scripts/overrides.lua"] = {

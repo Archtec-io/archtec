@@ -113,3 +113,10 @@ if minetest.get_modpath("stairsplus") and minetest.get_modpath("ethereal") then
 		sounds = def.sound
 	})
 end
+
+-- Areas shortcommands
+archtec.register_chatcommand_alias("so", "set_owner")
+archtec.register_chatcommand_alias("ao", "add_owner")
+archtec.register_chatcommand_alias("sa", "select_area")
+archtec.register_chatcommand_alias("p1", "area_pos1")
+archtec.register_chatcommand_alias("p2", "area_pos2")
