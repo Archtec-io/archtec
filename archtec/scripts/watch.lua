@@ -30,6 +30,7 @@ local function detach(name)
 		visual_size = props.visual_size,
 		makes_footstep_sound = props.makes_footstep_sound,
 		collisionbox = props.collisionbox,
+		show_on_minimap = true,
 	})
 
 	-- Reset pos
@@ -69,6 +70,7 @@ local function attach(name, target)
 		visual_size = {x = 0, y = 0},
 		makes_footstep_sound = false,
 		collisionbox = {0},
+		show_on_minimap = false,
 	})
 	player:set_nametag_attributes({color = {a = 0}, bgcolor = {a = 0}})
 
