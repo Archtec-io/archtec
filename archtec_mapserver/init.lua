@@ -1,11 +1,5 @@
---[[
-	Config (minetest.conf)
-	mapserver.url = http://127.0.0.1:7575
-	mapserver.key = myserverkey
-]]--
-
 mapserver = {
-	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 12.3,
+	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 7.1,
 	bridge = {}
 }
 
@@ -22,10 +16,10 @@ if http then
 
 	local file = io.open(path, "r" );
 	if file then
-		local json = file:read("*all");
-		mapserver_cfg = minetest.parse_json(json);
-		file:close();
-		print("[Mapserver] read settings from 'mapserver.json'")
+		local json = file:read("*all")
+		mapserver_cfg = minetest.parse_json(json)
+		file:close()
+		minetest.log("action", "[archtec_mapserver] read settings from 'mapserver.json'")
 	end
 
 	local mapserver_url = minetest.settings:get("mapserver.url")
@@ -45,14 +39,14 @@ if http then
 	if not mapserver_url then error("mapserver.url is not defined") end
 	if not mapserver_key then error("mapserver.key is not defined") end
 
-	print("[Mapserver] starting mapserver-bridge with endpoint: " .. mapserver_url)
+	minetest.log("action", "[archtec_mapserver] starting mapserver-bridge with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- initialize bridge
 	mapserver.bridge_init(http, mapserver_url, mapserver_key)
 
 else
-	print("[Mapserver] bridge not active, additional infos will not be visible on the map")
+	minetest.log("warning", "[archtec_mapserver] bridge not active, additional infos will not be visible on the map")
 end
 
-print("[Mapserver] OK")
+minetest.log("action", "[archtec_mapserver] loaded")

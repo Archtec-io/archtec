@@ -5,7 +5,7 @@ local path = modpath .. "/scripts/"
 archtec = {}
 archtec.S = minetest.get_translator("archtec")
 archtec.version_major = 24
-archtec.version_minor = 02
+archtec.version_minor = 04
 
 -- Change links here
 archtec.links = {}
