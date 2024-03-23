@@ -3,7 +3,10 @@
 	GNU Lesser General Public License v2.1 See LICENSE.txt for more information
 ]]--
 
-archtec_playerdata = {}
+archtec_playerdata = {
+	api_version = 1
+}
+
 local sql = minetest.get_mod_storage()
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
 local cache, playtime_current, rank = {}, {}, {}
@@ -18,6 +21,9 @@ local shutdown_mode = false
 local save_interval = 180
 local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
 local min_xp = 10000 -- modify by hand
+
+-- set storage version (needed for v2 rewrite)
+sql:set_int("system_storage_version", 1) -- long keyname to make sure that no player w/ this name can join (minetest has a name length limit)
 
 -- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
 local struct = {
@@ -158,16 +164,13 @@ archtec_playerdata.restore = stats_restore
 
 local function string2timestamp(s)
 	if type(s) ~= "string" then return end
-	local p = "(%a+) (%a+) (%d+) (%d+):(%d+):(%d+) (%d+)"
-	local p2 = "(%a+) (%a+)  (%d+) (%d+):(%d+):(%d+) (%d+)"
-	local _, month, day, hour, min, sec, year = s:match(p)
-	if day == nil then
-		_, month, day, hour, min, sec, year = s:match(p2)
-	end
+
+	local p = "(%a+) (%a+)(%s+)(%d+) (%d+):(%d+):(%d+) (%d+)"
+	local _, month, _, day, hour, min, sec, year = s:match(p)
+
 	local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
 	month = MON[month]
 	local offset = os.time() - os.time(os.date("!*t"))
-	-- Todo: fix possible crashes here
 	return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
