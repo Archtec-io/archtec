@@ -76,7 +76,7 @@ minetest.register_globalstep(function(dtime)
 		end
 
 		if cache[name].last_active < time - timeout then
-			minetest.kick_player(name, "Too long inactive")
+			archtec.kick_inactive_player(name)
 		end
 
 		if cache[name].last_active < time - 300 then
