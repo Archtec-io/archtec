@@ -43,11 +43,9 @@ function core.kick_player(player_name, reason)
 end
 
 function archtec.kick_inactive_player(player_name)
-	if archtec.is_online(player_name) then
-		minetest.chat_send_all(minetest.colorize("#FF0000", player_name .. " got kicked due to inactivity."))
-		archtec_matterbridge.send(":zzz: " .. player_name .. " got kicked due to inactivity.")
-		archtec.silent_leave[player_name] = true
-	end
+	minetest.chat_send_all(minetest.colorize("#FF0000", player_name .. " got kicked due to inactivity."))
+	archtec_matterbridge.send(":zzz: " .. player_name .. " got kicked due to inactivity.")
+	archtec.silent_leave[player_name] = true
 	return core.disconnect_player(player_name, "Too long inactive")
 end
 
