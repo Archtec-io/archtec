@@ -352,15 +352,20 @@ local function run_actions()
 		end
 
 		-- Run upgrades
-		for _, def in ipairs(system.upgrades) do
-			if storage:get_int("system_upgrade_" .. def.identifier) == 0 then
-				if data[name][def.key] ~= nil then -- value not set for this player
-					local result = def.func(name, data[name][def.key])
+		for identifier, def in pairs(system.upgrades) do
+			if storage:get_int("system_upgrade_" .. identifier) == 0 or def.run_always then
+				if data[name][def.key_name] ~= nil then -- value set for this player
+					local value = data[name][def.key_name]
+					if type(value) == "table" then
+						value = table.copy(data[name][def.key_name])
+					end
+
+					local result = def.func(name, value)
 					if result ~= nil then
-						archtec_playerdata.set(name, def.key, result)
+						archtec_playerdata.set(name, def.key_name, result)
 					end
 				end
-				stats.upgrades[def.identifier] = true
+				stats.upgrades[identifier] = true
 			end
 		end
 
@@ -385,7 +390,9 @@ local function run_actions()
 
 	-- Mark upgrades as executed
 	for identifier, _ in pairs(stats.upgrades) do
-		storage:set_int("system_upgrade_" .. identifier, 1)
+		if system.upgrades[identifier].run_always == false then
+			storage:set_int("system_upgrade_" .. identifier, 1)
+		end
 		log_action("run_actions", "executed upgrade '" .. identifier .. "'")
 	end
 
@@ -446,15 +453,18 @@ function archtec_playerdata.register_key(key_name, key_type, default_value, temp
 		.. ", default_value=" .. dumpx(default_value) .. ", temp=" .. bool_to_str(temp))
 end
 
-function archtec_playerdata.register_upgrade(key_name, identifier, func)
+function archtec_playerdata.register_upgrade(key_name, identifier, run_always, func)
 	if system.mode ~= "startup" then
 		api_error("register_upgrade", "tried to register upgrade after startup")
+	end
+	if not system.keys[key_name] then
+		api_error("register_upgrade", "key '" .. key_name .. "' does not exist")
 	end
 	if type(identifier) ~= "string" then
 		api_error("register_upgrade", "'identifier' must be a string")
 	end
-	if not system.keys[key_name] then
-		api_error("register_upgrade", "key '" .. key_name .. "' does not exist")
+	if type(run_always) ~= "boolean" then
+		api_error("register_upgrade", "'run_always' must be a boolean")
 	end
 	if type(func) ~= "function" then
 		api_error("register_upgrade", "'func' must be a function")
@@ -466,7 +476,7 @@ function archtec_playerdata.register_upgrade(key_name, identifier, func)
 		end
 	end
 
-	system.upgrades[#system.upgrades + 1] = {key = key_name, identifier = identifier,func = func}
+	system.upgrades[identifier] = {key_name = key_name, run_always = run_always, func = func}
 	log_debug("register_upgrade", "registered upgrade '" .. identifier .. "' for key '" .. key_name .. "'")
 end
 

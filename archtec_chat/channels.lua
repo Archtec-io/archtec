@@ -56,7 +56,7 @@ end
 channel.get_cname = get_cname
 
 archtec_playerdata.register_key("channels", "table", {})
-archtec_playerdata.register_upgrade("channels", "archtec_chat:channel_str_to_list", function(name, value)
+archtec_playerdata.register_upgrade("channels", "archtec_chat:channel_str_to_list", false, function(name, value)
 	return minetest.deserialize(value)
 end)
 

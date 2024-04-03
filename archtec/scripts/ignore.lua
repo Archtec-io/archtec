@@ -3,7 +3,7 @@ local max_ignored = 10
 
 archtec_playerdata.register_key("ignores", "table", {})
 
-archtec_playerdata.register_upgrade("ignores", "archtec:ignore_str_to_list", function(name, value)
+archtec_playerdata.register_upgrade("ignores", "archtec:ignore_str_to_list", false, function(name, value)
 	return minetest.deserialize(value)
 end)
 

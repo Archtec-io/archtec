@@ -8,13 +8,13 @@
     * Key must not start with `system_`
     * key_name: `string`, key_type: `string`, default_value: `*`, temp: `boolean`
 
-* `archtec_playerdata.register_upgrade(key_name, identifier, func)`: returns `nil` or stopps
+* `archtec_playerdata.register_upgrade(key_name, identifier, run_always, func)`: returns `nil` or stopps
   the server on startup.
-    * Registers a single run upgrade for all players
+    * Registers a upgrade for all players
     * Must be called during mod load time
-    * The identifier gets stored after the upgrade
+    * The identifier gets stored after a single run upgrade to not run it again
       Format identifier as `modname:anything` to prevent ID collisions
-    * key_name: `string`, identifier: `string`, func: `function`
+    * key_name: `string`, identifier: `string`, run_always: `boolean`, func: `function`
 
 * `archtec_playerdata.register_removal(key_name)`: returns `nil` or stopps
   the server on startup.
