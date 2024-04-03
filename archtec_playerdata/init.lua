@@ -49,7 +49,7 @@ end
 
 local function log_error(func, str)
 	minetest.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
-	notifyTeam("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. str .. ".")
+	notifyTeam("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. func .. "() ".. str .. ".")
 end
 
 local function api_error(func, str)
@@ -129,6 +129,7 @@ local function data_load(name, keep, create)
 	if create and raw == "" then
 		raw = "{}"
 	elseif raw == "" then
+		log_error("data_load", "tried to load data of not exisiting player '" .. name .. "'")
 		return false
 	end
 

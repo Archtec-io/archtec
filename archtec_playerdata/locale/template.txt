@@ -2,7 +2,6 @@
 NO=
 PENDING=
 YES=
-[stats] Unknown player!=
 [stats] Failed to load stats!=
 [Online]=
 [Offline]=
@@ -25,5 +24,6 @@ Can use the chainsaw: @1=
 Can forceload areas: @1=
 Can create big areas: @1=
 Shows stats of <name>=
+[stats] Unknown player!=
 Player ranking - @1 players earned @2 XP=
 Show the most active players=

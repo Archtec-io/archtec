@@ -91,11 +91,6 @@ local function colorize_privs(name, data, privs)
 end
 
 local function stats_formspec(name, target)
-	if not minetest.player_exists(target) then
-		minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
-		return
-	end
-
 	local data = archtec_playerdata.get_all(target)
 	local auth = minetest.get_auth_handler().get_auth(target)
 	local privs = minetest.get_player_privs(target)
@@ -166,12 +161,16 @@ minetest.register_chatcommand("stats", {
 	func = function(name, param)
 		minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
 		local target = param:trim()
+		if target == "" then
+			target = name
+		end
+		if not minetest.player_exists(target) then
+			minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
+			return
+		end
 		if target ~= name and archtec.ignore_check(name, target) then
 			archtec.ignore_msg("stats", name, target)
 			return
-		end
-		if target == "" then
-			target = name
 		end
 		stats_formspec(name, target)
 	end
