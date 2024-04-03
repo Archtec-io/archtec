@@ -1,43 +1,15 @@
 local S = archtec.S
-local cache = {}
 local max_ignored = 10
-local cache_ttl = archtec.time.hours(10)
 
-local function get_list(name)
-	if not name or name == "" then return {} end
-	if cache[name] then -- load from direct cache
-		return cache[name]
-	end
-	local ignores = minetest.deserialize(archtec_playerdata.get(name, "ignores"))
-	if ignores == nil then -- no data available, do nothing
-		ignores = {}
-	end
-	cache[name] = ignores
-	return ignores
-end
+archtec_playerdata.register_key("ignores", "table", {})
 
-local function purge_cache()
-	local l = 0 + archtec.count_keys(cache)
-	-- purge
-	cache = {}
-	if l > 0 then
-		minetest.log("action", "[archtec] Ignore cache cleaner removed " .. l .. " entries")
-	end
-end
-
--- mintest.after() does not work :\
-local time = 0
-minetest.register_globalstep(function(dtime)
-	time = time + dtime
-	if time > cache_ttl then
-		purge_cache()
-		time = 0
-	end
+archtec_playerdata.register_upgrade("ignores", "archtec:ignore_str_to_list", function(name, value)
+	return minetest.deserialize(value)
 end)
 
 local function is_ignored(name, target)
 	if type(name) ~= "string" then return false end
-	local ignores = get_list(name)
+	local ignores = archtec_playerdata.get(name, "ignores")
 	return ignores[target] ~= nil
 end
 
@@ -50,36 +22,21 @@ function archtec.ignore_check(name, target)
 end
 
 local function ignore_player(name, target)
-	local ignores = get_list(name)
+	local ignores = archtec_playerdata.get(name, "ignores")
 	ignores[target] = true
-	archtec_playerdata.set(name, "ignores", minetest.serialize(ignores))
-	-- update cache
-	if not cache[name] then
-		cache[name] = {}
-	end
-	cache[name][target] = true
+	archtec_playerdata.set(name, "ignores", ignores)
 	minetest.log("action", "[archtec_ignore] '" .. name .. "' now ignores '" .. target .. "'")
 end
 
 local function unignore_player(name, target)
-	local ignores = get_list(name)
+	local ignores = archtec_playerdata.get(name, "ignores")
 	ignores[target] = nil
-	if next(ignores) ~= nil then -- do not save table if nobody is ignored
-		archtec_playerdata.set(name, "ignores", minetest.serialize(ignores))
-	else
-		archtec_playerdata.set(name, "ignores", "") -- run's playerdata's garbage collector
-	end
-	-- update cache
-	if not cache[name] then
-		cache[name] = {}
-	else
-		cache[name][target] = nil
-	end
+	archtec_playerdata.set(name, "ignores", ignores)
 	minetest.log("action", "[archtec_ignore] '" .. name .. "' no longer ignores '" .. target .. "'")
 end
 
 local function list_ignored_players(name)
-	local ignores = get_list(name)
+	local ignores = archtec_playerdata.get(name, "ignores")
 	if next(ignores) == nil then
 		return ""
 	end
@@ -87,7 +44,7 @@ local function list_ignored_players(name)
 end
 
 local function count_ignored_players(name)
-	local ignores = get_list(name)
+	local ignores = archtec_playerdata.get(name, "ignores")
 	return archtec.count_keys(ignores)
 end
 

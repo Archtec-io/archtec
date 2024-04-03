@@ -5,6 +5,8 @@ local last_priv_msg_name = {}
 local msg_chat_color_text = "#ffff88"
 local msg_chat_color_name = "#ffff00"
 
+archtec_playerdata.register_key("chatmessages", "number", 0)
+
 -- Hard depend chatplus on archtec mod to run archtec's on_chat_message callbacks (HACK)
 minetest.register_on_chat_message(function(name, message)
 	-- Priv check

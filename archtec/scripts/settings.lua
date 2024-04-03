@@ -28,6 +28,14 @@ local function set(name, setting, val)
 	return archtec_playerdata.set(name, "s_" .. setting, val)
 end
 
+-- Register playerdata keys here
+archtec_playerdata.register_key("s_help_msg", "boolean", true)
+archtec_playerdata.register_key("s_tbw_show", "boolean", true)
+archtec_playerdata.register_key("s_sp_show", "boolean", true)
+archtec_playerdata.register_key("s_r_id", "boolean", true)
+archtec_playerdata.register_key("s_snow", "boolean", true)
+archtec_playerdata.register_key("s_avd", "boolean", false)
+
 local settings = {
 	{type = "header", title = S("Chat")},
 	{type = "setting", name = "help_msg", title = S("Show help messages in chat"), description = S("Shows one message every 10 minutes.")},
@@ -59,7 +67,7 @@ local function show_settings(name)
 	for i, def in ipairs(settings) do
 		if def.type == "header" then
 			fs = fs .. "box[0.3," .. y + 0.2 .. ";10.4,0.5;#c6e8ff]"
-			fs = fs .. "label[0.4," .. y + 0.45 .. ";" .. F(C("#000000", def.title)) .. "]"
+			fs = fs .. "label[0.4," .. y + 0.45 .. ";" .. F(def.title) .. "]"
 			y = y + 1.2
 		elseif def.type == "setting" then
 			local s_string = "s_" .. def.name

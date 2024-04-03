@@ -16,8 +16,6 @@ local function waypoint_add(name)
 	end
 end
 
-archtec.sp_add = waypoint_add
-
 local function waypoint_remove(name)
 	if waypoints[name] then
 		local player = minetest.get_player_by_name(name)
@@ -26,21 +24,22 @@ local function waypoint_remove(name)
 	end
 end
 
-archtec.sp_remove = waypoint_remove
-
-local function update(name, setting, newvalue)
+archtec.settings.add_callback(function(name, setting, newvalue)
 	if setting ~= "sp_show" then return end
 	if newvalue == true then
 		waypoint_add(name)
 	else
 		waypoint_remove(name)
 	end
-end
+end)
 
-archtec.settings.add_callback(update)
+minetest.register_on_joinplayer(function(player)
+	local name = player:get_player_name()
+	if archtec_playerdata.get(name, "s_sp_show") then
+		waypoint_add(name)
+	end
+end)
 
 minetest.register_on_leaveplayer(function(player)
-	if player then
-		waypoints[player:get_player_name()] = nil
-	end
+	waypoints[player:get_player_name()] = nil
 end)

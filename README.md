@@ -43,6 +43,12 @@ unified color for a command "#FF8800" (orange)
 
 `archtec_playerdata.debug_mode` Enable debug mode
 
+`archtec_playerdata.save_interval` Save interval of loaded data
+
+`archtec_playerdata.unload_data_after` Cache timeout
+
+`archtec_playerdata.auto_backup_interval` Interval for automatic backup creation
+
 ### License
 
 ##### Code: 
