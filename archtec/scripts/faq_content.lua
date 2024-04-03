@@ -21,8 +21,14 @@ archtec.faq.register("Private messages", {
 	header = "Chat",
 	pos = 1,
 	text = [[
-Use '/msg <name> <message>' to message another player.
-Use '/m <message>' to send a message to the person you sent your last message to.
+Send a private to a player:
+'/msg <name> <message>'
+
+Send a private message to the person you sent your last message to:
+'/m <message>
+
+Send an offline message to a player (the person will see your message when they joins the next time):
+'/tell <name> <message>'
 ]]
 })
 
@@ -443,13 +449,13 @@ archtec.faq.register("Useful chat commands", {
 General:
 - '/faq' shows this Frequently Asked Questions section
 - '/news' shows the news from join again (staff only)
-- '/report <msg>' report a bug/issue/feature request to the server staff (Creates a GitHub issue and a Discord notification)
+- '/report <message>' report a bug/issue/feature request to the server staff (Creates a GitHub issue and a Discord notification)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get the ID)
 
 Techage:
 - '/my_expoints' show your TA 5 experience points
 - '/ta_color' shows a color palette for the controller
-- '/ta_limit' show your TA command limit
+- '/ta_limit' shows your TA command limit
 ]]
 })
 

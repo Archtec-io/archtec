@@ -67,6 +67,7 @@ dofile(path.."snow.lua")
 dofile(path.."optimize_abm_lbm.lua")
 dofile(path.."perf_logging.lua")
 dofile(path.."playtime.lua")
+dofile(path.."msg_offline.lua")
 
 local http = minetest.request_http_api()
 if http then
