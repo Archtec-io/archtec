@@ -11,7 +11,7 @@ minetest.register_node("techage_addon:dry_ice", {
 	damage_per_second = 3,
 	drop = "techage_addon:dry_ice_cri"
 })
-minetest.register_alias("techage_cobble_generator:dry_ico", "techage_addon:dry_ice")
+minetest.register_alias("techage_cobble_generator:dry_ice", "techage_addon:dry_ice")
 
 minetest.register_craftitem("techage_addon:dry_ice_cri", {
 	description = S("Dry ice"),
