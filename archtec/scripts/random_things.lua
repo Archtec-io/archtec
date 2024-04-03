@@ -23,6 +23,9 @@ if minetest.get_modpath("moreblocks") then
 	)
 end
 
+-- Thankyou command
+archtec_playerdata.register_key("thank_you", "number", 0)
+
 minetest.register_chatcommand("thankyou", {
 	params = "<name>",
 	description = "Thank someone",
@@ -48,6 +51,7 @@ minetest.register_chatcommand("thankyou", {
 	end
 })
 
+-- Falling nodes cleanup command
 local abr = minetest.settings:get("active_block_range") * 16
 
 local function remove_falling_nodes(pos)

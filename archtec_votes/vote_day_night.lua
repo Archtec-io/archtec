@@ -6,6 +6,7 @@ end
 
 local free_votes = 5
 archtec.free_votes = free_votes
+archtec_playerdata.register_key("free_votes", "number", 0)
 
 minetest.register_chatcommand("vote_day", {
 	description = "Start a vote to set the time to day",

@@ -56,6 +56,7 @@ function archtec.namecolor.get_idx(color)
 	end
 end
 
+archtec_playerdata.register_key("s_ncolor", "string", "")
 function archtec.namecolor.get(name)
 	local color = archtec_playerdata.get(name, "s_ncolor")
 

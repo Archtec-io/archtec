@@ -55,11 +55,13 @@ end
 
 channel.get_cname = get_cname
 
+archtec_playerdata.register_key("channels", "table", {})
+archtec_playerdata.register_upgrade("channels", "archtec_chat:channel_str_to_list", function(name, value)
+	return minetest.deserialize(value)
+end)
+
 function archtec_chat.user.open(name)
-	local data = minetest.deserialize(archtec_playerdata.get(name, "channels"))
-	if data == nil then
-		data = user_table -- init
-	end
+	local data = archtec_playerdata.get(name, "channels")
 	-- add missing sub tables
 	for k, v in pairs(user_table) do
 		if not data[k] then
@@ -95,7 +97,7 @@ function archtec_chat.user.save(name)
 	end
 
 	-- Save channels
-	archtec_playerdata.set(name, "channels", minetest.serialize(archtec_chat.users[name]))
+	archtec_playerdata.set(name, "channels", archtec_chat.users[name])
 
 	-- Leave all remaining channels
 	for cname, _ in pairs(archtec_chat.users[name].channels) do

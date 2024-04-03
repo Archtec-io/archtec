@@ -1,693 +1,656 @@
 --[[
-	Copyright (C) 2023 Niklp <nik@niklp.net>
+	Copyright (C) 2023-24 Niklp <nik@niklp.net>
 	GNU Lesser General Public License v2.1 See LICENSE.txt for more information
 ]]--
 
 archtec_playerdata = {
-	api_version = 1
+	api_version = 2
 }
 
-local sql = minetest.get_mod_storage()
-local datadir = minetest.get_worldpath() .. "/archtec_playerdata"
-local cache, playtime_current, rank = {}, {}, {}
-local S = minetest.get_translator("archtec_playerdata")
-local F = minetest.formspec_escape
-local FS = function(...) return F(S(...)) end
-local floor, type, C = math.floor, type, minetest.colorize
-local rank_gentime = 0
-local shutdown_mode = false
+-- Init some basic stuff
+local storage = minetest.get_mod_storage()
+local modpath = minetest.get_modpath("archtec_playerdata")
+local datadir = minetest.get_worldpath() .. "/archtec_playerdata/"
+local type = type
 
--- config
-local save_interval = 180
-local debug_mode = minetest.settings:get("archtec_playerdata.debug_mode", false)
-local min_xp = 10000 -- modify by hand
+-- Config stuff
+local debug_mode = minetest.settings:get_bool("archtec_playerdata.debug_mode", false)
+local save_interval = minetest.settings:get("archtec_playerdata.save_interval") or 180 -- 3min
+local unload_data_after = minetest.settings:get("archtec_playerdata.unload_data_after") or 3600 -- 1h
+local auto_backup_interval = minetest.settings:get("archtec_playerdata.auto_backup_interval") or 86400 -- 1d
 
--- set storage version (needed for v2 rewrite)
-sql:set_int("system_storage_version", 1) -- long keyname to make sure that no player w/ this name can join (minetest has a name length limit)
-
--- struct: add new keys with default/fallback values! (Set always 0 (or a bool val) as fallback!)
-local struct = {
-	nodes_dug = 0,
-	nodes_placed = 0,
-	items_crafted = 0,
-	died = 0,
-	playtime = 0,
-	chatmessages = 0,
-	first_join = 0,
-	join_count = 0,
-	thank_you = 0,
-	ignores = "",
-	channels = "",
-	free_votes = 0, -- we use 0 to allow later changes of the max value
-	-- player settings
-	s_help_msg = true, -- help msg
-	s_tbw_show = true, -- tool breakage warnings
-	s_sp_show = true, -- spawnwaypoint
-	s_r_id = true, -- auto item drop collection
-	s_snow = true, -- enable snow particles
-	s_ncolor = "", -- player namecolor
-	s_avd = false, -- auto-vote-day
+-- System structure
+local data = {}
+local system = {
+	mode = "startup", -- modes: running, startup, shutdown
+	types = {
+		boolean = true,
+		number = true,
+		string = true,
+		table = true,
+	},
+	keys = {
+		system_data_unload = {key_type = "number", default_value = 0, temp = true}
+	},
+	keys_remove = {},
+	upgrades = {},
 }
 
--- helper funtions
-local function log_action(message)
-	if message ~= "" then
-		minetest.log("action", "[archtec_playerdata] " .. message)
-	end
-end
-
-local function log_warning(message)
-	if message ~= "" then
-		minetest.log("warning", "[archtec_playerdata] " .. message)
-		notifyTeam("[archtec_playerdata] Critical error! Please read the server logs!")
-	end
-end
-
-local function log_debug(message)
+-- Logging and error helpers
+local function log_debug(func, str)
 	if debug_mode then
-		if message ~= "" then
-			minetest.log("warning", "[archtec_playerdata] " .. message)
-		end
+		minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
 	end
 end
 
+local function log_action(func, str)
+	minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
+end
+
+local function log_error(func, str)
+	minetest.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
+	notifyTeam("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. str .. ".")
+end
+
+local function api_error(func, str)
+	error("[archtec_playerdata] " .. func .. "() ".. str, 2)
+end
+
+-- Validation helpers
 local function valid_player(name)
-	if name ~= nil and name ~= "" and type(name) == "string" then
-		-- log_debug("valid_player: " .. dump(name) .. " is valid")
-		return true
-	else
-		log_action("valid_player: " .. dump(name) .. " is not valid!") -- log_warning() would trigger staff notifications
-		return false
-	end
-end
-
-local function add_defaults(stats)
-	local t = table.copy(stats)
-	for k, v in pairs(struct) do
-		if not t[k] then
-			t[k] = v
-		end
-	end
-	return t
-end
-
-local function in_struct(key)
-	return struct[key] ~= nil
-end
-
-local function is_valid(value)
-	local valtype = type(value)
-	if valtype == "number" or valtype == "string" or valtype == "boolean" then
+	if name ~= "" and type(name) == "string" then
 		return true
 	end
 	return false
 end
 
-local function divmod(a, b)
-	return floor(a / b), a % b
+-- Other helpers
+local function dumpx(...) -- dump to one line
+	return dump(...):gsub("\n", ""):gsub("\t", "")
 end
 
-local function format_duration(seconds)
-	local display_hours, seconds_left = divmod(seconds, 3600)
-	local display_minutes, display_seconds = divmod(seconds_left, 60)
-	return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
+local function get_user_list()
+	local list = {}
+	local keys = storage:to_table().fields
+
+	for key, _ in pairs(keys) do
+		if key:sub(1, 7) == "player_" then
+			list[#list + 1] = key:sub(8, #key)
+		end
+	end
+	return list
 end
 
-local function in_cache(name)
-	return cache[name] ~= nil
+local function get_loaded_user_list()
+	local list = {}
+	for name, _ in pairs(data) do
+		list[#list + 1] = name
+	end
+
+	return list
 end
 
-local function get_session_playtime(name)
-	if playtime_current[name] then
-		return os.time() - playtime_current[name]
+local function get_unload_timestamp()
+	return os.time() + unload_data_after
+end
+
+local function bool_to_str(bool)
+	if bool then
+		return "true"
 	else
-		return 0
+		return "false"
 	end
 end
 
-local function format_int(number)
-	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
-
-	-- reverse the int-string and append a comma to all blocks of 3 digits
-	int = int:reverse():gsub("(%d%d%d)", "%1,")
-
-	-- reverse the int-string back remove an optional comma and put the
-	-- optional minus and fractional part back
-	return minus .. int:reverse():gsub("^,", "") .. fraction
+local function format_list(list)
+	local str = ""
+	for k, v in pairs(list) do
+		str = str .. k .. "=" .. v .. "; "
+	end
+	return str
 end
 
-local function stats_dump()
-	local d = sql:to_table()
-	local ts = os.date("!%Y-%m-%dT%H:%M:%SZ", os.time())
-	minetest.safe_file_write(datadir .. "/dump." .. ts, minetest.serialize(d))
+-- Basic system functions
+local function data_load(name, keep, create)
+	if data[name] then
+		if keep then -- reset unload timestamp if a player rejoins before cache timeout
+			data[name].system_data_unload = 0
+		end
+		log_debug("data_load", "data of '" .. name .. "' already loaded")
+		return true
+	end
+
+	if system.mode == "shutdown" then
+		log_error("data_load", "cannot load data in shutdown mode")
+		return false
+	end
+
+	local raw = storage:get_string("player_" .. name)
+	if create and raw == "" then
+		raw = "{}"
+	elseif raw == "" then
+		return false
+	end
+
+	local data_table = minetest.parse_json(raw)
+	if data_table == nil then
+		log_error("data_load", "failed to parse data of '" .. name .. "'; raw json '" .. raw .. "'")
+		return false
+	end
+
+	if keep then
+		data_table.system_data_unload = 0
+	else
+		data_table.system_data_unload = get_unload_timestamp()
+	end
+
+	data[name] = data_table
+	log_debug("data_load", "loaded data of '" .. name .. "'; " .. dumpx(data_table))
+	return true
 end
 
-minetest.register_chatcommand("stats_dump", {
-	description = "Dump all stats",
+local function data_save(name, unload_now)
+	if not data[name] then
+		log_error("data_save", "data of '" .. name .. "' not available - can't save")
+		return false
+	end
+
+	local data_copy = table.copy(data[name])
+	local unload_data = data_copy.system_data_unload ~= 0 and data_copy.system_data_unload < os.time()
+
+	for key_name, _ in pairs(data_copy) do
+		if system.keys[key_name] and system.keys[key_name].temp == true then
+			data_copy[key_name] = nil
+		end
+	end
+
+	local raw = minetest.write_json(data_copy)
+	if raw == nil then
+		log_error("data_save", "failed to generate json for '" .. name .. "'; lua table " .. dump(data_copy))
+		return false
+	end
+
+	storage:set_string("player_" .. name, raw)
+	log_debug("data_save", "saved data of '" .. name .. "'; " .. raw .. "")
+
+	if unload_data or unload_now then
+		data[name] = nil
+		if unload_data then
+			log_debug("data_save", "unloaded data of '" .. name .. "' due to cache timeout")
+		end
+	end
+
+	return true
+end
+
+-- Backup system
+local function backup_create()
+	local storage_copy = storage:to_table().fields
+	local data_copy = {}
+
+	-- Convert stored data back to lua tables
+	for k, v in pairs(storage_copy) do
+		if k:sub(1, 7) == "player_" then
+			data_copy[k] = minetest.parse_json(v)
+			if data_copy[k] == nil then
+				log_error("backup_create", "failed to parse json of '" .. k .. "'")
+			end
+		else
+			data_copy[k] = v
+		end
+	end
+
+	local json_dump = minetest.write_json(data_copy)
+	if json_dump == nil then
+		log_error("backup_create", "failed to create json string from table")
+		return false
+	end
+
+	local filename = "archtec_playerdata_"  .. os.date("!%Y-%m-%d_%H:%M:%S", os.time()) .. ".txt" -- 2024-01-01_20:00:00
+	local success = minetest.safe_file_write(datadir .. filename, json_dump)
+	if not success then
+		log_error("backup_create", "failed to write backup file - unknown engine error")
+		return false
+	end
+
+	local backup_size = math.ceil(#json_dump / 1024) -- 1 KiB = 1024 Bytes
+	log_action("backup_create", "created backup file " .. filename .. "; file is " .. backup_size .. " KiB big")
+	return true
+end
+archtec_playerdata.backup_create = backup_create
+
+local function backup_restore(filename)
+	if system.mode ~= "startup" then
+		log_error("backup_restore", "called outside of 'startup' mode")
+		return false
+	end
+
+	local file = io.open(datadir .. filename, "r")
+	if file == nil then
+		log_error("backup_restore", "couldn't open backup file '" .. filename .. "'")
+		return false
+	end
+
+	local raw = file:read("*all")
+	file:close()
+	if raw == nil then
+		log_error("backup_restore", "failed to read buffer from backup file '" .. filename .. "'")
+		return false
+	end
+
+	local data_copy = minetest.parse_json(raw)
+	if data_copy == nil then
+		log_error("backup_restore", "failed to parse json from backup file '" .. filename .. "'")
+		return false
+	end
+
+	-- Convert data back to json strings
+	for k, v in pairs(data_copy) do
+		if k:sub(1, 7) == "player_" then
+			data_copy[k] = minetest.write_json(v)
+			if data_copy[k] == nil then
+				log_error("backup_restore", "failed to write json of '" .. k .. "'")
+			end
+		else
+			data_copy[k] = v
+		end
+	end
+
+	local storage_copy = {fields = data_copy}
+	storage:from_table(storage_copy)
+	log_action("backup_restore", "restored backup from file '" .. filename .. "'")
+	return true
+end
+archtec_playerdata.backup_restore = backup_restore
+
+minetest.register_chatcommand("playerdata_backup", {
+	description = "Backup playerdata to world directory",
 	privs = {server = true},
 	func = function(name)
-		minetest.log("action", "[/stats_dump] executed by '" .. name .. "'")
-		stats_dump()
-		minetest.chat_send_player(name, C("#00BD00", "Dumped all stats"))
+		minetest.log("action", "[/playerdata_backup] executed by '" .. name .. "'")
+		if backup_create() then
+			minetest.chat_send_player(name, "Backed-up playerdata.")
+		else
+			minetest.chat_send_player(name, "Backup failed, please check the logs!")
+		end
 	end
 })
 
-archtec_playerdata.dump = stats_dump
-
-local function stats_restore(name, table)
-	local d = sql:to_table()
-	d.fields[name] = minetest.serialize(table)
-	sql:from_table(d)
-end
-
-archtec_playerdata.restore = stats_restore
-
-local function string2timestamp(s)
-	if type(s) ~= "string" then return end
-
-	local p = "(%a+) (%a+)(%s+)(%d+) (%d+):(%d+):(%d+) (%d+)"
-	local _, month, _, day, hour, min, sec, year = s:match(p)
-
-	local MON = {Jan = 1, Feb = 2, Mar = 3, Apr = 4, May = 5, Jun = 6, Jul = 7, Aug = 8, Sep = 9, Oct = 10, Nov = 11, Dec = 12}
-	month = MON[month]
-	local offset = os.time() - os.time(os.date("!*t"))
-	return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
-end
-
--- load/create data
-local function stats_create(name)
-	if sql:contains(name) then
-		log_warning("stats_create: stats file for '" .. name .. "' already exsists!")
-		return false
-	end
-	sql:set_string(name, minetest.serialize({}))
-	return sql:contains(name)
-end
-
-local function stats_load(name, create)
-	if not valid_player(name) then return end
-	if create == nil then create = true end
-	if cache[name] then
-		log_action("load: stats of '" .. name .. "' already loaded")
-		return
-	end
-	local raw = sql:get_string(name)
-	if raw == "" then
-		if not create then
-			return
-		end
-		if stats_create(name) then
-			raw = sql:get_string(name) -- try again
-		else
-			log_warning("load: cannot create stats entry for '" .. name .. "'!")
-			return
-		end
-	end
-	local data = minetest.deserialize(raw)
-	if data == nil then
-		log_warning("load: failed to deserialize stats of '" .. name .. "'!")
-		return
-	end
-	-- remove unknown keys
-	for key, _ in pairs(data) do
-		if not (in_struct(key)) then
-			log_action("load: removing unknown key '" .. key .. "' of player '" .. name)
-			data[key] = nil
-		end
-	end
-	cache[name] = data
-end
-
--- save handler
-local function stats_save(name)
-	if not valid_player(name) then return end
-	-- save data
-	local data = cache[name]
-	if data == nil then
-		log_warning("save: cache for '" .. name .. "' is nil! Saving will be aborted!")
-		return
-	end
-	local raw = minetest.serialize(data)
-	if raw == nil or raw == "" then
-		log_warning("save: raw data of '" .. name .. "' is nil!")
-		return
-	end
-	sql:set_string(name, raw)
-end
-
--- get default (global)
-function archtec_playerdata.get_default(key)
-	return struct[key]
-end
-
--- get/set/mod data
-local function stats_get(name, key)
-	if not valid_player(name) then return end
-	local val, clean
-	if cache[name] == nil then
-		stats_load(name, false)
-		clean = true
-		if cache[name] == nil then -- Player does not exist
-			return struct[key]
-		end
-	end
-	if cache[name][key] == nil then
-		val = struct[key]
-	else
-		val = cache[name][key]
-	end
-	if val == nil then
-		log_warning("get: key '" .. key .. "' is unknown!")
-		return
-	end
-	if clean then
-		cache[name] = nil
-	end
-	log_debug("get: return '" .. key .. "' of '" .. name .. "' with value '" .. dump(val) .. "'")
-	return val
-end
-
-archtec_playerdata.get = stats_get
-
-local function stats_set(name, key, value)
-	if not valid_player(name) then return false end
-	if not is_valid(value) then return false end
-	local clean
-	if not in_struct(key) then
-		log_warning("set: tried to set unknown key '" .. key .. "'!")
-		return false
-	end
-	if cache[name] == nil then
-		stats_load(name, false)
-		clean = true
-		if cache[name] == nil then -- Player does not exist
-			log_warning("set: tried to modify not existing player '" .. name .. "'!")
-			return false
-		end
-	end
-	if value == struct[key] then
-		value = nil
-	end
-	cache[name][key] = value
-	if clean then
-		stats_save(name)
-		cache[name] = nil
-	end
-	log_debug("set: set '" .. key .. "' of '" .. name .. "' to value '" .. dump(value) .. "'")
-	return true
-end
-
-archtec_playerdata.set = stats_set
-
-local function stats_mod(name, key, value)
-	if not valid_player(name) then return false end
-	if type(value) ~= "number" then
-		log_warning("mod: value " .. dump(value) .. " is not a number!")
-		return false
-	end
-	local old, clean
-	if not in_struct(key) then
-		log_warning("mod: tried to mod unknown key '" .. key .. "'!")
-		return false
-	end
-	if cache[name] then
-		if cache[name][key] then
-			old = cache[name][key]
-		else
-			old = struct[key]
-		end
-	else
-		stats_load(name, false)
-		clean = true
-		if cache[name] == nil then -- Player does not exist
-			log_warning("mod: tried to modify not existing player '" .. name .. "'!")
-			return false
-		end
-		if cache[name][key] then
-			old = cache[name][key]
-		else
-			old = struct[key]
-		end
-	end
-	local newval = old + value
-	cache[name][key] = newval
-	if clean then
-		stats_save(name)
-		cache[name] = nil
-	end
-	log_debug("mod: modify '" .. key .. "' of '" .. name .. "' to value '" .. newval .. "' (prev: '" .. old .. "' add: '" .. value .. "')")
-	return true
-end
-
-archtec_playerdata.mod = stats_mod
-
--- save data
-local function stats_save_all()
-	local before = minetest.get_us_time()
-	for _, player in ipairs(minetest.get_connected_players()) do
-		local name = player:get_player_name()
-		-- update playtime
-		stats_mod(name, "playtime", get_session_playtime(name))
-		playtime_current[name] = os.time()
-		stats_save(name)
-	end
-	local after = minetest.get_us_time()
-	log_debug("Took: " .. (after - before) / 1000 .. " ms")
-	minetest.after(save_interval, stats_save_all)
-end
-
-local function stats_save_all_shutdown()
-	local before = minetest.get_us_time()
-	for _, player in ipairs(minetest.get_connected_players()) do
-		local name = player:get_player_name()
-		-- update playtime
-		stats_mod(name, "playtime", get_session_playtime(name))
-		playtime_current[name] = os.time()
-		stats_save(name)
-		cache[name] = nil
-		playtime_current[name] = nil
-	end
-	local after = minetest.get_us_time()
-	return (after - before) / 1000
-end
-
-minetest.after(4, stats_save_all)
-
--- unload helper
-local function stats_unload(name)
-	if not valid_player(name) then return end
-	stats_save(name)
-	cache[name] = nil
-	playtime_current[name] = nil
-end
-
--- load/save on player join/leave events
+-- Callbacks to engine
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	if name ~= nil then
-		stats_load(name)
-		stats_mod(name, "join_count", 1)
-		-- playtime data migration
-		if stats_get(name, "playtime") == 0 then
-			local time = player:get_meta():get_int("archtec:playtime")
-			if time ~= nil and time ~= 0 and type(time) == "number" then
-				stats_set(name, "playtime", time)
-				player:get_meta():set_string("archtec:playtime", nil) -- remove playtime entry
-				log_debug("on_joinplayer: removed 'archtec:playtime' meta of '" .. name .. "'")
-			end
-		end
-		-- first join data migration
-		if stats_get(name, "first_join") == 0 then -- move legacy data
-			local string = player:get_meta():get_string("archtec:joined")
-			if string ~= "" or string == nil then
-				local int = string2timestamp(string)
-				stats_set(name, "first_join", int)
-				player:get_meta():set_string("archtec:joined", nil)
-				log_debug("on_joinplayer: removed 'archtec:joined' meta of '" .. name .. "'")
-			end
-		end
-		-- add first join
-		if stats_get(name, "first_join") == 0 then
-			stats_set(name, "first_join", os.time())
-		end
-		-- show spawn waypoint
-		if stats_get(name, "s_sp_show") == true then
-			archtec.sp_add(name)
-		end
-	end
+	data_load(name, true, true)
 end)
 
 minetest.register_on_leaveplayer(function(player)
-	if shutdown_mode then return end -- Do not save anything
 	local name = player:get_player_name()
-	if name ~= nil then
-		stats_unload(name)
+	archtec_playerdata.set(name, "system_data_unload", get_unload_timestamp())
+end)
+
+local time_save = 0
+local time_backup = 0
+minetest.register_globalstep(function(dtime)
+	time_save = time_save + dtime
+	time_backup = time_backup + dtime
+
+	if time_save > save_interval then
+		time_save = 0
+		local users = get_loaded_user_list()
+		local t0 = minetest.get_us_time()
+		for _, name in ipairs(users) do
+			data_save(name)
+		end
+		local t1 = minetest.get_us_time()
+
+		if #users > 0 then
+			log_action("save_step", "saved data of " .. #users .. " player(s) in " .. (t1 - t0) / 1000 .. " ms")
+		end
+	end
+
+	if time_backup > auto_backup_interval then
+		time_backup = 0
+		backup_create()
 	end
 end)
 
 minetest.register_on_shutdown(function()
-	shutdown_mode = true
-	local t = stats_save_all_shutdown()
-	log_action("shutdown: saved all data in " .. t .. "ms!")
-end)
+	system.mode = "shutdown"
 
--- stats
-minetest.register_on_dignode(function(_, _, digger)
-	if not digger then return end
-	local name = digger:get_player_name()
-	if name ~= nil then
-		stats_mod(name, "nodes_dug", 1)
+	local users = get_loaded_user_list()
+	local t0 = minetest.get_us_time()
+	for _, name in ipairs(users) do
+		data_save(name, true)
 	end
-end)
+	local t1 = minetest.get_us_time()
 
-minetest.register_on_placenode(function(_, _, placer, _, _, _)
-	if not placer then return end
-	local name = placer:get_player_name()
-	if name ~= nil then
-		stats_mod(name, "nodes_placed", 1)
+	if #users > 0 then
+		log_action("on_shutdown", "saved data of " .. #users .. " player(s) in " .. (t1 - t0) / 1000 .. " ms")
 	end
 end)
 
-minetest.register_on_craft(function(_, player, _, _)
-	if not player then return end
-	local name = player:get_player_name()
-	if name ~= nil then
-		stats_mod(name, "items_crafted", 1)
-	end
-end)
+-- Setup procedure
+local function run_actions()
+	local list = get_user_list()
+	local stats = {
+		keys_remove = {},
+		upgrades = {},
+		unknown_keys = {},
+		wrong_type = {},
+	}
 
-minetest.register_on_dieplayer(function(player, _)
-	if not player then return end
-	local name = player:get_player_name()
-	if name ~= nil then
-		stats_mod(name, "died", 1)
-	end
-end)
+	system.mode = "running" -- switch to running mode so mods can modify things in upgrades
+	for _, name in ipairs(list) do
+		data_load(name)
 
--- Stats formspec
--- 0 = conditions not fulfilled + w/o priv; 1 = conditions fulfilled + w/o priv; 2 = conditions fulfilled + w/ priv
-local function colorize_privs(name, data, privs)
-	local t = {priv_lava = 0, priv_chainsaw = 0, priv_forceload = 0, priv_areas = 0}
-	-- priv_lava
-	if data.playtime > archtec.adv_buckets_playtime then
-		t.priv_lava = 1
-	end
-	if privs.adv_buckets then t.priv_lava = 2 end
-	-- priv_chainsaw
-	if archtec.chainsaw_conditions(name) then
-		t.priv_chainsaw = 1
-	end
-	if privs.archtec_chainsaw then t.priv_chainsaw = 2 end
-	-- priv_forceload (no check needed)
-	if true then
-		t.priv_forceload = 1
-	end
-	if privs.forceload then t.priv_forceload = 2 end
-	-- priv_areas
-	if data.playtime > archtec.big_areas_playtime then
-		t.priv_areas = 1
-	end
-	if privs.areas_high_limit then t.priv_areas = 2 end
-
-	local colorized = {}
-	for priv, v in pairs(t) do
-		if v == 0 then
-			colorized[priv] = C("#FF0000", S("NO"))
-		elseif v == 1 then
-			colorized[priv] = C("#FF0", S("PENDING"))
-		elseif v == 2 then
-			colorized[priv] = C("#00BD00", S("YES"))
+		-- Remove keys scheduled for deletion
+		for _, key in ipairs(system.keys_remove) do
+			if data[name][key] then
+				data[name][key] = nil
+				stats.keys_remove[key] = (stats.keys_remove[key] or 0) + 1
+				log_debug("run_actions", "removed key '" .. key .. "' of player '" .. name .. "'")
+			end
 		end
-	end
-	return colorized.priv_lava or "", colorized.priv_chainsaw or "", colorized.priv_forceload or "", colorized.priv_areas or ""
-end
 
-local function stats_fs(name, target)
-	local data, is_online, user
-	if target == "" or target == nil then
-		target = name
-	end
-	if not minetest.player_exists(target) or not valid_player(target) then
-		minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
-		return
-	end
-	if in_cache(target) then
-		data = table.copy(cache[target])
-		is_online = true
-	else
-		stats_load(target, false) -- we won't create new stats files
-		if cache[target] == nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
-			return
+		-- Run upgrades
+		for _, def in ipairs(system.upgrades) do
+			if storage:get_int("system_upgrade_" .. def.identifier) == 0 then
+				if data[name][def.key] ~= nil then -- value not set for this player
+					local result = def.func(name, data[name][def.key])
+					if result ~= nil then
+						archtec_playerdata.set(name, def.key, result)
+					end
+				end
+				stats.upgrades[def.identifier] = true
+			end
 		end
-		data = table.copy(cache[target])
-		cache[target] = nil -- unload
-		is_online = false
-	end
-	if data == nil then
-		minetest.chat_send_player(name, C("#FF0000", S("[stats] Can't read stats!")))
-		return
-	end
-	-- prevent nil crashes
-	data = add_defaults(data)
-	-- get auth
-	local privs = minetest.get_player_privs(target) or {}
-	local pauth = minetest.get_auth_handler().get_auth(target)
-	-- stats
-	if is_online then user = target .. " " .. C("#00BD00", S("[Online]")) else user = target .. " " .. C("#FF0000", S("[Offline]")) end
-	if privs["staff"] then user = user .. " " .. C("#FF8800", S("[Staff]")) end
-	local nodes_dug = data.nodes_dug
-	local nodes_placed = data.nodes_placed
-	local crafted = data.items_crafted
-	local died = data.died
-	local playtime = format_duration(data.playtime)
-	local chatmessages = data.chatmessages
-	local first_join = os.date("!%Y-%m-%dT%H:%M:%SZ", data.first_join) .. " UTC"
-	local join_count = data.join_count
-	local thank_you = data.thank_you
-	local avg_playtime = format_duration(data.playtime / data.join_count)
-	local free_votes = archtec.free_votes - data.free_votes
-	local priv_lava, priv_chainsaw, priv_forceload, priv_areas = colorize_privs(target, data, privs)
-	local last_login
-	if pauth and pauth.last_login and pauth.last_login ~= -1 then
-		last_login = os.date("!%Y-%m-%dT%H:%M:%SZ", pauth.last_login) .. " UTC"
-	else
-		last_login = "unknown"
-	end
-	local formspec = [[
-		formspec_version[4]
-		size[5.5,9]
-		label[0.375,0.5;]] .. FS("Stats of: @1", user) .. [[]
-		label[0.375,1.0;]] .. FS("Dug: @1", nodes_dug) .. [[]
-		label[0.375,1.5;]] .. FS("Placed: @1", nodes_placed) .. [[]
-		label[0.375,2.0;]] .. FS("Crafted: @1", crafted) .. [[]
-		label[0.375,2.5;]] .. FS("Died: @1", died) .. [[]
-		label[0.375,3.0;]] .. FS("Playtime: @1", playtime) .. [[]
-		label[0.375,3.5;]] .. FS("Average playtime: @1", avg_playtime) .. [[]
-		label[0.375,4.0;]] .. FS("Chatmessages: @1", chatmessages) .. [[]
-		label[0.375,4.5;]] .. FS("Thank you: @1", thank_you) .. [[]
-		label[0.375,5.0;]] .. FS("Join date: @1", first_join) .. [[]
-		label[0.375,5.5;]] .. FS("Join count: @1", join_count) .. [[]
-		label[0.375,6.0;]] .. FS("Last login: @1", last_login) .. [[]
-		label[0.375,6.5;]] .. FS("Can spill lava: @1", priv_lava) .. [[]
-		label[0.375,7.0;]] .. FS("Can use the chainsaw: @1", priv_chainsaw) .. [[]
-		label[0.375,7.5;]] .. FS("Can place forceload blocks: @1", priv_forceload) .. [[]
-		label[0.375,8.0;]] .. FS("Can create big areas: @1", priv_areas) .. [[]
-		label[0.375,8.5;]] .. FS("Remaining free votes: @1", free_votes) .. [[]
-	]]
-	minetest.show_formspec(name, "archtec_playerdata:stats", formspec)
-end
 
-minetest.register_chatcommand("stats", {
-	params = "<name>",
-	description = "Shows player stats",
-	privs = {interact = true},
-	func = function(name, param)
-		minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
-		local target = param:trim()
-		if target ~= name and archtec.ignore_check(name, target) then
-			archtec.ignore_msg("stats", name, target)
-			return
+		-- Check for unknown keys
+		for key, _ in pairs(data[name]) do
+			if system.keys[key] == nil then
+				stats.unknown_keys[key] = (stats.unknown_keys[key] or 0) + 1
+				log_error("run_actions", "found unknown key '" .. key .. "' in data of '" .. name .. "'")
+			end
 		end
-		stats_fs(name, target)
-	end
-})
 
--- Ranking by XP
-local function calc_xp(data)
-	local xp = 0
-	xp = xp + data.nodes_dug * 1.1
-	xp = xp + data.nodes_placed * 1.6
-	xp = xp + data.items_crafted * 0.7
-	xp = xp - data.died * 200
-	xp = xp + data.playtime * 0.1 -- 0.1 xp per second = 360 XP per hour
-	xp = xp + data.chatmessages * 2
-	xp = xp + data.thank_you * 100
-	return floor(xp)
-end
+		-- Type checks
+		for key, value in pairs(data[name]) do
+			if system.keys[key] and system.keys[key].key_type ~= type(value) then
+				stats.wrong_type[key] = (stats.wrong_type[key] or 0) + 1
+				log_error("run_actions", "found " .. key .. "=" .. dump(value) .. " with wrong type in data of '" .. name .. "'")
+			end
+		end
 
-local function gen_ranking()
-	rank = {}
-	rank_gentime = os.time()
-	-- collect data
-	local data = sql:to_table().fields
-	local users = {}
-	for user, entry in pairs(data) do
-		local stats = add_defaults(minetest.deserialize(entry) or {})
-		local xp = calc_xp(stats)
-		if xp >= min_xp then
-			users[user] = {}
-			users[user].name = user
-			users[user].xp = xp
-		end
+		data_save(name, true)
 	end
-	-- sort data
-	local sorted = {}
-	for name, stats in pairs(users) do
-		table.sort(stats, function(a, b) return a.xp > b.xp end)
-		sorted[#sorted + 1] = {name, stats.xp}
+
+	-- Mark upgrades as executed
+	for identifier, _ in pairs(stats.upgrades) do
+		storage:set_int("system_upgrade_" .. identifier, 1)
+		log_action("run_actions", "executed upgrade '" .. identifier .. "'")
 	end
-	table.sort(sorted, function(a, b) return a[2] > b[2] end)
-	-- pre generate formspec entries for the first 100 players
-	local place = 1
-	for i = 1, 100 do
-		if sorted[i] then
-			local newstr = place .. ". " .. sorted[i][1] .. " - " .. format_int(sorted[i][2]) .. " XP"
-			place = place + 1
-			table.insert(rank, newstr)
-		end
+
+	if #stats.keys_remove > 0 then
+		log_action("run_actions", "removed keys from database: " .. format_list(stats.keys_remove))
+	end
+	if #stats.unknown_keys > 0 then
+		log_error("run_actions", "found unknown keys in database: " .. format_list(stats.unknown_keys))
+	end
+	if #stats.wrong_type > 0 then
+		log_error("run_actions", "found keys with wrong value-types in database: " .. format_list(stats.wrong_type))
 	end
 end
-
-local function rank_fs(sel)
-	if rank_gentime < (os.time() - (60 * 60 * 6)) then -- re-generate after 6h
-		gen_ranking()
-	end
-
-	local rows = {}
-	local label = FS("Ranking generated at @1", os.date("!%Y-%m-%dT%H:%M:%SZ", rank_gentime) .. " UTC")
-
-	local formspec = [[
-		formspec_version[4]
-		size[6,10]
-		label[0.1,0.3;%s]
-		tablecolumns[color;tree;text]
-		table[0.1,0.5;5.8,9.4;list;%s;%i]
-	]]
-
-	-- add entries
-	for _, str in ipairs(rank) do
-		rows[#rows + 1] = "#7F7,0," .. F(str)
-	end
-
-	return formspec:format(label, table.concat(rows, ","), sel or 0)
-end
-
-minetest.register_chatcommand("rank", {
-	description = "Get the XP of the best 100 players",
-	privs = {interact = true},
-	func = function(name)
-		minetest.log("action", "[/rank] executed by '" .. name .. "'")
-		minetest.show_formspec(name, "archtec_playerdata:rank", rank_fs())
-	end
-})
-
-minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "archtec_playerdata:rank" or fields.quit then
-		return
-	end
-
-	local event = minetest.explode_table_event(fields.list)
-	if event.type ~= "INV" then
-		local name = player:get_player_name()
-		minetest.show_formspec(name, "archtec_playerdata:rank", rank_fs(event.row))
-	end
-end)
 
 minetest.register_on_mods_loaded(function()
 	if not minetest.mkdir(datadir) then
-		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'!")
+		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'")
 	end
-	stats_dump()
-	gen_ranking()
+
+	-- Database maintenance procedure
+	log_action("setup", "starting database maintenance procedure")
+	backup_create()
+	run_actions()
+	log_action("setup", "startup procedure done")
 end)
+
+-- Register key
+function archtec_playerdata.register_key(key_name, key_type, default_value, temp)
+	if system.mode ~= "startup" then
+		api_error("register_key", "tried to register key after startup")
+	end
+	if system.keys[key_name] then
+		api_error("register_key", "'key_name' is already registered")
+	end
+
+	if type(key_name) ~= "string" then
+		api_error("register_key", "'key_name' must be a string")
+	end
+	if not system.types[key_type] then
+		api_error("register_key", "unsupported type for 'key_type'")
+	end
+	if not system.types[type(default_value)] then
+		api_error("register_key", "unsupported type for 'default_value'")
+	end
+	if type(temp) ~= "boolean" and temp ~= nil then
+		api_error("register_key", "'temp' is not a boolean value")
+	end
+	if key_name:sub(1, 7) == "system_" then
+		api_error("register_key", "'key_name' must not start with 'system_*'")
+	end
+
+	if temp == nil then
+		temp = false
+	end
+
+	system.keys[key_name] = {key_type = key_type, default_value = default_value, temp = temp}
+	log_debug("register_key", "registered key '" .. key_name .. "' with type=" .. key_type
+		.. ", default_value=" .. dumpx(default_value) .. ", temp=" .. bool_to_str(temp))
+end
+
+function archtec_playerdata.register_upgrade(key_name, identifier, func)
+	if system.mode ~= "startup" then
+		api_error("register_upgrade", "tried to register upgrade after startup")
+	end
+	if type(identifier) ~= "string" then
+		api_error("register_upgrade", "'identifier' must be a string")
+	end
+	if not system.keys[key_name] then
+		api_error("register_upgrade", "key '" .. key_name .. "' does not exist")
+	end
+	if type(func) ~= "function" then
+		api_error("register_upgrade", "'func' must be a function")
+	end
+
+	for _, def in ipairs(system.upgrades) do
+		if def.identifier == identifier then
+			api_error("register_upgrade", "identifier '" .. identifier .. " is already in use")
+		end
+	end
+
+	system.upgrades[#system.upgrades + 1] = {key = key_name, identifier = identifier,func = func}
+	log_debug("register_upgrade", "registered upgrade '" .. identifier .. "' for key '" .. key_name .. "'")
+end
+
+function archtec_playerdata.register_removal(key_name)
+	if system.mode ~= "startup" then
+		api_error("register_removal", "tried to register removal after startup")
+	end
+	if type(key_name) ~= "string" then
+		api_error("register_removal", "'key_name' must be a string")
+	end
+	if system.keys[key_name] ~= nil then
+		api_error("register_removal", "key '" .. key_name .. "' has been registered, cannot remove")
+	end
+
+	system.keys_remove[#system.keys_remove + 1] = key_name
+	log_debug("register_removal", "registered key removal '" .. key_name .. "'")
+end
+
+-- Get default_value of key
+function archtec_playerdata.get_default(key_name)
+	local key = system.keys[key_name]
+	if key then
+		if key.key_type == "table" then
+			return table.copy(key.default_value)
+		else
+			return key.default_value
+		end
+	end
+	log_debug("get_default", "key '" .. key_name .. "' does not exist")
+end
+
+-- Get value of key
+function archtec_playerdata.get(name, key_name)
+	if not valid_player(name) then
+		log_error("get", "tried to get data of non player object " .. dump(name))
+		return
+	end
+
+	if system.keys[key_name] == nil then
+		log_error("get", "tried to get value of unknown key '" .. key_name .. "'")
+		return
+	end
+
+	if not data_load(name) then
+		log_error("get", "data_load() failed")
+		return system.keys[key_name].default_value
+	end
+
+	local value
+	if data[name][key_name] ~= nil then
+		if system.keys[key_name].key_type == "table" then
+			value = table.copy(data[name][key_name])
+		else
+			value = data[name][key_name]
+		end
+	else -- use default value
+		if system.keys[key_name].key_type == "table" then
+			value = table.copy(system.keys[key_name].default_value)
+		else
+			value = system.keys[key_name].default_value
+		end
+	end
+
+	log_debug("get", "returned key " .. key_name .. "=" .. dumpx(value) .. " of '" ..  name .. "'")
+	return value
+end
+
+function archtec_playerdata.get_all(name)
+	if not valid_player(name) then
+		log_error("get_all", "tried to get all data of non player object " .. dump(name))
+		return
+	end
+
+	if not data_load(name) then
+		log_error("get_all", "data_load() failed")
+		return
+	end
+
+	local data_copy = table.copy(data[name])
+	for key_name, def in pairs(system.keys) do -- add all missing default values
+		if data_copy[key_name] == nil then
+			if def.key_type == "table" then
+				data_copy[key_name] = table.copy(def.default_value)
+			else
+				data_copy[key_name] = def.default_value
+			end
+		end
+	end
+
+	log_debug("get_all", "returned all data of '" .. name .. "' " .. dumpx(data_copy))
+	return data_copy
+end
+
+function archtec_playerdata.get_db()
+	local storage_copy = storage:to_table().fields
+	local data_copy = {}
+
+	-- Convert stored data back to lua tables
+	for k, v in pairs(storage_copy) do
+		if k:sub(1, 7) == "player_" then
+			data_copy[k] = minetest.parse_json(v)
+			if data_copy[k] == nil then
+				log_error("get_db", "failed to parse json of '" .. k .. "'")
+			end
+		end
+	end
+
+	return data_copy
+end
+
+function archtec_playerdata.set(name, key_name, value)
+	if not valid_player(name) then
+		log_error("set", "tried to set data of non player object " .. dump(name))
+		return false
+	end
+
+	if not system.keys[key_name] then
+		log_error("set", "tried to set unknown key '" .. key_name .. "'")
+		return false
+	end
+
+	if type(value) ~= system.keys[key_name].key_type then
+		log_error("set", "tried to set '" .. key_name .. "' of '" .. name .. "' to wrong data type '" .. type(key_name) .. "'")
+		return false
+	end
+
+	if not data_load(name) then
+		log_error("set", "data_load() failed")
+		return false
+	end
+
+	if type(value) == "table" then
+		data[name][key_name] = table.copy(value)
+	else
+		data[name][key_name] = value
+	end
+	log_debug("set", "set '" .. key_name .. "' of '" .. name .. "' to " .. dumpx(value))
+	return true
+end
+
+function archtec_playerdata.mod(name, key_name, value)
+	if not valid_player(name) then
+		log_error("mod", "tried to mod data of non player object " .. dump(name))
+		return false
+	end
+
+	if not system.keys[key_name] then
+		log_error("mod", "tried to mod unknown key '" .. key_name .. "'")
+		return false
+	end
+
+	if type(value) ~= "number" then
+		log_error("mod", "tried to mod '" .. key_name .. "' of '" .. name .. "' with wrong data type '" .. type(key_name) .. "'")
+		return false
+	end
+
+	if not data_load(name) then
+		log_error("mod", "data_load() failed")
+		return false
+	end
+
+	local old_value = data[name][key_name]
+	if old_value == nil then
+		old_value = system.keys[key_name].default_value
+	end
+
+	data[name][key_name] = old_value + value
+	log_debug("mod", "mod '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
+	return true
+end
+
+minetest.register_chatcommand("playerdata_debug", {
+	description = "Turn on/off API debug mode",
+	privs = {server = true},
+	func = function(name)
+		minetest.log("action", "[/playerdata_debug] executed by '" .. name .. "'")
+		debug_mode = not debug_mode
+		if debug_mode then
+			minetest.chat_send_player(name, "[archtec_playerdata] Enabled debug mode.")
+		else
+			minetest.chat_send_player(name, "[archtec_playerdata] Disabled debug mode.")
+		end
+	end
+})
+
+-- Load other stuff
+dofile(modpath .. "/stats.lua")
