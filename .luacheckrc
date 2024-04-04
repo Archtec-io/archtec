@@ -13,8 +13,6 @@ globals = {
 	"archtec_teleport",
 	"archtec_votes",
 	"mapserver",
-	"monitoring",
-	"notifyTeam",
 	"player_monoids",
 }
 
@@ -84,10 +82,6 @@ files["archtec/scripts/overrides.lua"] = {
 	globals = {"minetest.registered_entities", "carts.speed_max", "signs_bot.MAX_CAPA"},
 }
 
-files["archtec/init.lua"] = {
-	globals = {"futil"},
-}
-
 files["archtec/scripts/chainsaw.lua"] = {
 	globals = {"choppy.api"},
 }
@@ -98,40 +92,4 @@ files["archtec/scripts/random_things.lua"] = {
 
 files["archtec/scripts/watch.lua"] = {
 	globals = {"player_api"},
-}
-
-files["archtec_monitoring/builtin/after.lua"] = {
-	globals = {"minetest.after"},
-}
-
-files["archtec_monitoring/builtin/forceload_blocks.lua"] = {
-	globals = {"minetest.forceload_block", "minetest.forceload_free_block"},
-}
-
-files["archtec_monitoring/builtin/generated.lua"] = {
-	globals = {"minetest.registered_on_generateds"},
-}
-
-files["archtec_monitoring/builtin/globalstep.lua"] = {
-	globals = {"minetest.registered_globalsteps", "minetest.callback_origins"},
-}
-
-files["archtec_monitoring/builtin/on_joinplayer.lua"] = {
-	globals = {"minetest.registered_on_joinplayers"},
-}
-
-files["archtec_monitoring/builtin/on_prejoinplayer.lua"] = {
-	globals = {"minetest.registered_on_prejoinplayers"},
-}
-
-files["archtec_monitoring/mods/mesecons/functions.lua"] = {
-	globals = {"mesecon.queue.execute"},
-}
-
-files["archtec_monitoring/mods/mesecons/globals.lua"] = {
-	globals = {"mesecon.queue.execute"},
-}
-
-files["archtec_monitoring/mods/mesecons/luac.lua"] = {
-	globals = {"minetest.registered_nodes"},
 }

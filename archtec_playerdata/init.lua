@@ -49,7 +49,7 @@ end
 
 local function log_error(func, str)
 	minetest.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
-	notifyTeam("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. func .. "() ".. str .. ".")
+	archtec.notify_team("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. func .. "() ".. str .. ".")
 end
 
 local function api_error(func, str)

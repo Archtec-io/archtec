@@ -1,5 +1,5 @@
 minetest.register_on_prejoinplayer(function(name, ip)
-	notifyTeam("[archtec] Connection initialisation by '" .. name .. "' (IP: " .. ip .. ")")
+	archtec.notify_team("[archtec] Connection initialisation by '" .. name .. "' (IP: " .. ip .. ")")
 end)
 
 minetest.register_can_bypass_userlimit(function(name, ip)

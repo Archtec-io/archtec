@@ -102,9 +102,9 @@ minetest.register_on_joinplayer(function(player)
 	geoip.lookup(ip, function(data)
 		local txt = format_result(data)
 		if txt then
-			notifyTeam("[geoip] Result for player '" .. name .. "': " .. txt)
+			archtec.notify_team("[geoip] Result for player '" .. name .. "': " .. txt)
 		else
-			notifyTeam("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description))
+			archtec.notify_team("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description))
 		end
 	end, name)
 end)

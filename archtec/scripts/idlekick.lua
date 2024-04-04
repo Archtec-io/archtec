@@ -1,20 +1,10 @@
 local S = archtec.S
-local timeout = archtec.time.hours(1) -- Kick after 1h
-local timer = 0
 local cache = {}
+local timeout = archtec.time.hours(1) -- Kick after 1h
 
 local function now()
 	return minetest.get_us_time() / 1000000
 end
-
-local function cache_init(name, pos)
-	cache[name] = {
-		last_active = now(),
-		nametag_edited = nil, -- Created later
-		pos = pos
-	}
-end
-
 
 local function bump_name(name)
 	cache[name].last_active = now()
@@ -24,7 +14,6 @@ end
 local function bump(player)
 	if not player then return end
 	local name = player:get_player_name()
-
 	return bump_name(name)
 end
 
@@ -42,11 +31,15 @@ minetest.register_on_joinplayer(function(player)
 	local hp = player:get_hp()
 	if hp == 0 then
 		minetest.log("action", "[archtec] Respawned dead player '" .. name .. "' on join")
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Server respawned you (you were dead without respawn option)")))
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Server respawned you.")))
 		player:respawn()
 	end
 	-- Create data structure
-	cache_init(name, player:get_pos())
+	cache[name] = {
+		last_active = now(),
+		nametag_edited = nil, -- Created later
+		pos = player:get_pos(),
+	}
 end)
 
 -- Un-idle events
@@ -57,6 +50,7 @@ minetest.register_on_craft(function(_, player) bump(player) end)
 minetest.register_on_player_inventory_action(function(player) bump(player) end)
 minetest.register_on_chat_message(function(name) bump_name(name) end)
 
+local timer = 0
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
 	if timer < 6 then

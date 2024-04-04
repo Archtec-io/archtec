@@ -8,8 +8,8 @@ local delete_message_after = archtec.time.days(90)
 --[[
 	{
 		created = 1700000000,
-		author = "Player1"
-		text = "Hello...."
+		author = "Player1",
+		text = "Hello....",
 	}
 ]]--
 

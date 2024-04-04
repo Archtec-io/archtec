@@ -24,7 +24,7 @@ archtec.chainsaw_conditions = conditions
 local function grant_priv(name, priv)
 	archtec.grant_priv(name, priv)
 	minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege", "archtec_chainsaw")))
-	notifyTeam("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
+	archtec.notify_team("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 
 minetest.register_tool(":technic:chainsaw", {

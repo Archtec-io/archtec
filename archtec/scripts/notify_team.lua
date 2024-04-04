@@ -1,7 +1,7 @@
 local server_running = false
 local has_matterbridge = false
 
-function notifyTeam(message, discord)
+function archtec.notify_team(message, discord)
 	minetest.log("action", message)
 
 	if server_running then

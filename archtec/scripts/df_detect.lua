@@ -1,7 +1,6 @@
 -- taken from https://github.com/mt-mods/beowulf/blob/master/df_detect.lua
 
 -- Last updated: 2023-07-23
--- luacheck: push no max line length
 local df = {
 	"dragonfire",
 	"texmodbot",
@@ -217,31 +216,35 @@ Find and drop commits that seems to exist in both remotes, print rest of it:
 $ sort -k3 <(awk '{print NR" "$0}' df.log mt.log mt.log) | uniq -uf2 | sort -nk1 | sed -r 's/^[^ ]+ ([^ ]+) (.*)$/\t"\1", -- \2/'
 
 Replace above entries with output
---]]
--- luacheck: pop
+]]--
 
-local function dfver(s) for _,v in ipairs(df) do if s:find(v) then return v end end end
+local function dfver(s)
+	for _, v in ipairs(df) do
+		if s:find(v) then
+			return v
+		end
+	end
+end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local info = minetest.get_player_information(name)
 	local version = info.version_string
 
+	-- version-string not available
 	if not version then
-		-- version not available
+		archtec.notify_team("[archtec] Dragofireclient detection does not work. Engine patch required.")
 		return
 	end
 
-	notifyTeam("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
+	archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
 
 	local dfv = dfver(version)
 	if dfv then
-		local msg = "Unsupported client detected: " .. dfv .. " player: " .. name
-		minetest.log("action", "[df_detect] " .. msg)
-		notifyTeam("[archtec] Detected use of Dragonfireclient by '" .. name .. "' auto ban in 30 seconds")
+		archtec.notify_team("[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds")
 		minetest.after(30.0, function()
 			xban.ban_player(name, "Server", nil, "Cheating")
-			notifyTeam("[archtec] Auto banned '" .. name .. "'")
+			archtec.notify_team("[archtec] Auto banned '" .. name .. "'")
 		end)
 	end
 end)

@@ -15,7 +15,7 @@ local function try_grant_lava_priv(name)
 	if playtime > archtec.adv_buckets_playtime then
 		archtec.grant_priv(name, "adv_buckets")
 		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[request_lava]") .. " " .. S("Congratulations! You have been granted the '@1' privilege", "adv_buckets")))
-		notifyTeam("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")
+		archtec.notify_team("[request_lava] Granted '" .. name .. "' the 'adv_buckets' priv")
 		return true
 	else
 		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[request_lava]") .. " " .. S("You don't have @1 hours (or more) playtime", hours)))

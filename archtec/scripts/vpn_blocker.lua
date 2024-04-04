@@ -32,7 +32,7 @@ local function check_ip(name, ip)
 	else
 		if archtec.is_online(name) then
 			minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
-			notifyTeam("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+			archtec.notify_team("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
 			minetest.after(0.01, function()
 				if minetest.get_player_by_name(name) then
 					minetest.kick_player(name, kick_msg)
@@ -40,7 +40,7 @@ local function check_ip(name, ip)
 			end)
 		else -- player is joining right now
 			minetest.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
-			notifyTeam("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+			archtec.notify_team("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
 			ret_val = kick_msg
 		end
 	end
