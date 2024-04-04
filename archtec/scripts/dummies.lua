@@ -1,3 +1,4 @@
+local S = archtec.S
 local dummy_objs = {}
 local light_levels = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"
 local max_nametag_length = 15
@@ -87,13 +88,13 @@ end
 
 local function get_animation(animation)
 	if animation == "none" or animation == nil then
-		return {frame_begin = 0, frame_end = 0, speed = 0}
+		return {frame_begin = 0, frame_end = 0, speed = 0, collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}}
 	elseif animation == "stand" then
-		return {frame_begin = 0, frame_end = 79, speed = 30}
+		return {frame_begin = 0, frame_end = 79, speed = 30, collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}}
 	elseif animation == "sit" then
-		return {frame_begin = 81, frame_end = 160, speed = 30}
+		return {frame_begin = 81, frame_end = 160, speed = 30, collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.0, 0.3}}
 	elseif animation == "lay" then
-		return {frame_begin = 162, frame_end = 166, speed = 30}
+		return {frame_begin = 162, frame_end = 166, speed = 30, collisionbox = {-0.6, 0.0, -0.6, 0.6, 0.3, 0.6}}
 	end
 end
 
@@ -109,10 +110,11 @@ local function valid_ref(ref)
 end
 
 local function echo_desc(name, ownername)
+	local display_name = ownername or "unknown"
 	if name == ownername or minetest.get_player_privs(name).builder then
-		minetest.chat_send_player(name, "Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is " .. (ownername or "unknown") .. ".")
+		minetest.chat_send_player(name, S("Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is @1.", display_name))
 	else
-		minetest.chat_send_player(name, "Owner of this dummy is " .. (ownername or "unknown") .. ".")
+		minetest.chat_send_player(name, S("Owner of this dummy is @1.", display_name))
 	end
 end
 
@@ -305,12 +307,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	-- Delete Dummy
 	if fields.act_del_dummy then
 		dummy:remove()
+		dummy_objs[name] = nil
 		minetest.close_formspec(name, formname)
 		return true
 
 	-- Change animation
 	elseif fields.animation and fields.act_set_animation then
 		if animations[fields.animation] then
+			props.collisionbox = get_animation(fields.animation).collisionbox
+			props.selectionbox = get_animation(fields.animation).collisionbox
 			dummy:set_animation(set_animation(fields.animation))
 			dummy:get_luaentity()._animation = fields.animation
 		end
@@ -344,7 +349,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			props.textures[1] = armor.textures[target_name].skin
 			props.textures[2] = armor.textures[target_name].armor
 			props.textures[3] = armor.textures[target_name].wielditem
-
 			dummy:get_luaentity()._skin_show_armor = true
 			dummy:get_luaentity()._skin_show_wielditem = true
 		end
@@ -400,8 +404,11 @@ minetest.register_entity(":dummies:dummy", {
 		visual = "mesh",
 		mesh = "3d_armor_character.b3d",
 		textures = {},
-		collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3},
-		visual_size = {x = 1, y = 1},
+		physical = true,
+		collide_with_objects = true,
+		visual_size = {x = 1, y = 1, z = 1},
+		collisionbox = get_animation("none").collisionbox,
+		selectionbox = get_animation("none").collisionbox,
 		_skin_show_armor = true,
 		_skin_show_wielditem = true,
 	},
@@ -455,6 +462,8 @@ minetest.register_entity(":dummies:dummy", {
 
 		if data.animation ~= nil then
 			self._animation = data.animation
+			props.collisionbox = get_animation(data.animation).collisionbox
+			props.selectionbox = get_animation(data.animation).collisionbox
 			self.object:set_animation(set_animation(data.animation))
 		end
 

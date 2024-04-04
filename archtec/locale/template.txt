@@ -3,6 +3,9 @@
 You don't have @1 hours (or more) playtime=
 Congratulations! You have been granted the '@1' privilege=
 [chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account=
+Congratulations! You have been granted the '@1' privilege=
+Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is @1.=
+Owner of this dummy is @1.=
 Archtec FAQ (/faq)=
 Close=
 View ingame FAQ=
