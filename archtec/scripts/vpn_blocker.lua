@@ -1,5 +1,5 @@
 local http = assert(...)
-local iphub_key = minetest.settings:get("iphub_key")
+local iphub_key = minetest.settings:get("archtec.iphub_key")
 local kick_msg = "Please turn off your VPN."
 
 archtec.vpn_enabled = true

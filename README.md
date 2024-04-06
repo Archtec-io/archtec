@@ -14,40 +14,26 @@ unified color for a command "#FF8800" (orange)
 ### example command outputs
 `[command] Unknown player!`
 
-`[command] Removed entry`
+`[command] Removed entry.`
 
 (replace `command` with the command name)
 
 ### settings
-`archtec.webhook_url` Discord webhook url
+- `archtec.webhook_url` Discord webhook url
+- `archtec.report_gpg_key` GitHub rest api gpg key
+- `archtec.iphub_key` IPHub api key
 
-`archtec.report_gpg_key` GitHub create issue gpg key
+- `mapserver.url` Mapserver URL
+- `mapserver.key` Mapserver API key
+- `mapserver.send_interval` Mapserver JSON push interval
 
-`iphub_key` IPHub api key
+- `archtec_matterbridge.url` Matterbridge url
+- `archtec_matterbridge.token` Matterbridge API token
 
-`mapserver.url` Mapserver URL
-
-`mapserver.key` Mapserver API key
-
-`mapserver.send_interval` Mapserver JSON push interval
-
-`archtec_matterbridge.url` Matterbridge url
-
-`archtec_matterbridge.token` Matterbridge API token
-
-`monitoring.prometheus_push_url` Prometheus push url
-
-`monitoring.verbose` Verbose monitoring of builtin functions
-
-`monitoring.verbose_mesecons` Verbose monitoring of mesecons functions
-
-`archtec_playerdata.debug_mode` Enable debug mode
-
-`archtec_playerdata.save_interval` Save interval of loaded data
-
-`archtec_playerdata.unload_data_after` Cache timeout
-
-`archtec_playerdata.auto_backup_interval` Interval for automatic backup creation
+- `archtec_playerdata.debug_mode` Enable debug mode
+- `archtec_playerdata.save_interval` Save interval of loaded data
+- `archtec_playerdata.unload_data_after` Cache timeout
+- `archtec_playerdata.auto_backup_interval` Interval for automatic backup creation
 
 ### License
 
@@ -63,10 +49,10 @@ unified color for a command "#FF8800" (orange)
 - `archtec_biofuel_fuel_can_empty.png` - Bla based on work of El-Naso, CC BY-SA 4.0
 - `archtec_reset.png` - Zughy, CC BY-SA 4.0
 - `archtec_snowflakes.png` - paramat, CC BY-SA 3.0
-- `technic_chainsaw.png` - RealBadAngel, LGPL v2.1 or later
+- `archtec_chainsaw.png` - RealBadAngel, LGPL v2.1 or later
 - `mapserver_poi_*` - El-Naso, CC BY-SA 3.0
-- `pvp.png` - paly2, MPL 2.0
-- `nopvp.png` - paly2, MPL 2.0
+- `archtec_pvp_on.png` - paly2, MPL 2.0
+- `archtec_pvp_off.png` - paly2, MPL 2.0
 - `archtec_teleport_warp.ogg` - Panquesito7, CC BY-SA 4.0
 - `chatplus_incoming_msg.ogg` - unknown, unknown (modified by Niklp)
 - `archtec_stamina_eat.ogg` - Wuzzy, MIT License (modified by Niklp)

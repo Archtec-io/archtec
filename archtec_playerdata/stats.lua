@@ -220,12 +220,12 @@ local function generate_ranking()
 	for key, data in pairs(storage) do
 		local name = key:sub(8, #key) -- remove 'player_'
 		local xp = archtec_playerdata.calc_xp(data)
-		local color = archtec.namecolor.namecolor_refs[data.s_ncolor] or "#ffffff"
+		local color_def = archtec.namecolor.list[archtec.namecolor.get_idx(data.s_ncolor)] or {color = "#ffffff"}
 		xp_rank.all = xp_rank.all + xp
 		xp_rank.user_count = xp_rank.user_count + 1
 
 		if xp >= xp_rank.min_xp then
-			users[name] = {name = name, xp = xp, color = color}
+			users[name] = {name = name, xp = xp, color = color_def.color}
 		end
 	end
 

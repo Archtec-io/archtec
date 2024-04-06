@@ -77,6 +77,7 @@ minetest.register_tool(":technic:chainsaw", {
 })
 
 minetest.unregister_chatcommand("toggle_choppy")
+minetest.unregister_chatcommand("disable_choppy")
 minetest.unregister_chatcommand("visualize_choppy")
 
 anvil.make_unrepairable("technic:chainsaw")
