@@ -5,6 +5,11 @@
 [chatplus] Don't forget to add a message!=
 [chatplus] #@1 does not exist or you aren't a channel member!=
 [chatplus] You aren't in any channel! (try '/c j main')=
+[msg] Usage: '/msg <name> <msg>'!=
+[msg] Player '@1' isn't online!=
+[msg] You can't send yourself a msg!=
 To=
 From=
 Send a private message to the same person you sent your last message to.=
+[msg] Can't use this command. Use '/msg <name> <msg>' first!=
+[msg] @1 isn't online anymore!=

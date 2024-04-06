@@ -54,7 +54,7 @@ minetest.register_chatcommand("ignore", {
 	description = "Ignores someone",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/ignore] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/ignore] executed by '" .. name .. "' with param '" .. param .. "'")
 		local params = archtec.parse_params(param)
 		local action = params[1]
 		if action == "ignore" or action == "add" then
@@ -81,13 +81,13 @@ minetest.register_chatcommand("ignore", {
 					return
 				end
 				ignore_player(name, target)
-				minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are ignoring @1 now", target)))
+				minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are ignoring @1 now.", target)))
 				return
 			elseif target == "" then
 				minetest.chat_send_player(name, C("#FF0000", S("[ignore] You must specify a player name!")))
 				return
 			else
-				minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 is not a registered player!", target)))
+				minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 isn't a registered player!", target)))
 				return
 			end
 		elseif action == "unignore" or action == "remove" then
@@ -98,13 +98,13 @@ minetest.register_chatcommand("ignore", {
 					return
 				end
 				unignore_player(name, target)
-				minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are no longer ignoring @1", target)))
+				minetest.chat_send_player(name, C("#00BD00", S("[ignore] You are no longer ignoring @1.", target)))
 				return
 			elseif target == "" then
 				minetest.chat_send_player(name, C("#FF0000", S("[ignore] You must specify a player name!")))
 				return
 			else
-				minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 is not a registered player!", target)))
+				minetest.chat_send_player(name, C("#FF0000", S("[ignore] Player @1 isn't a registered player!", target)))
 				return
 			end
 		elseif action == "" or action == nil or action == "list" then
@@ -114,20 +114,24 @@ minetest.register_chatcommand("ignore", {
 					minetest.chat_send_player(name, C("#FF0000", S("[ignore] You aren't authorized to query this data!")))
 					return
 				end
-				local list = list_ignored_players(target)
-				if list == "" then
-					minetest.chat_send_player(name, C("#00BD00", S("[ignore] @1 isn't ignoring anyone", target)))
+				if not minetest.player_exists(target) then
+					minetest.chat_send_player(name, C("#FF0000", S("[ignore] layer @1 isn't a registered player!")))
 					return
 				end
-				minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players @1 ignores: @2", target, list)))
+				local list = list_ignored_players(target)
+				if list == "" then
+					minetest.chat_send_player(name, C("#00BD00", S("[ignore] @1 isn't ignoring anyone.", target)))
+					return
+				end
+				minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players @1 ignores: @2.", target, list)))
 				return
 			else
 				local list = list_ignored_players(name)
 				if list == "" then
-					minetest.chat_send_player(name, C("#00BD00", S("[ignore] You aren't ignoring anyone")))
+					minetest.chat_send_player(name, C("#00BD00", S("[ignore] You aren't ignoring anyone.")))
 					return
 				end
-				minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players you ignore: @1", list)))
+				minetest.chat_send_player(name, C("#00BD00", S("[ignore] List of players you ignore: @1.", list)))
 				return
 			end
 		end

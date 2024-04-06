@@ -1,9 +1,0 @@
-# textdomain: archtec_pvp
-Player @1 does not exist or is not currently connected.=Spieler @1 existiert nicht oder ist nicht angemeldet.
-Your PvP has been enabled=Dein PvP wurde aktiviert
-Your PvP has been disabled=Dein PvP wurde deaktiviert
-PvP is enabled for you!=PvP ist für dich aktiv
-PvP is disabled for you!=PvP ist für dich inaktiv
-You can't hit @1 because their PvP is disabled.=Du kannst @1 nicht angreifen, da ihr/sein PvP inaktiv ist.
-You can't hit @1 because your PvP is disabled.=Du kannst @1 nicht angreifen, da dein PvP inaktiv ist.
-Change the PvP mode of <name>=Ändere den PvP Modus von <name>

@@ -4,12 +4,38 @@ local FS = function(...) return F(S(...)) end
 local C = minetest.colorize
 local mod = archtec_playerdata.mod
 
+-- Helper functions
+local function divmod(a, b)
+	return math.floor(a / b), a % b
+end
+
+local function format_duration(seconds)
+	local display_hours, seconds_left = divmod(seconds, 3600)
+	local display_minutes, display_seconds = divmod(seconds_left, 60)
+	return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
+end
+
+local function format_int(number)
+	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
+	int = int:reverse():gsub("(%d%d%d)", "%1,")
+	return minus .. int:reverse():gsub("^,", "") .. fraction
+end
+
 -- Player activity stats
+local uses_choppy = {}
+choppy.api.register_before_chop(function(self, player, pos, node)
+	uses_choppy[player:get_player_name()] = true
+end)
+
+choppy.api.register_after_chop(function(self, player, pos, node)
+	uses_choppy[player:get_player_name()] = nil
+end)
+
 archtec_playerdata.register_key("nodes_dug", "number", 0)
 minetest.register_on_dignode(function(_, _, digger)
 	if not digger then return end
 	local name = digger:get_player_name()
-	if name ~= nil then
+	if name ~= nil and uses_choppy[name] == nil then
 		mod(name, "nodes_dug", 1)
 	end
 end)
@@ -40,23 +66,6 @@ minetest.register_on_dieplayer(function(player, _)
 		mod(name, "died", 1)
 	end
 end)
-
--- Helper functions
-local function divmod(a, b)
-	return math.floor(a / b), a % b
-end
-
-local function format_duration(seconds)
-	local display_hours, seconds_left = divmod(seconds, 3600)
-	local display_minutes, display_seconds = divmod(seconds_left, 60)
-	return ("%02d:%02d:%02d"):format(display_hours, display_minutes, display_seconds)
-end
-
-local function format_int(number)
-	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
-	int = int:reverse():gsub("(%d%d%d)", "%1,")
-	return minus .. int:reverse():gsub("^,", "") .. fraction
-end
 
 -- Stats formspec
 local function colorize_privs(name, data, privs)
@@ -159,7 +168,7 @@ minetest.register_chatcommand("stats", {
 	description = S("Shows stats of <name>"),
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = param:trim()
 		if target == "" then
 			target = name
@@ -189,11 +198,11 @@ local xp_rank = {
 
 function archtec_playerdata.calc_xp(data)
 	local xp = 0
-	xp = xp + (data.nodes_dug or 0) * 1.1
-	xp = xp + (data.nodes_placed or 0) * 1.6
+	xp = xp + (data.nodes_dug or 0) * 1
+	xp = xp + (data.nodes_placed or 0) * 1.5
 	xp = xp + (data.items_crafted or 0) * 0.5
 	xp = xp - (data.died or 0) * 1000
-	xp = xp + (data.playtime or 0) * 0.1 -- 0.1 xp per second = 360 XP per hour
+	xp = xp + (data.playtime or 0) * 0.025 -- 0.025 xp per second = 90 XP per hour
 	xp = xp + (data.chatmessages or 0) * 2
 	xp = xp + (data.thank_you or 0) * 100
 	return math.floor(xp)

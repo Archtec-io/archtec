@@ -2,6 +2,7 @@
 local pending = {}
 local S = minetest.get_translator(minetest.get_current_modname())
 local FS = function(...) return minetest.formspec_escape(S(...)) end
+local C = minetest.colorize
 
 local function run_vote(name, param)
 	archtec_matterbridge.send(":warning: **" .. name .. "** started a voting: Kick " .. param)
@@ -36,10 +37,10 @@ local function run_vote(name, param)
 
 		on_vote = function(self, name_voter, value)
 			if value == "yes" then
-				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description)
+				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description .. ".")
 				archtec_matterbridge.send(":green_square: **" .. name_voter .. "** voted YES")
 			else
-				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description)
+				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description .. ".")
 				archtec_matterbridge.send(":red_square: **" .. name_voter .. "** voted NO")
 			end
 		end
@@ -53,25 +54,25 @@ minetest.register_chatcommand("vote_kick", {
 		interact = true
 	},
 	func = function(name, param)
-		if param then param = param:trim() end
+		local target = archtec.get_and_trim(param)
 
-		if not minetest.get_player_by_name(param) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("There is no player called '@1'!", param)))
+		if not archtec.is_online(target) then
+			minetest.chat_send_player(name, C("#FF0000", S("[vote-kick] Player '@1' isn't online!", target)))
 			return
 		end
 
-		if param == name then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't vote-kick yourself!")))
+		if target == name then
+			minetest.chat_send_player(name, C("#FF0000", S("[vote-kick] You can't vote-kick yourself!")))
 			return
 		end
 
-		if minetest.check_player_privs(param, "staff") then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't vote-kick staff members!")))
+		if minetest.get_player_privs(target).staff then
+			minetest.chat_send_player(name, C("#FF0000", S("[vote-kick] You can't vote-kick staff members!")))
 			return
 		end
 
-		if #minetest.get_connected_players() <= 3 then -- min 4 players
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("Not enough players online to start a vote-kick!")))
+		if #minetest.get_connected_players() < 4 then -- min 4 players
+			minetest.chat_send_player(name, C("#FF0000", S("Not enough players online to start a vote-kick!")))
 			return
 		end
 
@@ -82,7 +83,7 @@ minetest.register_chatcommand("vote_kick", {
 			button[2,1;4,1;continue;]] .. FS("Yes, Continue") .. [[]
 			button[2,2.5;4,1;abort;]] .. FS("Abort") .. [[]
 		]]
-		pending[name] = param
+		pending[name] = target
 		minetest.show_formspec(name, "archtec_votes:kick", formspec)
 	end
 })
@@ -90,18 +91,17 @@ minetest.register_chatcommand("vote_kick", {
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec_votes:kick" then return end
 	local name = player:get_player_name()
-	if fields and fields.abort then
+	if fields.abort then
 		minetest.close_formspec(name, "archtec_votes:kick")
-		pending[name] = nil
-		return
 	end
-	if fields and fields.continue then
+
+	if fields.continue then
 		minetest.close_formspec(name, "archtec_votes:kick")
-		if pending[name] then -- security
+		if pending[name] and archtec.is_online(pending[name]) then
 			run_vote(name, pending[name])
-			pending[name] = nil
 		end
-		return
 	end
+
 	pending[name] = nil
+	return true
 end)

@@ -1,17 +1,19 @@
 # textdomain: archtec_votes
-Auto-vote @1 by @2.=
 Can't start a new vote! A vote is already in progress.=
+Auto-vote @1 by @2.=
 There is no vote currently running!=
 You've already voted!=
 The vote is not a yes/no one.=
 You can't vote in the currently active vote!=
 You can't start a new vote, it's already day!=
-Used one of your free votes, remaning free votes: @1=
-To start a vote you must have 3 etherium dust in your inventory=
+Used one of your free votes, remaning free votes: @1.=
+To start a vote you must have 3 etherium dust in your inventory!=
 You can't start a new vote, it's already night!=
-There is no player called '@1'!=
-You can't vote-kick yourself!=
-You can't vote-kick staff members!=
+Used one of your free votes, remaning free votes: @1!=
+To start a vote you must have 3 etherium dust in your inventory.=
+[vote-kick] Player '@1' isn't online!=
+[vote-kick] You can't vote-kick yourself!=
+[vote-kick] You can't vote-kick staff members!=
 Not enough players online to start a vote-kick!=
 Warning: Abusing a vote-kick can result in a ban for you!=
 Yes, Continue=

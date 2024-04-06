@@ -43,7 +43,7 @@ minetest.register_chatcommand("music_play", {
 	params = "<title> <name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/music_play] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/music_play] executed by '" .. name .. "' with param '" .. param .. "'")
 		if param:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] No arguments provided!")))
 			return
@@ -79,7 +79,7 @@ minetest.register_chatcommand("music_stop", {
 	params = "<name[s]>",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/music_stop] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/music_stop] executed by '" .. name .. "' with param '" .. param .. "'")
 		if param:trim() == "" then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_stop] No player names provided!")))
 			return
@@ -109,7 +109,5 @@ minetest.register_chatcommand("music_list", {
 })
 
 minetest.register_on_leaveplayer(function(player)
-	if player then
-		current[player:get_player_name()] = nil
-	end
+	current[player:get_player_name()] = nil
 end)

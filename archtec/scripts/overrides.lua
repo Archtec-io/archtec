@@ -92,7 +92,7 @@ minetest.register_on_mods_loaded(function()
 		local label = abm.label or ""
 
 		if label:sub(1, 12) == "mobs_animal:" then
-			abm.chance = abm.chance * 0.75
+			abm.chance = abm.chance * 0.5
 		end
 
 		if label:sub(1, 13) == "mobs_monster:" then
@@ -106,7 +106,7 @@ if minetest.get_modpath("castle_gates") then
 	local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
 
 	for _, name in ipairs(gates) do
-		local def = table.copy(minetest.registered_nodes[name]) -- table.copy prevents LC warnings
+		local def = table.copy(minetest.registered_nodes[name])
 		-- remove castle_gates specific groups and functions
 		def.can_dig = nil
 		def.on_rightclick = nil

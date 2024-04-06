@@ -5,6 +5,8 @@ local api = choppy.api
 local ptime_min = archtec.time.hours(24)
 local days_played = archtec.time.days(7)
 
+minetest.register_privilege("archtec_chainsaw", S("Allows you to use the chainsaw"))
+
 -- disable is_enabled() since we don't use the initialized function
 choppy.api.is_enabled = function(...) return true end
 
@@ -12,8 +14,8 @@ local function conditions(name)
 	local playtime = archtec_playerdata.get(name, "playtime")
 	local nodes_dug = archtec_playerdata.get(name, "nodes_dug")
 	local nodes_placed = archtec_playerdata.get(name, "nodes_placed")
-	local timestap = archtec_playerdata.get(name, "first_join")
-	if timestap > (os.time() - days_played) or playtime < ptime_min or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
+	local timestamp = archtec_playerdata.get(name, "first_join")
+	if timestamp > (os.time() - days_played) or playtime < ptime_min or nodes_dug < 20000 or nodes_placed < 10000 then -- joined 7 days ago; 24h playtime
 		return false
 	end
 	return true
@@ -22,14 +24,14 @@ end
 archtec.chainsaw_conditions = conditions
 
 local function grant_priv(name, priv)
-	archtec.grant_priv(name, priv)
-	minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege", "archtec_chainsaw")))
+	archtec.priv_grant(name, priv)
+	minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege.", "archtec_chainsaw")))
 	archtec.notify_team("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 
 minetest.register_tool(":technic:chainsaw", {
-	description = "Chainsaw",
-	inventory_image = "technic_chainsaw.png",
+	description = S("Chainsaw"),
+	inventory_image = "archtec_chainsaw.png",
 	tool_capabilities = {
 		full_punch_interval = 0.9,
 		max_drop_level = 1,
@@ -45,7 +47,7 @@ minetest.register_tool(":technic:chainsaw", {
 			if conditions(name) then
 				grant_priv(name, "archtec_chainsaw")
 			else
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account")))
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account!")))
 				return
 			end
 		end
@@ -62,13 +64,7 @@ minetest.register_tool(":technic:chainsaw", {
 			return
 		end
 
-		if not minetest.is_player(digger) then
-			return
-		end
-
-		local player_name = digger:get_player_name()
-
-		if api.get_process(player_name) then
+		if api.get_process(name) then
 			-- already cutting
 			return
 		end

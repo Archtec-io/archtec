@@ -28,7 +28,7 @@ minetest.register_chatcommand("tell", {
 	params = "<name> <text>",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/tell] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/tell] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target, msg = string.match(param, "([%a%d_-]+) (.+)")
 
 		if target == nil or msg == nil then

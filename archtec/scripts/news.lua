@@ -49,9 +49,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 end)
 
 minetest.register_on_joinplayer(function(player)
-	if player then
-		show_formspec(player:get_player_name())
-	end
+	show_formspec(player:get_player_name())
 end)
 
 minetest.register_chatcommand("news", {

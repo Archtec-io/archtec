@@ -1,6 +1,5 @@
 local http = assert(...)
 local iphub_key = minetest.settings:get("iphub_key")
-local ret_val = nil
 local kick_msg = "Please turn off your VPN."
 
 archtec.vpn_enabled = true
@@ -41,7 +40,7 @@ local function check_ip(name, ip)
 		else -- player is joining right now
 			minetest.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
 			archtec.notify_team("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
-			ret_val = kick_msg
+			return true
 		end
 	end
 end
@@ -71,7 +70,7 @@ local function vpn_check(name, ip, query)
 		query_ip(name, ip)
 		return
 	end
-	check_ip(name, ip)
+	return check_ip(name, ip)
 end
 
 minetest.register_on_joinplayer(function(player)
@@ -84,11 +83,8 @@ end)
 
 minetest.register_on_prejoinplayer(function(name, ip) -- on_authplayer won't work
 	if name and ip then
-		vpn_check(name, ip, false) -- Don't query a http request but block if in cache
-		if ret_val then
-			local msg = ret_val
-			ret_val = nil
-			return msg
+		if vpn_check(name, ip, false) then -- Don't query a http request but block if in cache
+			return kick_msg
 		end
 	end
 end)

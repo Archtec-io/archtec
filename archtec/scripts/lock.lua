@@ -39,7 +39,7 @@ minetest.register_chatcommand("lock", {
 	params = "<mode> [<keep (list of names)>]",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/lock] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/lock] executed by '" .. name .. "' with param '" .. param .. "'")
 		if not can_join then
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[lock] The server is already locked!"))
 			return
@@ -52,7 +52,7 @@ minetest.register_chatcommand("lock", {
 		mode, keep = param:match("([^ ]+) *(.*)")
 		keep = archtec.string_to_table(keep)
 		lock_server(mode, keep, name)
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", "[lock] Locked the server successfully"))
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", "[lock] Locked the server successfully."))
 	end
 })
 
@@ -66,6 +66,6 @@ minetest.register_chatcommand("open", {
 			return
 		end
 		open_server(name)
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", "[open] Opened the server successfully"))
+		minetest.chat_send_player(name, minetest.colorize("#00BD00", "[open] Opened the server successfully."))
 	end
 })

@@ -87,18 +87,13 @@ local function show_settings(name)
 				local curr_val = archtec_playerdata.get(name, "s_ncolor")
 
 				local colors = C("#999", "List of all colors: ")
-				for _, id in ipairs(archtec.namecolor.namecolors) do
-					colors = colors .. C(archtec.namecolor.namecolor_refs[id], "█ ")
+				for _, def2 in ipairs(archtec.namecolor.list) do
+					colors = colors .. C(def2.color, "█ ")
 				end
 
 				local idx = archtec.namecolor.get_idx(curr_val)
 
-				-- This should never happen
-				if idx == nil then
-					idx = 1
-				end
-
-				fs = fs .. "dropdown[0.4," .. y .. ";2.5;ncolor;" .. table.concat(archtec.namecolor.list_human, ",") .. ";" .. F(idx) .. ";true]"
+				fs = fs .. "dropdown[0.4," .. y .. ";2.5;ncolor;" .. table.concat(archtec.namecolor.list_names, ",") .. ";" .. F(idx) .. ";true]"
 				fs = fs .. "label[3," .. y + 0.15 .. ";" .. F(def.title) .. "]"
 				fs = fs .. "label[3," .. y + 0.55 .. ";" .. F(colors) .. "]"
 				y = y + 1.3
@@ -132,11 +127,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 	-- Custom settings
 	if fields.ncolor then
-		local id = archtec.namecolor.idxs[tonumber(fields.ncolor)]
+		local def = archtec.namecolor.list[tonumber(fields.ncolor)]
 		local curr_val = archtec_playerdata.get(name, "s_ncolor")
 
-		if archtec.namecolor.names[id] ~= nil and id ~= curr_val then -- validity check
-			archtec_playerdata.set(name, "s_ncolor", id)
+		if def ~= nil and def.id ~= curr_val then -- validity check
+			archtec_playerdata.set(name, "s_ncolor", def.id)
 			show_settings(name)
 			minetest.chat_send_player(name, S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name)))
 		end

@@ -14,13 +14,13 @@ function archtec.is_online(name)
 	return true
 end
 
-function archtec.grant_priv(name, priv)
+function archtec.priv_grant(name, priv)
 	local privs = minetest.get_player_privs(name)
 	privs[priv] = true
 	minetest.set_player_privs(name, privs)
 end
 
-function archtec.revoke_priv(name, priv)
+function archtec.priv_revoke(name, priv)
 	local privs = minetest.get_player_privs(name)
 	privs[priv] = nil
 	minetest.set_player_privs(name, privs)

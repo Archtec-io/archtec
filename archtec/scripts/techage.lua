@@ -4,10 +4,10 @@ local S = archtec.S
 local old_on_place = minetest.registered_nodes["techage:forceload"].on_place or function() end
 minetest.override_item("techage:forceload", {
 	on_place = function(itemstack, placer, pointed_thing)
-		local pname = placer:get_player_name()
+		local name = placer:get_player_name()
 
-		if not minetest.check_player_privs(pname, "forceload") then
-			minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("[Forceload Restriction]: 'forceload' priv required to use this node")))
+		if not minetest.check_player_privs(name, "forceload") then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[Forceload Restriction]: 'forceload' priv required to use this node!")))
 			return
 		else
 			return old_on_place(itemstack, placer, pointed_thing)
@@ -18,10 +18,10 @@ minetest.override_item("techage:forceload", {
 local old_on_place2 = minetest.registered_nodes["techage:forceloadtile"].on_place or function() end
 minetest.override_item("techage:forceloadtile", {
 	on_place = function(itemstack, placer, pointed_thing)
-		local pname = placer:get_player_name()
+		local name = placer:get_player_name()
 
-		if not minetest.check_player_privs(pname, "forceload") then
-			minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("[Forceload Restriction]: 'forceload' priv required to use this node")))
+		if not minetest.check_player_privs(name, "forceload") then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[Forceload Restriction]: 'forceload' priv required to use this node!")))
 			return
 		else
 			return old_on_place2(itemstack, placer, pointed_thing)
@@ -32,12 +32,12 @@ minetest.override_item("techage:forceloadtile", {
 local old_on_place3 = minetest.registered_nodes["techage:ta3_drillbox_pas"].on_place or function() end
 minetest.override_item("techage:ta3_drillbox_pas", {
 	on_place = function(itemstack, placer, pointed_thing)
-		local pname = placer:get_player_name()
+		local name = placer:get_player_name()
 
-		if not minetest.check_player_privs(pname, "forceload") then
-			archtec.grant_priv(pname, "forceload")
-			minetest.chat_send_player(pname, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege", "forceload")))
-			archtec.notify_team("[techage] Granted '" .. pname .. "' the 'forceload' priv")
+		if not minetest.check_player_privs(name, "forceload") then
+			archtec.priv_grant(name, "forceload")
+			minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege.", "forceload")))
+			archtec.notify_team("[techage] Granted '" .. name .. "' the 'forceload' priv")
 			return old_on_place3(itemstack, placer, pointed_thing)
 		else
 			return old_on_place3(itemstack, placer, pointed_thing)
@@ -45,7 +45,7 @@ minetest.override_item("techage:ta3_drillbox_pas", {
 	end
 })
 
--- fix flowers. thx ethereal...
+-- Fix flowers. thx ethereal...
 local flowers = {
 	"flowers:rose",
 	"flowers:tulip",

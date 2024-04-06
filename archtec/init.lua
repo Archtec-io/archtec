@@ -13,11 +13,15 @@ archtec.links.website = "https://archtec.niklp.net"
 archtec.links.discord = "https://discord.gg/txCMTMwBWm"
 archtec.links.matrix = "https://matrix.to/#/#archtec:matrix.org"
 
+-- Load files which provide API stuff first
 dofile(path .. "common.lua")
 dofile(path .. "notify_team.lua")
 dofile(path .. "namecolor.lua")
 dofile(path .. "settings.lua")
 dofile(path .. "ignore.lua")
+
+-- These files aren't (mostly) in a particular order
+dofile(path .. "pvp.lua")
 dofile(path .. "privs.lua")
 dofile(path .. "stats.lua")
 dofile(path .. "mapfix.lua")
@@ -60,7 +64,6 @@ dofile(path .. "waypoints.lua")
 dofile(path .. "luac_logging.lua")
 dofile(path .. "faq.lua")
 dofile(path .. "faq_content.lua")
-dofile(path .. "spawn_post.lua")
 dofile(path .. "playerlist.lua")
 dofile(path .. "dummies.lua")
 dofile(path .. "snow.lua")

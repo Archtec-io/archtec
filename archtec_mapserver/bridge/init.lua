@@ -18,12 +18,12 @@ local function send_stats()
 	local t1 = minetest.get_us_time()
 	local process_time = t1 - t0
 	if process_time > 50000 then
-		minetest.log("warning", "[mapserver-bridge] processing took " .. process_time .. " us")
+		minetest.log("warning", "[archtec_mapserver] processing took " .. process_time .. " us")
 	end
 
 	local size = string.len(json)
 	if size > 256000 then
-		minetest.log("warning", "[mapserver-bridge] json-size is " .. size .. " bytes")
+		minetest.log("warning", "[archtec_mapserver] json-size is " .. size .. " bytes")
 	end
 
 	http.fetch({
@@ -35,7 +35,7 @@ local function send_stats()
 		local t2 = minetest.get_us_time()
 		local post_time = t2 - t1
 		if post_time > 1000000 then -- warn if over a second
-			minetest.log("warning", "[mapserver-bridge] post took " .. post_time .. " us")
+			minetest.log("warning", "[archtec_mapserver] post took " .. post_time .. " us")
 		end
 
 		minetest.after(mapserver.send_interval, send_stats)

@@ -34,10 +34,11 @@ local function detach(name)
 	})
 
 	-- Reset pos
+	local pos = table.copy(props.pos) -- table get deleted by state = nil
 	minetest.after(0, function()
 		local player2 = minetest.get_player_by_name(name)
 		if player2 then
-			player2:set_pos(props.pos)
+			player2:set_pos(pos)
 		end
 	end)
 
@@ -91,7 +92,7 @@ minetest.register_chatcommand("watch", {
 	description = "Watch a player",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/watch] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/watch] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_and_trim(param)
 
 		if target == "" then

@@ -8,7 +8,7 @@ local function fix_craft(node, recipedef, amount)
 	end
 
 	if not minetest.registered_nodes[node] and not minetest.registered_items[node] then
-		minetest.log("warning", "[archtec] tried to overwrite recipe of non exist item '" .. node .. "'")
+		minetest.log("warning", "[archtec] tried to override recipe of non exist item '" .. node .. "'")
 		return
 	end
 

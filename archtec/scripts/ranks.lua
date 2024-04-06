@@ -42,8 +42,6 @@ local function update_nametag(player, remove)
 	end
 end
 
-archtec.ranks_update_nametag = update_nametag
-
 -- Assign/update rank on join player
 minetest.register_on_joinplayer(function(player)
 	if not player then return end

@@ -1,13 +1,16 @@
 local S = archtec.S
--- remove building category
+
+-- Remove building category
 if minetest.get_modpath("unified_inventory") then
 	unified_inventory.remove_category("building")
 end
 
+-- Smaller biome_lib generation area
 if minetest.get_modpath("biome_lib") then
-	biome_lib.mapgen_elevation_limit = { ["min"] = 0, ["max"] = 48 }
+	biome_lib.mapgen_elevation_limit = {["min"] = 0, ["max"] = 48}
 end
 
+-- Add mtg stairs for 'moreblocks:empty_shelf'
 if minetest.get_modpath("moreblocks") then
 	local S2 = minetest.get_translator("moreblocks")
 	local def = minetest.registered_nodes["moreblocks:empty_shelf"]
@@ -31,14 +34,14 @@ minetest.register_chatcommand("thankyou", {
 	description = "Thank someone",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_target(name, param)
 		if target == name then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank yourself")))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank yourself!")))
 			return
 		end
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank someone who is offline")))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank an offline player!")))
 			return
 		end
 		if archtec.ignore_check(name, target) then
@@ -46,8 +49,8 @@ minetest.register_chatcommand("thankyou", {
 			return
 		end
 		archtec_playerdata.mod(target, "thank_you", 1)
-		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2", name, target)))
-		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**")
+		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
+		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**.")
 	end
 })
 
@@ -91,6 +94,7 @@ minetest.register_chatcommand("falling_nodes_cleanup", {
 	end
 })
 
+-- Shutdown command
 minetest.register_chatcommand("sd", {
 	description = "Shuts the server down after a 10 seconds delay.",
 	privs = {staff = true},

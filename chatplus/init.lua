@@ -1,6 +1,7 @@
 local S = minetest.get_translator("chatplus")
+local C = minetest.colorize
 
-local last_priv_msg_name = {}
+local last_msg_name = {}
 
 local msg_chat_color_text = "#ffff88"
 local msg_chat_color_name = "#ffff00"
@@ -98,39 +99,41 @@ end)
 local function private_message(name, param)
 	local to, msg = string.match(param, "([%a%d_-]+) (.+)")
 	if to == nil or msg == nil then
-		minetest.chat_send_player(name, "Usage: " .. minetest.colorize("#00ff00", "/msg ") .. minetest.colorize("#ffff00", "<name> <message>"))
+		minetest.chat_send_player(name, C("#FF0000", S("[msg] Usage: '/msg <name> <msg>'!")))
 		return
 	end
 	if not minetest.get_player_by_name(to) then
-		minetest.chat_send_player(name, "Player " .. minetest.colorize(msg_chat_color_name, to) .. " isn't online.")
+		minetest.chat_send_player(name, C("#FF0000", S("[msg] Player '@1' isn't online!", to)))
 		return
 	end
 	if name == to then
-		minetest.chat_send_player(name, "You can't send yourself a msg.")
+		minetest.chat_send_player(name, C("#FF0000", S("[msg] You can't send yourself a msg!")))
 		return
 	end
 	if archtec.ignore_check(name, to) then
 		minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg .. " (message blocked by ignore)")
-		archtec.ignore_msg("chatplus", name, to)
+		archtec.ignore_msg("msg", name, to)
 		return
 	end
-	minetest.chat_send_player(name, minetest.colorize(msg_chat_color_name, S("To") .. " " .. to .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
-	minetest.chat_send_player(to, minetest.colorize(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. minetest.colorize(msg_chat_color_text, msg))
+	minetest.chat_send_player(name, C(msg_chat_color_name, S("To") .. " " .. to .. ": ") .. C(msg_chat_color_text, msg))
+	minetest.chat_send_player(to, C(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. C(msg_chat_color_text, msg))
 	minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg)
-	minetest.sound_play("chatplus_incoming_msg", {to_player = to})
-	last_priv_msg_name[name] = to
+	minetest.sound_play("chatplus_incoming_msg", {to_player = to}, true)
+	last_msg_name[name] = to
 end
 
 minetest.register_chatcommand("m", {
 	description = S("Send a private message to the same person you sent your last message to."),
 	func = function(name, param)
-		if last_priv_msg_name[name] == nil then
-			minetest.chat_send_player(name, "Use " .. minetest.colorize(msg_chat_color_name, "/msg") .. " before this command!")
-		elseif minetest.get_player_by_name(last_priv_msg_name[name]) ~= nil then
-			private_message(name, last_priv_msg_name[name] .. " " .. param)
-		else
-			minetest.chat_send_player(name, "Player " .. minetest.colorize(msg_chat_color_name, last_priv_msg_name[name]) .. " isn't online anymore." )
+		if last_msg_name[name] == nil then
+			minetest.chat_send_player(name, C("#FF0000", S("[msg] Can't use this command. Use '/msg <name> <msg>' first!")))
+			return
 		end
+		if not archtec.is_online(last_msg_name[name]) then
+			minetest.chat_send_player(name, C("#FF0000", S("[msg] @1 isn't online anymore!")))
+			return
+		end
+		private_message(name, last_msg_name[name] .. " " .. param)
 	end
 })
 
@@ -138,7 +141,5 @@ minetest.unregister_chatcommand("msg")
 minetest.register_chatcommand("msg", {func = private_message})
 
 minetest.register_on_leaveplayer(function(player)
-	if not player then return end
-	local name = player:get_player_name()
-	last_priv_msg_name[name] = nil
+	last_msg_name[player:get_player_name()] = nil
 end)

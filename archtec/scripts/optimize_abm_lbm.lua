@@ -17,7 +17,7 @@ local function replace_groups(group)
 end
 
 local function replace(input)
-	if input == nil or input == "" or archtec.count_keys(input) == 0 then
+	if input == nil or input == "" or input == {} then
 		return input
 	end
 
@@ -51,8 +51,7 @@ minetest.register_on_mods_loaded(function()
 		abm.neighbors = replace(abm.neighbors)
 	end
 
-	-- @reviewer LBMs need further testing
-	--for _, lbm in ipairs(minetest.registered_lbms) do
-	--	lbm.nodenames = replace(lbm.nodenames)
-	--end
+	for _, lbm in ipairs(minetest.registered_lbms) do
+		lbm.nodenames = replace(lbm.nodenames)
+	end
 end)

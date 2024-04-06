@@ -57,14 +57,6 @@ local function hud_show(player)
 	playerlist.huds[name] = huds
 end
 
-
-minetest.register_on_joinplayer(function(player)
-	local name = player:get_player_name()
-	playerlist.controls[name] = {
-		zoom = false
-	}
-end)
-
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	playerlist.controls[name] = nil
@@ -83,18 +75,18 @@ minetest.register_globalstep(function(dtime)
 		local controls = player:get_player_control()
 
 		if not playerlist.controls[name] then
-			break
+			playerlist.controls[name] = {}
 		end
 
 		-- Press
-		if controls.zoom == true and playerlist.controls[name].zoom == false then
+		if controls.zoom == true and playerlist.controls[name].zoom == nil then
 			playerlist.controls[name].zoom = true
 			hud_show(player)
 		end
 
 		-- Release
 		if controls.zoom == false and playerlist.controls[name].zoom == true then
-			playerlist.controls[name].zoom = false
+			playerlist.controls[name].zoom = nil
 			hud_remove(player)
 		end
 	end

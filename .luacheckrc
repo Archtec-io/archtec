@@ -9,7 +9,6 @@ globals = {
 	"archtec_chat",
 	"archtec_matterbridge",
 	"archtec_playerdata",
-	"archtec_pvp",
 	"archtec_teleport",
 	"archtec_votes",
 	"mapserver",
@@ -50,7 +49,7 @@ files["archtec/scripts/status.lua"] = {
 	globals = {"minetest.get_server_status"},
 }
 
-files["archtec_pvp/init.lua"] = {
+files["archtec/scripts/pvp.lua"] = {
 	globals = {"minetest.calculate_knockback"},
 }
 

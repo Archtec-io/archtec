@@ -164,7 +164,7 @@ minetest.register_chatcommand("tpr", {
 	params = "<name>",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/tpr] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/tpr] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_and_trim(param)
 
 		if target == "" then
@@ -206,7 +206,7 @@ minetest.register_chatcommand("tp2me", {
 	params = "<name>",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/tp2me] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/tp2me] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_and_trim(param)
 
 		if target == "" then

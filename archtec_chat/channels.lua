@@ -172,7 +172,7 @@ function channel.invite_delete(cname, target, timed_out)
 	if cdef.invites[target] then -- invite might already be deleted
 		minetest.log("action", "[archtec_chat] Delete '" .. cname .. "' invite for '" .. target .. "'")
 		if timed_out then
-			minetest.chat_send_player(target, C("#FF8800", S("Invite timed-out")))
+			minetest.chat_send_player(target, C("#FF8800", S("Invite timed-out.")))
 		end
 		cdef.invites[target] = nil
 	end
@@ -281,7 +281,7 @@ minetest.register_chatcommand("c", {
 	description = "Run '/c help' to get the command help",
 	privs = {interact = true, shout = true},
 	func = function(name, param)
-		minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. (param or "") .. "'")
+		minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. param .. "'")
 		if archtec.get_and_trim(param) == "" then
 			minetest.chat_send_player(name, help_all())
 			return
@@ -299,7 +299,7 @@ minetest.register_chatcommand("c", {
 			-- join if main
 			if c == "main" then
 				channel.join(c, name, "")
-				minetest.chat_send_player(name, C("#00BD00", S("[c/join] Joined #main")))
+				minetest.chat_send_player(name, C("#00BD00", S("[c/join] Joined #main.")))
 				return
 			end
 			-- limit channels per user
@@ -357,7 +357,7 @@ minetest.register_chatcommand("c", {
 			-- leave if main
 			if c == "main" then
 				channel.leave(c, name, "")
-				minetest.chat_send_player(name, C("#00BD00", S("[c/leave] Left #main")))
+				minetest.chat_send_player(name, C("#00BD00", S("[c/leave] Left #main.")))
 				return
 			end
 			-- check if player is in channel
@@ -408,7 +408,7 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			if not cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2", target, c)))
+				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2!", target, c)))
 				return
 			end
 			if cdef.users[target] then
@@ -420,7 +420,7 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			channel.invite(c, target, name)
-			minetest.chat_send_player(name, C("#00BD00", S("[c/invite] Invited @1 to join #@2", target, c)))
+			minetest.chat_send_player(name, C("#00BD00", S("[c/invite] Invited @1 to join #@2.", target, c)))
 		elseif action == "kick" or action == "k" then
 			local c = archtec.get_and_trim(p1)
 			local target = archtec.get_and_trim(p2)
@@ -493,7 +493,7 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			archtec_chat.users[name].default = c
-			minetest.chat_send_player(name, C("#00BD00", S("[c/default] Set your default channel to #@1", c)))
+			minetest.chat_send_player(name, C("#00BD00", S("[c/default] Set your default channel to #@1.", c)))
 		else
 			minetest.chat_send_player(name, C("#FF0000", S("[c] Unknown sub-command! (try '/c help')")))
 		end

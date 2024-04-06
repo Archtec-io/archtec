@@ -49,9 +49,7 @@ minetest.register_on_cheat(function(player, cheat)
 end)
 
 minetest.register_on_leaveplayer(function(player)
-	if player then
-		local name = player:get_player_name()
-		times[name] = nil
-		pd_cache[name] = nil
-	end
+	local name = player:get_player_name()
+	times[name] = nil
+	pd_cache[name] = nil
 end)

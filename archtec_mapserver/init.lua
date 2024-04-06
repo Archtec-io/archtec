@@ -39,7 +39,7 @@ if http then
 	if not mapserver_url then error("mapserver.url is not defined") end
 	if not mapserver_key then error("mapserver.key is not defined") end
 
-	minetest.log("action", "[archtec_mapserver] starting mapserver-bridge with endpoint: " .. mapserver_url)
+	minetest.log("action", "[archtec_mapserver] starting archtec_mapserver with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- initialize bridge
