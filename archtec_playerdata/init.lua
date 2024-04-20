@@ -171,6 +171,11 @@ local function data_save(name, unload_now)
 		return false
 	end
 
+	if raw == "null" then -- write_json return "null" when we pass a table w/ 0 key-value pairs
+		log_debug("data_save", "failed to generate proper json for '" .. name .. "'; no keys set for this user")
+		return false
+	end
+
 	storage:set_string("player_" .. name, raw)
 	log_debug("data_save", "saved data of '" .. name .. "'; " .. raw .. "")
 
@@ -600,7 +605,7 @@ function archtec_playerdata.set(name, key_name, value)
 	end
 
 	if type(value) ~= system.keys[key_name].key_type then
-		log_error("set", "tried to set '" .. key_name .. "' of '" .. name .. "' to wrong data type '" .. type(key_name) .. "'")
+		log_error("set", "tried to set '" .. key_name .. "' of '" .. name .. "' to wrong data type '" .. type(value) .. "'")
 		return false
 	end
 
@@ -629,6 +634,11 @@ function archtec_playerdata.mod(name, key_name, value)
 		return false
 	end
 
+	if system.keys[key_name].key_type ~= "number" then
+		log_error("mod", "tried to mod '" .. key_name .. "' which uses '" .. system.keys[key_name].key_type .. "'")
+		return false
+	end
+
 	if type(value) ~= "number" then
 		log_error("mod", "tried to mod '" .. key_name .. "' of '" .. name .. "' with wrong data type '" .. type(key_name) .. "'")
 		return false
@@ -645,7 +655,7 @@ function archtec_playerdata.mod(name, key_name, value)
 	end
 
 	data[name][key_name] = old_value + value
-	log_debug("mod", "mod '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
+	log_debug("mod", "set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
 	return true
 end
 

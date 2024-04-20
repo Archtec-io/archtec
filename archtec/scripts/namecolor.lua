@@ -52,7 +52,7 @@ function archtec.namecolor.get(name)
 
 	-- Choose random color if stored was removed (or not created yet)
 	if id == "" or get_idx(id) == nil then
-		id = list[math.random(1, #list)]
+		id = list[math.random(1, #list)].id
 		archtec_playerdata.set(name, "s_ncolor", id)
 	end
 
