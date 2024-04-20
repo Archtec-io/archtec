@@ -10,12 +10,15 @@ end
 
 local function get_rank(name)
 	local privs = minetest.get_player_privs(name)
-	if privs.staff then
-		if privs.server then
-			return "admin"
-		end
-		return "mod"
+	local rank
+	if privs.builder then
+		rank = "builder"
+	elseif privs.staff then
+		rank = "mod"
+	elseif privs.server then
+		rank = "admin"
 	end
+	return rank
 end
 
 local function update_nametag(player, remove)
@@ -56,6 +59,11 @@ register("admin", {
 register("mod", {
 	prefix = "[Mod]",
 	color = {a = 255, r = 255, g = 83, b = 37},
+})
+
+register("builder", {
+	prefix = "[Builder]",
+	color = {a = 255, r = 0, g = 189, b = 0},
 })
 
 minetest.register_chatcommand("ranks_reload", {

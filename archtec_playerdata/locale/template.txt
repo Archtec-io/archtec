@@ -6,6 +6,7 @@ YES=
 [Online]=
 [Offline]=
 [Staff]=
+[Builder]=
 Stats of: @1 - @2 XP @3=
 Nodes dug: @1=
 Nodes placed: @1=

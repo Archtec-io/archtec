@@ -118,6 +118,9 @@ local function stats_formspec(name, target)
 	if privs.staff then
 		tags = tags .. " " .. C("#FF8800", S("[Staff]"))
 	end
+	if privs.builder then
+		tags = tags .. " " ..  C("#00BD00", S("[Builder]"))
+	end
 
 	-- Format some values
 	local playtime = format_duration(data.playtime)
