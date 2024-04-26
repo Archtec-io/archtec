@@ -103,8 +103,7 @@ local function stats_formspec(name, target)
 	local data = archtec_playerdata.get_all(target)
 	local auth = minetest.get_auth_handler().get_auth(target)
 	local privs = minetest.get_player_privs(target)
-	local privs_color = colorize_privs(target, data, privs)
-	if data == nil then
+	if data == nil then -- can happen when the user never joined after archtec_player was enabled
 		minetest.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
 		return
 	end
@@ -129,13 +128,14 @@ local function stats_formspec(name, target)
 	local free_votes = archtec.free_votes - data.free_votes
 
 	local last_login
-	if auth and auth.last_login and auth.last_login ~= -1 then
+	if auth and auth.last_login then
 		last_login = os.date("!%Y-%m-%d %H:%M", auth.last_login) .. " UTC"
 	else
 		last_login = "unknown"
 	end
 
 	local xp = archtec_playerdata.calc_xp(data)
+	local privs_color = colorize_privs(target, data, privs)
 
 	-- Generate formspec
 	local formspec = {
@@ -178,6 +178,10 @@ minetest.register_chatcommand("stats", {
 		end
 		if not minetest.player_exists(target) then
 			minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
+			return
+		end
+		if not archtec_playerdata.player_exists(target) then
+			minetest.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
 			return
 		end
 		if target ~= name and archtec.ignore_check(name, target) then

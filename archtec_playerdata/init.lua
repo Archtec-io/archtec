@@ -501,6 +501,16 @@ function archtec_playerdata.register_removal(key_name)
 	log_debug("register_removal", "registered key removal '" .. key_name .. "'")
 end
 
+-- Check if player is in the database
+function archtec_playerdata.player_exists(name)
+	local raw = storage:get_string("player_" .. name)
+	if raw == "" then
+		log_debug("player_exists", "player " .. name .. " does not exist")
+		return false
+	end
+	return true
+end
+
 -- Get default_value of key
 function archtec_playerdata.get_default(key_name)
 	local key = system.keys[key_name]
@@ -615,6 +625,7 @@ function archtec_playerdata.set(name, key_name, value)
 	end
 
 	if type(value) == "table" then
+		-- Todo: add recursive key type check here?
 		data[name][key_name] = table.copy(value)
 	else
 		data[name][key_name] = value
