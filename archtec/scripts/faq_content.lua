@@ -25,7 +25,7 @@ Send a private to a player:
 '/msg <name> <message>'
 
 Send a private message to the person you sent your last message to:
-'/m <message>
+'/m <message>'
 
 Send an offline message to a player (the person will see your message when they joins the next time):
 '/tell <name> <message>'
@@ -36,7 +36,7 @@ archtec.faq.register("Channels", {
 	header = "Chat",
 	pos = 2,
 	text = [[
-To send a message to a channel, prepend the message with '#' followed by the channel name. (e.g. '#staff hiho')
+To send a message to a channel, prepend the message with '#' followed by the channel name. (e.g. '#staff hey')
 
 Required arguments/parameters are indicated with angle braces <> while optional ones have curly braces {}.
 
@@ -74,7 +74,7 @@ Show help:
 ]]
 })
 
-archtec.faq.register("Chatbridge to Discord, Matrix and IRC", {
+archtec.faq.register("Chatbridge (Discord, Matrix, IRC)", {
 	header = "Chat",
 	pos = 3,
 	text = [[
@@ -148,21 +148,25 @@ archtec.faq.register("Voting", {
 	text = [[
 There are three kinds of votes a player on Archtec can initiate:
 
-Each player starts with 5 free votes since it might take new players a while to get Etherium Dust. To check how many free votes you have remaining, use the '/stats' command.
+Each player starts with 5 free vote-creations since it might take new players a while to get Etherium Dust.
+To check how many free vote-creations you have remaining, use the '/stats' command.
+Participating on votes doesn't cost anything.
 
 Vote to skip the night (switches to daytime if the voting succeeds):
 - Turns in-game night into day
-- Costs 3 etherium dust
+- Starting costs 3 etherium dust
 - Requires 60% of votes to be YES to succeed
+- '/vote_day' (shortcut '/vd')
 
 Vote to skip the day (switches to nighttime if the voting succeeds):
 - Turns in-game day into night
-- Costs 3 etherium dust
+- Starting costs 3 etherium dust
 - Requires 60% of votes to be YES to succeed
+- '/vote_night' (shortcut '/vn')
 
 Vote to kick a player:
 - Kicks a misbehaving player off the server
-- Costs nothing
+- **Costs nothing**
 - Requires 80% of votes to be YES to succeed
 - To prevent abuse, there must be at least 4 players online to initiate the vote
 ]]
