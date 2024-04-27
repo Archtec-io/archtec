@@ -120,11 +120,6 @@ local function data_load(name, keep, create)
 		return true
 	end
 
-	if system.mode == "shutdown" then
-		log_error("data_load", "cannot load data in shutdown mode")
-		return false
-	end
-
 	local raw = storage:get_string("player_" .. name)
 	if create and raw == "" then
 		raw = "{}"
@@ -631,6 +626,10 @@ function archtec_playerdata.set(name, key_name, value)
 		data[name][key_name] = value
 	end
 	log_debug("set", "set '" .. key_name .. "' of '" .. name .. "' to " .. dumpx(value))
+
+	if system.mode == "shutdown" then
+		data_save(name, true)
+	end
 	return true
 end
 
@@ -667,6 +666,10 @@ function archtec_playerdata.mod(name, key_name, value)
 
 	data[name][key_name] = old_value + value
 	log_debug("mod", "set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
+
+	if system.mode == "shutdown" then
+		data_save(name, true)
+	end
 	return true
 end
 

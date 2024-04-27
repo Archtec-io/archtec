@@ -1,7 +1,9 @@
 `archtec_playerdata` API Reference
 ==================================
 
-Supported key types: `boolean`, `number`, `string`, `table` (which supports the first three types only)
+* Supported key types: `boolean`, `number`, `string`, `table` (which supports the first three types only)
+* All functions which interact with playerdata don't work during mod loadtime. The functions work within
+  `register_on_mods_loaded` calls when your mod depends on `archtec_playerdata`.
 
 * `archtec_playerdata.register_key(key_name, key_type, default_value[, temp])`: returns `nil` or stopps
   the server on startup.
@@ -36,30 +38,25 @@ Supported key types: `boolean`, `number`, `string`, `table` (which supports the 
 
 * `archtec_playerdata.get(name, key_name)`: returns `value` or `nil`-
     * Get value of key for a player (or default value if unset)
-    * Can't be used in `on_shutdown` callbacks
     * Return of `nil` is caused by unknown key, corrupted data (unknown player works)
     * name: `string`, key_name: `string`
 
 * `archtec_playerdata.get_all(name)`: returns `table` with data or `nil`.
     * Get all key=value pairs of a player
-    * Can't be used in `on_shutdown` callbacks
     * Return of `nil` is caused by corrupted data, unknown player
     * name: `string`
 
 * `archtec_playerdata.get_db()`: returns `table` or `nil`.
     * Get key=value pairs of all players
-    * Can be used in `on_shutdown` callbacks
     * Does not return never set values, you must query the defaults yourself
 
 * `archtec_playerdata.set(name, key_name, value)`: returns `true` (success) or `false` (failure).
     * Set key of player to value
-    * Can't be used in `on_shutdown` callbacks
     * Return of `false` is caused by corrupted data, unknown player, wrong data type of `value`
     * name: `string`, key_name: `string`, value: `*`
 
 * `archtec_playerdata.mod(name, key_name, value)`: returns `true` (success) or `false` (failure).
     * Modify key of player by value (number)
-    * Can't be used in `on_shutdown` callbacks
     * Return of `false` is caused by corrupted data, unknown player, type of `value` ~= `number`
     * name: `string`, key_name: `string`, value: `number`
 

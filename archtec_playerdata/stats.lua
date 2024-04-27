@@ -140,8 +140,8 @@ local function stats_formspec(name, target)
 	-- Generate formspec
 	local formspec = {
 		"formspec_version[3]",
-		"size[9,6]",
-		"box[0.3,0.3;8.4,0.5;#c6e8ff]",
+		"size[10,6]",
+		"box[0.3,0.3;9.4,0.5;#c6e8ff]",
 		"label[0.4,0.55;" .. FS("Stats of: @1 - @2 XP @3", target, format_int(xp), tags) .. "]",
 
 		"label[0.4,1.2;" .. FS("Nodes dug: @1", format_int(data.nodes_dug)) .. "]",
@@ -153,14 +153,14 @@ local function stats_formspec(name, target)
 		"label[0.4,4.8;" .. FS("Playtime: @1", playtime) .. "]",
 		"label[0.4,5.4;" .. FS("Average playtime: @1", avg_playtime) .. "]",
 
-		"label[4.5,1.2;" .. FS("Join count: @1", format_int(data.join_count)) .. "]",
-		"label[4.5,1.8;" .. FS("First join: @1", first_join) .. "]",
-		"label[4.5,2.4;" .. FS("Last login: @1", last_login) .. "]",
-		"label[4.5,3.0;" .. FS("Remaining free votes: @1", free_votes) .. "]",
-		"label[4.5,3.6;" .. FS("Can spill lava: @1", privs_color.lava) .. "]",
-		"label[4.5,4.2;" .. FS("Can use the chainsaw: @1", privs_color.chainsaw) .. "]",
-		"label[4.5,4.8;" .. FS("Can forceload areas: @1", privs_color.forceload) .. "]",
-		"label[4.5,5.4;" .. FS("Can create big areas: @1", privs_color.areas) .. "]",
+		"label[5.0,1.2;" .. FS("Join count: @1", format_int(data.join_count)) .. "]",
+		"label[5.0,1.8;" .. FS("First join: @1", first_join) .. "]",
+		"label[5.0,2.4;" .. FS("Last login: @1", last_login) .. "]",
+		"label[5.0,3.0;" .. FS("Remaining free votes: @1", free_votes) .. "]",
+		"label[5.0,3.6;" .. FS("Can spill lava: @1", privs_color.lava) .. "]",
+		"label[5.0,4.2;" .. FS("Can use the chainsaw: @1", privs_color.chainsaw) .. "]",
+		"label[5.0,4.8;" .. FS("Can forceload areas: @1", privs_color.forceload) .. "]",
+		"label[5.0,5.4;" .. FS("Can create big areas: @1", privs_color.areas) .. "]",
 	}
 
 	minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec))
