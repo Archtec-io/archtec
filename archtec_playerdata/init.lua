@@ -207,7 +207,7 @@ local function backup_create()
 		return false
 	end
 
-	local filename = "archtec_playerdata_"  .. os.date("!%Y-%m-%d_%H:%M:%S", os.time()) .. ".txt" -- 2024-01-01_20:00:00
+	local filename = "archtec_playerdata_" .. os.date("!%Y-%m-%d_%H:%M:%S", os.time()) .. ".txt" -- 2024-01-01_20:00:00
 	local success = minetest.safe_file_write(datadir .. filename, json_dump)
 	if not success then
 		log_error("backup_create", "failed to write backup file - unknown engine error")
@@ -551,7 +551,7 @@ function archtec_playerdata.get(name, key_name)
 		end
 	end
 
-	log_debug("get", "returned key " .. key_name .. "=" .. dumpx(value) .. " of '" ..  name .. "'")
+	log_debug("get", "returned key " .. key_name .. "=" .. dumpx(value) .. " of '" .. name .. "'")
 	return value
 end
 

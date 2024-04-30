@@ -157,7 +157,7 @@ local function show_fs(name, active_tab)
 		local anim_data = get_animation(dummy:get_luaentity()._animation)
 		formspec = formspec ..
 			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,150;false;false;"
-				.. anim_data.frame_begin  .. "," .. anim_data.frame_end .. ";" .. anim_data.speed .. "]"
+				.. anim_data.frame_begin .. "," .. anim_data.frame_end .. ";" .. anim_data.speed .. "]"
 	end
 
 	-- Show tab content
