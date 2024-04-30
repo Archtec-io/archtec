@@ -452,14 +452,14 @@ archtec.faq.register("Useful chat commands", {
 	text = [[
 General:
 - '/faq' shows this Frequently Asked Questions section
-- '/news' shows the news from join again (staff only)
+- '/news' shows the news from join again
 - '/report <message>' report a bug/issue/feature request to the server staff (Creates a GitHub issue and a Discord notification)
 - '/area_flak <id>' close the airspace above your area for hanggliders (prevent other players from flying above your protected area, see '/list_areas' to get the ID)
 
 Techage:
 - '/my_expoints' show your TA 5 experience points
 - '/ta_color' shows a color palette for the controller
-- '/ta_limit' shows your TA command limit
+- '/ta_limit' shows your TA command limit usage
 ]]
 })
 

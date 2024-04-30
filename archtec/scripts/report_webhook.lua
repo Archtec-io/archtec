@@ -190,7 +190,11 @@ minetest.register_chatcommand("report", {
 	description = "Report a bug/feature request",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/report] executed by '" .. name .. "'")
+		minetest.log("action", "[/report] executed by '" .. name .. "' with param '" .. param .. "'")
+		local text = archtec.get_and_trim(param)
+		if check_text(text) then
+			archtec_playerdata.set(name, "report_draft", text)
+		end
 		report_formspec(name)
 	end
 })
