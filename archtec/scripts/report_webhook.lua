@@ -67,12 +67,12 @@ local function send_report(name, report)
 	})
 
 	if json == nil then
-		minetest.log_("error", "[archtec] Failed to create json for report '" .. table.concat(body, "\n") .. "'")
+		minetest.log("error", "[archtec] Failed to create json for report '" .. table.concat(body, "\n") .. "'")
 		return false
 	end
 
 	http.fetch({
-		url = "https://api.github.com/repos/Archtec-io/bugtracker_test/issues",
+		url = "https://api.github.com/repos/Archtec-io/bugtracker/issues",
 		method = "POST",
 		extra_headers = {
 			"Accept: application/vnd.github+json",
@@ -85,7 +85,7 @@ local function send_report(name, report)
 		if parse.html_url then
 			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: " .. parse.html_url)
 		else
-			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: unknown; JSON parsing error!")
+			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: unknown (JSON parsing error) | Response code: " .. (res.code or "unknown"))
 		end
 
 		if not parse.html_url then
@@ -163,7 +163,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if not check_text(fields.report_text) then
 		minetest.close_formspec(name, "archtec:report")
 		minetest.chat_send_player(name, C("#FF0000", S("[report] Your text is too long and/or contains disallowed characters!")))
-		return
+		return true
 	end
 
 	if fields.draft_save then
@@ -178,7 +178,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		send_report(name, fields.report_text)
 		archtec_playerdata.set(name, "report_draft", "")
 		minetest.close_formspec(name, "archtec:report")
-		return
+		return true
 	end
 
 	report_formspec(name)
@@ -192,7 +192,7 @@ minetest.register_chatcommand("report", {
 	func = function(name, param)
 		minetest.log("action", "[/report] executed by '" .. name .. "' with param '" .. param .. "'")
 		local text = archtec.get_and_trim(param)
-		if check_text(text) then
+		if text ~= "" and archtec_playerdata.get(name, "report_draft") == "" and check_text(text) then
 			archtec_playerdata.set(name, "report_draft", text)
 		end
 		report_formspec(name)
