@@ -35,6 +35,7 @@ read_globals = {
 	"homedecor",
 	"mesecon",
 	"player_api",
+	"screwdriver",
 	"signs_bot",
 	"signs_lib",
 	"stairs",
