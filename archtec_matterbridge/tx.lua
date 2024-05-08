@@ -1,4 +1,5 @@
 local http = ...
+local is_shutdown = false
 
 -- normal message in chat channel
 archtec_matterbridge.send = function(message, channel, event)
@@ -48,10 +49,12 @@ function minetest.send_leave_message(player_name, timed_out)
 		archtec.silent_leave[player_name] = nil
 		return
 	end
-	if timed_out then
-		archtec_matterbridge.send(":information_source: " .. player_name .. " lost the connection.")
-	else
-		archtec_matterbridge.send(":information_source: " .. player_name .. " left the game.")
+	if not is_shutdown then
+		if timed_out then
+			archtec_matterbridge.send(":information_source: " .. player_name .. " lost the connection.")
+		else
+			archtec_matterbridge.send(":information_source: " .. player_name .. " left the game.")
+		end
 	end
 	old_leave(player_name, timed_out)
 end
@@ -63,5 +66,6 @@ end)
 
 -- shutdown message
 minetest.register_on_shutdown(function()
+	is_shutdown = true
 	archtec_matterbridge.send(":warning: Server is shutting down...")
 end)
