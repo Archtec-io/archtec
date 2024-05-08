@@ -30,7 +30,8 @@ local system = {
 		table = true,
 	},
 	keys = {
-		system_data_unload = {key_type = "number", default_value = 0, temp = true}
+		system_data_unload = {key_type = "number", default_value = 0, temp = true},
+		system_data_modified = {key_type = "boolean", default_value = false, temp = true},
 	},
 	keys_remove = {},
 	upgrades = {},
@@ -66,7 +67,11 @@ end
 
 -- Other helpers
 local function dumpx(...) -- dump to one line
-	return dump(...):gsub("\n", ""):gsub("\t", "")
+	if debug_mode then
+		return dump(...):gsub("\n", ""):gsub("\t", "")
+	else -- no need to dump tables outside of debug mode
+		return ""
+	end
 end
 
 local function get_user_list()
@@ -154,6 +159,19 @@ local function data_save(name, unload_now)
 	local data_copy = table.copy(data[name])
 	local unload_data = data_copy.system_data_unload ~= 0 and data_copy.system_data_unload < os.time()
 
+	if not data_copy.system_data_modified then -- don't save data
+		log_debug("data_save", "skipped data of '" .. name .. "' since nothing has changed")
+
+		if unload_data or unload_now then
+			data[name] = nil
+			if unload_data then
+				log_debug("data_save", "unloaded data of '" .. name .. "' due to cache timeout")
+			end
+		end
+
+		return false
+	end
+
 	for key_name, _ in pairs(data_copy) do
 		if system.keys[key_name] and system.keys[key_name].temp == true then
 			data_copy[key_name] = nil
@@ -166,13 +184,14 @@ local function data_save(name, unload_now)
 		return false
 	end
 
-	if raw == "null" then -- write_json return "null" when we pass a table w/ 0 key-value pairs
+	if raw == "null" then -- write_json returns "null" when we pass a table w/ 0 key-value pairs
 		log_debug("data_save", "failed to generate proper json for '" .. name .. "'; no keys set for this user")
 		return false
 	end
 
 	storage:set_string("player_" .. name, raw)
 	log_debug("data_save", "saved data of '" .. name .. "'; " .. raw .. "")
+	data[name].system_data_changed = false
 
 	if unload_data or unload_now then
 		data[name] = nil
@@ -297,14 +316,17 @@ minetest.register_globalstep(function(dtime)
 	if time_save > save_interval then
 		time_save = 0
 		local users = get_loaded_user_list()
+		local saved = {}
 		local t0 = minetest.get_us_time()
 		for _, name in ipairs(users) do
-			data_save(name)
+			if data_save(name) then
+				saved[#saved + 1] = name
+			end
 		end
 		local t1 = minetest.get_us_time()
 
 		if #users > 0 then
-			log_action("save_step", "saved data of " .. #users .. " player(s) in " .. (t1 - t0) / 1000 .. " ms")
+			log_action("save_step", "saved data of " .. #saved .. " player(s) in " .. (t1 - t0) / 1000 .. " ms; data of " .. #users .. " player(s) is loaded")
 		end
 	end
 
@@ -626,6 +648,7 @@ function archtec_playerdata.set(name, key_name, value)
 		data[name][key_name] = value
 	end
 	log_debug("set", "set '" .. key_name .. "' of '" .. name .. "' to " .. dumpx(value))
+	data[name].system_data_changed = true
 
 	if system.mode == "shutdown" then
 		data_save(name, true)
@@ -666,6 +689,7 @@ function archtec_playerdata.mod(name, key_name, value)
 
 	data[name][key_name] = old_value + value
 	log_debug("mod", "set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
+	data[name].system_data_changed = true
 
 	if system.mode == "shutdown" then
 		data_save(name, true)
