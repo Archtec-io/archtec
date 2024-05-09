@@ -26,9 +26,15 @@ minetest.register_chatcommand("vote_day", {
 		elseif archtec_playerdata.get(name, "free_votes") < free_votes then
 			archtec_playerdata.mod(name, "free_votes", 1)
 			local counter = free_votes - archtec_playerdata.get(name, "free_votes")
-			minetest.chat_send_player(name, C("#00BD00", S("Used one of your free votes, remaning free votes: @1.", counter)))
+			minetest.chat_send_player(
+				name,
+				C("#00BD00", S("Used one of your free votes, remaning free votes: @1.", counter))
+			)
 		else
-			minetest.chat_send_player(name, C("#FF0000", S("To start a vote you must have 3 etherium dust in your inventory!")))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("To start a vote you must have 3 etherium dust in your inventory!"))
+			)
 			return
 		end
 
@@ -41,22 +47,38 @@ minetest.register_chatcommand("vote_day", {
 
 			on_result = function(self, result, results)
 				if result == "yes" then
-					minetest.chat_send_all("Vote passed, " .. C("#00BD00", #results.yes) .. " to " .. C("#FF0000", #results.no) .. ", Time will be set to day.")
+					minetest.chat_send_all(
+						"Vote passed, "
+							.. C("#00BD00", #results.yes)
+							.. " to "
+							.. C("#FF0000", #results.no)
+							.. ", Time will be set to day."
+					)
 					minetest.set_timeofday(0.23) -- same as beds
 				else
-					minetest.chat_send_all("Vote failed, " .. C("#00BD00", #results.yes) .. " to " .. C("#FF0000", #results.no) .. ", Time won't be set to day.")
+					minetest.chat_send_all(
+						"Vote failed, "
+							.. C("#00BD00", #results.yes)
+							.. " to "
+							.. C("#FF0000", #results.no)
+							.. ", Time won't be set to day."
+					)
 				end
 			end,
 
 			on_vote = function(self, name_voter, value)
 				if value == "yes" then
-					minetest.chat_send_all(name_voter .. " voted " .. C("#00BD00", "YES") .. " to " .. self.description .. ".")
+					minetest.chat_send_all(
+						name_voter .. " voted " .. C("#00BD00", "YES") .. " to " .. self.description .. "."
+					)
 				else
-					minetest.chat_send_all(name_voter .. " voted " .. C("#FF0000", "NO") .. " to " .. self.description .. ".")
+					minetest.chat_send_all(
+						name_voter .. " voted " .. C("#FF0000", "NO") .. " to " .. self.description .. "."
+					)
 				end
-			end
+			end,
 		})
-	end
+	end,
 })
 archtec.register_chatcommand_alias("vd", "vote_day")
 
@@ -77,9 +99,15 @@ minetest.register_chatcommand("vote_night", {
 		elseif archtec_playerdata.get(name, "free_votes") < free_votes then
 			archtec_playerdata.mod(name, "free_votes", 1)
 			local counter = free_votes - archtec_playerdata.get(name, "free_votes")
-			minetest.chat_send_player(name, C("#00BD00", S("Used one of your free votes, remaning free votes: @1!", counter)))
+			minetest.chat_send_player(
+				name,
+				C("#00BD00", S("Used one of your free votes, remaning free votes: @1!", counter))
+			)
 		else
-			minetest.chat_send_player(name, C("#FF0000", S("To start a vote you must have 3 etherium dust in your inventory.")))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("To start a vote you must have 3 etherium dust in your inventory."))
+			)
 			return
 		end
 
@@ -92,21 +120,37 @@ minetest.register_chatcommand("vote_night", {
 
 			on_result = function(self, result, results)
 				if result == "yes" then
-					minetest.chat_send_all("Vote passed, " .. C("#00BD00", #results.yes) .. " to " .. C("#FF0000", #results.no) .. ", Time will be set to night.")
+					minetest.chat_send_all(
+						"Vote passed, "
+							.. C("#00BD00", #results.yes)
+							.. " to "
+							.. C("#FF0000", #results.no)
+							.. ", Time will be set to night."
+					)
 					minetest.set_timeofday(0)
 				else
-					minetest.chat_send_all("Vote failed, " .. C("#00BD00", #results.yes) .. " to " .. C("#FF0000", #results.no) .. ", Time won't be set to night.")
+					minetest.chat_send_all(
+						"Vote failed, "
+							.. C("#00BD00", #results.yes)
+							.. " to "
+							.. C("#FF0000", #results.no)
+							.. ", Time won't be set to night."
+					)
 				end
 			end,
 
 			on_vote = function(self, name_voter, value)
 				if value == "yes" then
-					minetest.chat_send_all(name_voter .. " voted " .. C("#00BD00", "YES") .. " to " .. self.description .. ".")
+					minetest.chat_send_all(
+						name_voter .. " voted " .. C("#00BD00", "YES") .. " to " .. self.description .. "."
+					)
 				else
-					minetest.chat_send_all(name_voter .. " voted " .. C("#FF0000", "NO") .. " to " .. self.description .. ".")
+					minetest.chat_send_all(
+						name_voter .. " voted " .. C("#FF0000", "NO") .. " to " .. self.description .. "."
+					)
 				end
-			end
+			end,
 		})
-	end
+	end,
 })
 archtec.register_chatcommand_alias("vn", "vote_night")

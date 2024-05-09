@@ -5,10 +5,13 @@ local current = {}
 local path = minetest.get_worldpath() .. "/music/"
 
 function music.play(name, title)
-	minetest.dynamic_add_media({filepath = path .. title .. ".ogg", ephemeral = false, to_player = name}, function(player)
-		local handle = minetest.sound_play(title, {to_player = name, gain = 1.0})
-		current[name] = handle
-	end)
+	minetest.dynamic_add_media(
+		{filepath = path .. title .. ".ogg", ephemeral = false, to_player = name},
+		function(player)
+			local handle = minetest.sound_play(title, {to_player = name, gain = 1.0})
+			current[name] = handle
+		end
+	)
 end
 
 function music.stop(name)
@@ -61,17 +64,25 @@ minetest.register_chatcommand("music_play", {
 		local players = archtec.string_to_table(playersraw)
 		for _, player in pairs(players) do
 			if not archtec.is_online(player) then
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_play] Player @1 is not online!", player)))
+				minetest.chat_send_player(
+					name,
+					minetest.colorize("#FF0000", S("[music_play] Player @1 is not online!", player))
+				)
 				return
 			end
 			music.play(player, title)
 			if name ~= player then
-				minetest.chat_send_player(player, minetest.colorize("#00BD00", S("[music_play] Playing @1 to you (started by @2)", title, name)))
+				minetest.chat_send_player(
+					player,
+					minetest.colorize("#00BD00", S("[music_play] Playing @1 to you (started by @2)", title, name))
+				)
 			end
 		end
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_play] Playing @1 to @2", title, playersraw:trim())))
-
-	end
+		minetest.chat_send_player(
+			name,
+			minetest.colorize("#00BD00", S("[music_play] Playing @1 to @2", title, playersraw:trim()))
+		)
+	end,
 })
 
 minetest.register_chatcommand("music_stop", {
@@ -87,16 +98,25 @@ minetest.register_chatcommand("music_stop", {
 		local players = archtec.string_to_table(param)
 		for _, player in pairs(players) do
 			if not archtec.is_online(player) then
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[music_stop] Player @1 is not online!", player)))
+				minetest.chat_send_player(
+					name,
+					minetest.colorize("#FF0000", S("[music_stop] Player @1 is not online!", player))
+				)
 				return
 			end
 			music.stop(player)
 			if name ~= player then
-				minetest.chat_send_player(player, minetest.colorize("#00BD00", S("[music_stop] @1 stopped your music", name)))
+				minetest.chat_send_player(
+					player,
+					minetest.colorize("#00BD00", S("[music_stop] @1 stopped your music", name))
+				)
 			end
 		end
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_stop] Stopped music for @1", param:trim())))
-	end
+		minetest.chat_send_player(
+			name,
+			minetest.colorize("#00BD00", S("[music_stop] Stopped music for @1", param:trim()))
+		)
+	end,
 })
 
 minetest.register_chatcommand("music_list", {
@@ -105,7 +125,7 @@ minetest.register_chatcommand("music_list", {
 	func = function(name)
 		minetest.log("action", "[/music_list] executed by '" .. name .. "'")
 		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("[music_list] @1", get_music_list())))
-	end
+	end,
 })
 
 minetest.register_on_leaveplayer(function(player)

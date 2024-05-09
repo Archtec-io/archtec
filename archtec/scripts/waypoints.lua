@@ -11,7 +11,7 @@ local function waypoint_add(name)
 			name = "[Spawn]",
 			text = "m",
 			number = 0xFF0000,
-			world_pos = pos
+			world_pos = pos,
 		})
 	end
 end
@@ -25,7 +25,9 @@ local function waypoint_remove(name)
 end
 
 archtec.settings.add_callback(function(name, setting, newvalue)
-	if setting ~= "sp_show" then return end
+	if setting ~= "sp_show" then
+		return
+	end
 	if newvalue == true then
 		waypoint_add(name)
 	else

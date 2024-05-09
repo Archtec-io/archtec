@@ -1,6 +1,8 @@
 local S = minetest.get_translator("archtec_playerdata")
 local F = minetest.formspec_escape
-local FS = function(...) return F(S(...)) end
+local FS = function(...)
+	return F(S(...))
+end
 local C = minetest.colorize
 local mod = archtec_playerdata.mod
 
@@ -16,7 +18,7 @@ local function format_duration(seconds)
 end
 
 local function format_int(number)
-	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
+	local _, _, minus, int, fraction = tostring(number):find("([-]?)(%d+)([.]?%d*)")
 	int = int:reverse():gsub("(%d%d%d)", "%1,")
 	return minus .. int:reverse():gsub("^,", "") .. fraction
 end
@@ -33,7 +35,9 @@ end)
 
 archtec_playerdata.register_key("nodes_dug", "number", 0)
 minetest.register_on_dignode(function(_, _, digger)
-	if not digger then return end
+	if not digger then
+		return
+	end
 	local name = digger:get_player_name()
 	if name ~= nil and uses_choppy[name] == nil then
 		mod(name, "nodes_dug", 1)
@@ -42,7 +46,9 @@ end)
 
 archtec_playerdata.register_key("nodes_placed", "number", 0)
 minetest.register_on_placenode(function(_, _, placer, _, _, _)
-	if not placer then return end
+	if not placer then
+		return
+	end
 	local name = placer:get_player_name()
 	if name ~= nil then
 		mod(name, "nodes_placed", 1)
@@ -51,7 +57,9 @@ end)
 
 archtec_playerdata.register_key("items_crafted", "number", 0)
 minetest.register_on_craft(function(_, player, _, _)
-	if not player then return end
+	if not player then
+		return
+	end
 	local name = player:get_player_name()
 	if name ~= nil then
 		mod(name, "items_crafted", 1)
@@ -60,7 +68,9 @@ end)
 
 archtec_playerdata.register_key("died", "number", 0)
 minetest.register_on_dieplayer(function(player, _)
-	if not player then return end
+	if not player then
+		return
+	end
 	local name = player:get_player_name()
 	if name ~= nil then
 		mod(name, "died", 1)
@@ -71,20 +81,34 @@ end)
 local function colorize_privs(name, data, privs)
 	local t = {lava = 0, chainsaw = 0, forceload = 0, areas = 0}
 	-- lava
-	if data.playtime > archtec.adv_buckets_playtime then t.lava = 1 end
-	if privs.adv_buckets then t.lava = 2 end
+	if data.playtime > archtec.adv_buckets_playtime then
+		t.lava = 1
+	end
+	if privs.adv_buckets then
+		t.lava = 2
+	end
 
 	-- chainsaw
-	if archtec.chainsaw_conditions(name) then t.chainsaw = 1 end
-	if privs.archtec_chainsaw then t.chainsaw = 2 end
+	if archtec.chainsaw_conditions(name) then
+		t.chainsaw = 1
+	end
+	if privs.archtec_chainsaw then
+		t.chainsaw = 2
+	end
 
 	-- forceload (no check needed)
 	t.forceload = 1
-	if privs.forceload then t.forceload = 2 end
+	if privs.forceload then
+		t.forceload = 2
+	end
 
 	-- areas
-	if data.playtime > archtec.big_areas_playtime then t.areas = 1 end
-	if privs.areas_high_limit then t.areas = 2 end
+	if data.playtime > archtec.big_areas_playtime then
+		t.areas = 1
+	end
+	if privs.areas_high_limit then
+		t.areas = 2
+	end
 
 	local colorized = {}
 	for priv, v in pairs(t) do
@@ -189,7 +213,7 @@ minetest.register_chatcommand("stats", {
 			return
 		end
 		stats_formspec(name, target)
-	end
+	end,
 })
 
 -- XP stuff
@@ -239,10 +263,14 @@ local function generate_ranking()
 	-- Sort data (A > B)
 	local sorted = {}
 	for name, stats in pairs(users) do
-		table.sort(stats, function(a, b) return a.xp > b.xp end)
+		table.sort(stats, function(a, b)
+			return a.xp > b.xp
+		end)
 		sorted[#sorted + 1] = {name, stats.xp}
 	end
-	table.sort(sorted, function(a, b) return a[2] > b[2] end)
+	table.sort(sorted, function(a, b)
+		return a[2] > b[2]
+	end)
 
 	for i, entry in ipairs(sorted) do
 		local name, xp = entry[1], entry[2]
@@ -266,7 +294,9 @@ local function rank_formspec(name)
 		"formspec_version[3]",
 		"size[10,10]",
 		"box[0.3,0.3;9.4,0.5;#c6e8ff]",
-		"label[0.4,0.55;" .. FS("Player ranking - @1 players earned @2 XP", xp_rank.user_count, format_int(xp_rank.all)) .. "]",
+		"label[0.4,0.55;"
+			.. FS("Player ranking - @1 players earned @2 XP", xp_rank.user_count, format_int(xp_rank.all))
+			.. "]",
 		"hypertext[3.5,1.2;3,1;;<center><mono>1st " .. F(xp_rank.names[1]) .. "</mono></center>]",
 		"item_image[4,1.4;2,2;cups:cup_gold]",
 		"hypertext[0,1.8;3,1;;<center><mono>2nd " .. F(xp_rank.names[2]) .. "</mono></center>]",
@@ -286,5 +316,5 @@ minetest.register_chatcommand("rank", {
 	func = function(name)
 		minetest.log("action", "[/rank] executed by '" .. name .. "'")
 		rank_formspec(name)
-	end
+	end,
 })

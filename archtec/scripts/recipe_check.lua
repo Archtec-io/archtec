@@ -1,7 +1,6 @@
 -- Find duplicate crafting recipes
 
 local function is_same_item(item1, item2)
-
 	local chkgroup = nil
 	local chkitem = nil
 
@@ -42,20 +41,17 @@ local function is_same_item(item1, item2)
 	return false
 end
 
-
-
 local function is_same_recipe(rec1, rec2)
 	-- Maybe TODO? : recalculation to universal format (width=0). same recipes can be defined in different ways (no samples)
 	if not (rec1.items or rec2.items) then -- nil means no recipe that is never the same oO
 		return false
 	end
 
-	if rec1.type ~= rec2.type or
-		rec1.width ~= rec2.width then
+	if rec1.type ~= rec2.type or rec1.width ~= rec2.width then
 		return false
 	end
 
-	for i =1, 9 do -- check all fields. max recipe is 3x3e
+	for i = 1, 9 do -- check all fields. max recipe is 3x3e
 		if not is_same_item(rec1.items[i], rec2.items[i]) then
 			return false
 		end
@@ -63,28 +59,30 @@ local function is_same_recipe(rec1, rec2)
 	return true -- checks passed, no differences found
 end
 
-
 local known_recipes = {}
 
 local function run(pname)
 	for name, def in futil.table.pairs_by_key(minetest.registered_items) do
-		if (not def.groups.not_in_creative_inventory or
-		def.groups.not_in_creative_inventory == 0) and
-		def.description and def.description ~= "" then -- check valide entrys only
-
+		if
+			(not def.groups.not_in_creative_inventory or def.groups.not_in_creative_inventory == 0)
+			and def.description
+			and def.description ~= ""
+		then -- check valide entrys only
 			local recipes_for_node = minetest.get_all_craft_recipes(name)
 			if recipes_for_node ~= nil then
 				for kn, vn in ipairs(recipes_for_node) do
 					for ku, vu in ipairs(known_recipes) do
-						if vu.output ~= vn.output and
-						is_same_recipe(vu, vn) == true then
+						if vu.output ~= vn.output and is_same_recipe(vu, vn) == true then
 							minetest.log("warning", "[recipe-check] " .. vu.output .. " " .. vn.output)
 							if name then
-								minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output))
+								minetest.chat_send_player(
+									pname,
+									minetest.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output)
+								)
 							end
 						end
 					end
-					table.insert(known_recipes, vn )
+					table.insert(known_recipes, vn)
 				end
 			end
 		end
@@ -98,5 +96,5 @@ minetest.register_chatcommand("recipe_check", {
 	func = function(name)
 		minetest.log("action", "[/recipe_check] executed by '" .. name .. "'")
 		run(name)
-	end
+	end,
 })

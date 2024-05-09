@@ -25,10 +25,14 @@ local function faq_tree(search)
 	end
 	local sorted_entries = {}
 	for header, content in pairs(entries) do
-		table.sort(content, function(a, b) return a[2].pos < b[2].pos end) -- sort after pos
+		table.sort(content, function(a, b)
+			return a[2].pos < b[2].pos
+		end) -- sort after pos
 		sorted_entries[#sorted_entries + 1] = {header, content}
 	end
-	table.sort(sorted_entries, function(a, b) return order_headers[a[1]] < order_headers[b[1]] end)
+	table.sort(sorted_entries, function(a, b)
+		return order_headers[a[1]] < order_headers[b[1]]
+	end)
 	return sorted_entries
 end
 
@@ -90,7 +94,7 @@ minetest.register_chatcommand("faq", {
 	func = function(name, param)
 		minetest.log("action", "[/faq] executed by '" .. name .. "' with param '" .. param .. "'")
 		faq_formspec(name, param:sub(1, 20), 0)
-	end
+	end,
 })
 
 function archtec.faq.register(name, def)

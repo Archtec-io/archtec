@@ -19,7 +19,10 @@ minetest.register_on_chat_message(function(name, message)
 
 	-- 7msg typo check
 	if message:sub(1, 4) == "7msg" then
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] Anti leak detection blocked this message!")))
+		minetest.chat_send_player(
+			name,
+			minetest.colorize("#FF0000", S("[chatplus] Anti leak detection blocked this message!"))
+		)
 		minetest.log("action", "CHAT: <" .. name .. "> " .. message .. " (blocked by anti leak detection)")
 		return true
 	end
@@ -50,14 +53,20 @@ minetest.register_on_chat_message(function(name, message)
 			return true
 		end
 		if msg == "" then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] Don't forget to add a message!")))
+			minetest.chat_send_player(
+				name,
+				minetest.colorize("#FF0000", S("[chatplus] Don't forget to add a message!"))
+			)
 			return true
 		end
 		if archtec_chat.channels[cname] and archtec_chat.channels[cname].users[name] then
 			channel = cname
 			message = msg
 		else
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] #@1 does not exist or you aren't a channel member!", cname)))
+			minetest.chat_send_player(
+				name,
+				minetest.colorize("#FF0000", S("[chatplus] #@1 does not exist or you aren't a channel member!", cname))
+			)
 			return true
 		end
 
@@ -68,7 +77,10 @@ minetest.register_on_chat_message(function(name, message)
 
 	-- No channel available
 	if not channel then
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')")))
+		minetest.chat_send_player(
+			name,
+			minetest.colorize("#FF0000", S("[chatplus] You aren't in any channel! (try '/c j main')"))
+		)
 		return true
 	end
 
@@ -116,7 +128,10 @@ local function private_message(name, param)
 		return
 	end
 	minetest.chat_send_player(name, C(msg_chat_color_name, S("To") .. " " .. to .. ": ") .. C(msg_chat_color_text, msg))
-	minetest.chat_send_player(to, C(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. C(msg_chat_color_text, msg))
+	minetest.chat_send_player(
+		to,
+		C(msg_chat_color_name, S("From") .. " " .. name .. ": ") .. C(msg_chat_color_text, msg)
+	)
 	minetest.log("action", "MSG: from <" .. name .. "> to <" .. to .. "> " .. msg)
 	minetest.sound_play("chatplus_incoming_msg", {to_player = to}, true)
 	last_msg_name[name] = to
@@ -126,7 +141,10 @@ minetest.register_chatcommand("m", {
 	description = S("Send a private message to the same person you sent your last message to."),
 	func = function(name, param)
 		if last_msg_name[name] == nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[msg] Can't use this command. Use '/msg <name> <msg>' first!")))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[msg] Can't use this command. Use '/msg <name> <msg>' first!"))
+			)
 			return
 		end
 		if not archtec.is_online(last_msg_name[name]) then
@@ -134,7 +152,7 @@ minetest.register_chatcommand("m", {
 			return
 		end
 		private_message(name, last_msg_name[name] .. " " .. param)
-	end
+	end,
 })
 
 minetest.unregister_chatcommand("msg")

@@ -216,7 +216,8 @@ Find and drop commits that seems to exist in both remotes, print rest of it:
 $ sort -k3 <(awk '{print NR" "$0}' df.log mt.log mt.log) | uniq -uf2 | sort -nk1 | sed -r 's/^[^ ]+ ([^ ]+) (.*)$/\t"\1", -- \2/'
 
 Replace above entries with output
-]]--
+]]
+--
 
 local function dfver(s)
 	for _, v in ipairs(df) do
@@ -237,11 +238,20 @@ minetest.register_on_joinplayer(function(player)
 		return
 	end
 
-	archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
+	archtec.notify_team(
+		"[archtec] Debug info for '"
+			.. name
+			.. "': Client: "
+			.. info.version_string
+			.. " FS-V: "
+			.. info.formspec_version
+	)
 
 	local dfv = dfver(version)
 	if dfv then
-		archtec.notify_team("[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds")
+		archtec.notify_team(
+			"[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds"
+		)
 		minetest.after(30.0, function()
 			xban.ban_player(name, "Server", nil, "Cheating")
 			archtec.notify_team("[archtec] Auto banned '" .. name .. "'")

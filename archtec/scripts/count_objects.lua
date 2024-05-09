@@ -55,5 +55,5 @@ minetest.register_chatcommand("count_objects", {
 	func = function(name)
 		minetest.log("action", "[/count_objects] executed by '" .. name .. "'")
 		minetest.chat_send_player(name, count_object())
-	end
+	end,
 })

@@ -36,7 +36,7 @@ function geoip.lookup(ip, callback, playername)
 	http.fetch({
 		url = "https://tools.keycdn.com/geo.json?host=" .. ip,
 		extra_headers = {
-			"User-Agent: keycdn-tools:https://archtec.niklp.net"
+			"User-Agent: keycdn-tools:https://archtec.niklp.net",
 		},
 		timeout = 1,
 	}, function(res)
@@ -49,7 +49,7 @@ function geoip.lookup(ip, callback, playername)
 				result.status = data.status
 				result.description = data.description
 				result.timestamp = timestamp
-				result.players = playername and {[playername]=timestamp} or {}
+				result.players = playername and {[playername] = timestamp} or {}
 				cache[ip] = result
 				callback(result)
 				return
@@ -88,7 +88,9 @@ end
 
 -- query ip on join, record in logs and execute callback
 minetest.register_on_joinplayer(function(player)
-	if not archtec.geoip_enabled then return end -- Kill switch
+	if not archtec.geoip_enabled then
+		return
+	end -- Kill switch
 
 	local name = player:get_player_name()
 	local ip = minetest.get_player_ip(name)
@@ -97,14 +99,18 @@ minetest.register_on_joinplayer(function(player)
 		return
 	end
 
-	if ip == "127.0.0.1" then return end
+	if ip == "127.0.0.1" then
+		return
+	end
 
 	geoip.lookup(ip, function(data)
 		local txt = format_result(data)
 		if txt then
 			archtec.notify_team("[geoip] Result for player '" .. name .. "': " .. txt)
 		else
-			archtec.notify_team("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description))
+			archtec.notify_team(
+				"[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description)
+			)
 		end
 	end, name)
 end)
@@ -126,13 +132,13 @@ local function format_matches_by_name(name)
 		if result.players[name] then
 			table.insert(formatted_results, {
 				time = now - result.players[name],
-				txt = format_message(name, result)
+				txt = format_message(name, result),
 			})
 			count = count + 1
 		end
 	end
 	if count > 0 then
-		table.sort(formatted_results, function(a,b)
+		table.sort(formatted_results, function(a, b)
 			return a.time < b.time
 		end)
 		local msg = ""
@@ -171,6 +177,5 @@ minetest.register_chatcommand("geoip", {
 			local msg = format_matches_by_name(param) or "No ip or cached result available."
 			return true, msg
 		end
-
-	end
+	end,
 })

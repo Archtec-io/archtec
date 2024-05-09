@@ -11,15 +11,17 @@ local function hud_show(player)
 	local name = player:get_player_name()
 	local players = minetest.get_connected_players()
 
-	local huds = {player:hud_add({
-		hud_elem_type = "image",
-		position = {x = 0.5, y = 0},
-		offset = {x = 0, y = 20},
-		text = "archtec_background.png",
-		alignment = {x = 0, y = 1},
-		scale = {x = 400, y = (#players + 1) * 18 + 8},
-		number = 0xFFFFFF
-	})}
+	local huds = {
+		player:hud_add({
+			hud_elem_type = "image",
+			position = {x = 0.5, y = 0},
+			offset = {x = 0, y = 20},
+			text = "archtec_background.png",
+			alignment = {x = 0, y = 1},
+			scale = {x = 400, y = (#players + 1) * 18 + 8},
+			number = 0xFFFFFF,
+		}),
+	}
 	huds[#huds + 1] = player:hud_add({
 		hud_elem_type = "text",
 		position = {x = 0.5, y = 0},
@@ -28,7 +30,7 @@ local function hud_show(player)
 		alignment = {x = 0, y = 1},
 		scale = {x = 100, y = 100},
 		style = 1,
-		number = 0xFFFFFF
+		number = 0xFFFFFF,
 	})
 
 	for i = 1, #players do
@@ -42,7 +44,7 @@ local function hud_show(player)
 			text = uname,
 			alignment = {x = 0, y = 1},
 			scale = {x = 100, y = 100},
-			number = 0xFFFFFF
+			number = 0xFFFFFF,
 		})
 		huds[#huds + 1] = player:hud_add({
 			hud_elem_type = "image",
@@ -51,7 +53,7 @@ local function hud_show(player)
 			text = "server_ping_" .. ping .. ".png",
 			alignment = {x = 1, y = 1},
 			scale = {x = 1.5, y = 1.5},
-			number = 0xFFFFFF
+			number = 0xFFFFFF,
 		})
 	end
 	playerlist.huds[name] = huds

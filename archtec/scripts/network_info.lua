@@ -24,7 +24,30 @@ minetest.register_chatcommand("network_info", {
 		local min_rtt = info.min_rtt or "?"
 		local max_rtt = info.max_rtt or "?"
 		local avg_rtt = info.avg_rtt or "?"
-		minetest.chat_send_player(name, "Network info for player " .. C(target) .. " IP: " .. C(address) .. " IP-V: " .. C(ip_version) .. " Uptime: " .. C(connection_uptime) .. " Prot-V: " .. C(protocol_version) ..
-			" Jitter-min: " .. C(min_jitter) .. " Jitter-max: " .. C(max_jitter) .. " Jitter-avg: " .. C(avg_jitter) .. " RTT-min: " .. C(min_rtt) .. " RTT-max: " .. C(max_rtt) .. " RTT-avg: " .. C(avg_rtt))
-	end
+		minetest.chat_send_player(
+			name,
+			"Network info for player "
+				.. C(target)
+				.. " IP: "
+				.. C(address)
+				.. " IP-V: "
+				.. C(ip_version)
+				.. " Uptime: "
+				.. C(connection_uptime)
+				.. " Prot-V: "
+				.. C(protocol_version)
+				.. " Jitter-min: "
+				.. C(min_jitter)
+				.. " Jitter-max: "
+				.. C(max_jitter)
+				.. " Jitter-avg: "
+				.. C(avg_jitter)
+				.. " RTT-min: "
+				.. C(min_rtt)
+				.. " RTT-max: "
+				.. C(max_rtt)
+				.. " RTT-avg: "
+				.. C(avg_rtt)
+		)
+	end,
 })

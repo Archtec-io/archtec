@@ -13,15 +13,18 @@ local cdef_default = {
 	secured = false, -- Kicks non staff members after log out
 	public = false, -- Allows everyone to join the channel w/o invite
 }
-]]--
+]]
+--
 
 local user_table = {
-	channels = {}
+	channels = {},
 	-- default = "staff"
 }
 
 local function get_cdef(cname)
-	if not archtec_chat.channels[cname] then return nil end
+	if not archtec_chat.channels[cname] then
+		return nil
+	end
 	return archtec_chat.channels[cname]
 end
 
@@ -45,7 +48,9 @@ local function list_table(t)
 end
 
 local function get_cname(c)
-	if not c then return end
+	if not c then
+		return
+	end
 	if c:sub(1, 1) == "#" then
 		return c:sub(2, #c)
 	else
@@ -109,7 +114,9 @@ end
 
 function channel.send(cname, message, sender)
 	-- minetest.log("action", "[archtec_chat] Send message '" .. message .. "' into channel '" .. cname .. "'")
-	if message == "" then return end
+	if message == "" then
+		return
+	end
 	local cdef = get_cdef(cname)
 	local msg = C("#FF8800", "#" .. cname .. " | " .. message)
 	for name, _ in pairs(cdef.users) do
@@ -181,7 +188,18 @@ end
 function channel.invite(cname, target, inviter)
 	local cdef = get_cdef(cname)
 	minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited '" .. target .. "' to channel '" .. cname .. "'")
-	minetest.chat_send_player(target, C("#FF8800", S("@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.", inviter, cname, cname)))
+	minetest.chat_send_player(
+		target,
+		C(
+			"#FF8800",
+			S(
+				"@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.",
+				inviter,
+				cname,
+				cname
+			)
+		)
+	)
 	cdef.invites[target] = os.time()
 	minetest.after(60, function(cname_new, target_new)
 		local cdef_new = get_cdef(cname_new)
@@ -203,57 +221,57 @@ local help_list = {
 		description = "Join or create a channel. Add 'public' to your command to make new the created channel public. Add 'default' to your command to make the new created channel your default channel. (# is optional)",
 		param = "<channel> <public> <default>",
 		shortcut = "j",
-		usage = "/c join #mychannel {public} {default}"
+		usage = "/c join #mychannel {public} {default}",
 	},
 	leave = {
 		name = "leave",
 		description = "Leave a channel (# is optional)",
 		param = "<channel>",
 		shortcut = "l",
-		usage = "/c leave #mychannel"
+		usage = "/c leave #mychannel",
 	},
 	invite = {
 		name = "invite",
 		description = "Invite someone in a channel (# is optional)",
 		param = "<channel> <name>",
 		shortcut = "i",
-		usage = "/c invite #mychannel Player007"
+		usage = "/c invite #mychannel Player007",
 	},
 	list = {
 		name = "list",
 		description = "List all channels",
 		param = "",
 		shortcut = "li",
-		usage = "/c list"
+		usage = "/c list",
 	},
 	find = {
 		name = "find",
 		description = "Finds all channels where <name> is",
 		param = "<name>",
 		shortcut = "f",
-		usage = "/c find Player007"
+		usage = "/c find Player007",
 	},
 	kick = {
 		name = "kick",
 		description = "Kicks <name> from <channel>. Can be used by channelowners. (# is optional)",
 		param = "<channel> <name>",
 		shortcut = "k",
-		usage = "/c kick #mychannel Player007"
+		usage = "/c kick #mychannel Player007",
 	},
 	help = {
 		name = "help",
 		description = "Sends you the help for <sub-command> (or all commands)",
 		param = "<sub-command>",
 		shortcut = "h",
-		usage = "/c help join"
+		usage = "/c help join",
 	},
 	default = {
 		name = "default",
 		description = "Sets your default channel (# is optional)",
 		param = "<channel>",
 		shortcut = "d",
-		usage = "/c default #mychannel"
-	}
+		usage = "/c default #mychannel",
+	},
 }
 
 local tab = "	"
@@ -304,13 +322,18 @@ minetest.register_chatcommand("c", {
 			end
 			-- limit channels per user
 			if #archtec_chat.users[name].channels >= max_user_channels then
-				minetest.chat_send_player(name, C("#00BD00", S("[c/join] You can't be in more than @1 channels!", max_user_channels)))
+				minetest.chat_send_player(
+					name,
+					C("#00BD00", S("[c/join] You can't be in more than @1 channels!", max_user_channels))
+				)
 				return
 			end
 			-- create if not registered
 			if not cdef then
-				local public = archtec.get_and_trim(params[3]) == "public" or archtec.get_and_trim(params[4]) == "public"
-				local default_channel = archtec.get_and_trim(params[3]) == "default" or archtec.get_and_trim(params[4]) == "default"
+				local public = archtec.get_and_trim(params[3]) == "public"
+					or archtec.get_and_trim(params[4]) == "public"
+				local default_channel = archtec.get_and_trim(params[3]) == "default"
+					or archtec.get_and_trim(params[4]) == "default"
 				if type(c) == "string" and c:len() <= max_channel_lenght then
 					channel.create(c, {owner = name, public = public})
 					if public then
@@ -325,7 +348,10 @@ minetest.register_chatcommand("c", {
 					end
 					return
 				else
-					minetest.chat_send_player(name, C("#FF0000", S("[c/join] Channelname contains forbidden characters or is too long!")))
+					minetest.chat_send_player(
+						name,
+						C("#FF0000", S("[c/join] Channelname contains forbidden characters or is too long!"))
+					)
 					return
 				end
 			end
@@ -404,11 +430,17 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			if not is_channel_owner(cdef, name) then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You aren't authorized to invite someone to join @1!", c)))
+				minetest.chat_send_player(
+					name,
+					C("#FF0000", S("[c/invite] You aren't authorized to invite someone to join @1!", c))
+				)
 				return
 			end
 			if not cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2!", target, c)))
+				minetest.chat_send_player(
+					name,
+					C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2!", target, c))
+				)
 				return
 			end
 			if cdef.users[target] then
@@ -462,7 +494,10 @@ minetest.register_chatcommand("c", {
 				minetest.chat_send_player(name, C("#FF0000", S("[c/find] @1 is in no channels!", target)))
 				return
 			end
-			minetest.chat_send_player(name, C("#00BD00", S("[c/find] @1 is in the following channels: @2", target, list_table(channels or {}))))
+			minetest.chat_send_player(
+				name,
+				C("#00BD00", S("[c/find] @1 is in the following channels: @2", target, list_table(channels or {})))
+			)
 		elseif action == "help" or action == "h" then
 			local help = archtec.get_and_trim(p1)
 			if help == "" then
@@ -497,7 +532,7 @@ minetest.register_chatcommand("c", {
 		else
 			minetest.chat_send_player(name, C("#FF0000", S("[c] Unknown sub-command! (try '/c help')")))
 		end
-	end
+	end,
 })
 
 return channel

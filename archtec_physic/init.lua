@@ -16,7 +16,8 @@ player_map: A map from player names to their effect tables. Effect tables
 are maps from effect IDs to values.
 value_cache: A map from player names to the cached value for the monoid.
 next_id: The next unique ID to assign an effect.
-]]--
+]]
+--
 
 local function monoid(def)
 	local mon = {}
@@ -95,7 +96,9 @@ function mon_meta:del_change(player, id)
 	local def = self.def
 
 	local p_effects = self.player_map[p_name]
-	if p_effects == nil then return end
+	if p_effects == nil then
+		return
+	end
 
 	local old_total = self.value_cache[p_name]
 	p_effects[id] = nil
@@ -111,8 +114,9 @@ function mon_meta:value(player)
 	return self.value_cache[p_name] or self.def.identity
 end
 
-
-local function mult(x, y) return x * y end
+local function mult(x, y)
+	return x * y
+end
 
 local function mult_fold(elems)
 	local tot = 1

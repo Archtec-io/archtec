@@ -20,14 +20,14 @@ local function pvp_enable(name, player, init)
 	data[name].pvp_pic_on = player:hud_add({
 		hud_elem_type = "image",
 		position = {x = 1, y = 0},
-		offset = {x=-210, y = 20},
+		offset = {x = -210, y = 20},
 		scale = {x = 1, y = 1},
 		text = "archtec_pvp_on.png",
 	})
 	data[name].pvp_text_on = player:hud_add({
 		hud_elem_type = "text",
 		position = {x = 1, y = 0},
-		offset = {x=-125, y = 20},
+		offset = {x = -125, y = 20},
 		scale = {x = 100, y = 100},
 		text = S("PvP is enabled for you!"),
 		number = 0xFF0000, -- Red
@@ -56,7 +56,7 @@ local function pvp_disable(name, player, init)
 	data[name].pvp_text_off = player:hud_add({
 		hud_elem_type = "text",
 		position = {x = 1, y = 0},
-		offset = {x=-125, y = 20},
+		offset = {x = -125, y = 20},
 		scale = {x = 100, y = 100},
 		text = S("PvP is disabled for you!"),
 		number = 0x7DC435,
@@ -123,7 +123,7 @@ if minetest.get_modpath("unified_inventory") then
 			else
 				pvp_enable(name, player)
 			end
-		end
+		end,
 	})
 end
 
@@ -169,5 +169,5 @@ minetest.register_chatcommand("pvp", {
 		else
 			minetest.chat_send_player(name, C("#FF0000", "[pvp] Unknown mode!"))
 		end
-	end
+	end,
 })

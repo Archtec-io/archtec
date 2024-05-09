@@ -15,7 +15,10 @@ function archtec_votes.new_vote(creator, voteset)
 end
 
 function archtec_votes.start_vote(voteset, creator)
-	minetest.log("action", "[archtec_votes] " .. creator .. " started a vote: " .. voteset.description .. " (" .. voteset.help .. ")")
+	minetest.log(
+		"action",
+		"[archtec_votes] " .. creator .. " started a vote: " .. voteset.description .. " (" .. voteset.help .. ")"
+	)
 	archtec_votes.active = voteset
 	voteset.vote_id = vote_id
 
@@ -33,7 +36,9 @@ function archtec_votes.start_vote(voteset, creator)
 		end)
 	end
 
-	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. C("#999", " (" .. voteset.help .. ")"))
+	minetest.chat_send_all(
+		creator .. " started a vote: " .. voteset.description .. C("#999", " (" .. voteset.help .. ")")
+	)
 
 	-- Handle autovotes
 	if voteset.description == "Make day" then
@@ -126,7 +131,7 @@ minetest.register_chatcommand("vote_clear", {
 		archtec_votes.active = nil
 		minetest.chat_send_all(C("#FF0000", name .. " canceled active vote!"))
 		minetest.log("action", "[archtec_votes] " .. name .. " canceled active vote")
-	end
+	end,
 })
 
 -- Vote /y and /n functions
@@ -169,13 +174,13 @@ end
 minetest.register_chatcommand("yes", {
 	description = "Vote yes",
 	privs = {interact = true},
-	func = vote_yes
+	func = vote_yes,
 })
 archtec.register_chatcommand_alias("y", "yes")
 
 minetest.register_chatcommand("no", {
 	description = "Vote no",
 	privs = {interact = true},
-	func = vote_no
+	func = vote_no,
 })
 archtec.register_chatcommand_alias("n", "no")

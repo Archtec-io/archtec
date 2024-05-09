@@ -11,10 +11,10 @@ archtec_matterbridge = {
 		Niklp = "880453609530212352",
 		LonnySophie = "882021148186009620",
 		HomerJayS = "751543903940903034",
-		Juri = "298742788865130498"
+		Juri = "298742788865130498",
 	},
 
-	emojis = dofile(MP .. "/emoji.lua")
+	emojis = dofile(MP .. "/emoji.lua"),
 }
 
 if not archtec_matterbridge.token then

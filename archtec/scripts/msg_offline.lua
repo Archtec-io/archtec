@@ -11,7 +11,8 @@ local delete_message_after = archtec.time.days(90)
 		author = "Player1",
 		text = "Hello....",
 	}
-]]--
+]]
+--
 
 archtec_playerdata.register_key("offline_msgs", "table", {})
 archtec_playerdata.register_upgrade("offline_msgs", "archtec:cleanup_offline_msgs", true, function(name, msgs)
@@ -42,7 +43,10 @@ minetest.register_chatcommand("tell", {
 		end
 
 		if archtec.is_online(target) then
-			minetest.chat_send_player(name, C("#FF0000", S("[tell] @1 is online, please send a normal message to them!", target)))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[tell] @1 is online, please send a normal message to them!", target))
+			)
 			return
 		end
 
@@ -57,7 +61,10 @@ minetest.register_chatcommand("tell", {
 		end
 
 		if #msg > max_message_length then
-			minetest.chat_send_player(name, C("#FF0000", S("[tell] Message too long! (max length is @1 characters)", max_message_length)))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[tell] Message too long! (max length is @1 characters)", max_message_length))
+			)
 			return
 		end
 
@@ -70,15 +77,21 @@ minetest.register_chatcommand("tell", {
 		end
 
 		if messages_by_user >= max_messages then
-			minetest.chat_send_player(name, C("#FF0000", S("[tell] You can't send @1 more than @2 offline messages!", target, max_messages)))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[tell] You can't send @1 more than @2 offline messages!", target, max_messages))
+			)
 			return
 		end
 
 		msgs[#msgs + 1] = {created = os.time(), author = name, text = msg}
-		archtec_playerdata.set(target, "offline_msgs",msgs)
-		minetest.chat_send_player(name, C("#00BD00", S("[tell] Message saved. @1 will see your message when they joins the next time.", target)))
+		archtec_playerdata.set(target, "offline_msgs", msgs)
+		minetest.chat_send_player(
+			name,
+			C("#00BD00", S("[tell] Message saved. @1 will see your message when they joins the next time.", target))
+		)
 		minetest.log("action", "[archtec] Saved offline message from " .. name .. " to " .. target .. ": " .. msg)
-	end
+	end,
 })
 
 minetest.register_on_joinplayer(function(player)
@@ -88,8 +101,22 @@ minetest.register_on_joinplayer(function(player)
 	if #msgs > 0 then
 		for i, msg in ipairs(msgs) do
 			local date = os.date("!%Y-%m-%d %H:%M", msg.created) .. " UTC"
-			minetest.chat_send_player(name, C("#FF0", S("[tell] @1 sent you an offline message at @2:", msg.author, date)) .. " " .. msg.text)
-			minetest.log("action", "[archtec] Sent offline message from " .. msg.author .. " to " .. name .. ": " .. msg.text .. " (created at " .. date .. ")")
+			minetest.chat_send_player(
+				name,
+				C("#FF0", S("[tell] @1 sent you an offline message at @2:", msg.author, date)) .. " " .. msg.text
+			)
+			minetest.log(
+				"action",
+				"[archtec] Sent offline message from "
+					.. msg.author
+					.. " to "
+					.. name
+					.. ": "
+					.. msg.text
+					.. " (created at "
+					.. date
+					.. ")"
+			)
 			msgs[i] = nil
 		end
 

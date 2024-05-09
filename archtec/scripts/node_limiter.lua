@@ -18,22 +18,51 @@ local function ov_node(node, check_nodes, rad, max)
 			end
 
 			if check_nodes then -- nodes check
-				local count = minetest.find_nodes_in_area(generate_vector(pos, tonumber(-rad)), generate_vector(pos, tonumber(rad)), check_nodes)
+				local count = minetest.find_nodes_in_area(
+					generate_vector(pos, tonumber(-rad)),
+					generate_vector(pos, tonumber(rad)),
+					check_nodes
+				)
 				if #count < max then
 					return old_place(itemstack, placer, pointed_thing)
 				else
 					local pname = placer:get_player_name()
-					minetest.log("action", "[node_limiter] " .. pname .. " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
+					minetest.log(
+						"action",
+						"[node_limiter] "
+							.. pname
+							.. " tried to place "
+							.. node
+							.. " at "
+							.. minetest.pos_to_string(pos)
+					)
 					local n = minetest.registered_nodes[node].description or node
-					minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more '@1' in this area!", n)))
+					minetest.chat_send_player(
+						pname,
+						minetest.colorize("#FF0000", S("You can't place more '@1' in this area!", n))
+					)
 				end
 			else -- entity check
 				local p1, p2 = archtec.get_block_bounds(pos)
 				local objs = minetest.get_objects_in_area(p1, p2)
 				if #objs > max then
 					local pname = placer:get_player_name()
-					minetest.log("action", "[node_limiter] " .. pname .. " tried to place " .. node .. " at " .. minetest.pos_to_string(pos))
-					minetest.chat_send_player(pname, minetest.colorize("#FF0000", S("You can't place more '@1' in this area! (Too many entities)", "Drawers")))
+					minetest.log(
+						"action",
+						"[node_limiter] "
+							.. pname
+							.. " tried to place "
+							.. node
+							.. " at "
+							.. minetest.pos_to_string(pos)
+					)
+					minetest.chat_send_player(
+						pname,
+						minetest.colorize(
+							"#FF0000",
+							S("You can't place more '@1' in this area! (Too many entities)", "Drawers")
+						)
+					)
 				else
 					return old_place(itemstack, placer, pointed_thing)
 				end
@@ -43,16 +72,21 @@ local function ov_node(node, check_nodes, rad, max)
 	mesecon.register_mvps_stopper(node)
 end
 
-
 -- limit hoppers to 10 in a 24 node radius
 ov_node("hopper:hopper", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("hopper:hopper_side", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("hopper:hopper_void", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 ov_node("minecart:hopper", {"hopper:hopper", "hopper:hopper_side", "hopper:hopper_void", "minecart:hopper"}, 24, 10)
 
-
 -- limit quarrys to 3 in a 24 node radius
-local quarrys = {"techage:ta2_quarry_pas", "techage:ta2_quarry_act", "techage:ta3_quarry_pas", "techage:ta3_quarry_act", "techage:ta4_quarry_pas", "techage:ta4_quarry_act"}
+local quarrys = {
+	"techage:ta2_quarry_pas",
+	"techage:ta2_quarry_act",
+	"techage:ta3_quarry_pas",
+	"techage:ta3_quarry_act",
+	"techage:ta4_quarry_pas",
+	"techage:ta4_quarry_act",
+}
 
 for _, quarry in pairs(quarrys) do
 	ov_node(quarry, quarrys, 24, 3)

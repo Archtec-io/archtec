@@ -16,7 +16,7 @@ archtec_stamina.settings = {
 	heal_lvl = 12, -- minimum saturation needed for healing
 	starve = 1, -- amount of HP a player loses per archtec_stamina.health_tick
 	starve_lvl = 3, -- maximum stamina needed for starving
-	visual_max = 20 -- hunger points
+	visual_max = 20, -- hunger points
 }
 local settings = archtec_stamina.settings
 
@@ -27,10 +27,7 @@ local attribute = {
 }
 
 local function is_player(player)
-	return (
-		minetest.is_player(player) and
-		not player.is_fake_player
-	)
+	return (minetest.is_player(player) and not player.is_fake_player)
 end
 
 local function set_player_meta(player, key, value)
@@ -64,11 +61,7 @@ end
 
 function archtec_stamina.set_saturation(player, level)
 	set_player_meta(player, attribute.saturation, level)
-	player:hud_change(
-		get_hud_id(player),
-		"number",
-		math.min(settings.visual_max, level)
-	)
+	player:hud_change(get_hud_id(player), "number", math.min(settings.visual_max, level))
 end
 
 function archtec_stamina.update_saturation(player, level)
@@ -79,7 +72,7 @@ function archtec_stamina.update_saturation(player, level)
 	end
 
 	-- players without interact priv cannot eat
-	if old < settings.heal_lvl and not minetest.check_player_privs(player, {interact=true}) then
+	if old < settings.heal_lvl and not minetest.check_player_privs(player, {interact = true}) then
 		return
 	end
 
@@ -186,7 +179,13 @@ local function health_tick()
 		local hp = player:get_hp() or 20
 		local saturation = archtec_stamina.get_saturation(player) or 20
 
-		if saturation > settings.heal_lvl and hp > 0 and hp < 20 and air > 0 and not archtec_stamina.is_poisoned(player) then
+		if
+			saturation > settings.heal_lvl
+			and hp > 0
+			and hp < 20
+			and air > 0
+			and not archtec_stamina.is_poisoned(player)
+		then
 			player:set_hp(hp + settings.heal, {type = "set_hp", cause = "stamina:heal"})
 			archtec_stamina.exhaust_player(player, settings.exhaust_lvl, archtec_stamina.exhaustion_reasons.heal)
 		elseif saturation < settings.starve_lvl and hp > 0 then -- or damage player by 1 hp if saturation is < 2 (of 20)
@@ -235,11 +234,16 @@ function minetest.do_item_eat(hp_change, replace_with_item, itemstack, player, p
 
 	local itemname = itemstack:get_name()
 	if replace_with_item then
-		archtec_stamina.log("action", "%s eats %s for %s stamina, replace with %s",
-			player:get_player_name(), itemname, hp_change, replace_with_item)
+		archtec_stamina.log(
+			"action",
+			"%s eats %s for %s stamina, replace with %s",
+			player:get_player_name(),
+			itemname,
+			hp_change,
+			replace_with_item
+		)
 	else
-		archtec_stamina.log("action", "%s eats %s for %s stamina",
-			player:get_player_name(), itemname, hp_change)
+		archtec_stamina.log("action", "%s eats %s for %s stamina", player:get_player_name(), itemname, hp_change)
 	end
 	minetest.sound_play("archtec_stamina_eat", {object = player, pos = player:get_pos(), max_hear_distance = 16}, true)
 

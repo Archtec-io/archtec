@@ -24,7 +24,10 @@ local function tobool(v)
 end
 
 local function set(name, setting, val)
-	minetest.log("action", "[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. dump(val) .. "'")
+	minetest.log(
+		"action",
+		"[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. dump(val) .. "'"
+	)
 	return archtec_playerdata.set(name, "s_" .. setting, val)
 end
 
@@ -38,7 +41,12 @@ archtec_playerdata.register_key("s_avd", "boolean", false)
 
 local settings = {
 	{type = "header", title = S("Chat")},
-	{type = "setting", name = "help_msg", title = S("Show help messages in chat"), description = S("Shows one message every 10 minutes.")},
+	{
+		type = "setting",
+		name = "help_msg",
+		title = S("Show help messages in chat"),
+		description = S("Shows one message every 10 minutes."),
+	},
 	{type = "setting", name = "tbw_show", title = S("Show tool breakage warnings"), description = ""},
 	{type = "custom", name = "ncolor", title = S("Namecolor in the #main channel"), description = ""},
 
@@ -48,7 +56,7 @@ local settings = {
 
 	{type = "header", title = S("Misc")},
 	{type = "setting", name = "r_id", title = S("Collect dropped items automatically"), description = ""},
-	{type = "setting", name = "avd", title = S("Auto-vote \"YES\" on day votes"), description = ""},
+	{type = "setting", name = "avd", title = S('Auto-vote "YES" on day votes'), description = ""},
 }
 
 local setting_list = {}
@@ -77,7 +85,13 @@ local function show_settings(name)
 
 			fs = fs .. "checkbox[0.4," .. y .. ";" .. s_string .. ";" .. label .. ";" .. tostring(curr_val) .. "]"
 			if default_val ~= curr_val then
-				fs = fs .. "image_button[10.2," .. y - 0.2 .. ";0.5,0.5;archtec_reset.png;" .. "reset_" .. def.name .. ";;false;false;]"
+				fs = fs
+					.. "image_button[10.2,"
+					.. y - 0.2
+					.. ";0.5,0.5;archtec_reset.png;"
+					.. "reset_"
+					.. def.name
+					.. ";;false;false;]"
 				fs = fs .. "tooltip[" .. "reset_" .. def.name .. ";" .. F(S("Reset to default")) .. "]"
 			end
 			y = y + 0.6
@@ -93,7 +107,14 @@ local function show_settings(name)
 
 				local idx = archtec.namecolor.get_idx(curr_val)
 
-				fs = fs .. "dropdown[0.4," .. y .. ";2.5;ncolor;" .. table.concat(archtec.namecolor.list_names, ",") .. ";" .. F(idx) .. ";true]"
+				fs = fs
+					.. "dropdown[0.4,"
+					.. y
+					.. ";2.5;ncolor;"
+					.. table.concat(archtec.namecolor.list_names, ",")
+					.. ";"
+					.. F(idx)
+					.. ";true]"
 				fs = fs .. "label[3," .. y + 0.15 .. ";" .. F(def.title) .. "]"
 				fs = fs .. "label[3," .. y + 0.55 .. ";" .. F(colors) .. "]"
 				y = y + 1.3
@@ -105,17 +126,23 @@ local function show_settings(name)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "archtec:settings" then return end
+	if formname ~= "archtec:settings" then
+		return
+	end
 	local name = player:get_player_name()
 	for f, v in pairs(fields) do
 		local setting, value
 		if f:sub(1, 2) == "s_" then
 			setting = f:sub(3, #f)
-			if setting_list[setting] == nil then return end
+			if setting_list[setting] == nil then
+				return
+			end
 			value = tobool(v)
 		elseif f:sub(1, 6) == "reset_" then
 			setting = f:sub(7, #f)
-			if setting_list[setting] == nil then return end
+			if setting_list[setting] == nil then
+				return
+			end
 			value = archtec_playerdata.get_default("s_" .. setting)
 		end
 
@@ -133,7 +160,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if def ~= nil and def.id ~= curr_val then -- validity check
 			archtec_playerdata.set(name, "s_ncolor", def.id)
 			show_settings(name)
-			minetest.chat_send_player(name, S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name)))
+			minetest.chat_send_player(
+				name,
+				S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name))
+			)
 		end
 	end
 end)
@@ -148,6 +178,6 @@ if minetest.get_modpath("unified_inventory") then
 				local name = player:get_player_name()
 				show_settings(name)
 			end
-		end
+		end,
 	})
 end

@@ -1,5 +1,7 @@
 local S = archtec.S
-local NS = function(s) return s end -- fake function for i18n.py
+local NS = function(s)
+	return s
+end -- fake function for i18n.py
 
 local messages = {
 	fall = {
@@ -55,7 +57,9 @@ local messages = {
 local function get_mob_name(entity_name)
 	local index, _ = string.find(entity_name, ":")
 	entity_name = entity_name:sub(index + 1):gsub("_", " ")
-	return (entity_name:gsub("(%a)([%w_']*)", function(first, rest) return first:upper()..rest:lower() end))
+	return (entity_name:gsub("(%a)([%w_']*)", function(first, rest)
+		return first:upper() .. rest:lower()
+	end))
 end
 
 local function send_death_message(cause, player, killer)

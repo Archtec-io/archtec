@@ -1,7 +1,7 @@
 archtec_chat = {
 	user = {},
 	users = {},
-	channels = {}
+	channels = {},
 }
 
 archtec_chat.channel = dofile(minetest.get_modpath("archtec_chat") .. "/channels.lua")

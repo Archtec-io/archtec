@@ -70,6 +70,7 @@ dofile(path .. "perf_logging.lua")
 dofile(path .. "playtime.lua")
 dofile(path .. "msg_offline.lua")
 dofile(path .. "mailbox.lua")
+dofile(path .. "creative_inv.lua")
 
 local http = minetest.request_http_api()
 if http then

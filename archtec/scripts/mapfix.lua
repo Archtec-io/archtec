@@ -19,7 +19,10 @@ minetest.register_chatcommand("mapfix", {
 			return false, "Radius is too big"
 		end
 
-		minetest.log("action", name .. " uses mapfix at " .. minetest.pos_to_string(vector.round(pos)) .. " with radius " .. size)
+		minetest.log(
+			"action",
+			name .. " uses mapfix at " .. minetest.pos_to_string(vector.round(pos)) .. " with radius " .. size
+		)
 
 		size = math.max(math.floor(size - 8), 0) -- When passed to get_voxel_manip, positions are rounded up, to a multiple of 16 nodes in each direction. By subtracting 8 it's rounded to the nearest chunk border. max is used to avoid negative radius.
 

@@ -15,13 +15,13 @@ end
 minetest.register_chatcommand("spawn", {
 	description = "Teleport to spawn",
 	privs = {interact = true},
-	func = move_to_spawn
+	func = move_to_spawn,
 })
 archtec.register_chatcommand_alias("s", "spawn")
 
 minetest.register_chatcommand("spawn_old", {
 	description = "Teleport to old spawn",
 	privs = {interact = true},
-	func = move_to_old_spawn
+	func = move_to_old_spawn,
 })
 archtec.register_chatcommand_alias("s_o", "spawn_old")

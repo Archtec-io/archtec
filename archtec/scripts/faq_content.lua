@@ -6,7 +6,8 @@ archtec.faq.register("My nice title", { <- Title of the entry
 My cool text" <- Text of the section content
 ]*] -- The * is not needed
 })
-]]--
+]]
+--
 
 archtec.faq.register_headers({
 	["Spawn"] = 1,
@@ -29,7 +30,7 @@ Send a private message to the person you sent your last message to:
 
 Send an offline message to a player (the person will see your message when they joins the next time):
 '/tell <name> <message>'
-]]
+]],
 })
 
 archtec.faq.register("Channels", {
@@ -71,7 +72,7 @@ Kick a player from a channel. Can only be used by channel owners and staff:
 Show help:
 '/c help {command}' or
 '/c h {command}'
-]]
+]],
 })
 
 archtec.faq.register("Chatbridge (Discord, Matrix, IRC)", {
@@ -87,7 +88,7 @@ The following commands and chat formats are supported:
 - '/me' Used in conjunction with a verb to indicate you as a player acting as described by a 3rd person, e.g., '/me talks' -> Player talks
 - '!status' Shows the server status
 - '!cmd' Remote command execution (staff only)
-]]
+]],
 })
 
 -- Player interaction
@@ -109,7 +110,7 @@ Unblock/Un-ignore player:
 List blocked/ignored players:
 '/ignore list' or
 '/ignore list {name}' (lists ignored players of <name>; staff only)
-]]
+]],
 })
 
 archtec.faq.register("Teleport requests", {
@@ -126,7 +127,7 @@ Accept a teleport request:
 '/ok'
 
 All teleport requests time out after 60 seconds.
-]]
+]],
 })
 
 archtec.faq.register("PvP", {
@@ -139,7 +140,7 @@ Each player on Archtec can opt in or out of PvP mode. If you enable PvP mode, ot
 - To disable PvP, toggle the button again.
 
 PvP mode gets disabled when logging off. You have to re-enable it after logging back in.
-]]
+]],
 })
 
 archtec.faq.register("Voting", {
@@ -169,7 +170,7 @@ Vote to kick a player:
 - **Costs nothing**
 - Requires 80% of votes to be YES to succeed
 - To prevent abuse, there must be at least 4 players online to initiate the vote
-]]
+]],
 })
 
 archtec.faq.register("Stats & Ranking", {
@@ -185,7 +186,7 @@ To show a ranking of the players with the most XP*:
 - '/rank'
 
 * XP points are calculated from various other values (e.g., dug nodes) and ranked.
-]]
+]],
 })
 
 archtec.faq.register("Thank you", {
@@ -196,7 +197,7 @@ There are many helpful players on Archtec. If someone has been helpful and you w
 
 To thank a player:
 '/thankyou <name>'
-]]
+]],
 })
 
 archtec.faq.register("Areas", {
@@ -272,7 +273,7 @@ Rename an area
 
 1. Rename a specified area
 - '/rename_area <ID> <Areaname>' 'ID' is the number you can see at the bottom left in square brackets ('[]'), choose for 'Areaname' a name you want
-]]
+]],
 })
 
 -- Spawn
@@ -285,7 +286,7 @@ To teleport back to Spawn:
 
 To teleport back to Old Spawn:
 - '/spawn_old' or '/s_o'
-]]
+]],
 })
 
 archtec.faq.register("Find areas without protection", {
@@ -303,7 +304,7 @@ Players can choose one of several ways to get out of the protected spawn area an
 - If you want to build far from others, you might want to check out the online Archtec Map https://archmap.niklp.net.
 
 - Some players have created their own personal Travelnet Networks, that go to the very edges of the universe. Ask around if you are curious and want to discover, how big our server is.
-]]
+]],
 })
 
 -- Player related
@@ -334,7 +335,7 @@ Chainsaw ('archtec_chainsaw'):
 - Requires a player to have placed 10000 nodes (see '/stats' command)
 - The player account must be at least 7 days old
 - When all those conditions are met you'll be granted the privilege by using the chainsaw for the first time.
-]]
+]],
 })
 
 archtec.faq.register("Teleport Home", {
@@ -352,7 +353,7 @@ System 1 - Home/Sethome:
 System 2 - Inventory home:
 - Use the green arrow home button in the inventory window to teleport to the home position
 - Use the red arrow home button in the inventory window to set your home to your current position
-]]
+]],
 })
 
 archtec.faq.register("Settings", {
@@ -362,7 +363,7 @@ archtec.faq.register("Settings", {
 - Main settings: Press the cog/sprocket button in your inventory window
 - Skin: Press the "face" button in your inventory
 - Hotbar size: Execute '/hotbar <size>' to change the size of your hotbar
-]]
+]],
 })
 
 -- Other
@@ -386,7 +387,7 @@ Quarries each player is allowed to place within a 24 node radius.
 Sign Bots:
 While these cute little bots are very useful, they can also cause significant lag and performance issues.
 To prevent this from impacting other players, each player is limited to placing 10 Signs Bots within a 16 node radius.
-]]
+]],
 })
 
 archtec.faq.register("Tower cranes", {
@@ -400,7 +401,7 @@ Tower cranes allow a player to freely move within the boundaries set during the 
 3. To start flying, right-click the red button on the crane and press "K" on your keyboard.
 
 To stop flying, press the green button on the crane.
-]]
+]],
 })
 
 archtec.faq.register("Lava solidification", {
@@ -428,7 +429,7 @@ For players building cobblestone generators, you must use dry ice instead of wat
 - Diamond powder drops in Techage (TA) gravel rinsers with a probability of 1/300
 
 For more information, see the Techage manual or in-game guide.
-]]
+]],
 })
 
 archtec.faq.register("Ores and Tools", {
@@ -443,7 +444,7 @@ Special ores:
 - Titanium doesn't drop in Techage (TA) gravel sieves
 
 Titanium tools are more durable than diamond or mithril tools, but Titanium tools tend to be slower.
-]]
+]],
 })
 
 archtec.faq.register("Useful chat commands", {
@@ -460,7 +461,7 @@ Techage:
 - '/my_expoints' show your TA 5 experience points
 - '/ta_color' shows a color palette for the controller
 - '/ta_limit' shows your TA command limit usage
-]]
+]],
 })
 
 archtec.faq.register("TNT and explosions", {
@@ -472,7 +473,7 @@ There is no way for players to use TNT on Archtec. If you want to clear large ar
 The following mobs can cause explosions:
 - Dugeon master (DM), when it hits a node, radius 1
 - Tree monster, when it spawns near Acacia Bush Leaves (default:acacia_bush_leaves), radius 6
-]]
+]],
 })
 
 archtec.faq.register("Biofuel", {
@@ -486,5 +487,5 @@ Biofuel has multiple use cases:
 - As fuel for the TA3 Tiny Power Generator
 
 - As a craft ingredient, search in your inventory after "group:biofuel"
-]]
+]],
 })

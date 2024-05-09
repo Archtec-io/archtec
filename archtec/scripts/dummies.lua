@@ -15,7 +15,7 @@ local costumes = {
 	wearwolf = {texture = "halloween_suit_wearwolf.png", name = "Wearwolf"},
 	-- christmas
 	mrs_claus = {texture = "christmas_decor_mrs_claus.png", name = "Mrs. Claus"},
-	santa_claus = {texture = "christmas_decor_santa.png", name = "Santa Claus"}
+	santa_claus = {texture = "christmas_decor_santa.png", name = "Santa Claus"},
 }
 
 -- Costume list
@@ -112,7 +112,13 @@ end
 local function echo_desc(name, ownername)
 	local display_name = ownername or "unknown"
 	if name == ownername or minetest.get_player_privs(name).builder then
-		minetest.chat_send_player(name, S("Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is @1.", display_name))
+		minetest.chat_send_player(
+			name,
+			S(
+				"Use Sneak+Punch to remove the dummy or Sneak+Rightclick to edit the dummy. Owner of this dummy is @1.",
+				display_name
+			)
+		)
 	else
 		minetest.chat_send_player(name, S("Owner of this dummy is @1.", display_name))
 	end
@@ -124,7 +130,7 @@ local form = {
 		{name = "general", title = "General"},
 		{name = "skin", title = "Skin"},
 		{name = "nametag", title = "Name Tag"},
-	}
+	},
 }
 
 -- Main formspec "generator"
@@ -142,22 +148,29 @@ local function show_fs(name, active_tab)
 	-- Tabs
 	for i, tab in pairs(form.tabs) do
 		if tab.name == active_tab then
-			formspec = formspec ..
-				"style[" .. tab.name .. ";bgcolor=green]"
+			formspec = formspec .. "style[" .. tab.name .. ";bgcolor=green]"
 		end
 
 		local y = 0.3 + (i - 1) * 1
-		formspec = formspec ..
-			"button[0.3," .. y .. ";3,0.8;" .. tab.name .. ";" .. tab.title .. "]"
+		formspec = formspec .. "button[0.3," .. y .. ";3,0.8;" .. tab.name .. ";" .. tab.title .. "]"
 	end
 
 	-- Dummy preview
 	if props.mesh then
 		local textures = dummy:get_properties().textures
 		local anim_data = get_animation(dummy:get_luaentity()._animation)
-		formspec = formspec ..
-			"model[10,0.3;3,7.5;dummy_mesh;" .. props.mesh .. ";" .. table.concat(textures, ",") .. ";0,150;false;false;"
-				.. anim_data.frame_begin .. "," .. anim_data.frame_end .. ";" .. anim_data.speed .. "]"
+		formspec = formspec
+			.. "model[10,0.3;3,7.5;dummy_mesh;"
+			.. props.mesh
+			.. ";"
+			.. table.concat(textures, ",")
+			.. ";0,150;false;false;"
+			.. anim_data.frame_begin
+			.. ","
+			.. anim_data.frame_end
+			.. ";"
+			.. anim_data.speed
+			.. "]"
 	end
 
 	-- Show tab content
@@ -165,65 +178,97 @@ local function show_fs(name, active_tab)
 	local y = 0.4
 	if active_tab == "general" then
 		-- Delete dummy
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Delete this dummy]"
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Delete this dummy]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"style[act_del_dummy;bgcolor=red]" ..
-			"button[" .. x .. "," .. y .. ";3,0.8;act_del_dummy;Delete]"
+		formspec = formspec
+			.. "style[act_del_dummy;bgcolor=red]"
+			.. "button["
+			.. x
+			.. ","
+			.. y
+			.. ";3,0.8;act_del_dummy;Delete]"
 
 		y = y + 1.5
 		-- Set luminosity
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change luminosity]"
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Change luminosity]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"dropdown[" .. x .. "," .. y .. ";4,0.8;luminosity;" .. light_levels .. ";" .. (props.glow or 0) .. ";false]"
+		formspec = formspec
+			.. "dropdown["
+			.. x
+			.. ","
+			.. y
+			.. ";4,0.8;luminosity;"
+			.. light_levels
+			.. ";"
+			.. (props.glow or 0)
+			.. ";false]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_luminosity;Set]"
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_luminosity;Set]"
 
 		y = y + 1.5
 		-- Select animation
 		local animation = dummy:get_luaentity()._animation
 
-		if animation == nil then animation = "none" end
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change animation]"
+		if animation == nil then
+			animation = "none"
+		end
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Change animation]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"dropdown[" .. x .. "," .. y .. ";4,0.8;animation;" .. animations_str .. ";" .. (animations[animation] + 1) .. ";false]"
+		formspec = formspec
+			.. "dropdown["
+			.. x
+			.. ","
+			.. y
+			.. ";4,0.8;animation;"
+			.. animations_str
+			.. ";"
+			.. (animations[animation] + 1)
+			.. ";false]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_animation;Set]"
-
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_animation;Set]"
 	elseif active_tab == "nametag" then
 		-- Set nametag string
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change Name Tag (only " .. max_nametag_length .. " characters)]"
+		formspec = formspec
+			.. "label["
+			.. x
+			.. ","
+			.. y
+			.. ";Change Name Tag (only "
+			.. max_nametag_length
+			.. " characters)]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"field[" .. x .. "," .. y .. ";4,0.8;nametag_str;;" .. minetest.formspec_escape(props.nametag) .. "]"
+		formspec = formspec
+			.. "field["
+			.. x
+			.. ","
+			.. y
+			.. ";4,0.8;nametag_str;;"
+			.. minetest.formspec_escape(props.nametag)
+			.. "]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_nametag_str;Set]"
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_nametag_str;Set]"
 
 		y = y + 1.5
 		-- Nametag color
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Change Name Tag color]"
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Change Name Tag color]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"dropdown[" .. x .. "," .. y .. ";4,0.8;nametag_color;" .. color_str .. ";" .. find_color(props.nametag_color) .. ";false]"
+		formspec = formspec
+			.. "dropdown["
+			.. x
+			.. ","
+			.. y
+			.. ";4,0.8;nametag_color;"
+			.. color_str
+			.. ";"
+			.. find_color(props.nametag_color)
+			.. ";false]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_nametag_color;Set]"
-
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_nametag_color;Set]"
 	elseif active_tab == "skin" then
 		-- Set to costume
 		local costumes_str = ""
@@ -233,15 +278,21 @@ local function show_fs(name, active_tab)
 		costumes_str = costumes_str:sub(1, #costumes_str - 1)
 		local idx = find_costume(props.textures) or 0
 
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Set skin to costume]"
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Set skin to costume]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"dropdown[" .. x .. "," .. y .. ";4,0.8;skin_costume;" .. costumes_str .. ";" .. idx .. ";true]"
+		formspec = formspec
+			.. "dropdown["
+			.. x
+			.. ","
+			.. y
+			.. ";4,0.8;skin_costume;"
+			.. costumes_str
+			.. ";"
+			.. idx
+			.. ";true]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_skin_costume;Set]"
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_skin_costume;Set]"
 
 		y = y + 1.5
 		-- Set to player skin
@@ -251,40 +302,56 @@ local function show_fs(name, active_tab)
 		end
 		pnames = pnames:sub(1, #pnames - 1)
 
-		formspec = formspec ..
-			"label[" .. x .. "," .. y .. ";Set skin to player skin]"
+		formspec = formspec .. "label[" .. x .. "," .. y .. ";Set skin to player skin]"
 		y = y + 0.3
 
-		formspec = formspec ..
-			"dropdown[" .. x .. "," .. y .. ";4,0.8;skin_player;" .. pnames .. ";0;false]"
+		formspec = formspec .. "dropdown[" .. x .. "," .. y .. ";4,0.8;skin_player;" .. pnames .. ";0;false]"
 
-		formspec = formspec ..
-			"button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_skin_player;Set]"
+		formspec = formspec .. "button[" .. x + 4 .. "," .. y .. ";2,0.8;act_set_skin_player;Set]"
 
 		y = y + 1.5
 		-- Show armor
 		local show_armor = dummy:get_luaentity()._skin_show_armor
-		if show_armor == nil then show_armor = true end
-		formspec = formspec ..
-			"checkbox[" .. x .. "," .. y .. ";skin_show_armor;Show armor;" .. tostring(show_armor) .. "]"
+		if show_armor == nil then
+			show_armor = true
+		end
+		formspec = formspec
+			.. "checkbox["
+			.. x
+			.. ","
+			.. y
+			.. ";skin_show_armor;Show armor;"
+			.. tostring(show_armor)
+			.. "]"
 
 		y = y + 0.5
 		-- Show wielditem
 		local show_wielditem = dummy:get_luaentity()._skin_show_wielditem
-		if show_wielditem == nil then show_wielditem = true end
-		formspec = formspec ..
-			"checkbox[" .. x .. "," .. y .. ";skin_show_wielditem;Show wielditem;" .. tostring(show_wielditem) .. "]"
-
+		if show_wielditem == nil then
+			show_wielditem = true
+		end
+		formspec = formspec
+			.. "checkbox["
+			.. x
+			.. ","
+			.. y
+			.. ";skin_show_wielditem;Show wielditem;"
+			.. tostring(show_wielditem)
+			.. "]"
 	end
 
 	minetest.show_formspec(name, "archtec:dummy_" .. active_tab, formspec)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if not formname:find("^archtec:dummy") then return false end
+	if not formname:find("^archtec:dummy") then
+		return false
+	end
 
 	local _, _, active_tab = formname:find("^archtec:dummy_(%a+)")
-	if not active_tab then return true end
+	if not active_tab then
+		return true
+	end
 
 	local name = player:get_player_name()
 
@@ -398,7 +465,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	return true
 end)
 
-
 minetest.register_entity(":dummies:dummy", {
 	initial_properties = {
 		visual = "mesh",
@@ -432,7 +498,9 @@ minetest.register_entity(":dummies:dummy", {
 		local props = self.object:get_properties()
 
 		-- Older dummies have no 'version' param
-		if data.version ~= nil then self._version = data.version end
+		if data.version ~= nil then
+			self._version = data.version
+		end
 		if self._version == nil then
 			self._version = 1
 		end
@@ -453,12 +521,22 @@ minetest.register_entity(":dummies:dummy", {
 			props.textures = data.textures
 		end
 
-		if data.glow then props.glow = data.glow end
-		if data.nametag then props.nametag = data.nametag end
-		if data.nametag_color then props.nametag_color = data.nametag_color end
+		if data.glow then
+			props.glow = data.glow
+		end
+		if data.nametag then
+			props.nametag = data.nametag
+		end
+		if data.nametag_color then
+			props.nametag_color = data.nametag_color
+		end
 
-		if data.show_armor ~= nil then self._skin_show_armor = data.show_armor end
-		if data.show_wielditem ~= nil then self._skin_show_wielditem = data.show_wielditem end
+		if data.show_armor ~= nil then
+			self._skin_show_armor = data.show_armor
+		end
+		if data.show_wielditem ~= nil then
+			self._skin_show_wielditem = data.show_wielditem
+		end
 
 		if data.animation ~= nil then
 			self._animation = data.animation
@@ -467,7 +545,9 @@ minetest.register_entity(":dummies:dummy", {
 			self.object:set_animation(set_animation(data.animation))
 		end
 
-		if data.ownername ~= nil then self._ownername = data.ownername end
+		if data.ownername ~= nil then
+			self._ownername = data.ownername
+		end
 
 		self.object:set_properties(props)
 	end,
@@ -503,13 +583,17 @@ minetest.register_entity(":dummies:dummy", {
 })
 
 local function spawndummy(pos, textures, name)
-	local dummy = minetest.add_entity(pos, "dummies:dummy", minetest.serialize({
-		textures = {
-			textures[1],
-			textures[2],
-			textures[3]
-		}
-	}))
+	local dummy = minetest.add_entity(
+		pos,
+		"dummies:dummy",
+		minetest.serialize({
+			textures = {
+				textures[1],
+				textures[2],
+				textures[3],
+			},
+		})
+	)
 
 	if dummy then
 		minetest.log("action", "[archtec] Spawned dummy at " .. minetest.pos_to_string(pos) .. " for player " .. name)
@@ -535,14 +619,17 @@ minetest.register_chatcommand("spawndummy", {
 		local pointed_thing = raycast:next()
 
 		if not pointed_thing then
-			minetest.chat_send_player(name, "No position found! Point at a node when entering this command to place a dummy.")
+			minetest.chat_send_player(
+				name,
+				"No position found! Point at a node when entering this command to place a dummy."
+			)
 			return
 		end
 
 		local textures = {
 			armor.textures[name].skin,
 			armor.textures[name].armor,
-			armor.textures[name].wielditem
+			armor.textures[name].wielditem,
 		}
 
 		local pos = pointed_thing.intersection_point
@@ -560,7 +647,7 @@ minetest.register_chatcommand("spawndummy", {
 			dummy_objs[name] = dummy
 			show_fs(name)
 		end
-	end
+	end,
 })
 
 minetest.register_on_leaveplayer(function(player)

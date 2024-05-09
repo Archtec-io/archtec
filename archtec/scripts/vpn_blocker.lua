@@ -25,7 +25,9 @@ end
 minetest.after(ttl, cleanup)
 
 local function check_ip(name, ip)
-	if not cache[ip] then return end
+	if not cache[ip] then
+		return
+	end
 	if cache[ip].result == 0 then
 		minetest.log("action", "[archtec_vpn_blocker] Passing good-ip-player " .. name .. " [" .. ip .. "]")
 	else
@@ -48,7 +50,7 @@ end
 local function query_ip(name, ip)
 	local request = {
 		["url"] = "https://v2.api.iphub.info/ip/" .. ip,
-		["extra_headers"] = {"X-Key: " .. iphub_key}
+		["extra_headers"] = {"X-Key: " .. iphub_key},
 	}
 	http.fetch(request, function(result)
 		if result.code == 429 then
@@ -65,7 +67,9 @@ local function query_ip(name, ip)
 end
 
 local function vpn_check(name, ip, query)
-	if not archtec.vpn_enabled then return end -- Kill switch
+	if not archtec.vpn_enabled then
+		return
+	end -- Kill switch
 	if not cache[ip] and query then
 		query_ip(name, ip)
 		return

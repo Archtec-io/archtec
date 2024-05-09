@@ -20,5 +20,5 @@ return {
 	["🧐"] = "face_with_monocle",
 	["😁"] = "grin",
 	["❤️"] = "heart",
-	["💕"] = "two_hearts"
+	["💕"] = "two_hearts",
 }

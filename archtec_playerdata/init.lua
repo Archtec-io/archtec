@@ -1,10 +1,11 @@
 --[[
 	Copyright (C) 2023-24 Niklp <nik@niklp.net>
 	GNU Lesser General Public License v2.1 See LICENSE.txt for more information
-]]--
+]]
+--
 
 archtec_playerdata = {
-	api_version = 2
+	api_version = 2,
 }
 
 -- Init some basic stuff
@@ -40,21 +41,28 @@ local system = {
 -- Logging and error helpers
 local function log_debug(func, str)
 	if debug_mode then
-		minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
+		minetest.log("action", "[archtec_playerdata] " .. func .. "() " .. str)
 	end
 end
 
 local function log_action(func, str)
-	minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
+	minetest.log("action", "[archtec_playerdata] " .. func .. "() " .. str)
 end
 
 local function log_error(func, str)
-	minetest.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
-	archtec.notify_team("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. func .. "() ".. str .. ".")
+	minetest.log("warning", "[archtec_playerdata] " .. func .. "() " .. str)
+	archtec.notify_team(
+		"[archtec_playerdata] Something went wrong, error message: "
+			.. "[archtec_playerdata] "
+			.. func
+			.. "() "
+			.. str
+			.. "."
+	)
 end
 
 local function api_error(func, str)
-	error("[archtec_playerdata] " .. func .. "() ".. str, 2)
+	error("[archtec_playerdata] " .. func .. "() " .. str, 2)
 end
 
 -- Validation helpers
@@ -180,7 +188,7 @@ local function data_save(name, unload_now)
 
 	local raw = minetest.write_json(data_copy)
 	if raw == nil then
-		log_error("data_save", "failed to generate json for '" .. name .. "'; lua table " .. dump(data_copy))
+		log_error("data_save", "failed to generate json for '" .. name .. "'; lua table " .. dumpx(data_copy))
 		return false
 	end
 
@@ -293,7 +301,7 @@ minetest.register_chatcommand("playerdata_backup", {
 		else
 			minetest.chat_send_player(name, "Backup failed, please check the logs!")
 		end
-	end
+	end,
 })
 
 -- Callbacks to engine
@@ -326,7 +334,16 @@ minetest.register_globalstep(function(dtime)
 		local t1 = minetest.get_us_time()
 
 		if #users > 0 then
-			log_action("save_step", "saved data of " .. #saved .. " player(s) in " .. (t1 - t0) / 1000 .. " ms; data of " .. #users .. " player(s) is loaded")
+			log_action(
+				"save_step",
+				"saved data of "
+					.. #saved
+					.. " player(s) in "
+					.. (t1 - t0) / 1000
+					.. " ms; data of "
+					.. #users
+					.. " player(s) is loaded"
+			)
 		end
 	end
 
@@ -404,7 +421,10 @@ local function run_actions()
 		for key, value in pairs(data[name]) do
 			if system.keys[key] and system.keys[key].key_type ~= type(value) then
 				stats.wrong_type[key] = (stats.wrong_type[key] or 0) + 1
-				log_error("run_actions", "found " .. key .. "=" .. dump(value) .. " with wrong type in data of '" .. name .. "'")
+				log_error(
+					"run_actions",
+					"found " .. key .. "=" .. dumpx(value) .. " with wrong type in data of '" .. name .. "'"
+				)
 			end
 		end
 
@@ -472,8 +492,17 @@ function archtec_playerdata.register_key(key_name, key_type, default_value, temp
 	end
 
 	system.keys[key_name] = {key_type = key_type, default_value = default_value, temp = temp}
-	log_debug("register_key", "registered key '" .. key_name .. "' with type=" .. key_type
-		.. ", default_value=" .. dumpx(default_value) .. ", temp=" .. bool_to_str(temp))
+	log_debug(
+		"register_key",
+		"registered key '"
+			.. key_name
+			.. "' with type="
+			.. key_type
+			.. ", default_value="
+			.. dumpx(default_value)
+			.. ", temp="
+			.. bool_to_str(temp)
+	)
 end
 
 function archtec_playerdata.register_upgrade(key_name, identifier, run_always, func)
@@ -632,7 +661,10 @@ function archtec_playerdata.set(name, key_name, value)
 	end
 
 	if type(value) ~= system.keys[key_name].key_type then
-		log_error("set", "tried to set '" .. key_name .. "' of '" .. name .. "' to wrong data type '" .. type(value) .. "'")
+		log_error(
+			"set",
+			"tried to set '" .. key_name .. "' of '" .. name .. "' to wrong data type '" .. type(value) .. "'"
+		)
 		return false
 	end
 
@@ -673,7 +705,10 @@ function archtec_playerdata.mod(name, key_name, value)
 	end
 
 	if type(value) ~= "number" then
-		log_error("mod", "tried to mod '" .. key_name .. "' of '" .. name .. "' with wrong data type '" .. type(key_name) .. "'")
+		log_error(
+			"mod",
+			"tried to mod '" .. key_name .. "' of '" .. name .. "' with wrong data type '" .. type(key_name) .. "'"
+		)
 		return false
 	end
 
@@ -688,7 +723,10 @@ function archtec_playerdata.mod(name, key_name, value)
 	end
 
 	data[name][key_name] = old_value + value
-	log_debug("mod", "set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
+	log_debug(
+		"mod",
+		"set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')"
+	)
 	data[name].system_data_changed = true
 
 	if system.mode == "shutdown" then
@@ -708,7 +746,7 @@ minetest.register_chatcommand("playerdata_debug", {
 		else
 			minetest.chat_send_player(name, "[archtec_playerdata] Disabled debug mode.")
 		end
-	end
+	end,
 })
 
 -- Load other stuff

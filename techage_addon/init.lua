@@ -9,7 +9,7 @@ minetest.register_node("techage_addon:dry_ice", {
 	groups = {cracky = 3, slippery = 3, not_in_creative_inventory = 1},
 	sounds = default.node_sound_ice_defaults(),
 	damage_per_second = 3,
-	drop = "techage_addon:dry_ice_cri"
+	drop = "techage_addon:dry_ice_cri",
 })
 minetest.register_alias("techage_cobble_generator:dry_ice", "techage_addon:dry_ice")
 
@@ -22,7 +22,7 @@ minetest.register_craftitem("techage_addon:dry_ice_cri", {
 		local leftover = minetest.item_place(itemstack, placer, pointed_thing)
 		leftover:set_name("techage_addon:dry_ice_cri")
 		return leftover
-	end
+	end,
 })
 minetest.register_alias("techage_cobble_generator:dry_ice_cri", "techage_addon:dry_ice_cri")
 
@@ -34,14 +34,18 @@ minetest.register_craftitem("techage_addon:diamond_powder", {
 minetest.register_alias("techage_cobble_generator:diamond_powder", "techage_addon:diamond_powder")
 
 -- Add to techage
-techage.add_rinser_recipe({input = "techage:sieved_gravel", output = "techage_addon:diamond_powder", probability = 300})
+techage.add_rinser_recipe({
+	input = "techage:sieved_gravel",
+	output = "techage_addon:diamond_powder",
+	probability = 300,
+})
 
 techage.recipes.add("ta4_doser", {
 	output = "techage_addon:dry_ice_cri 1",
 	input = {
 		"techage_addon:diamond_powder 5",
 		"techage:water 3",
-	}
+	},
 })
 
 -- Cool lava ABM
@@ -61,5 +65,5 @@ minetest.register_abm({
 		if math.random(1, 4) == 1 then
 			minetest.sound_play("default_cool_lava", {pos = pos, max_hear_distance = 16, gain = 0.2}, true)
 		end
-	end
+	end,
 })

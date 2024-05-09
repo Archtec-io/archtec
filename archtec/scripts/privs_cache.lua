@@ -13,7 +13,15 @@ minetest.get_player_privs = function(name)
 			cache[name] = privs
 		else
 			local d = debug.getinfo(2, "nS")
-			minetest.log("error", "[archtec] called 'get_player_privs' with wrong data type '" .. type(name) .. "' called from " .. (d.source or "") .. "@" .. (d.linedefined or ""))
+			minetest.log(
+				"error",
+				"[archtec] called 'get_player_privs' with wrong data type '"
+					.. type(name)
+					.. "' called from "
+					.. (d.source or "")
+					.. "@"
+					.. (d.linedefined or "")
+			)
 			privs = {}
 		end
 	else
@@ -27,7 +35,7 @@ end
 local old_set_player_privs = minetest.set_player_privs
 minetest.set_player_privs = function(name, privs)
 	cache[name] = privs
-	old_set_player_privs(name, privs);
+	old_set_player_privs(name, privs)
 end
 
 minetest.register_on_leaveplayer(function(player)
@@ -40,5 +48,5 @@ minetest.register_chatcommand("privs_cache", {
 	func = function(name)
 		minetest.log("action", "[/privs_cache] executed by '" .. name .. "'")
 		minetest.chat_send_player(name, "Hit: " .. hit_count .. ", Miss: " .. miss_count)
-	end
+	end,
 })

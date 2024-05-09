@@ -1,7 +1,9 @@
 local http = assert(...)
 local S = archtec.S
 local F = minetest.formspec_escape
-local FS = function(...) return F(S(...)) end
+local FS = function(...)
+	return F(S(...))
+end
 local C = minetest.colorize
 
 local webhook_url = minetest.settings:get("archtec.webhook_url")
@@ -77,7 +79,7 @@ local function send_report(name, report)
 		extra_headers = {
 			"Accept: application/vnd.github+json",
 			"Authorization: Bearer " .. report_gpg_key,
-			"X-GitHub-Api-Version: 2022-11-28"
+			"X-GitHub-Api-Version: 2022-11-28",
 		},
 		data = json,
 	}, function(res)
@@ -85,13 +87,23 @@ local function send_report(name, report)
 		if parse.html_url then
 			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: " .. parse.html_url)
 		else
-			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: unknown (JSON parsing error) | Response code: " .. (res.code or "unknown"))
+			archtec.notify_team(
+				"[archtec] "
+					.. name
+					.. " reported an Issue: "
+					.. report
+					.. " URL: unknown (JSON parsing error) | Response code: "
+					.. (res.code or "unknown")
+			)
 		end
 
 		if not parse.html_url then
 			parse.html_url = "Unknown URL"
 		end
-		minetest.chat_send_player(name, C("#00BD00", S("[report] Report successfully created. GitHub URL: @1", parse.html_url)))
+		minetest.chat_send_player(
+			name,
+			C("#00BD00", S("[report] Report successfully created. GitHub URL: @1", parse.html_url))
+		)
 
 		-- Discord webhook
 		local body_dc = {
@@ -106,7 +118,7 @@ local function send_report(name, report)
 			embeds = {{
 				title = "Report by " .. name .. ":",
 				description = table.concat(body_dc, "\n"),
-			}}
+			}},
 		})
 
 		if json_dc ~= nil then
@@ -162,7 +174,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	if not check_text(fields.report_text) then
 		minetest.close_formspec(name, "archtec:report")
-		minetest.chat_send_player(name, C("#FF0000", S("[report] Your text is too long and/or contains disallowed characters!")))
+		minetest.chat_send_player(
+			name,
+			C("#FF0000", S("[report] Your text is too long and/or contains disallowed characters!"))
+		)
 		return true
 	end
 
@@ -196,5 +211,5 @@ minetest.register_chatcommand("report", {
 			archtec_playerdata.set(name, "report_draft", text)
 		end
 		report_formspec(name)
-	end
+	end,
 })

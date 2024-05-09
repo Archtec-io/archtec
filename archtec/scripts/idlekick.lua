@@ -12,7 +12,9 @@ local function bump_name(name)
 end
 
 local function bump(player)
-	if not player then return end
+	if not player then
+		return
+	end
 	local name = player:get_player_name()
 	return bump_name(name)
 end
@@ -43,12 +45,24 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 -- Un-idle events
-minetest.register_on_placenode(function(_, _, player) bump(player) end)
-minetest.register_on_dignode(function(_, _, player) bump(player) end)
-minetest.register_on_punchnode(function(_, _, player) bump(player) end)
-minetest.register_on_craft(function(_, player) bump(player) end)
-minetest.register_on_player_inventory_action(function(player) bump(player) end)
-minetest.register_on_chat_message(function(name) bump_name(name) end)
+minetest.register_on_placenode(function(_, _, player)
+	bump(player)
+end)
+minetest.register_on_dignode(function(_, _, player)
+	bump(player)
+end)
+minetest.register_on_punchnode(function(_, _, player)
+	bump(player)
+end)
+minetest.register_on_craft(function(_, player)
+	bump(player)
+end)
+minetest.register_on_player_inventory_action(function(player)
+	bump(player)
+end)
+minetest.register_on_chat_message(function(name)
+	bump_name(name)
+end)
 
 local timer = 0
 minetest.register_globalstep(function(dtime)
@@ -79,7 +93,7 @@ minetest.register_globalstep(function(dtime)
 
 				local nametag = get_nametag(name, player) .. " (idle)"
 				player:set_nametag_attributes({
-					text = nametag
+					text = nametag,
 				})
 			end
 		elseif cache[name].nametag_edited then
@@ -88,7 +102,7 @@ minetest.register_globalstep(function(dtime)
 			local nametag = get_nametag(name, player)
 			nametag = string.sub(nametag, 1, #nametag - 7)
 			player:set_nametag_attributes({
-				text = nametag
+				text = nametag,
 			})
 		end
 	end

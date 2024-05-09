@@ -19,20 +19,29 @@ end
 
 local function inc_abm(label, diff, pos, nn)
 	if diff > abm_max_time then
-		minetest.log("action", "[archtec] ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		minetest.log(
+			"action",
+			"[archtec] ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'"
+		)
 	end
 end
 
 local function inc_nt(diff, pos)
 	if diff > nt_max_time then
 		local nn = minetest.get_node(pos).name
-		minetest.log("action", "[archtec] NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		minetest.log(
+			"action",
+			"[archtec] NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'"
+		)
 	end
 end
 
 local function inc_lbm(label, diff, pos, nn)
 	if diff > lbm_max_time then
-		minetest.log("action", "[archtec] LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		minetest.log(
+			"action",
+			"[archtec] LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'"
+		)
 	end
 end
 

@@ -11,7 +11,7 @@ local function spawn_particles(player)
 		minetest.add_particlespawner({
 			amount = 2000,
 			minpos = vector.new(-25, 10, -25),
-			maxpos = vector.new( 25, 25,  25),
+			maxpos = vector.new(25, 25, 25),
 			minvel = vector.new(-2, -7, -2),
 			maxvel = vector.new(-2, -9, -2),
 			time = math.random(30, 60),
@@ -23,10 +23,13 @@ local function spawn_particles(player)
 			collision_removal = true,
 			object_collision = true,
 			vertical = false,
-			texture = ("[combine:7x7:%s,%s=archtec_snowflakes.png"):format(math.random(0, 3) * -7, math.random(0, 1) * -7),
+			texture = ("[combine:7x7:%s,%s=archtec_snowflakes.png"):format(
+				math.random(0, 3) * -7,
+				math.random(0, 1) * -7
+			),
 			playername = player:get_player_name(),
 			attached = player,
-			glow = 2
+			glow = 2,
 		})
 	end
 end
@@ -66,5 +69,5 @@ minetest.register_chatcommand("snow", {
 			spawn_snow = true
 			minetest.chat_send_player(name, "Snow mode enabled.")
 		end
-	end
+	end,
 })

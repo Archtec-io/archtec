@@ -51,7 +51,7 @@ minetest.register_chatcommand("thankyou", {
 		archtec_playerdata.mod(target, "thank_you", 1)
 		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
 		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**.")
-	end
+	end,
 })
 
 -- Falling nodes cleanup command
@@ -68,7 +68,10 @@ local function remove_falling_nodes(pos)
 				local nodep = vector.round(pos2)
 				nodep.y = nodep.y - 1
 				if minetest.get_node(nodep).name == "air" or nodep.y < -30912 then
-					minetest.log("action", "[falling_nodes_cleaner] remove falling entity at " .. minetest.pos_to_string(pos2))
+					minetest.log(
+						"action",
+						"[falling_nodes_cleaner] remove falling entity at " .. minetest.pos_to_string(pos2)
+					)
 					object:remove()
 					c = c + 1
 				end
@@ -91,7 +94,7 @@ minetest.register_chatcommand("falling_nodes_cleanup", {
 		end
 		counter = remove_falling_nodes(player:get_pos())
 		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Removed " .. counter .. " falling node(s)"))
-	end
+	end,
 })
 
 -- Shutdown command
@@ -99,15 +102,19 @@ minetest.register_chatcommand("sd", {
 	description = "Shuts the server down after a 10 seconds delay.",
 	privs = {staff = true},
 	func = function(name, delay)
-		if delay == "" or type(tonumber(delay)) ~= "number" then delay = 10 end
+		if delay == "" or type(tonumber(delay)) ~= "number" then
+			delay = 10
+		end
 		-- notify all
 		local logmsg = name .. " requested a server shutdown in " .. delay .. " seconds."
 		minetest.log("warning", logmsg)
 		archtec_matterbridge.send(":anger: " .. logmsg)
-		minetest.chat_send_all(minetest.colorize("#FF0", S("@1 requested a server shutdown in @2 seconds.", name, delay)))
+		minetest.chat_send_all(
+			minetest.colorize("#FF0", S("@1 requested a server shutdown in @2 seconds.", name, delay))
+		)
 		-- shutdown, ask for reconnect
 		minetest.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, tonumber(delay))
-	end
+	end,
 })
 
 -- Stairsplus support for ethereal:glostone (https://github.com/Archtec-io/bugtracker/issues/143)
@@ -118,7 +125,7 @@ if minetest.get_modpath("stairsplus") and minetest.get_modpath("ethereal") then
 		description = def.description,
 		tiles = def.texture,
 		groups = def.groups,
-		sounds = def.sound
+		sounds = def.sound,
 	})
 end
 

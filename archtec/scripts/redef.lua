@@ -1,7 +1,7 @@
 -- 3D ladders
 local ladders = {
 	{"ladder_wood", "default_ladder_wood.png", "default_wood.png"},
-	{"ladder_steel", "default_ladder_steel.png", "default_steel_block.png"}
+	{"ladder_steel", "default_ladder_steel.png", "default_steel_block.png"},
 }
 
 for l, def in pairs(ladders) do
@@ -50,7 +50,7 @@ local grass_nodes = {
 
 for _, grass in pairs(grass_nodes) do
 	local current_box = minetest.registered_nodes[grass].selection_box.fixed
-	if (current_box[5] > target) then
+	if current_box[5] > target then
 		minetest.override_item(grass, {
 			selection_box = {
 				type = "fixed",
@@ -61,8 +61,8 @@ for _, grass in pairs(grass_nodes) do
 					current_box[4],
 					target,
 					current_box[6],
-				}
-			}
+				},
+			},
 		})
 	end
 end

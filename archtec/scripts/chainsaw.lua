@@ -1,4 +1,6 @@
-if not minetest.get_modpath("choppy") then return end
+if not minetest.get_modpath("choppy") then
+	return
+end
 
 local S = archtec.S
 local api = choppy.api
@@ -8,7 +10,9 @@ local days_played = archtec.time.days(7)
 minetest.register_privilege("archtec_chainsaw", S("Allows you to use the chainsaw"))
 
 -- disable is_enabled() since we don't use the initialized function
-choppy.api.is_enabled = function(...) return true end
+choppy.api.is_enabled = function(...)
+	return true
+end
 
 local function conditions(name)
 	local playtime = archtec_playerdata.get(name, "playtime")
@@ -25,7 +29,13 @@ archtec.chainsaw_conditions = conditions
 
 local function grant_priv(name, priv)
 	archtec.priv_grant(name, priv)
-	minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Congratulations! You have been granted the '@1' privilege.", "archtec_chainsaw")))
+	minetest.chat_send_player(
+		name,
+		minetest.colorize(
+			"#00BD00",
+			S("Congratulations! You have been granted the '@1' privilege.", "archtec_chainsaw")
+		)
+	)
 	archtec.notify_team("[chainsaw] Granted '" .. name .. "' the 'archtec_chainsaw' priv")
 end
 
@@ -47,7 +57,15 @@ minetest.register_tool(":technic:chainsaw", {
 			if conditions(name) then
 				grant_priv(name, "archtec_chainsaw")
 			else
-				minetest.chat_send_player(name, minetest.colorize("#FF0000", S("[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account!")))
+				minetest.chat_send_player(
+					name,
+					minetest.colorize(
+						"#FF0000",
+						S(
+							"[chainsaw] You don't satisfy all conditions to use a chainsaw. Needed conditions: 20k nodes dug, 10k nodes placed, 24h playtime, 7 days or older account!"
+						)
+					)
+				)
 				return
 			end
 		end
@@ -90,22 +108,24 @@ minetest.register_craft({
 		{"default:steel_ingot", "default:mese_crystal_fragment", "default:diamond"},
 		{"basic_materials:copper_wire", "basic_materials:motor", "default:diamond"},
 		{"", "dye:red", "default:steel_ingot"},
-	}
+	},
 })
 
 minetest.register_craft({
 	output = "technic:chainsaw",
 	recipe = {
-		{"techage:ta3_canister_gasoline", "technic:chainsaw"}
+		{"techage:ta3_canister_gasoline", "technic:chainsaw"},
 	},
-	replacements = {{"techage:ta3_canister_gasoline", "techage:ta3_canister_empty"}}
+	replacements = {{"techage:ta3_canister_gasoline", "techage:ta3_canister_empty"}},
 })
 
 minetest.register_craft({
 	type = "shapeless",
 	output = "technic:chainsaw",
 	recipe = {
-		"biofuel:fuel_can", "technic:chainsaw",
-		"biofuel:fuel_can", "biofuel:fuel_can",
-	}
+		"biofuel:fuel_can",
+		"technic:chainsaw",
+		"biofuel:fuel_can",
+		"biofuel:fuel_can",
+	},
 })

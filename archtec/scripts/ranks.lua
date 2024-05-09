@@ -1,5 +1,5 @@
 local registered = {
-	admin = {prefix = "[Admin]", color = {a = 255, r = 230, g = 33, b = 23}, priv = "server",  prio = 3},
+	admin = {prefix = "[Admin]", color = {a = 255, r = 230, g = 33, b = 23}, priv = "server", prio = 3},
 	mod = {prefix = "[Mod]", color = {a = 255, r = 255, g = 83, b = 37}, priv = "staff", prio = 2},
 	builder = {prefix = "[Builder]", color = {a = 255, r = 0, g = 189, b = 0}, priv = "builder", prio = 1},
 }
@@ -57,5 +57,5 @@ minetest.register_chatcommand("ranks_reload", {
 			update_nametag(player, true)
 		end
 		minetest.chat_send_player(name, "Ranks reloaded")
-	end
+	end,
 })

@@ -1,20 +1,20 @@
 mapserver = {
 	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 7.1,
-	bridge = {}
+	bridge = {},
 }
 
 local MP = minetest.get_modpath("archtec_mapserver")
-dofile(MP.."/common.lua")
-dofile(MP.."/poi.lua")
+dofile(MP .. "/common.lua")
+dofile(MP .. "/poi.lua")
 
 local http = minetest.request_http_api()
 
 if http then
 	-- check if the mapserver.json is in the world-folder
-	local path = minetest.get_worldpath().."/mapserver.json";
+	local path = minetest.get_worldpath() .. "/mapserver.json"
 	local mapserver_cfg
 
-	local file = io.open(path, "r" );
+	local file = io.open(path, "r")
 	if file then
 		local json = file:read("*all")
 		mapserver_cfg = minetest.parse_json(json)
@@ -36,15 +36,18 @@ if http then
 		end
 	end
 
-	if not mapserver_url then error("mapserver.url is not defined") end
-	if not mapserver_key then error("mapserver.key is not defined") end
+	if not mapserver_url then
+		error("mapserver.url is not defined")
+	end
+	if not mapserver_key then
+		error("mapserver.key is not defined")
+	end
 
 	minetest.log("action", "[archtec_mapserver] starting archtec_mapserver with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- initialize bridge
 	mapserver.bridge_init(http, mapserver_url, mapserver_key)
-
 else
 	minetest.log("warning", "[archtec_mapserver] bridge not active, additional infos will not be visible on the map")
 end

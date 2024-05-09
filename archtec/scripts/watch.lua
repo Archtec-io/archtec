@@ -100,7 +100,10 @@ minetest.register_chatcommand("watch", {
 		end
 
 		if state[name] ~= nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target))
+			)
 			return
 		end
 
@@ -115,13 +118,16 @@ minetest.register_chatcommand("watch", {
 		end
 
 		if state[target] then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is watching '@2'!", target, state[target].target)))
+			minetest.chat_send_player(
+				name,
+				C("#FF0000", S("[watch] Target '@1' is watching '@2'!", target, state[target].target))
+			)
 			return
 		end
 
 		attach(name, target)
 		minetest.chat_send_player(name, C("#00BD00", S("[watch] Watching @1.", target)))
-	end
+	end,
 })
 
 minetest.register_chatcommand("unwatch", {
@@ -139,7 +145,7 @@ minetest.register_chatcommand("unwatch", {
 		local target = state[name].target
 		detach(name)
 		minetest.chat_send_player(name, C("#00BD00", S("[unwatch] Detached you from @1.", target)))
-	end
+	end,
 })
 
 minetest.register_on_leaveplayer(function(player)

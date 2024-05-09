@@ -8,14 +8,14 @@ archtec_matterbridge.send = function(message, channel, event)
 		method = "POST",
 		extra_headers = {
 			"Content-Type: application/json",
-			"Authorization: Bearer " .. archtec_matterbridge.token
+			"Authorization: Bearer " .. archtec_matterbridge.token,
 		},
 		timeout = 5,
 		data = minetest.write_json({
 			gateway = channel or "MT-POST",
 			text = message,
-			event = event
-		})
+			event = event,
+		}),
 	}, function()
 		-- ignore errors
 	end)
@@ -27,12 +27,12 @@ minetest.override_chatcommand("me", {
 		local msg = archtec.get_and_trim(param)
 		if msg ~= "" then
 			minetest.chat_send_all("* " .. name .. " " .. param)
-			archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(name, param))
+			archtec_matterbridge.send(":speech_left: " .. ("%s *%s*"):format(name, param))
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[/me] No message provided!"))
 		end
 		return true
-	end
+	end,
 })
 
 -- join player message

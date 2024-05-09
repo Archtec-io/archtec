@@ -23,4 +23,5 @@ end
 
 local json = minetest.write_json(new)
 minetest.safe_file_write(minetest.get_worldpath() .. "/dump_v2.txt", json)
-]]--
+]]
+--

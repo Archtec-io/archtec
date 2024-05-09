@@ -19,7 +19,6 @@ local function instrument(name, value, _cache)
 			total_calls[name] = (total_calls[name] or 0) + 1
 			return unpack(rvs)
 		end
-
 	elseif type(value) == "table" then
 		_cache = _cache or {}
 		local cached = _cache[value]
@@ -33,7 +32,6 @@ local function instrument(name, value, _cache)
 		for k, v in pairs(value) do
 			if type(k) == "string" then
 				t[k] = instrument(("%s.%s"):format(name, k), v, _cache)
-
 			else
 				t[k] = instrument(("%s[%s]"):format(name, k), v, _cache)
 			end
@@ -42,7 +40,6 @@ local function instrument(name, value, _cache)
 		setmetatable(t, instrument(("getmetatable(%s)"):format(name), getmetatable(value), _cache))
 
 		return t
-
 	else
 		return value
 	end
@@ -63,7 +60,6 @@ minetest.register_chatcommand("instrument_mod", {
 			old_values[param] = nil
 			num_instrumented = num_instrumented - 1
 			return true, ("instrumentation disabled for %s"):format(param)
-
 		else
 			old_values[param] = _G[param]
 			_G[param] = instrument(param, _G[param])
@@ -90,9 +86,7 @@ minetest.register_globalstep(function(dtime)
 	for name, num_calls in pairs_by_key(total_calls) do
 		local te = total_elapsed[name]
 
-		log(log_level, ("[instrument_mod] %s was called %s times, used %s us"):format(
-			name, num_calls, te
-		))
+		log(log_level, ("[instrument_mod] %s was called %s times, used %s us"):format(name, num_calls, te))
 	end
 
 	total_calls = {}

@@ -13,12 +13,12 @@ local function fix_craft(node, recipedef, amount)
 	end
 
 	minetest.clear_craft({
-		output = node
+		output = node,
 	})
 
 	minetest.register_craft({
 		output = node .. " " .. amount,
-		recipe = recipedef
+		recipe = recipedef,
 	})
 
 	minetest.log("action", "[archtec] changed recipe of '" .. node .. "'")
@@ -28,67 +28,67 @@ end
 fix_craft("pride_flags:lower_mast", {
 	{"default:steel_ingot", "farming:string"},
 	{"default:steel_ingot", "farming:string"},
-	{"default:steel_ingot", "farming:string"}
+	{"default:steel_ingot", "farming:string"},
 })
 
 -- homedecor:table/ts_furniture:default_WOODTYPE_small_table
 fix_craft("homedecor:table", {
-	{ "group:wood","group:wood", "group:wood" },
-	{ "group:stick", "", "group:stick" },
-	{ "", "group:stick", "" }
+	{"group:wood", "group:wood", "group:wood"},
+	{"group:stick", "", "group:stick"},
+	{"", "group:stick", ""},
 })
 
 -- jonez palace windows had the same recipe
 fix_craft("xpanes:palace_window_top_flat", {
 	{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
-	{"xpanes:pane_flat", "", "xpanes:pane_flat"}
+	{"xpanes:pane_flat", "", "xpanes:pane_flat"},
 })
 
 -- jonez palace windows had the same recipe
 fix_craft("xpanes:palace_window_bottom_flat", {
 	{"xpanes:pane_flat", "", "xpanes:pane_flat"},
-	{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"}
+	{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
 })
 
 -- xdecor:pressure_stone_off/mesecons_pressureplates:pressure_plate_stone_off
 fix_craft("xdecor:pressure_stone_off", {
-	{"xdecor:stone_tile", "xdecor:stone_tile"}
+	{"xdecor:stone_tile", "xdecor:stone_tile"},
 })
 
 -- xdecor:pressure_wood_off/mesecons_pressureplates:pressure_plate_wood_off
 fix_craft("xdecor:pressure_wood_off", {
-	{"xdecor:wood_tile", "xdecor:wood_tile"}
+	{"xdecor:wood_tile", "xdecor:wood_tile"},
 })
 
 -- xdecor:tatami/homedecor:tatami_mat
 fix_craft("xdecor:tatami", {
 	{"farming:wheat", "farming:wheat", "farming:wheat"},
-	{"", "farming:wheat", ""}
+	{"", "farming:wheat", ""},
 })
 
 -- xdecor:bowl/farming:bowl
 fix_craft("xdecor:bowl", {
 	{"xdecor:wood_tile", "", "xdecor:wood_tile"},
-	{"", "xdecor:wood_tile", ""}
+	{"", "xdecor:wood_tile", ""},
 })
 
 -- xpanes:wrought_lattice_bottom_flat/jonez:wrought_lattice_top (https://github.com/Archtec-io/bugtracker/issues/166)
 fix_craft("jonez:wrought_lattice_top", {
 	{"", "default:tin_ingot", ""},
-	{"default:steel_ingot", "default:tin_ingot", "default:steel_ingot"}
+	{"default:steel_ingot", "default:tin_ingot", "default:steel_ingot"},
 }, 16)
 
 if minetest.get_modpath("ethereal") then
 	minetest.register_craft({
 		output = "ethereal:bowl",
 		type = "shapeless",
-		recipe = {"farming:bowl"}
+		recipe = {"farming:bowl"},
 	})
 
 	minetest.register_craft({
 		output = "farming:bowl",
 		type = "shapeless",
-		recipe = {"ethereal:bowl"}
+		recipe = {"ethereal:bowl"},
 	})
 end
 
@@ -110,8 +110,8 @@ if minetest.get_modpath("homedecor_lighting") then
 		neutral_node = "homedecor:table_lamp_14",
 		recipe = {
 			"NEUTRAL_NODE",
-			"MAIN_DYE"
-		}
+			"MAIN_DYE",
+		},
 	})
 
 	minetest.register_craft({
@@ -130,21 +130,21 @@ if minetest.get_modpath("homedecor_lighting") then
 		neutral_node = "homedecor:standing_lamp_14",
 		recipe = {
 			"NEUTRAL_NODE",
-			"MAIN_DYE"
-		}
+			"MAIN_DYE",
+		},
 	})
 end
 
 -- https://github.com/Archtec-io/bugtracker/issues/58 (small hack)
 minetest.register_craft({
 	output = "farming:wheat 3",
-	recipe = {{"farming:straw"}}
+	recipe = {{"farming:straw"}},
 })
 
 -- https://github.com/Archtec-io/bugtracker/issues/181 (next straw hack)
 minetest.register_craft({
 	output = "farming:straw",
-	recipe = {{"castle_farming:bound_straw"}}
+	recipe = {{"castle_farming:bound_straw"}},
 })
 
 -- default:dry_dirt + group:water_bucket -> default:dirt (https://github.com/Archtec-io/bugtracker/issues/139)
@@ -155,5 +155,5 @@ minetest.register_craft({
 		"group:water_bucket",
 		"default:dry_dirt",
 	},
-	replacements = {{"group:water_bucket", "bucket:bucket_empty"}}
+	replacements = {{"group:water_bucket", "bucket:bucket_empty"}},
 })

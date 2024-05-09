@@ -30,7 +30,7 @@ local function pickupfunc(player)
 	end
 
 	local pos = player:get_pos()
-	pos.y = pos.y+0.5
+	pos.y = pos.y + 0.5
 	local inv = player:get_inventory()
 
 	local objectlist = minetest.get_objects_inside_radius(pos, pickup_radius)

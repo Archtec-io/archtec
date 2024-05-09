@@ -8,17 +8,23 @@ local update_formspec = function(meta)
 
 	meta:set_string("infotext", "POI, name:" .. name .. ", icon:" .. icon)
 
-	meta:set_string("formspec", "size[8,4;]" ..
-		-- col 1
-		"field[0.2,1;4,1;name;Name;" .. name .. "]" ..
-		"field[4.2,1;4,1;icon;Icon;" .. icon .. "]" ..
-
-		-- col 2
-		"field[0.2,2;8,1;url;URL;" .. url .. "]" ..
-
-		-- col 3
-		"button_exit[0,3;8,1;save;Save]" ..
-	"")
+	meta:set_string(
+		"formspec",
+		"size[8,4;]" -- col 1
+			.. "field[0.2,1;4,1;name;Name;"
+			.. name
+			.. "]"
+			.. "field[4.2,1;4,1;icon;Icon;"
+			.. icon
+			.. "]"
+			-- col 2
+			.. "field[0.2,2;8,1;url;URL;"
+			.. url
+			.. "]"
+			-- col 3
+			.. "button_exit[0,3;8,1;save;Save]"
+			.. ""
+	)
 end
 
 local on_receive_fields = function(pos, formname, fields, sender)
@@ -41,9 +47,9 @@ local register_poi = function(color, dye)
 	minetest.register_node(":mapserver:poi_" .. color, {
 		description = "Mapserver POI (" .. color .. ")",
 		tiles = {
-			"[combine:16x16:0,0=default_gold_block.png:3,2=mapserver_poi_" .. color .. ".png"
+			"[combine:16x16:0,0=default_gold_block.png:3,2=mapserver_poi_" .. color .. ".png",
 		},
-		groups = {cracky=3,oddly_breakable_by_hand=3},
+		groups = {cracky = 3, oddly_breakable_by_hand = 3},
 		sounds = default.node_sound_glass_defaults(),
 		can_dig = mapserver.can_interact,
 		after_place_node = mapserver.after_place_node,
@@ -58,7 +64,7 @@ local register_poi = function(color, dye)
 			update_formspec(meta)
 		end,
 
-		on_receive_fields = on_receive_fields
+		on_receive_fields = on_receive_fields,
 	})
 end
 

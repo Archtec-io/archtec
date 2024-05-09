@@ -1,6 +1,8 @@
 local C = minetest.colorize
 local S = archtec.S
-local FS = function(...) return minetest.formspec_escape(S(...)) end
+local FS = function(...)
+	return minetest.formspec_escape(S(...))
+end
 
 local mailbox = {}
 archtec_playerdata.register_key("mailbox", "string", "")
@@ -13,20 +15,38 @@ function mailbox.get_formspec(pos, owner, fs_type)
 	local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 
 	if fs_type == 1 then
-		return "size[8,9.5]" .. default.get_hotbar_bg(0, 5.5) ..
-			"checkbox[0,0;books_only;" .. FS("Only allow written books") .. ";" .. is_letterbox .. "]" ..
-			"list[nodemeta:" .. spos .. ";mailbox;0,1;8,4;]" ..
-			"listring[nodemeta:" .. spos .. ";mailbox]" ..
-			"listring[current_player;main]" ..
-			"list[current_player;main;0,5.5;8,4;]" ..
-			"button_exit[6,0;2,1;unrent;" .. FS("Unrent") .. "]"
+		return "size[8,9.5]"
+			.. default.get_hotbar_bg(0, 5.5)
+			.. "checkbox[0,0;books_only;"
+			.. FS("Only allow written books")
+			.. ";"
+			.. is_letterbox
+			.. "]"
+			.. "list[nodemeta:"
+			.. spos
+			.. ";mailbox;0,1;8,4;]"
+			.. "listring[nodemeta:"
+			.. spos
+			.. ";mailbox]"
+			.. "listring[current_player;main]"
+			.. "list[current_player;main;0,5.5;8,4;]"
+			.. "button_exit[6,0;2,1;unrent;"
+			.. FS("Unrent")
+			.. "]"
 	else
-		return "size[8,5.25]" .. default.get_hotbar_bg(0, 1.5) ..
-			"label[0,0;" .. FS("Send your goods to\n@1", C("#FFFF00", owner)) .. "]" ..
-			"list[nodemeta:" .. spos .. ";drop;3.5,0;1,1;]" ..
-			"listring[nodemeta:" .. spos .. ";drop]" ..
-			"listring[current_player;main]" ..
-			"list[current_player;main;0,1.5;8,4;]"
+		return "size[8,5.25]"
+			.. default.get_hotbar_bg(0, 1.5)
+			.. "label[0,0;"
+			.. FS("Send your goods to\n@1", C("#FFFF00", owner))
+			.. "]"
+			.. "list[nodemeta:"
+			.. spos
+			.. ";drop;3.5,0;1,1;]"
+			.. "listring[nodemeta:"
+			.. spos
+			.. ";drop]"
+			.. "listring[current_player;main]"
+			.. "list[current_player;main;0,1.5;8,4;]"
 	end
 end
 
@@ -100,7 +120,10 @@ end
 function mailbox.on_rightclick_free(pos, _, clicker)
 	local name = clicker:get_player_name()
 	if archtec_playerdata.get(name, "mailbox") ~= "" then
-		minetest.chat_send_player(name, C("#FF0000", S("You have already rented a mailbox at @1!", archtec_playerdata.get(name, "mailbox"))))
+		minetest.chat_send_player(
+			name,
+			C("#FF0000", S("You have already rented a mailbox at @1!", archtec_playerdata.get(name, "mailbox")))
+		)
 		return
 	end
 
@@ -160,8 +183,7 @@ function mailbox.allow_metadata_inventory_put(pos, listname, index, stack, playe
 			return 0
 		end
 
-		if minetest.get_node(pos).name == "mailbox:letterbox" and
-			stack:get_name() ~= "default:book_written" then
+		if minetest.get_node(pos).name == "mailbox:letterbox" and stack:get_name() ~= "default:book_written" then
 			return 0
 		end
 
@@ -199,9 +221,12 @@ end
 minetest.register_node(":mailbox:mailbox", {
 	description = S("Mailbox"),
 	tiles = {
-		"archtec_mailbox_top.png", "archtec_mailbox_bottom.png",
-		"archtec_mailbox_side.png", "archtec_mailbox_side.png",
-		"archtec_mailbox.png", "archtec_mailbox.png",
+		"archtec_mailbox_top.png",
+		"archtec_mailbox_bottom.png",
+		"archtec_mailbox_side.png",
+		"archtec_mailbox_side.png",
+		"archtec_mailbox.png",
+		"archtec_mailbox.png",
 	},
 	groups = {cracky = 3, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,
@@ -220,9 +245,12 @@ minetest.register_node(":mailbox:mailbox", {
 minetest.register_node(":mailbox:mailbox_free", {
 	description = S("Mailbox for Rent"),
 	tiles = {
-		"archtec_mailbox_free_top.png", "archtec_mailbox_free_bottom.png",
-		"archtec_mailbox_free_side.png", "archtec_mailbox_free_side.png",
-		"archtec_mailbox_free.png", "archtec_mailbox_free.png",
+		"archtec_mailbox_free_top.png",
+		"archtec_mailbox_free_bottom.png",
+		"archtec_mailbox_free_side.png",
+		"archtec_mailbox_free_side.png",
+		"archtec_mailbox_free.png",
+		"archtec_mailbox_free.png",
 	},
 	groups = {cracky = 3, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,
@@ -236,9 +264,12 @@ minetest.register_node(":mailbox:mailbox_free", {
 
 minetest.register_node(":mailbox:letterbox", {
 	tiles = {
-		"archtec_letterbox_top.png", "archtec_letterbox_bottom.png",
-		"archtec_letterbox_side.png", "archtec_letterbox_side.png",
-		"archtec_letterbox.png", "archtec_letterbox.png",
+		"archtec_letterbox_top.png",
+		"archtec_letterbox_bottom.png",
+		"archtec_letterbox_side.png",
+		"archtec_letterbox_side.png",
+		"archtec_letterbox.png",
+		"archtec_letterbox.png",
 	},
 	groups = {cracky = 3, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,

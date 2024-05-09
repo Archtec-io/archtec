@@ -50,8 +50,7 @@ end
 -- Disable wardrobe skin selector
 if minetest.get_modpath("homedecor_wardrobe") then
 	minetest.override_item("homedecor:wardrobe", {
-		on_construct = function()
-		end,
+		on_construct = function() end,
 		on_place = function(itemstack, placer, pointed_thing)
 			return homedecor.stack_vertically(itemstack, placer, pointed_thing, itemstack:get_name(), "placeholder")
 		end,
@@ -126,7 +125,7 @@ if minetest.get_modpath("castle_gates") then
 			{"group:wood", "default:steel_ingot", "group:wood"},
 			{"group:wood", "default:tin_ingot", "group:wood"},
 			{"group:wood", "default:steel_ingot", "group:wood"},
-		}
+		},
 	})
 
 	minetest.register_craft({
@@ -135,7 +134,7 @@ if minetest.get_modpath("castle_gates") then
 			{"", "default:steel_ingot", ""},
 			{"default:steel_ingot", "", "default:steel_ingot"},
 			{"", "default:steel_ingot", ""},
-		}
+		},
 	})
 end
 
@@ -151,15 +150,15 @@ end
 -- Caveralms stones drop themselves
 if minetest.get_modpath("caverealms") then
 	minetest.override_item("caverealms:stone_with_algae", {
-		drop = nil
+		drop = nil,
 	})
 
 	minetest.override_item("caverealms:stone_with_lichen", {
-		drop = nil
+		drop = nil,
 	})
 
 	minetest.override_item("caverealms:stone_with_moss", {
-		drop = nil
+		drop = nil,
 	})
 end
 

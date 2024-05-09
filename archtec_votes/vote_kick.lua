@@ -1,7 +1,9 @@
 -- vote_kick
 local pending = {}
 local S = minetest.get_translator(minetest.get_current_modname())
-local FS = function(...) return minetest.formspec_escape(S(...)) end
+local FS = function(...)
+	return minetest.formspec_escape(S(...))
+end
 local C = minetest.colorize
 
 local function run_vote(name, param)
@@ -26,24 +28,60 @@ local function run_vote(name, param)
 			end
 
 			if result == "yes" then
-				minetest.chat_send_all("Vote passed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
-				archtec_matterbridge.send(":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
+				minetest.chat_send_all(
+					"Vote passed, "
+						.. minetest.colorize("#00BD00", #results.yes)
+						.. " to "
+						.. minetest.colorize("#FF0000", #results.no)
+						.. ", "
+						.. self.name
+						.. " will be kicked."
+				)
+				archtec_matterbridge.send(
+					":warning: Vote passed, "
+						.. #results.yes
+						.. " to "
+						.. #results.no
+						.. ", "
+						.. self.name
+						.. " will be kicked."
+				)
 				xban.ban_player(self.name, "/vote_kick", os.time() + 3600, "vote-kicked")
 			else
-				minetest.chat_send_all("Vote failed, " .. minetest.colorize("#00BD00", #results.yes) .. " to " .. minetest.colorize("#FF0000", #results.no) .. ", " .. self.name .. " remains ingame.")
-				archtec_matterbridge.send(":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
+				minetest.chat_send_all(
+					"Vote failed, "
+						.. minetest.colorize("#00BD00", #results.yes)
+						.. " to "
+						.. minetest.colorize("#FF0000", #results.no)
+						.. ", "
+						.. self.name
+						.. " remains ingame."
+				)
+				archtec_matterbridge.send(
+					":warning: Vote failed, "
+						.. #results.yes
+						.. " to "
+						.. #results.no
+						.. ", "
+						.. self.name
+						.. " remains ingame."
+				)
 			end
 		end,
 
 		on_vote = function(self, name_voter, value)
 			if value == "yes" then
-				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description .. ".")
+				minetest.chat_send_all(
+					name_voter .. " voted " .. minetest.colorize("#00BD00", "YES") .. " to " .. self.description .. "."
+				)
 				archtec_matterbridge.send(":green_square: **" .. name_voter .. "** voted YES")
 			else
-				minetest.chat_send_all(name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description .. ".")
+				minetest.chat_send_all(
+					name_voter .. " voted " .. minetest.colorize("#FF0000", "NO") .. " to " .. self.description .. "."
+				)
 				archtec_matterbridge.send(":red_square: **" .. name_voter .. "** voted NO")
 			end
-		end
+		end,
 	})
 end
 
@@ -51,7 +89,7 @@ minetest.register_chatcommand("vote_kick", {
 	params = "<name>",
 	description = "Vote kick someone. Warning: Abusing '/vote_kick' will result in a ban for you",
 	privs = {
-		interact = true
+		interact = true,
 	},
 	func = function(name, param)
 		local target = archtec.get_and_trim(param)
@@ -85,11 +123,13 @@ minetest.register_chatcommand("vote_kick", {
 		]]
 		pending[name] = target
 		minetest.show_formspec(name, "archtec_votes:kick", formspec)
-	end
+	end,
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-	if formname ~= "archtec_votes:kick" then return end
+	if formname ~= "archtec_votes:kick" then
+		return
+	end
 	local name = player:get_player_name()
 	if fields.abort then
 		minetest.close_formspec(name, "archtec_votes:kick")

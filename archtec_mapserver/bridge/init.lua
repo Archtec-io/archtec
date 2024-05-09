@@ -30,7 +30,7 @@ local function send_stats()
 		url = url .. "/api/minetest",
 		extra_headers = {"Content-Type: application/json", "Authorization: " .. key},
 		timeout = 5,
-		post_data = json
+		post_data = json,
 	}, function(res)
 		local t2 = minetest.get_us_time()
 		local post_time = t2 - t1
@@ -40,7 +40,6 @@ local function send_stats()
 
 		minetest.after(mapserver.send_interval, send_stats)
 	end)
-
 end
 
 function mapserver.bridge_init(h, u, k)
