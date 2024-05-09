@@ -141,6 +141,12 @@ minetest.register_craft({
 	recipe = {{"farming:straw"}}
 })
 
+-- https://github.com/Archtec-io/bugtracker/issues/181 (next straw hack)
+minetest.register_craft({
+	output = "farming:straw",
+	recipe = {{"castle_farming:bound_straw"}}
+})
+
 -- default:dry_dirt + group:water_bucket -> default:dirt (https://github.com/Archtec-io/bugtracker/issues/139)
 minetest.register_craft({
 	output = "default:dirt",
