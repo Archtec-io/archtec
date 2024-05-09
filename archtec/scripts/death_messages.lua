@@ -1,86 +1,77 @@
 local S = archtec.S
-local messages = {}
+local NS = function(s) return s end -- fake function for i18n.py
 
--- Fall damage
-messages.fall = {
-	"@1 hit the ground too hard",
-	"@1 jumped off a cliff",
-	"@1 thought water canceled fall damage",
-	"@1 fell and couldn't get back up"
+local messages = {
+	fall = {
+		NS("@1 hit the ground too hard"),
+		NS("@1 jumped off a cliff"),
+		NS("@1 thought water canceled fall damage"),
+		NS("@1 fell and couldn't get back up"),
+	},
+	burn = {
+		NS("@1 burned to a crisp."),
+		NS("@1 got a little too warm."),
+		NS("@1 got too close to the camp fire."),
+		NS("@1 just got roasted, hotdog style."),
+		NS("@1 got burned up. More light that way."),
+	},
+	drown = {
+		NS("@1 drowned."),
+		NS("@1 ran out of air."),
+		NS("@1 failed at swimming lessons."),
+		NS("@1 tried to impersonate an anchor."),
+		NS("@1 forgot he wasn't a fish."),
+		NS("@1 blew one too many bubbles."),
+	},
+	lava = {
+		NS("@1 melted into a ball of fire."),
+		NS("@1 thought lava was cool."),
+		NS("@1 melted into a ball of fire."),
+		NS("@1 couldn't resist that warm glow of lava."),
+		NS("@1 dug straight down."),
+		NS("@1 didn't know lava was hot."),
+	},
+	pvp = {
+		NS("@1 was slain by @2."),
+		NS("@1 was killed by @2."),
+		NS("@1 was put to the sword by @2."),
+		NS("@1 lost a PVP battle to @2."),
+	},
+	mob = {
+		NS("@1 was slain by @2."),
+		NS("@1 was killed by @2."),
+		NS("@1 got on @2's last nerve."),
+		NS("@1 forgot to feed @2."),
+	},
+	other = {
+		NS("@1 died."),
+		NS("@1 did something fatal."),
+		NS("@1 gave up on life."),
+		NS("@1 is somewhat dead now."),
+		NS("@1 passed out -permanently."),
+	},
 }
 
--- Burning death messages
-messages.burn = {
-	"@1 burned to a crisp.",
-	"@1 got a little too warm.",
-	"@1 got too close to the camp fire.",
-	"@1 just got roasted, hotdog style.",
-	"@1 got burned up. More light that way."
-}
-
--- Drowning
-messages.drown = {
-	"@1 drowned.",
-	"@1 ran out of air.",
-	"@1 failed at swimming lessons.",
-	"@1 tried to impersonate an anchor.",
-	"@1 forgot he wasn't a fish.",
-	"@1 blew one too many bubbles."
-}
-
--- Burning in lava
-messages.lava = {
-	"@1 melted into a ball of fire.",
-	"@1 thought lava was cool.",
-	"@1 melted into a ball of fire.",
-	"@1 couldn't resist that warm glow of lava.",
-	"@1 dug straight down.",
-	"@1 didn't know lava was hot."
-}
-
--- Killed by other player
-messages.pvp = {
-	"@1 was slain by @2.",
-	"@1 was killed by @2.",
-	"@1 was put to the sword by @2.",
-	"@1 lost a PVP battle to @2."
-}
-
--- Killed by mob
-messages.mob = {
-	"@1 was slain by @2.",
-	"@1 was killed by @2.",
-	"@1 got on @2's last nerve.",
-	"@1 forgot to feed @2."
-}
-
--- Everything else
-messages.other = {
-	"@1 died.",
-	"@1 did something fatal.",
-	"@1 gave up on life.",
-	"@1 is somewhat dead now.",
-	"@1 passed out -permanently."
-}
+local function get_mob_name(entity_name)
+	local index, _ = string.find(entity_name, ":")
+	entity_name = entity_name:sub(index + 1):gsub("_", " ")
+	return (entity_name:gsub("(%a)([%w_']*)", function(first, rest) return first:upper()..rest:lower() end))
+end
 
 local function send_death_message(cause, player, killer)
-	local random_selection = messages[cause][math.random(1, #messages[cause])]
+	local random_message = messages[cause][math.random(1, #messages[cause])]
 	local name = player:get_player_name()
 	local death_message
 
 	if killer then
 		if killer:is_player() then
-			death_message = S(random_selection, name, killer:get_player_name())
+			death_message = S(random_message, name, killer:get_player_name())
 		else
-			-- Get entity name, excluding mod name ("mymod:enemy" -> "enemy")
-			local entity_name = killer:get_luaentity().name
-			local index, _ = string.find(entity_name, ":")
-			entity_name = string.sub(entity_name, index + 1)
-			entity_name = string.gsub(entity_name, "_", " ") -- remove _'s from mob names
-			death_message = S(random_selection, name, entity_name)
+			local mob_name = get_mob_name(killer:get_luaentity().name)
+			death_message = S(random_message, name, mob_name)
 		end
 	else
-		death_message = S(random_selection, name)
+		death_message = S(random_message, name)
 	end
 
 	minetest.chat_send_all(minetest.colorize("#FF0000", death_message))

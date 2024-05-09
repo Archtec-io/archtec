@@ -50,7 +50,7 @@ local function send_report(name, report)
 
 	local body = {
 		"**Report by " .. name .. ":**",
-		"> " .. report .. "\n",
+		report .. "\n",
 		"**Position:**",
 		"```\n" .. data.pos .. "\n```",
 		"**Meta:**",

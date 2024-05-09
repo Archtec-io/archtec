@@ -34,11 +34,10 @@ local function detach(name)
 	})
 
 	-- Reset pos
-	local pos = table.copy(props.pos) -- table get deleted by state = nil
-	minetest.after(0, function()
+	minetest.after(0.1, function() -- delay=0 (next step) isn't reliable
 		local player2 = minetest.get_player_by_name(name)
 		if player2 then
-			player2:set_pos(pos)
+			player2:set_pos(props.pos)
 		end
 	end)
 
