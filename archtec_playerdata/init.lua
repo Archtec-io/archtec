@@ -191,7 +191,7 @@ local function data_save(name, unload_now)
 
 	storage:set_string("player_" .. name, raw)
 	log_debug("data_save", "saved data of '" .. name .. "'; " .. raw .. "")
-	data[name].system_data_changed = false
+	data[name].system_data_modified = false
 
 	if unload_data or unload_now then
 		data[name] = nil
@@ -648,7 +648,7 @@ function archtec_playerdata.set(name, key_name, value)
 		data[name][key_name] = value
 	end
 	log_debug("set", "set '" .. key_name .. "' of '" .. name .. "' to " .. dumpx(value))
-	data[name].system_data_changed = true
+	data[name].system_data_modified = true
 
 	if system.mode == "shutdown" then
 		data_save(name, true)
@@ -689,7 +689,7 @@ function archtec_playerdata.mod(name, key_name, value)
 
 	data[name][key_name] = old_value + value
 	log_debug("mod", "set '" .. key_name .. "' of '" .. name .. "' to '" .. data[name][key_name] .. "' (add '" .. value .. "')")
-	data[name].system_data_changed = true
+	data[name].system_data_modified = true
 
 	if system.mode == "shutdown" then
 		data_save(name, true)
