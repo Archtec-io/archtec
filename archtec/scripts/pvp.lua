@@ -85,6 +85,10 @@ minetest.register_on_punchplayer(function(player, hitter)
 		return false
 	end
 
+	if not data[name] or not data[name_hitter] then
+		return false
+	end
+
 	if not data[name_hitter].pvp then
 		minetest.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because your PvP is disabled!", name)))
 		return true
@@ -102,9 +106,13 @@ minetest.register_on_punchplayer(function(player, hitter)
 	return false
 end)
 
+local function get_data(name)
+	return data[name] or {}
+end
+
 local old_calculate_knockback = minetest.calculate_knockback
 function minetest.calculate_knockback(player, hitter, ...)
-	if not data[player:get_player_name()].pvp or not data[hitter:get_player_name()].pvp then
+	if not get_data(player:get_player_name()).pvp or not get_data(hitter:get_player_name()).pvp then
 		return 0
 	end
 	return old_calculate_knockback(player, hitter, ...)
