@@ -226,25 +226,42 @@ local function dfver(s)
 	end
 end
 
+local ip_list = {}
+
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local info = minetest.get_player_information(name)
-	local version = info.version_string
 
-	-- version-string not available
-	if not version then
+	-- Check for bad client
+	if not info.version then
 		archtec.notify_team("[archtec] Dragofireclient detection does not work. Engine patch required.")
-		return
+	else
+		archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version .. ".")
+
+		local dfv = dfver(info.version_string)
+		if dfv then
+			archtec.notify_team("[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds.")
+			minetest.after(30.0, function()
+				xban.ban_player(name, "Server", nil, "Cheating")
+				archtec.notify_team("[archtec] Auto banned '" .. name .. "'.")
+			end)
+		end
 	end
 
-	archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version)
+	-- Check for other players w/ the same IP
+	if info.address then
+		ip_list[name] = info.address
+		local same_ip = {}
+		for user, ip in pairs(ip_list) do
+			if ip == info.address then
+				same_ip[#same_ip + 1] = user
+			end
+		end
 
-	local dfv = dfver(version)
-	if dfv then
-		archtec.notify_team("[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds")
-		minetest.after(30.0, function()
-			xban.ban_player(name, "Server", nil, "Cheating")
-			archtec.notify_team("[archtec] Auto banned '" .. name .. "'")
-		end)
+		archtec.notify_team("[archtec] IP " .. info.address .. " is currently used by " .. #same_ip .. " players: " .. table.concat(same_ip, ", ") .. ".")
 	end
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	ip_list[player:get_player_name()] = nil
 end)
