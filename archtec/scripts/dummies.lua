@@ -437,8 +437,8 @@ minetest.register_entity(":dummies:dummy", {
 			self._version = 1
 		end
 
-		-- Upgrade to v2
-		if self._version == 1 then
+		-- Upgrade to v2 (support for more animations)
+		if self._version < 2 then
 			if data.enable_animation == true then
 				self._animation = "stand"
 				self.object:set_animation(set_animation("stand"))
@@ -447,6 +447,14 @@ minetest.register_entity(":dummies:dummy", {
 				self.object:set_animation(set_animation("none"))
 			end
 			self._version = 2
+		end
+
+		-- Upgrade to v3 (3d_armor removed blank texture)
+		if self._version < 3 then
+			for i, str in ipairs(data.textures) do
+				data.textures[i] = str:gsub("3d_armor_trans.png", "blank.png")
+			end
+			self._version = 3
 		end
 
 		if data.textures and type(data.textures) == "table" then
@@ -515,6 +523,7 @@ local function spawndummy(pos, textures, name)
 		minetest.log("action", "[archtec] Spawned dummy at " .. minetest.pos_to_string(pos) .. " for player " .. name)
 		dummy:get_luaentity()._animation = "none"
 		dummy:get_luaentity()._ownername = name
+		dummy:get_luaentity()._version = 3 -- Update if needed
 		return dummy -- Return dummy object
 	end
 end
