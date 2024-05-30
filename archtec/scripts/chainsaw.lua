@@ -109,3 +109,26 @@ minetest.register_craft({
 		"biofuel:fuel_can", "biofuel:fuel_can",
 	}
 })
+
+-- Reduce impact on saturation
+local uses_choppy = {}
+choppy.api.register_before_chop(function(self, player, pos, node)
+	uses_choppy[player:get_player_name()] = true
+end)
+
+choppy.api.register_after_chop(function(self, player, pos, node)
+	uses_choppy[player:get_player_name()] = nil
+end)
+
+stamina.register_on_exhaust_player(function(player, change, cause)
+	if not minetest.is_player(player) then
+		return
+	end
+
+	if cause == "dig" then
+		local name = player:get_player_name()
+		if uses_choppy[name] then
+			return true -- Don't exhaust player
+		end
+	end
+end)

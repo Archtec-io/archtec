@@ -40,6 +40,7 @@ read_globals = {
 	"signs_lib",
 	"stairs",
 	"stairsplus",
+	"stamina",
 	"techage",
 	"unified_inventory",
 	"unifieddyes",
