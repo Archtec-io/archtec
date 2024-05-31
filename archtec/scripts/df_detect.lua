@@ -258,7 +258,9 @@ minetest.register_on_joinplayer(function(player)
 			end
 		end
 
-		archtec.notify_team("[archtec] IP " .. info.address .. " is currently used by " .. #same_ip .. " players: " .. table.concat(same_ip, ", ") .. ".")
+		if #same_ip > 1 then
+			archtec.notify_team("[archtec] IP " .. info.address .. " is currently used by " .. #same_ip .. " players: " .. table.concat(same_ip, ", ") .. ".")
+		end
 	end
 end)
 
