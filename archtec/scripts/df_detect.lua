@@ -233,7 +233,7 @@ minetest.register_on_joinplayer(function(player)
 	local info = minetest.get_player_information(name)
 
 	-- Check for bad client
-	if not info.version then
+	if not info.version_string then
 		archtec.notify_team("[archtec] Dragofireclient detection does not work. Engine patch required.")
 	else
 		archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. info.version_string .. " FS-V: " .. info.formspec_version .. ".")
