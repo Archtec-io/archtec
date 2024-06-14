@@ -59,10 +59,6 @@ files["archtec/scripts/privs_cache.lua"] = {
 	globals = {"minetest.set_player_privs", "minetest.get_player_privs"},
 }
 
-files["stamina/init.lua"] = {
-	globals = {"minetest.do_item_eat"},
-}
-
 files["archtec/scripts/mvps_stopper.lua"] = {
 	globals = {"mesecon"},
 }
@@ -87,10 +83,6 @@ files["archtec/scripts/chainsaw.lua"] = {
 	globals = {"choppy.api"},
 }
 
-files["archtec/scripts/random_things.lua"] = {
-	globals = {"biome_lib"},
-}
-
 files["archtec/scripts/watch.lua"] = {
-	globals = {"player_api"},
+	globals = {"player_api.player_attached"},
 }

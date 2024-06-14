@@ -5,11 +5,6 @@ if minetest.get_modpath("unified_inventory") then
 	unified_inventory.remove_category("building")
 end
 
--- Smaller biome_lib generation area
-if minetest.get_modpath("biome_lib") then
-	biome_lib.mapgen_elevation_limit = {["min"] = 0, ["max"] = 48}
-end
-
 -- Add mtg stairs for 'moreblocks:empty_shelf'
 if minetest.get_modpath("moreblocks") then
 	local S2 = minetest.get_translator("moreblocks")
