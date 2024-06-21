@@ -6,6 +6,7 @@ mapserver = {
 local MP = minetest.get_modpath("archtec_mapserver")
 dofile(MP.."/common.lua")
 dofile(MP.."/poi.lua")
+dofile(MP.."/train.lua")
 
 local http = minetest.request_http_api()
 

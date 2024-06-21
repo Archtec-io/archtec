@@ -8,6 +8,7 @@ archtec.S = minetest.get_translator("archtec")
 -- Change links here
 archtec.links = {}
 archtec.links.website = "https://archtec.niklp.net"
+archtec.links.mapserver = "https://archmap.niklp.net"
 archtec.links.discord = "https://discord.gg/txCMTMwBWm"
 archtec.links.matrix = "https://matrix.to/#/#archtec:matrix.org"
 

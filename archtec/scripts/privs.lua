@@ -19,9 +19,6 @@ function archtec.check_areas_high_limit(name, privs)
 		minetest.chat_send_player(name, C("#00BD00", S("Congratulations! You have been granted the '@1' privilege.", "areas_high_limit")))
 		archtec.notify_team("[areas_high_limit] Granted '" .. name .. "' the 'areas_high_limit' priv")
 		return true
-	else
-		minetest.chat_send_player(name, C("#FF0000", S("You do not have @1 hours (or more) playtime", archtec.big_areas_playtime)))
-		return
 	end
 end
 

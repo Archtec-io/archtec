@@ -20,6 +20,7 @@ local random_messages = {
 	S("Diamond powder can be used to build cobble stone generators."),
 	S("Moving is slow? Get Mithril Boots to move much faster."),
 	S("Any questions? Take a look at our FAQ/Wiki using '/faq'."),
+	S("Visit '@1' for a livemap of the world.", archtec.links.mapserver)
 }
 
 if os.date("%m") == "12" then
