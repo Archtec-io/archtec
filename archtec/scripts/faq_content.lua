@@ -74,7 +74,7 @@ Show help:
 ]]
 })
 
-archtec.faq.register("Chatbridge (Discord, Matrix, IRC)", {
+archtec.faq.register("Chatbridge (Discord and Matrix)", {
 	header = "Chat",
 	pos = 3,
 	text = [[

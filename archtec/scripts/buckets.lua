@@ -15,7 +15,7 @@ local function try_grant_priv(name)
 		archtec.notify_team("[adv_buckets] Granted '" .. name .. "' the 'adv_buckets' priv")
 		return true
 	else
-		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You don't have @1 hours (or more) playtime.", archtec.adv_buckets_playtime)))
+		minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You don't have @1 hours (or more) playtime.", archtec.adv_buckets_playtime / 3600)))
 		return false
 	end
 end

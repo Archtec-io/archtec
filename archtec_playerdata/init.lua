@@ -99,14 +99,6 @@ local function get_unload_timestamp()
 	return os.time() + unload_data_after
 end
 
-local function bool_to_str(bool)
-	if bool then
-		return "true"
-	else
-		return "false"
-	end
-end
-
 local function format_list(list)
 	local str = ""
 	for k, v in pairs(list) do
@@ -473,7 +465,7 @@ function archtec_playerdata.register_key(key_name, key_type, default_value, temp
 
 	system.keys[key_name] = {key_type = key_type, default_value = default_value, temp = temp}
 	log_debug("register_key", "registered key '" .. key_name .. "' with type=" .. key_type
-		.. ", default_value=" .. dumpx(default_value) .. ", temp=" .. bool_to_str(temp))
+		.. ", default_value=" .. dumpx(default_value) .. ", temp=" .. tostring(temp))
 end
 
 function archtec_playerdata.register_upgrade(key_name, identifier, run_always, func)

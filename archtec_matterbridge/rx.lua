@@ -3,9 +3,13 @@ local C = minetest.colorize
 local emojis = archtec_matterbridge.emojis
 
 local protocol = {
-	irc = "Libera",
 	discord = "Discord",
 	matrix = "Matrix"
+}
+
+local bridge_color = {
+	discord = "#5662f6", -- Purple from discord icon
+	matrix = "#2bc599" -- Green from element icon
 }
 
 local function handle_data(data)
@@ -23,10 +27,6 @@ local function handle_data(data)
 		minetest.log("action", "[archtec_matterbridge] User action '" .. data.text .. "' by '" .. data.username)
 		minetest.chat_send_all("* " .. data.username .. " " .. data.text)
 		archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(data.username, data.text))
-	elseif data.event == "join_leave" then
-		return
-		-- join/leave message, from irc for example; ignore
-		-- archtec_matterbridge.send(data.username, data.gateway, data.text)
 	else
 		-- regular text
 		if data.text:sub(1, 7) == "!status" then
@@ -94,7 +94,7 @@ local function handle_data(data)
 			local text = data.text:gsub("\n", " ")
 			-- regular user message
 			minetest.log("action", "[archtec_matterbridge] CHAT (" .. bridge .. "): <" .. data.username .. "> " .. text)
-			minetest.chat_send_all(C("#5662f6", "[" .. bridge .. "] ") .. C("#FF8800", data.username .. ": ") .. text)
+			minetest.chat_send_all(C(bridge_color[data.protocol], "[" .. bridge .. "] ") .. C("#FF8800", data.username .. ": ") .. text)
 		end
 	end
 end
