@@ -135,10 +135,18 @@ function archtec.time.days(days)
 	return 60 * 60 * 24 * days
 end
 
-function archtec.physics_locked(player)
-	local ppl = player:get_meta():get_int("player_physics_locked")
-	if ppl == 1 or player:get_physics_override().speed == 0 then
+-- Attachments are a fucking mess
+function archtec.is_attached(player)
+	local name = player:get_player_name()
+	if player_api.player_attached[name] == true then -- not all mods set this param
 		return true
+	elseif player:get_attach() ~= nil then -- not all mods use object attachments
+		return true
+	elseif player:get_meta():get_int("player_physics_locked") == 1 then -- some joe7575 mods set this
+		return true
+	elseif player:get_physics_override().speed == 0 then -- we probably don't want to move the player in this case
+		return true
+	else
+		return false
 	end
-	return false
 end

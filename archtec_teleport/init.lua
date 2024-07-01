@@ -89,12 +89,12 @@ function archtec_teleport.tpr_accept(name, target) -- name gets teleported; targ
 		return
 	end
 
-	if player_api.player_attached[target]then
+	if archtec.is_attached(target_obj) then
 		minetest.chat_send_player(target, C("#FF0000", S("[tpr] You can't accept the teleport request since you're attached to something!")))
 		return
 	end
 
-	if player_api.player_attached[name] or archtec.physics_locked(player) then
+	if archtec.is_attached(player) then
 		minetest.chat_send_player(name, C("#FF0000", S("[tpr] @1 tried to accept the teleport request but you are attached to something!", target)))
 		minetest.chat_send_player(target, C("#FF0000", S("[tpr] @1 is currently attached to something. You can't accept the teleport request!", name)))
 		return
@@ -128,12 +128,12 @@ function archtec_teleport.tp2me_accept(name, target) -- name nothing; target /ok
 		return
 	end
 
-	if player_api.player_attached[target] or archtec.physics_locked(target_obj) then
+	if archtec.is_attached(target) then
 		minetest.chat_send_player(target, C("#FF0000", S("[tp2me] You can't accept the teleport request since you're attached to something!")))
 		return
 	end
 
-	if player_api.player_attached[name] or archtec.physics_locked(player) then
+	if archtec.is_attached(player) then
 		minetest.chat_send_player(name, C("#FF0000", S("[tp2me] @1 tried to accept the teleport request but you are attached to something!", target)))
 		minetest.chat_send_player(target, C("#FF0000", S("[tp2me] @1 is currently attached to something. You can't accept the teleport request!", name)))
 		return
@@ -192,7 +192,7 @@ minetest.register_chatcommand("tpr", {
 			return
 		end
 
-		if player_api.player_attached[name] or archtec.physics_locked(minetest.get_player_by_name(name)) then
+		if archtec.is_attached(minetest.get_player_by_name(name)) then
 			minetest.chat_send_player(name, C("#FF0000", S("[tpr] You are attached so something, can't create teleport request!")))
 			return
 		end
@@ -234,7 +234,7 @@ minetest.register_chatcommand("tp2me", {
 			return
 		end
 
-		if player_api.player_attached[name] or archtec.physics_locked(minetest.get_player_by_name(name)) then
+		if archtec.is_attached(minetest.get_player_by_name(name)) then
 			minetest.chat_send_player(name, C("#FF0000", S("[tp2me] You are attached so something, can't create teleport request!")))
 			return
 		end

@@ -3,13 +3,12 @@ local C = minetest.colorize
 local state = {}
 
 local function detach(name)
-	if not player_api.player_attached[name] then
-		return -- Player not attached
+	local player = minetest.get_player_by_name(name)
+	if not archtec.is_attached(player) then
+		return
 	end
 
-	local player = minetest.get_player_by_name(name)
 	local props = state[name]
-
 	if not state[name] then
 		return
 	end
@@ -101,6 +100,11 @@ minetest.register_chatcommand("watch", {
 
 		if state[name] ~= nil then
 			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
+			return
+		end
+
+		if archtec.is_attached(minetest.get_player_by_name(name)) then
+			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently attached to something!")))
 			return
 		end
 

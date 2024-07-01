@@ -24,7 +24,7 @@ minetest.register_on_joinplayer(function(player)
 		if str ~= "" then
 			local int = string_to_timestamp(str)
 			archtec_playerdata.set(name, "first_join", int)
-			player:get_meta():set_string("archtec:joined", nil)
+			player:get_meta():set_string("archtec:joined", "")
 			minetest.log("action", "[archtec] removed 'archtec:joined' meta of '" .. name .. "' (moved to archtec_playerdata)")
 		else
 			archtec_playerdata.set(name, "first_join", os.time())

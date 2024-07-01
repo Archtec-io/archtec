@@ -155,6 +155,7 @@ Reset to default=
 Your tool is about to break!=
 [watch] You must specify a player name!=
 [watch] You are currently watching @1. Run '/unwatch' first!=
+[watch] You are currently attached to something!=
 [watch] You can't watch yourself!=
 [watch] Target '@1' is not online!=
 [watch] Target '@1' is watching '@2'!=
