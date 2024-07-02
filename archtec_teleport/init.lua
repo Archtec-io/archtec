@@ -128,7 +128,7 @@ function archtec_teleport.tp2me_accept(name, target) -- name nothing; target /ok
 		return
 	end
 
-	if archtec.is_attached(target) then
+	if archtec.is_attached(target_obj) then
 		minetest.chat_send_player(target, C("#FF0000", S("[tp2me] You can't accept the teleport request since you're attached to something!")))
 		return
 	end
