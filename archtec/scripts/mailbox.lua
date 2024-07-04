@@ -63,6 +63,10 @@ local function img_col(stack)
 	return ""
 end
 
+local function can_modify_mailbox(owner, name)
+	return owner == name or minetest.get_player_privs(name).staff
+end
+
 function mailbox.get_formspec(pos, owner, fs_type)
 	local is_letterbox = "false"
 	if minetest.get_node(pos).name == "mailbox:letterbox" then
@@ -118,7 +122,7 @@ end
 function mailbox.unrent(pos, player)
 	local meta = minetest.get_meta(pos)
 	local name = player:get_player_name()
-	if meta:get_string("owner") == name then
+	if can_modify_mailbox(meta:get_string("owner"), name) then
 		local node = minetest.get_node(pos)
 		node.name = "mailbox:mailbox_free"
 		minetest.swap_node(pos, node)
@@ -136,7 +140,7 @@ end
 
 function mailbox.switch_mode(pos, player)
 	local meta = minetest.get_meta(pos)
-	if meta:get_string("owner") == player:get_player_name() then
+	if can_modify_mailbox(meta:get_string("owner"), player:get_player_name()) then
 		local node = minetest.get_node(pos)
 		if node.name == "mailbox:mailbox" then
 			node.name = "mailbox:letterbox"
@@ -172,7 +176,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	return true
 end)
 
-function mailbox.on_place(itemstack, placer, pointed_thing) -- can't be placed, rent a free mailbox instead
+function mailbox.on_place(itemstack, placer, pointed_thing) -- can't be placed, place a free mailbox instead
 	return
 end
 
@@ -232,7 +236,7 @@ function mailbox.on_rightclick(pos, _, clicker)
 	local name = clicker:get_player_name()
 	local owner = meta:get_string("owner")
 
-	if name == owner then
+	if name == owner or (minetest.get_player_privs(name).staff and clicker:get_player_control().aux1) then
 		local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 		minetest.show_formspec(name, "mailbox:mailbox_" .. spos, mailbox.get_formspec(pos, owner, 1))
 	else
@@ -265,10 +269,11 @@ function mailbox.on_metadata_inventory_put(pos, listname, index, stack, player)
 end
 
 function mailbox.allow_metadata_inventory_put(pos, listname, index, stack, player)
+	local name = player:get_player_name()
+
 	if listname == "drop" then
 		local meta = minetest.get_meta(pos)
 		local owner = meta:get_string("owner")
-		local name = player:get_player_name()
 
 		if archtec.ignore_check(name, owner) then
 			archtec.ignore_msg("mailbox", name, owner)
@@ -287,15 +292,16 @@ function mailbox.allow_metadata_inventory_put(pos, listname, index, stack, playe
 			minetest.chat_send_player(name, C("#FF0000", S("Mailbox full!")))
 			return 0
 		end
+	elseif listname == "mailbox" and minetest.get_player_privs(name).staff then -- staff can put things back
+		return stack:get_count()
 	end
+
 	return 0
 end
 
 function mailbox.allow_metadata_inventory_take(pos, listname, index, stack, player)
 	local meta = minetest.get_meta(pos)
-	local name = player:get_player_name()
-
-	if meta:get_string("owner") == name then
+	if can_modify_mailbox(meta:get_string("owner"), player:get_player_name()) then
 		return stack:get_count()
 	end
 	return 0
@@ -303,9 +309,7 @@ end
 
 function mailbox.allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
 	local meta = minetest.get_meta(pos)
-	local name = player:get_player_name()
-
-	if meta:get_string("owner") == name then
+	if can_modify_mailbox(meta:get_string("owner"), player:get_player_name()) then
 		return count
 	end
 	return 0
