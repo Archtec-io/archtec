@@ -441,10 +441,8 @@ minetest.register_entity(":dummies:dummy", {
 		if self._version < 2 then
 			if data.enable_animation == true then
 				self._animation = "stand"
-				self.object:set_animation(set_animation("stand"))
 			else
 				self._animation = "none"
-				self.object:set_animation(set_animation("none"))
 			end
 			self._version = 2
 		end

@@ -81,8 +81,8 @@ end
 -- Give pandas more HP
 if minetest.get_modpath("mobs_animal") then
 	local def = minetest.registered_entities["mobs_animal:panda"]
-	def.hp_max = 30 -- default 24
-	def.hp_min = 15 -- default 10
+	def.initial_properties.hp_max = 30 -- default 24
+	def.initial_properties.hp_min = 15 -- default 10
 	minetest.registered_entities["mobs_animal:panda"] = def
 end
 

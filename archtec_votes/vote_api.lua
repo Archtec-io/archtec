@@ -135,14 +135,8 @@ local function vote_yes(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
-	elseif voteset == 0 then
+	elseif voteset.votes[name] then
 		minetest.chat_send_player(name, S("You've already voted!"))
-		return
-	elseif not voteset.results.yes then
-		minetest.chat_send_player(name, S("The vote is not a yes/no one."))
-		return
-	elseif voteset.can_vote and not voteset:can_vote(name) then
-		minetest.chat_send_player(name, S("You can't vote in the currently active vote!"))
 		return
 	end
 	archtec_votes.vote(voteset, name, "yes")
@@ -153,14 +147,8 @@ local function vote_no(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
-	elseif voteset == 0 then
+	elseif voteset.votes[name] then
 		minetest.chat_send_player(name, S("You've already voted!"))
-		return
-	elseif not voteset.results.no then
-		minetest.chat_send_player(name, S("The vote is not a yes/no one."))
-		return
-	elseif voteset.can_vote and not voteset:can_vote(name) then
-		minetest.chat_send_player(name, S("You can't vote in the currently active vote!"))
 		return
 	end
 	archtec_votes.vote(voteset, name, "no")

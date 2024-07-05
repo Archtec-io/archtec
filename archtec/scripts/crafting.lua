@@ -33,21 +33,9 @@ fix_craft("pride_flags:lower_mast", {
 
 -- homedecor:table/ts_furniture:default_WOODTYPE_small_table
 fix_craft("homedecor:table", {
-	{ "group:wood","group:wood", "group:wood" },
-	{ "group:stick", "", "group:stick" },
-	{ "", "group:stick", "" }
-})
-
--- jonez palace windows had the same recipe
-fix_craft("xpanes:palace_window_top_flat", {
-	{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"},
-	{"xpanes:pane_flat", "", "xpanes:pane_flat"}
-})
-
--- jonez palace windows had the same recipe
-fix_craft("xpanes:palace_window_bottom_flat", {
-	{"xpanes:pane_flat", "", "xpanes:pane_flat"},
-	{"xpanes:pane_flat", "xpanes:pane_flat", "xpanes:pane_flat"}
+	{"group:wood","group:wood", "group:wood"},
+	{"group:stick", "", "group:stick"},
+	{"", "group:stick", ""}
 })
 
 -- xdecor:pressure_stone_off/mesecons_pressureplates:pressure_plate_stone_off
@@ -71,12 +59,6 @@ fix_craft("xdecor:bowl", {
 	{"xdecor:wood_tile", "", "xdecor:wood_tile"},
 	{"", "xdecor:wood_tile", ""}
 })
-
--- xpanes:wrought_lattice_bottom_flat/jonez:wrought_lattice_top (https://github.com/Archtec-io/bugtracker/issues/166)
-fix_craft("jonez:wrought_lattice_top", {
-	{"", "default:tin_ingot", ""},
-	{"default:steel_ingot", "default:tin_ingot", "default:steel_ingot"}
-}, 16)
 
 if minetest.get_modpath("ethereal") then
 	minetest.register_craft({

@@ -45,27 +45,6 @@ minetest.override_item("techage:ta3_drillbox_pas", {
 	end
 })
 
--- Fix flowers. thx ethereal...
-local flowers = {
-	"flowers:rose",
-	"flowers:tulip",
-	"flowers:dandelion_yellow",
-	"flowers:chrysanthemum_green",
-	"flowers:geranium",
-	"flowers:viola",
-	"flowers:dandelion_white",
-	"flowers:tulip_black",
-	"flowers:mushroom_brown",
-	"flowers:mushroom_red"
-}
-
-minetest.after(1, function()
-	for _, flower in pairs(flowers) do
-		techage.register_flower(flower)
-		signs_bot.register_flower(flower)
-	end
-end)
-
 -- Disable titanium drops
 techage.register_ore_for_gravelsieve("titanium:titanium", 99999)
 
