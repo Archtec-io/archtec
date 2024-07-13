@@ -17,7 +17,7 @@ Required chat command arguments/parameters are indicated with angle braces "<>",
 local function faq_tree(search)
 	local entries = {}
 	for name, def in pairs(defs) do
-		if search == "" or string.find(def.text, search) then
+		if search == "" or string.find(def.text:lower(), search:lower()) then
 			entries[def.header] = entries[def.header] or {}
 			local len = #entries[def.header]
 			entries[def.header][len + 1] = {name, def}

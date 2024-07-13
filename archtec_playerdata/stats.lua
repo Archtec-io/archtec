@@ -212,6 +212,10 @@ function archtec_playerdata.calc_xp(data)
 	xp = xp + (data.playtime or 0) * 0.025 -- 0.025 xp per second = 90 XP per hour
 	xp = xp + (data.chatmessages or 0) * 2
 	xp = xp + (data.thank_you or 0) * 100
+
+	if xp < 0 then
+		return 0
+	end
 	return math.floor(xp)
 end
 
