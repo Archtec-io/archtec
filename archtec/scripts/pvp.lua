@@ -1,76 +1,32 @@
-if not minetest.settings:get_bool("enable_pvp") then
-	return
-end
 local S = archtec.S
 local C = minetest.colorize
-local data = {}
+local enabled = {}
 
 local function pvp_enable(name, player, init)
-	data[name].pvp = true
+	enabled[name] = true
+	archtec.modify_hud(name, 1, {bg_color = "#FF0000", icon = "archtec_pvp_on.png", icon_scale = 3})
 
 	if not init then
-		player:hud_remove(data[name].pvp_pic_off)
-		player:hud_remove(data[name].pvp_text_off)
-		data[name].pvp_pic_off = nil
-		data[name].pvp_text_off = nil
-
 		minetest.chat_send_player(name, S("Your PvP has been enabled."))
 	end
-
-	data[name].pvp_pic_on = player:hud_add({
-		hud_elem_type = "image",
-		position = {x = 1, y = 0},
-		offset = {x=-210, y = 20},
-		scale = {x = 1, y = 1},
-		text = "archtec_pvp_on.png",
-	})
-	data[name].pvp_text_on = player:hud_add({
-		hud_elem_type = "text",
-		position = {x = 1, y = 0},
-		offset = {x=-125, y = 20},
-		scale = {x = 100, y = 100},
-		text = S("PvP is enabled for you!"),
-		number = 0xFF0000, -- Red
-	})
 end
 
 local function pvp_disable(name, player, init)
-	data[name].pvp = false
+	enabled[name] = false
+	archtec.modify_hud(name, 1, {bg_color = "#00BD00", icon = "archtec_pvp_off.png", icon_scale = 3})
 
 	if not init then
-		player:hud_remove(data[name].pvp_pic_on)
-		player:hud_remove(data[name].pvp_text_on)
-		data[name].pvp_pic_on = nil
-		data[name].pvp_text_on = nil
-
 		minetest.chat_send_player(name, S("Your PvP has been disabled."))
 	end
-
-	data[name].pvp_pic_off = player:hud_add({
-		hud_elem_type = "image",
-		position = {x = 1, y = 0},
-		offset = {x = -210, y = 20},
-		scale = {x = 1, y = 1},
-		text = "archtec_pvp_off.png",
-	})
-	data[name].pvp_text_off = player:hud_add({
-		hud_elem_type = "text",
-		position = {x = 1, y = 0},
-		offset = {x=-125, y = 20},
-		scale = {x = 100, y = 100},
-		text = S("PvP is disabled for you!"),
-		number = 0x7DC435,
-	})
 end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	data[name] = {}
 	pvp_disable(name, player, true)
 end)
 
 minetest.register_on_leaveplayer(function(player)
-	data[player:get_player_name()] = nil
+	enabled[player:get_player_name()] = nil
 end)
 
 minetest.register_on_punchplayer(function(player, hitter)
@@ -85,15 +41,11 @@ minetest.register_on_punchplayer(function(player, hitter)
 		return false
 	end
 
-	if not data[name] or not data[name_hitter] then
-		return false
-	end
-
-	if not data[name_hitter].pvp then
+	if not enabled[name_hitter]then
 		minetest.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because your PvP is disabled!", name)))
 		return true
 	end
-	if not data[name].pvp then
+	if not enabled[name] then
 		minetest.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because their PvP is disabled!", name)))
 		return true
 	end
@@ -106,13 +58,9 @@ minetest.register_on_punchplayer(function(player, hitter)
 	return false
 end)
 
-local function get_data(name)
-	return data[name] or {}
-end
-
 local old_calculate_knockback = minetest.calculate_knockback
 function minetest.calculate_knockback(player, hitter, ...)
-	if not get_data(player:get_player_name()).pvp or not get_data(hitter:get_player_name()).pvp then
+	if not enabled[player:get_player_name()] or not enabled[hitter:get_player_name()] then
 		return 0
 	end
 	return old_calculate_knockback(player, hitter, ...)
@@ -126,7 +74,7 @@ if minetest.get_modpath("unified_inventory") then
 		tooltip = "PvP",
 		action = function(player)
 			local name = player:get_player_name()
-			if data[name].pvp then
+			if enabled[name] then
 				pvp_disable(name, player)
 			else
 				pvp_enable(name, player)
@@ -161,14 +109,14 @@ minetest.register_chatcommand("pvp", {
 		end
 
 		if mode == "on" then
-			if data[target].pvp then
+			if enabled[target] then
 				minetest.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already enabled!"))
 				return
 			end
 			pvp_enable(target, minetest.get_player_by_name(target))
 			minetest.chat_send_player(name, C("#00BD00", "[pvp] Enabled PvP of " .. target))
 		elseif mode == "off" then
-			if not data[target].pvp then
+			if not enabled[target] then
 				minetest.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already disabled!"))
 				return
 			end

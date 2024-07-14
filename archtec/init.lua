@@ -18,6 +18,7 @@ dofile(path .. "notify_team.lua")
 dofile(path .. "namecolor.lua")
 dofile(path .. "settings.lua")
 dofile(path .. "ignore.lua")
+dofile(path .. "hud_api.lua")
 dofile(path .. "xp.lua")
 
 -- These files aren't (mostly) in a particular order
