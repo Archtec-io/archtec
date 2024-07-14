@@ -18,11 +18,12 @@ dofile(path .. "notify_team.lua")
 dofile(path .. "namecolor.lua")
 dofile(path .. "settings.lua")
 dofile(path .. "ignore.lua")
+dofile(path .. "xp.lua")
 
 -- These files aren't (mostly) in a particular order
 dofile(path .. "pvp.lua")
 dofile(path .. "privs.lua")
-dofile(path .. "stats.lua")
+dofile(path .. "serverstats.lua")
 dofile(path .. "mapfix.lua")
 dofile(path .. "prejoin.lua")
 dofile(path .. "aliases.lua")
@@ -71,6 +72,7 @@ dofile(path .. "perf_logging.lua")
 dofile(path .. "playtime.lua")
 dofile(path .. "msg_offline.lua")
 dofile(path .. "mailbox.lua")
+dofile(path .. "playerstats.lua")
 
 local http = minetest.request_http_api()
 if http then

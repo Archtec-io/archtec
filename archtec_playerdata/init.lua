@@ -9,7 +9,6 @@ archtec_playerdata = {
 
 -- Init some basic stuff
 local storage = minetest.get_mod_storage()
-local modpath = minetest.get_modpath("archtec_playerdata")
 local datadir = minetest.get_worldpath() .. "/archtec_playerdata/"
 local type = type
 
@@ -702,6 +701,3 @@ minetest.register_chatcommand("playerdata_debug", {
 		end
 	end
 })
-
--- Load other stuff
-dofile(modpath .. "/stats.lua")
