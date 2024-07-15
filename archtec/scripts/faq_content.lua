@@ -483,8 +483,6 @@ Biofuel is produced in the Biofuel Refinery.
 
 Biofuel has multiple use cases:
 - As fuel for the chainsaw
-- As fuel for the TA3 Tiny Power Generator
-
 - As a craft ingredient, search in your inventory after "group:biofuel"
 ]]
 })

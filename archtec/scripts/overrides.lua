@@ -172,3 +172,14 @@ end
 if minetest.get_modpath("signs_bot") then
 	signs_bot.MAX_CAPA = signs_bot.MAX_CAPA * 1.5
 end
+
+-- Add empty biofuel canister
+if minetest.get_modpath("biofuel") then
+	minetest.override_item("biofuel:fuel_can", {stack_max = 1, inventory_image = "archtec_biofuel_fuel_can.png"})
+
+	minetest.register_craftitem(":biofuel:fuel_can_empty", {
+		description = "Empty Canister of Biofuel",
+		inventory_image = "archtec_biofuel_fuel_can_empty.png",
+		stack_max = 1
+	})
+end
