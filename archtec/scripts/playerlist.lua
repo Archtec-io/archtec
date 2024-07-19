@@ -12,7 +12,7 @@ local function hud_show(player)
 	local players = minetest.get_connected_players()
 
 	local huds = {player:hud_add({
-		hud_elem_type = "image",
+		[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
 		position = {x = 0.5, y = 0},
 		offset = {x = 0, y = 20},
 		text = "archtec_background.png",
@@ -21,7 +21,7 @@ local function hud_show(player)
 		number = 0xFFFFFF
 	})}
 	huds[#huds + 1] = player:hud_add({
-		hud_elem_type = "text",
+		[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "text",
 		position = {x = 0.5, y = 0},
 		offset = {x = 0, y = 23},
 		text = #players .. "/" .. max_players,
@@ -36,7 +36,7 @@ local function hud_show(player)
 		local uname = user:get_player_name()
 		local ping = math.max(1, math.ceil(4 - (minetest.get_player_information(uname).avg_rtt or 0) * 50))
 		huds[#huds + 1] = player:hud_add({
-			hud_elem_type = "text",
+			[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "text",
 			position = {x = 0.5, y = 0},
 			offset = {x = 0, y = 41 + (i - 1) * 18},
 			text = uname,
@@ -45,7 +45,7 @@ local function hud_show(player)
 			number = 0xFFFFFF
 		})
 		huds[#huds + 1] = player:hud_add({
-			hud_elem_type = "image",
+			[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
 			position = {x = 0.5, y = 0},
 			offset = {x = -195, y = 38 + (i - 1) * 18},
 			text = "server_ping_" .. ping .. ".png",

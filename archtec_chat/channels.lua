@@ -15,11 +15,6 @@ local cdef_default = {
 }
 ]]--
 
-local user_table = {
-	channels = {}
-	-- default = "staff"
-}
-
 local function get_cdef(cname)
 	if not archtec_chat.channels[cname] then return nil end
 	return archtec_chat.channels[cname]
@@ -63,10 +58,8 @@ end)
 function archtec_chat.user.open(name)
 	local data = archtec_playerdata.get(name, "channels")
 	-- add missing sub tables
-	for k, v in pairs(user_table) do
-		if not data[k] then
-			data[k] = v
-		end
+	if not data.channels then
+		data.channels = {}
 	end
 	-- remove old channels
 	for cname, _ in pairs(data.channels) do
