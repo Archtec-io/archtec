@@ -135,7 +135,7 @@ local function vote_yes(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
-	elseif voteset.votes[name] then
+	elseif voteset.voted[name] then
 		minetest.chat_send_player(name, S("You've already voted!"))
 		return
 	end
@@ -147,7 +147,7 @@ local function vote_no(name)
 	if not voteset then
 		minetest.chat_send_player(name, S("There is no vote currently running!"))
 		return
-	elseif voteset.votes[name] then
+	elseif voteset.voted[name] then
 		minetest.chat_send_player(name, S("You've already voted!"))
 		return
 	end
