@@ -10,7 +10,7 @@ function archtec_votes.new_vote(creator, voteset)
 	if archtec_votes.active == nil then
 		archtec_votes.start_vote(voteset, creator)
 	elseif creator then
-		minetest.chat_send_player(creator, S("Can't start a new vote! A vote is already in progress."))
+		minetest.chat_send_player(creator, C("#FF0000", S("Can't start a new vote! A vote is already in progress.")))
 	end
 end
 
@@ -21,7 +21,7 @@ function archtec_votes.start_vote(voteset, creator)
 
 	-- Results table
 	voteset.results = {
-		voted = {creator = true},
+		voted = {[creator] = true},
 		yes = {creator},
 		no = {},
 	}
@@ -33,7 +33,7 @@ function archtec_votes.start_vote(voteset, creator)
 		end)
 	end
 
-	minetest.chat_send_all(creator .. " started a vote: " .. voteset.description .. C("#999", " (" .. voteset.help .. ")"))
+	minetest.chat_send_all(S("@1 started a vote: @2 (@3)", creator, voteset.description, C("#999", voteset.help)))
 
 	-- Handle autovotes
 	if voteset.description == "Make day" then
@@ -121,10 +121,10 @@ minetest.register_chatcommand("vote_clear", {
 	privs = {staff = true},
 	func = function(name)
 		if archtec_votes.active == nil then
-			minetest.chat_send_player(name, C("#FF0000", "There is no vote in progress!"))
+			minetest.chat_send_player(name, C("#FF0000", S("There is no vote in progress!")))
 		end
 		archtec_votes.active = nil
-		minetest.chat_send_all(C("#FF0000", name .. " canceled active vote!"))
+		minetest.chat_send_all(C("#FF0000", S("@1 canceled active vote!", name)))
 		minetest.log("action", "[archtec_votes] " .. name .. " canceled active vote")
 	end
 })
@@ -133,10 +133,10 @@ minetest.register_chatcommand("vote_clear", {
 local function vote_yes(name)
 	local voteset = archtec_votes.active
 	if not voteset then
-		minetest.chat_send_player(name, S("There is no vote currently running!"))
+		minetest.chat_send_player(name, C("#FF0000", S("There is no vote currently running!")))
 		return
-	elseif voteset.voted[name] then
-		minetest.chat_send_player(name, S("You've already voted!"))
+	elseif voteset.results.voted[name] then
+		minetest.chat_send_player(name, C("#FF0000", S("You've already voted!")))
 		return
 	end
 	archtec_votes.vote(voteset, name, "yes")
@@ -145,10 +145,10 @@ end
 local function vote_no(name)
 	local voteset = archtec_votes.active
 	if not voteset then
-		minetest.chat_send_player(name, S("There is no vote currently running!"))
+		minetest.chat_send_player(name, C("#FF0000", S("There is no vote currently running!")))
 		return
-	elseif voteset.voted[name] then
-		minetest.chat_send_player(name, S("You've already voted!"))
+	elseif voteset.results.voted[name] then
+		minetest.chat_send_player(name, C("#FF0000", S("You've already voted!")))
 		return
 	end
 	archtec_votes.vote(voteset, name, "no")

@@ -1,6 +1,9 @@
 # textdomain: archtec_votes
 Can't start a new vote! A vote is already in progress.=
+@1 started a vote: @2 (@3)=
 Auto-vote @1 by @2.=
+There is no vote in progress!=
+@1 canceled active vote!=
 There is no vote currently running!=
 You've already voted!=
 You can't start a new vote, it's already day!=
