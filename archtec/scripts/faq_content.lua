@@ -193,6 +193,7 @@ archtec.faq.register("Thank you", {
 	pos = 6,
 	text = [[
 There are many helpful players on Archtec. If someone has been helpful and you want to thank them and call them out for their assistance, use the '/thankyou' command. To see how many thankyou's a player has received, use the '/stats' command. :-)
+You are limited to 1 '/thankyou' per hour.
 
 To thank a player:
 '/thankyou <name>'

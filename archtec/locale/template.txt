@@ -153,6 +153,7 @@ You can disable snow in the settings.=
 [Info]:=
 You can't thank yourself!=
 You can't thank an offline player!=
+You used '/thankyou' within the last hour! Try again later.=
 @1 said thank you to @2.=
 @1 requested a server shutdown in @2 seconds.=
 [report] Report successfully created. GitHub URL: @1=

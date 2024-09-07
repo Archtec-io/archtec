@@ -23,6 +23,7 @@ end
 
 -- Thankyou command
 archtec_playerdata.register_key("thank_you", "number", 0)
+archtec_playerdata.register_key("thank_you_last_used", "number", 0)
 
 minetest.register_chatcommand("thankyou", {
 	params = "<name>",
@@ -43,7 +44,12 @@ minetest.register_chatcommand("thankyou", {
 			archtec.ignore_msg("thankyou", name, target)
 			return
 		end
+		if archtec_playerdata.get(name, "thank_you_last_used") > os.time() - archtec.time.hours(1) then
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You used '/thankyou' within the last hour! Try again later.")))
+			return
+		end
 		archtec_playerdata.mod(target, "thank_you", 1)
+		archtec_playerdata.set(name, "thank_you_last_used", os.time())
 		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
 		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**.")
 	end
