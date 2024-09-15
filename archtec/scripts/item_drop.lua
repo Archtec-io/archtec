@@ -1,5 +1,5 @@
 local pickup_gain = 0.4
-local pickup_radius = 0.75
+local pickup_radius = 1.25
 local pickup_age = 0.5
 
 -- adds the item to the inventory and removes the object
@@ -61,7 +61,7 @@ local function pickup_step()
 	-- lower step if takeable item(s) were found
 	local time
 	if got_item then
-		time = 0.05 -- next step
+		time = 0 -- next step
 	else
 		time = 0.4
 	end

@@ -511,6 +511,11 @@ end
 
 -- Check if player is in the database
 function archtec_playerdata.player_exists(name)
+	if data[name] ~= nil then
+		return true
+	end
+
+	-- Note: Player might be in cache only if the player just joined for the first time
 	local raw = storage:get_string("player_" .. name)
 	if raw == "" then
 		log_debug("player_exists", "player " .. name .. " does not exist")
