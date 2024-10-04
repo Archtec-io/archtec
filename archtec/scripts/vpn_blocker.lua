@@ -1,11 +1,11 @@
 local http = assert(...)
 local iphub_key = minetest.settings:get("archtec.iphub_key")
-local kick_msg = "Please turn off your VPN."
 
-archtec.vpn_enabled = true
+archtec_playerdata.register_key("vpn_allowed", "boolean", false)
+archtec.vpn_blocker_enabled = true
 
 if not iphub_key or iphub_key == "" then
-	archtec.vpn_enabled = false
+	archtec.vpn_blocker_enabled = false
 	minetest.log("warning", "[archtec] No IPHub key provided!")
 	return
 end
@@ -30,17 +30,27 @@ local function check_ip(name, ip)
 		minetest.log("action", "[archtec_vpn_blocker] Passing good-ip-player " .. name .. " [" .. ip .. "]")
 	else
 		if archtec.is_online(name) then
-			minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
-			archtec.notify_team("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
-			minetest.after(0.01, function()
-				if minetest.get_player_by_name(name) then
-					minetest.kick_player(name, kick_msg)
-				end
-			end)
-		else -- player is joining right now
-			minetest.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
-			archtec.notify_team("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
-			return true
+			if archtec_playerdata.get(name, "vpn_allowed") then
+				minetest.log("action", "[archtec_vpn_blocker] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
+				archtec.notify_team("[archtec_vpn_blocker] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
+			else
+				minetest.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
+				archtec.notify_team("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+				minetest.after(0.01, function()
+					if minetest.get_player_by_name(name) then
+						minetest.kick_player(name, "Please turn off your VPN.")
+					end
+				end)
+			end
+		else -- Player is joining right now
+			if archtec_playerdata.get(name, "vpn_allowed") then
+				minetest.log("action", "[archtec_vpn_blocker] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
+				archtec.notify_team("[archtec_vpn_blocker] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
+			else
+				minetest.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
+				archtec.notify_team("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+				return true -- For prejoinplayer callback
+			end
 		end
 	end
 end
@@ -65,7 +75,7 @@ local function query_ip(name, ip)
 end
 
 local function vpn_check(name, ip, query)
-	if not archtec.vpn_enabled then return end -- Kill switch
+	if not archtec.vpn_blocker_enabled then return end -- Kill switch
 	if not cache[ip] and query then
 		query_ip(name, ip)
 		return
@@ -84,7 +94,7 @@ end)
 minetest.register_on_prejoinplayer(function(name, ip) -- on_authplayer won't work
 	if name and ip then
 		if vpn_check(name, ip, false) then -- Don't query a http request but block if in cache
-			return kick_msg
+			return "Please turn off your VPN."
 		end
 	end
 end)
