@@ -50,3 +50,14 @@ minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	archtec.black_sky[name] = nil
 end)
+
+-- Volumetric lighting
+minetest.register_on_joinplayer(function(player)
+	archtec.update_vol_light(player)
+end)
+
+function archtec.update_vol_light(player)
+	player:set_lighting({
+		volumetric_light = {strength = archtec_playerdata.get(player:get_player_name(), "s_vol_light") / 100}
+	})
+end

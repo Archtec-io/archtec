@@ -35,6 +35,7 @@ archtec_playerdata.register_key("s_sp_show", "boolean", true)
 archtec_playerdata.register_key("s_r_id", "boolean", true)
 archtec_playerdata.register_key("s_snow", "boolean", true)
 archtec_playerdata.register_key("s_avd", "boolean", false)
+archtec_playerdata.register_key("s_vol_light", "number", 0)
 
 local settings = {
 	{type = "header", title = S("Chat")},
@@ -45,6 +46,7 @@ local settings = {
 	{type = "header", title = S("Visual")},
 	{type = "setting", name = "sp_show", title = S("Show waypoint to spawn"), description = ""},
 	-- disabled {type = "setting", name = "snow", title = S("Enable snow particles"), description = S("Snow particles must also be activated by the admin.")},
+	{type = "custom", name = "vol_light", title = S("Volumetric lighting a.k.a \"Godrays\""), description = "Requires Minetest 5.9.0 or higher; must be enabled in client settings."},
 
 	{type = "header", title = S("Misc")},
 	{type = "setting", name = "r_id", title = S("Collect dropped items automatically"), description = ""},
@@ -97,6 +99,19 @@ local function show_settings(name)
 				fs = fs .. "label[3," .. y + 0.15 .. ";" .. F(def.title) .. "]"
 				fs = fs .. "label[3," .. y + 0.55 .. ";" .. F(colors) .. "]"
 				y = y + 1.3
+			-- Volumetric lighting
+			elseif def.name == "vol_light" then
+				local curr_val = archtec_playerdata.get(name, "s_vol_light")
+
+				fs = fs .. "scrollbaroptions[min=0;max=100;smalltep=20;largestep=20]"
+				fs = fs .. "scrollbar[0.4," .. y - 0.15 .. ";4,0.5;horizontal;vol_light;" .. curr_val .. "]"
+				fs = fs .. "label[4.5," .. y .. ";" .. F(def.title) .. "]"
+				fs = fs .. "label[0.4," .. y + 0.55 .. ";" .. F(C("#999", def.description)) .. "]"
+				if curr_val ~= 0 then
+					fs = fs .. "image_button[10.2," .. y - 0.20 .. ";0.5,0.5;archtec_reset.png;" .. "reset_" .. def.name .. ";;false;false;]"
+					fs = fs .. "tooltip[" .. "reset_" .. def.name .. ";" .. F(S("Reset to default")) .. "]"
+				end
+				y = y + 0.8
 			end
 		end
 	end
@@ -111,11 +126,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		local setting, value
 		if f:sub(1, 2) == "s_" then
 			setting = f:sub(3, #f)
-			if setting_list[setting] == nil then return end
+			if setting_list[setting] == nil then
+				return
+			end
 			value = tobool(v)
 		elseif f:sub(1, 6) == "reset_" then
 			setting = f:sub(7, #f)
-			if setting_list[setting] == nil then return end
+			if setting_list[setting] == nil then
+				return
+			end
 			value = archtec_playerdata.get_default("s_" .. setting)
 		end
 
@@ -134,6 +153,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			archtec_playerdata.set(name, "s_ncolor", def.id)
 			show_settings(name)
 			minetest.chat_send_player(name, S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name)))
+		end
+	end
+	-- can't use elseif here
+	if fields.vol_light then
+		local value = tonumber(minetest.explode_scrollbar_event(fields.vol_light).value)
+		if value >= 0 and value <= 100 then
+			archtec_playerdata.set(name, "s_vol_light", value)
+			archtec.update_vol_light(minetest.get_player_by_name(name))
+			show_settings(name)
 		end
 	end
 end)
