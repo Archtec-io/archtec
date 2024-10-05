@@ -47,3 +47,8 @@ minetest.override_item("techage:ta3_drillbox_pas", {
 
 -- Disable titanium drops
 techage.register_ore_for_gravelsieve("titanium:titanium", 99999)
+
+-- signs_bot: Support for a few more trees
+local ts = signs_bot.register_tree_saplings
+ts("cherrytree:sapling", "cherrytree:sapling", 2400, 4800)
+ts("mahogany:sapling", "mahogany:sapling", 2400, 4800)
