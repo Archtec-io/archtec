@@ -1,4 +1,5 @@
 local S = archtec.S
+local C = minetest.colorize
 
 -- Remove building category
 if minetest.get_modpath("unified_inventory") then
@@ -129,3 +130,30 @@ archtec.register_chatcommand_alias("ao", "add_owner")
 archtec.register_chatcommand_alias("sa", "select_area")
 archtec.register_chatcommand_alias("p1", "area_pos1")
 archtec.register_chatcommand_alias("p2", "area_pos2")
+
+-- /map command
+local url = archtec.links.mapserver .. "#!/map/0/12/" -- layer/zoomlevel
+local help_str = C("#FF8800", S("Ctrl + Click the link to open your browser"))
+
+minetest.register_chatcommand("map", {
+	description = "Gives you an URL to the Mapserver, pointing at your current position.",
+	privs = {interact = true},
+	func = function(name)
+		minetest.log("action", "[/thankyou] executed by '" .. name .. "'")
+		local player = minetest.get_player_by_name(name)
+		if player == nil then
+			minetest.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
+			return
+		end
+
+		local pos = player:get_pos()
+		if pos == nil then
+			minetest.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
+			return
+		else
+			local x = math.floor(pos.x + 0.5)
+			local z = math.floor(pos.z + 0.5)
+			minetest.chat_send_player(name, S("[map] You are here: @1 (@2)", url .. tostring(x) .. "/" .. tostring(z), help_str))
+		end
+	end
+})

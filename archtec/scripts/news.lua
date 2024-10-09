@@ -41,7 +41,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if url ~= nil then
 			local name = player:get_player_name()
 			minetest.close_formspec(name, "archtec:news")
-			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click the link to open your browser:")) .. " " .. url)
+			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click the link to open your browser") .. ":") .. " " .. url)
 		end
 	end
 
