@@ -10,13 +10,13 @@ local function allow_skybox_change(name)
 	return true
 end
 
-if not minetest.global_exists("auroras") then
+if not core.global_exists("auroras") then
 	allow_skybox_change = function(name)
 		return true
 	end
 end
 
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	timer = timer + dtime
 	if timer < 6 then
 		return
@@ -24,7 +24,7 @@ minetest.register_globalstep(function(dtime)
 
 	timer = 0
 
-	for _, player in pairs(minetest.get_connected_players()) do
+	for _, player in pairs(core.get_connected_players()) do
 		local name = player:get_player_name()
 		local pos = player:get_pos()
 		if allow_skybox_change(name) then
@@ -46,7 +46,7 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	archtec.black_sky[name] = nil
 end)

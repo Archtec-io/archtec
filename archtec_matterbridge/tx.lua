@@ -11,7 +11,7 @@ archtec_matterbridge.send = function(message, channel, event)
 			"Authorization: Bearer " .. archtec_matterbridge.token
 		},
 		timeout = 5,
-		data = minetest.write_json({
+		data = core.write_json({
 			gateway = channel or "MT-POST",
 			text = message,
 			event = event
@@ -22,29 +22,29 @@ archtec_matterbridge.send = function(message, channel, event)
 end
 
 -- /me message in chat channel
-minetest.override_chatcommand("me", {
+core.override_chatcommand("me", {
 	func = function(name, param)
 		local msg = archtec.get_and_trim(param)
 		if msg ~= "" then
-			minetest.chat_send_all("* " .. name .. " " .. param)
+			core.chat_send_all("* " .. name .. " " .. param)
 			archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(name, param))
 		else
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "[/me] No message provided!"))
+			core.chat_send_player(name, core.colorize("#FF0000", "[/me] No message provided!"))
 		end
 		return true
 	end
 })
 
 -- join player message
-local old_join = minetest.send_join_message
-function minetest.send_join_message(player_name)
+local old_join = core.send_join_message
+function core.send_join_message(player_name)
 	archtec_matterbridge.send(":information_source: " .. player_name .. " joined the game.")
 	old_join(player_name)
 end
 
 -- leave player message
-local old_leave = minetest.send_leave_message
-function minetest.send_leave_message(player_name, timed_out)
+local old_leave = core.send_leave_message
+function core.send_leave_message(player_name, timed_out)
 	if archtec.silent_leave[player_name] then
 		archtec.silent_leave[player_name] = nil
 		return
@@ -60,12 +60,12 @@ function minetest.send_leave_message(player_name, timed_out)
 end
 
 -- initial message on start
-minetest.after(0.1, function()
+core.after(0.1, function()
 	archtec_matterbridge.send(":green_circle: Server is back online.")
 end)
 
 -- shutdown message
-minetest.register_on_shutdown(function()
+core.register_on_shutdown(function()
 	is_shutdown = true
 	archtec_matterbridge.send(":warning: Server is shutting down...")
 end)

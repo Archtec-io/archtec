@@ -24,7 +24,7 @@ local update_formspec = function(meta)
 	)
 end
 
-minetest.register_node(":mapserver:train", {
+core.register_node(":mapserver:train", {
 	description = "Mapserver Train",
 	tiles = {
 		"mapserver_train.png"
@@ -35,13 +35,13 @@ minetest.register_node(":mapserver:train", {
 	can_dig = mapserver.can_interact,
 
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 
 		local last_index = 0
 		local last_line = ""
 		local last_color = ""
 
-		if minetest.is_player(placer) then
+		if core.is_player(placer) then
 			local name = placer:get_player_name()
 			if name ~= nil then
 				if last_set_by[name] ~= nil then
@@ -73,7 +73,7 @@ minetest.register_node(":mapserver:train", {
 			return
 		end
 
-		local meta = minetest.get_meta(pos)
+		local meta = core.get_meta(pos)
 		local name = sender:get_player_name()
 
 		if fields.save then

@@ -1,9 +1,9 @@
 local S = archtec.S
-local C = minetest.colorize
+local C = core.colorize
 local state = {}
 
 local function detach(name)
-	local player = minetest.get_player_by_name(name)
+	local player = core.get_player_by_name(name)
 	if not archtec.is_attached(player) then
 		return
 	end
@@ -33,15 +33,15 @@ local function detach(name)
 	})
 
 	-- Reset pos
-	minetest.after(0.1, function() -- delay=0 (next step) isn't reliable
-		local player2 = minetest.get_player_by_name(name)
+	core.after(0.1, function() -- delay=0 (next step) isn't reliable
+		local player2 = core.get_player_by_name(name)
 		if player2 then
 			player2:set_pos(props.pos)
 		end
 	end)
 
 	state[name] = nil
-	minetest.log("action", "[archtec_watch] Detached '" .. name .. "' from '" .. props.target .. "'")
+	core.log("action", "[archtec_watch] Detached '" .. name .. "' from '" .. props.target .. "'")
 end
 
 local function attach(name, target)
@@ -49,7 +49,7 @@ local function attach(name, target)
 	detach(name)
 
 	-- Save some props for detach
-	local player = minetest.get_player_by_name(name)
+	local player = core.get_player_by_name(name)
 	local properties = player:get_properties()
 	local nametage_attr = player:get_nametag_attributes()
 
@@ -77,76 +77,76 @@ local function attach(name, target)
 	player_api.player_attached[name] = true
 
 	local eye_pos = vector.new(0, -5, -20)
-	local target_player = minetest.get_player_by_name(target)
+	local target_player = core.get_player_by_name(target)
 
 	player:set_eye_offset(eye_pos)
 	player:set_attach(target_player, "", eye_pos)
 
-	minetest.log("action", "[archtec_watch] Attached '" .. name .. "' to '" .. target .. "'")
+	core.log("action", "[archtec_watch] Attached '" .. name .. "' to '" .. target .. "'")
 end
 
-minetest.register_chatcommand("watch", {
+core.register_chatcommand("watch", {
 	params = "<name>",
 	description = "Watch a player",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/watch] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/watch] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_and_trim(param)
 
 		if target == "" then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] You must specify a player name!")))
+			core.chat_send_player(name, C("#FF0000", S("[watch] You must specify a player name!")))
 			return
 		end
 
 		if state[name] ~= nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
+			core.chat_send_player(name, C("#FF0000", S("[watch] You are currently watching @1. Run '/unwatch' first!", state[name].target)))
 			return
 		end
 
-		if archtec.is_attached(minetest.get_player_by_name(name)) then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] You are currently attached to something!")))
+		if archtec.is_attached(core.get_player_by_name(name)) then
+			core.chat_send_player(name, C("#FF0000", S("[watch] You are currently attached to something!")))
 			return
 		end
 
 		if name == target then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] You can't watch yourself!")))
+			core.chat_send_player(name, C("#FF0000", S("[watch] You can't watch yourself!")))
 			return
 		end
 
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is not online!", target)))
+			core.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is not online!", target)))
 			return
 		end
 
 		if state[target] then
-			minetest.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is watching '@2'!", target, state[target].target)))
+			core.chat_send_player(name, C("#FF0000", S("[watch] Target '@1' is watching '@2'!", target, state[target].target)))
 			return
 		end
 
 		attach(name, target)
-		minetest.chat_send_player(name, C("#00BD00", S("[watch] Watching @1.", target)))
+		core.chat_send_player(name, C("#00BD00", S("[watch] Watching @1.", target)))
 	end
 })
 
-minetest.register_chatcommand("unwatch", {
+core.register_chatcommand("unwatch", {
 	params = "",
 	description = "Disable watch mode",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/unwatch] executed by '" .. name .. "'")
+		core.log("action", "[/unwatch] executed by '" .. name .. "'")
 
 		if not state[name] then
-			minetest.chat_send_player(name, C("#FF0000", S("[unwatch] You aren't watching anybody!")))
+			core.chat_send_player(name, C("#FF0000", S("[unwatch] You aren't watching anybody!")))
 			return
 		end
 
 		local target = state[name].target
 		detach(name)
-		minetest.chat_send_player(name, C("#00BD00", S("[unwatch] Detached you from @1.", target)))
+		core.chat_send_player(name, C("#00BD00", S("[unwatch] Detached you from @1.", target)))
 	end
 })
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 
 	-- Detach (watcher left)
@@ -164,7 +164,7 @@ minetest.register_on_leaveplayer(function(player)
 	state[name] = nil
 end)
 
-minetest.register_on_respawnplayer(function(player)
+core.register_on_respawnplayer(function(player)
 	local name = player:get_player_name()
 
 	if state[name] then
@@ -172,7 +172,7 @@ minetest.register_on_respawnplayer(function(player)
 	end
 end)
 
-minetest.register_on_player_hpchange(function(player, hp_change, reason)
+core.register_on_player_hpchange(function(player, hp_change, reason)
 	local name = player:get_player_name()
 
 	-- No damage for watchers

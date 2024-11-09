@@ -1,6 +1,6 @@
-local fpath = minetest.get_worldpath() .. "/news.txt"
+local fpath = core.get_worldpath() .. "/news.txt"
 local S = archtec.S
-local FS = function(...) return minetest.formspec_escape(S(...)) end
+local FS = function(...) return core.formspec_escape(S(...)) end
 local news = S("No news available")
 
 local function read_file()
@@ -17,12 +17,12 @@ local fsh = 10
 local function show_formspec(name)
 	local fs = ""
 	fs = fs .. "size[" .. fsw .. "," .. fsh .. ",true]"
-	fs = fs .. "hypertext[0.3,0;" .. fsw .. "," .. fsh .. ";news;" .. minetest.formspec_escape(news) .. "]"
+	fs = fs .. "hypertext[0.3,0;" .. fsw .. "," .. fsh .. ";news;" .. core.formspec_escape(news) .. "]"
 	fs = fs .. "button_exit[0," .. (fsh - 0.75) .. ";" .. fsw .. ",1;ok;" .. FS("Continue") .. "]"
-	minetest.show_formspec(name, "archtec:news", fs)
+	core.show_formspec(name, "archtec:news", fs)
 end
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:news" then return end
 	if fields.news and fields.news:sub(1, 12) == "action:link_" then
 		local link = fields.news:sub(13, #fields.news)
@@ -40,35 +40,35 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		if url ~= nil then
 			local name = player:get_player_name()
-			minetest.close_formspec(name, "archtec:news")
-			minetest.chat_send_player(name, minetest.colorize("#FF8800", S("Ctrl + Click the link to open your browser") .. ":") .. " " .. url)
+			core.close_formspec(name, "archtec:news")
+			core.chat_send_player(name, core.colorize("#FF8800", S("Ctrl + Click the link to open your browser") .. ":") .. " " .. url)
 		end
 	end
 
 	return true
 end)
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	show_formspec(player:get_player_name())
 end)
 
-minetest.register_chatcommand("news", {
+core.register_chatcommand("news", {
 	description = "Read the server news",
 	privs = {interact = true},
 	func = function(name)
-		minetest.log("action", "[/news] executed by '" .. name .. "'")
+		core.log("action", "[/news] executed by '" .. name .. "'")
 		show_formspec(name)
 	end
 })
 
-minetest.register_chatcommand("news_reload", {
+core.register_chatcommand("news_reload", {
 	description = "Reload server news",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/news_reload] executed by '" .. name .. "'")
+		core.log("action", "[/news_reload] executed by '" .. name .. "'")
 		read_file()
 		show_formspec(name)
-		minetest.chat_send_player(name, "News reloaded")
+		core.chat_send_player(name, "News reloaded")
 	end
 })
 

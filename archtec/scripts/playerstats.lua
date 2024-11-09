@@ -1,7 +1,7 @@
 local S = archtec.S
-local F = minetest.formspec_escape
+local F = core.formspec_escape
 local FS = function(...) return F(S(...)) end
-local C = minetest.colorize
+local C = core.colorize
 local mod = archtec_playerdata.mod
 
 -- Helper functions
@@ -26,7 +26,7 @@ choppy.api.register_after_chop(function(self, player, pos, node)
 end)
 
 archtec_playerdata.register_key("nodes_dug", "number", 0)
-minetest.register_on_dignode(function(_, _, digger)
+core.register_on_dignode(function(_, _, digger)
 	if not digger then return end
 	local name = digger:get_player_name()
 	if name ~= nil and uses_choppy[name] == nil then
@@ -35,7 +35,7 @@ minetest.register_on_dignode(function(_, _, digger)
 end)
 
 archtec_playerdata.register_key("nodes_placed", "number", 0)
-minetest.register_on_placenode(function(_, _, placer, _, _, _)
+core.register_on_placenode(function(_, _, placer, _, _, _)
 	if not placer then return end
 	local name = placer:get_player_name()
 	if name ~= nil then
@@ -44,7 +44,7 @@ minetest.register_on_placenode(function(_, _, placer, _, _, _)
 end)
 
 archtec_playerdata.register_key("items_crafted", "number", 0)
-minetest.register_on_craft(function(_, player, _, _)
+core.register_on_craft(function(_, player, _, _)
 	if not player then return end
 	local name = player:get_player_name()
 	if name ~= nil then
@@ -53,7 +53,7 @@ minetest.register_on_craft(function(_, player, _, _)
 end)
 
 archtec_playerdata.register_key("died", "number", 0)
-minetest.register_on_dieplayer(function(player, _)
+core.register_on_dieplayer(function(player, _)
 	if not player then return end
 	local name = player:get_player_name()
 	if name ~= nil then
@@ -95,15 +95,15 @@ end
 
 local function stats_formspec(name, target)
 	local data = archtec_playerdata.get_all(target)
-	local auth = minetest.get_auth_handler().get_auth(target)
-	local privs = minetest.get_player_privs(target)
+	local auth = core.get_auth_handler().get_auth(target)
+	local privs = core.get_player_privs(target)
 	if data == nil then -- can happen when the user never joined after archtec_player was enabled
-		minetest.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
+		core.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
 		return
 	end
 
 	local tags
-	if minetest.get_player_by_name(target) then
+	if core.get_player_by_name(target) then
 		tags = C("#00BD00", S("[Online]"))
 	else
 		tags = C("#FF0000", S("[Offline]"))
@@ -157,25 +157,25 @@ local function stats_formspec(name, target)
 		"label[5.0,5.4;" .. FS("Can create big areas: @1", privs_color.areas) .. "]",
 	}
 
-	minetest.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec))
+	core.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec))
 end
 
-minetest.register_chatcommand("stats", {
+core.register_chatcommand("stats", {
 	params = "<name>",
 	description = S("Shows stats of <name>"),
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/stats] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/stats] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = param:trim()
 		if target == "" then
 			target = name
 		end
-		if not minetest.player_exists(target) then
-			minetest.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
+		if not core.player_exists(target) then
+			core.chat_send_player(name, C("#FF0000", S("[stats] Unknown player!")))
 			return
 		end
 		if not archtec_playerdata.player_exists(target) then
-			minetest.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
+			core.chat_send_player(name, C("#FF0000", S("[stats] Failed to load stats!")))
 			return
 		end
 		if target ~= name and archtec.ignore_check(name, target) then

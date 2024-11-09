@@ -4,7 +4,7 @@ local function count_object()
 	local ret = {}
 	local total = 0
 
-	local all_objects = minetest.luaentities
+	local all_objects = core.luaentities
 
 	for _, entity in pairs(all_objects) do
 		local name = (entity or {}).name
@@ -49,11 +49,11 @@ local function count_object()
 	return table.concat(parts, "\n")
 end
 
-minetest.register_chatcommand("count_objects", {
+core.register_chatcommand("count_objects", {
 	description = "Get counts of all objects active on the server",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/count_objects] executed by '" .. name .. "'")
-		minetest.chat_send_player(name, count_object())
+		core.log("action", "[/count_objects] executed by '" .. name .. "'")
+		core.chat_send_player(name, count_object())
 	end
 })

@@ -1,30 +1,30 @@
 mapserver = {
-	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 7.1,
+	send_interval = tonumber(core.settings:get("mapserver.send_interval")) or 7.1,
 	bridge = {}
 }
 
-local MP = minetest.get_modpath("archtec_mapserver")
+local MP = core.get_modpath("archtec_mapserver")
 dofile(MP.."/common.lua")
 dofile(MP.."/poi.lua")
 dofile(MP.."/train.lua")
 
-local http = minetest.request_http_api()
+local http = core.request_http_api()
 
 if http then
 	-- check if the mapserver.json is in the world-folder
-	local path = minetest.get_worldpath().."/mapserver.json";
+	local path = core.get_worldpath().."/mapserver.json";
 	local mapserver_cfg
 
 	local file = io.open(path, "r" );
 	if file then
 		local json = file:read("*all")
-		mapserver_cfg = minetest.parse_json(json)
+		mapserver_cfg = core.parse_json(json)
 		file:close()
-		minetest.log("action", "[archtec_mapserver] read settings from 'mapserver.json'")
+		core.log("action", "[archtec_mapserver] read settings from 'mapserver.json'")
 	end
 
-	local mapserver_url = minetest.settings:get("mapserver.url")
-	local mapserver_key = minetest.settings:get("mapserver.key")
+	local mapserver_url = core.settings:get("mapserver.url")
+	local mapserver_key = core.settings:get("mapserver.key")
 
 	if mapserver_cfg and mapserver_cfg.webapi then
 		if not mapserver_key then
@@ -40,14 +40,14 @@ if http then
 	if not mapserver_url then error("mapserver.url is not defined") end
 	if not mapserver_key then error("mapserver.key is not defined") end
 
-	minetest.log("action", "[archtec_mapserver] starting archtec_mapserver with endpoint: " .. mapserver_url)
+	core.log("action", "[archtec_mapserver] starting archtec_mapserver with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- initialize bridge
 	mapserver.bridge_init(http, mapserver_url, mapserver_key)
 
 else
-	minetest.log("warning", "[archtec_mapserver] bridge not active, additional infos will not be visible on the map")
+	core.log("warning", "[archtec_mapserver] bridge not active, additional infos will not be visible on the map")
 end
 
-minetest.log("action", "[archtec_mapserver] loaded")
+core.log("action", "[archtec_mapserver] loaded")

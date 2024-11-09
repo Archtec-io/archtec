@@ -7,7 +7,7 @@ function archtec.get_target(name, param)
 end
 
 function archtec.is_online(name)
-	local player = minetest.get_player_by_name(name)
+	local player = core.get_player_by_name(name)
 	if not player then
 		return false
 	end
@@ -15,15 +15,15 @@ function archtec.is_online(name)
 end
 
 function archtec.priv_grant(name, priv)
-	local privs = minetest.get_player_privs(name)
+	local privs = core.get_player_privs(name)
 	privs[priv] = true
-	minetest.set_player_privs(name, privs)
+	core.set_player_privs(name, privs)
 end
 
 function archtec.priv_revoke(name, priv)
-	local privs = minetest.get_player_privs(name)
+	local privs = core.get_player_privs(name)
 	privs[priv] = nil
-	minetest.set_player_privs(name, privs)
+	core.set_player_privs(name, privs)
 end
 
 archtec.silent_leave = {}
@@ -35,7 +35,7 @@ function core.kick_player(player_name, reason)
 		reason = "Kicked."
 	end
 	if archtec.is_online(player_name) then -- xban kicks also offline players
-		minetest.chat_send_all(minetest.colorize("#FF0000", player_name .. " got kicked! Reason: " .. reason))
+		core.chat_send_all(core.colorize("#FF0000", player_name .. " got kicked! Reason: " .. reason))
 		archtec_matterbridge.send(":bangbang: " .. player_name .. " got kicked! Reason: " .. reason)
 		archtec.silent_leave[player_name] = true
 	end
@@ -43,7 +43,7 @@ function core.kick_player(player_name, reason)
 end
 
 function archtec.kick_inactive_player(player_name)
-	minetest.chat_send_all(minetest.colorize("#FF0000", player_name .. " got kicked due to inactivity."))
+	core.chat_send_all(core.colorize("#FF0000", player_name .. " got kicked due to inactivity."))
 	archtec_matterbridge.send(":zzz: " .. player_name .. " got kicked due to inactivity.")
 	archtec.silent_leave[player_name] = true
 	return core.disconnect_player(player_name, "Too long inactive")
@@ -90,10 +90,10 @@ function archtec.table_contains(table, element)
 end
 
 function archtec.register_chatcommand_alias(newname, original)
-	local cmd = table.copy(minetest.registered_chatcommands[original])
+	local cmd = table.copy(core.registered_chatcommands[original])
 	if cmd then
-		minetest.register_chatcommand(newname, cmd)
-		minetest.registered_chatcommands[newname].mod_origin = minetest.registered_chatcommands[original].mod_origin
+		core.register_chatcommand(newname, cmd)
+		core.registered_chatcommands[newname].mod_origin = core.registered_chatcommands[original].mod_origin
 	end
 end
 

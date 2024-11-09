@@ -40,7 +40,7 @@ function archtec.namecolor.get(name)
 
 	-- Migrate from player meta
 	if id == "" then
-		local player = minetest.get_player_by_name(name)
+		local player = core.get_player_by_name(name)
 		local meta = player:get_meta()
 		id = meta:get_string("chatplus:namecolor")
 		-- Remove meta entry
@@ -60,6 +60,6 @@ function archtec.namecolor.get(name)
 end
 
 -- This is important to generate/migrate data to give the settings access to it
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	archtec.namecolor.get(player:get_player_name())
 end)

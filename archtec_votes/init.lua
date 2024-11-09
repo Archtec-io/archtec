@@ -1,4 +1,4 @@
-local modpath = minetest.get_modpath("archtec_votes")
+local modpath = core.get_modpath("archtec_votes")
 
 dofile(modpath .. "/vote_api.lua")
 dofile(modpath .. "/vote_kick.lua")

@@ -1,42 +1,42 @@
-minetest.unregister_chatcommand("ban")
-minetest.unregister_chatcommand("unban")
-minetest.unregister_chatcommand("rollback")
-minetest.unregister_chatcommand("rollback_check")
-minetest.unregister_chatcommand("set")
+core.unregister_chatcommand("ban")
+core.unregister_chatcommand("unban")
+core.unregister_chatcommand("rollback")
+core.unregister_chatcommand("rollback_check")
+core.unregister_chatcommand("set")
 
-if minetest.get_modpath("atm") then
-	minetest.unregister_item("atm:atm")
-	minetest.unregister_item("atm:atm2")
+if core.get_modpath("atm") then
+	core.unregister_item("atm:atm")
+	core.unregister_item("atm:atm2")
 end
 
-if minetest.get_modpath("currency") then
-	minetest.unregister_item("currency:minegeld_bundle")
-	minetest.unregister_item("currency:shop")
-	minetest.unregister_item("currency:shop_empty")
+if core.get_modpath("currency") then
+	core.unregister_item("currency:minegeld_bundle")
+	core.unregister_item("currency:shop")
+	core.unregister_item("currency:shop_empty")
 end
 
-if minetest.get_modpath("xdecor") then
-	minetest.unregister_item("xdecor:cobweb")
+if core.get_modpath("xdecor") then
+	core.unregister_item("xdecor:cobweb")
 end
 
-if minetest.get_modpath("mesecons_debug") then
-	minetest.unregister_item("mesecons_debug:mesecons_lagger")
+if core.get_modpath("mesecons_debug") then
+	core.unregister_item("mesecons_debug:mesecons_lagger")
 end
 
-if minetest.get_modpath("abriglass") then
-	minetest.unregister_item("abriglass:porthole_junglewood")
-	minetest.unregister_item("abriglass:porthole_wood")
+if core.get_modpath("abriglass") then
+	core.unregister_item("abriglass:porthole_junglewood")
+	core.unregister_item("abriglass:porthole_wood")
 end
 
-if minetest.get_modpath("shields") then
-	minetest.unregister_item("shields:shield_nether")
-	minetest.unregister_item("invisible_shields:shield_nether")
+if core.get_modpath("shields") then
+	core.unregister_item("shields:shield_nether")
+	core.unregister_item("invisible_shields:shield_nether")
 end
 
-if minetest.get_modpath("ambience") then
-	minetest.unregister_chatcommand("mvol")
+if core.get_modpath("ambience") then
+	core.unregister_chatcommand("mvol")
 end
 
-if minetest.get_modpath("prefab") then
-	minetest.unregister_item("prefab:boat")
+if core.get_modpath("prefab") then
+	core.unregister_item("prefab:boat")
 end

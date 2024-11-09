@@ -1,9 +1,9 @@
-local before = minetest.get_us_time()
-local modpath = minetest.get_modpath("archtec")
+local before = core.get_us_time()
+local modpath = core.get_modpath("archtec")
 local path = modpath .. "/scripts/"
 
 archtec = {}
-archtec.S = minetest.get_translator("archtec")
+archtec.S = core.get_translator("archtec")
 
 -- Change links here
 archtec.links = {}
@@ -76,15 +76,15 @@ dofile(path .. "mailbox.lua")
 dofile(path .. "playerstats.lua")
 dofile(path .. "teleport_mapblock.lua")
 
-local http = minetest.request_http_api()
+local http = core.request_http_api()
 if http then
 	assert(loadfile(path .. "/report_webhook.lua"))(http)
 	assert(loadfile(path .. "/geoip.lua"))(http)
 	assert(loadfile(path .. "/vpn_blocker.lua"))(http)
 end
 
-minetest.register_on_mods_loaded(function()
-	if not minetest.global_exists("archtec_matterbridge") then
+core.register_on_mods_loaded(function()
+	if not core.global_exists("archtec_matterbridge") then
 		archtec_matterbridge = {}
 		archtec_matterbridge.send = function(...)
 			-- dummy function
@@ -92,6 +92,6 @@ minetest.register_on_mods_loaded(function()
 	end
 end)
 
-local after = minetest.get_us_time()
+local after = core.get_us_time()
 
-minetest.log("action", "Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")
+core.log("action", "Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")

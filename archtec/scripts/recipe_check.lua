@@ -30,7 +30,7 @@ local function is_same_item(item1, item2)
 	end
 
 	if chkgroup and chkitem then
-		local chkitemdef = minetest.registered_nodes[chkitem]
+		local chkitemdef = core.registered_nodes[chkitem]
 		if not chkitemdef then -- should not be happen. But unknown item cannot be in a group
 			return false
 		elseif chkitemdef.groups[chkgroup] then -- is in the group
@@ -67,20 +67,20 @@ end
 local known_recipes = {}
 
 local function run(pname)
-	for name, def in futil.table.pairs_by_key(minetest.registered_items) do
+	for name, def in futil.table.pairs_by_key(core.registered_items) do
 		if (not def.groups.not_in_creative_inventory or
 		def.groups.not_in_creative_inventory == 0) and
 		def.description and def.description ~= "" then -- check valide entrys only
 
-			local recipes_for_node = minetest.get_all_craft_recipes(name)
+			local recipes_for_node = core.get_all_craft_recipes(name)
 			if recipes_for_node ~= nil then
 				for kn, vn in ipairs(recipes_for_node) do
 					for ku, vu in ipairs(known_recipes) do
 						if vu.output ~= vn.output and
 						is_same_recipe(vu, vn) == true then
-							minetest.log("warning", "[recipe-check] " .. vu.output .. " " .. vn.output)
+							core.log("warning", "[recipe-check] " .. vu.output .. " " .. vn.output)
 							if name then
-								minetest.chat_send_player(pname, minetest.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output))
+								core.chat_send_player(pname, core.colorize("#FF0000", "[recipe-check] " .. vu.output .. " " .. vn.output))
 							end
 						end
 					end
@@ -92,11 +92,11 @@ local function run(pname)
 	known_recipes = {}
 end
 
-minetest.register_chatcommand("recipe_check", {
+core.register_chatcommand("recipe_check", {
 	description = "Get recipe bugs",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/recipe_check] executed by '" .. name .. "'")
+		core.log("action", "[/recipe_check] executed by '" .. name .. "'")
 		run(name)
 	end
 })

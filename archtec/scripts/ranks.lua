@@ -5,11 +5,11 @@ local registered = {
 }
 
 local function get_color(color)
-	return minetest.rgba(color.r, color.g, color.b, color.a)
+	return core.rgba(color.r, color.g, color.b, color.a)
 end
 
 local function get_rank(player_name)
-	local privs = minetest.get_player_privs(player_name)
+	local privs = core.get_player_privs(player_name)
 	local rank = {prio = 0}
 	for name, def in pairs(registered) do
 		if privs[def.priv] and rank.prio < def.prio then
@@ -25,7 +25,7 @@ local function update_nametag(player, remove)
 	if rank ~= nil then
 		local def = registered[rank]
 		local color = get_color(def.color)
-		local prefix = minetest.colorize(color, def.prefix) .. " "
+		local prefix = core.colorize(color, def.prefix) .. " "
 
 		if player then
 			player:set_nametag_attributes({
@@ -44,18 +44,18 @@ local function update_nametag(player, remove)
 end
 
 -- Assign/update rank on join player
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	update_nametag(player, false)
 end)
 
-minetest.register_chatcommand("ranks_reload", {
+core.register_chatcommand("ranks_reload", {
 	description = "Reload staff ranks",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/ranks_reload] executed by '" .. name .. "'")
-		for _, player in ipairs(minetest.get_connected_players()) do
+		core.log("action", "[/ranks_reload] executed by '" .. name .. "'")
+		for _, player in ipairs(core.get_connected_players()) do
 			update_nametag(player, true)
 		end
-		minetest.chat_send_player(name, "Ranks reloaded")
+		core.chat_send_player(name, "Ranks reloaded")
 	end
 })

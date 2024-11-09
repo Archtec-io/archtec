@@ -2,14 +2,14 @@ local server_running = false
 local has_matterbridge = false
 
 function archtec.notify_team(message, discord)
-	minetest.log("action", message)
+	core.log("action", message)
 
 	if server_running then
-		local colored_message = minetest.colorize("#999", message)
-		for _, player in ipairs(minetest.get_connected_players()) do
+		local colored_message = core.colorize("#999", message)
+		for _, player in ipairs(core.get_connected_players()) do
 			local name = player:get_player_name()
-			if minetest.get_player_privs(name).staff then
-				minetest.chat_send_player(name, colored_message)
+			if core.get_player_privs(name).staff then
+				core.chat_send_player(name, colored_message)
 			end
 		end
 	end
@@ -19,9 +19,9 @@ function archtec.notify_team(message, discord)
 	end
 end
 
-minetest.after(0, function()
+core.after(0, function()
 	server_running = true
-	if minetest.global_exists("archtec_matterbridge") then
+	if core.global_exists("archtec_matterbridge") then
 		has_matterbridge = true
 	end
 end)

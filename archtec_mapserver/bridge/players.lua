@@ -1,8 +1,8 @@
 mapserver.bridge.add_players = function(data)
 	data.players = {}
 
-	for _, player in ipairs(minetest.get_connected_players()) do
-		local is_moderator = minetest.check_player_privs(player:get_player_name(), {staff = true})
+	for _, player in ipairs(core.get_connected_players()) do
+		local is_moderator = core.check_player_privs(player:get_player_name(), {staff = true})
 
 		local info = {
 			name = player:get_player_name(),

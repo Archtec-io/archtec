@@ -1,15 +1,15 @@
 local S = archtec.S
-local C = minetest.colorize
+local C = core.colorize
 
 -- Remove building category
-if minetest.get_modpath("unified_inventory") then
+if core.get_modpath("unified_inventory") then
 	unified_inventory.remove_category("building")
 end
 
 -- Add mtg stairs for 'moreblocks:empty_shelf'
-if minetest.get_modpath("moreblocks") then
-	local S2 = minetest.get_translator("moreblocks")
-	local def = minetest.registered_nodes["moreblocks:empty_shelf"]
+if core.get_modpath("moreblocks") then
+	local S2 = core.get_translator("moreblocks")
+	local def = core.registered_nodes["moreblocks:empty_shelf"]
 	stairs.register_stair_and_slab(
 		"moreblocks:empty_shelf",
 		"moreblocks:empty_shelf",
@@ -26,19 +26,19 @@ end
 archtec_playerdata.register_key("thank_you", "number", 0)
 archtec_playerdata.register_key("thank_you_last_used", "number", 0)
 
-minetest.register_chatcommand("thankyou", {
+core.register_chatcommand("thankyou", {
 	params = "<name>",
 	description = "Thank someone",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/thankyou] executed by '" .. name .. "' with param '" .. param .. "'")
 		local target = archtec.get_target(name, param)
 		if target == name then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank yourself!")))
+			core.chat_send_player(name, core.colorize("#FF0000", S("You can't thank yourself!")))
 			return
 		end
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You can't thank an offline player!")))
+			core.chat_send_player(name, core.colorize("#FF0000", S("You can't thank an offline player!")))
 			return
 		end
 		if archtec.ignore_check(name, target) then
@@ -46,22 +46,22 @@ minetest.register_chatcommand("thankyou", {
 			return
 		end
 		if archtec_playerdata.get(name, "thank_you_last_used") > os.time() - archtec.time.hours(1) then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", S("You used '/thankyou' within the last hour! Try again later.")))
+			core.chat_send_player(name, core.colorize("#FF0000", S("You used '/thankyou' within the last hour! Try again later.")))
 			return
 		end
 		archtec_playerdata.mod(target, "thank_you", 1)
 		archtec_playerdata.set(name, "thank_you_last_used", os.time())
-		minetest.chat_send_all(minetest.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
+		core.chat_send_all(core.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
 		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**.")
 	end
 })
 
 -- Falling nodes cleanup command
-local abr = minetest.settings:get("active_block_range") * 16
+local abr = core.settings:get("active_block_range") * 16
 
 local function remove_falling_nodes(pos)
 	local c = 0
-	local objects = minetest.get_objects_inside_radius(pos, abr)
+	local objects = core.get_objects_inside_radius(pos, abr)
 	for _, object in ipairs(objects) do
 		local ent = object:get_luaentity()
 		if ent and ent.name == "__builtin:falling_node" then
@@ -69,8 +69,8 @@ local function remove_falling_nodes(pos)
 				local pos2 = object:get_pos()
 				local nodep = vector.round(pos2)
 				nodep.y = nodep.y - 1
-				if minetest.get_node(nodep).name == "air" or nodep.y < -30912 then
-					minetest.log("action", "[falling_nodes_cleaner] remove falling entity at " .. minetest.pos_to_string(pos2))
+				if core.get_node(nodep).name == "air" or nodep.y < -30912 then
+					core.log("action", "[falling_nodes_cleaner] remove falling entity at " .. core.pos_to_string(pos2))
 					object:remove()
 					c = c + 1
 				end
@@ -80,41 +80,41 @@ local function remove_falling_nodes(pos)
 	return c
 end
 
-minetest.register_chatcommand("falling_nodes_cleanup", {
+core.register_chatcommand("falling_nodes_cleanup", {
 	description = "Remove stuck falling nodes",
 	privs = {staff = true},
 	func = function(name)
-		minetest.log("action", "[/falling_nodes_cleanup] executed by '" .. name)
+		core.log("action", "[/falling_nodes_cleanup] executed by '" .. name)
 		local counter
-		local player = minetest.get_player_by_name(name)
+		local player = core.get_player_by_name(name)
 		if not player then
-			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You are not online!"))
+			core.chat_send_player(name, core.colorize("#FF0000", "You are not online!"))
 			return
 		end
 		counter = remove_falling_nodes(player:get_pos())
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", "Removed " .. counter .. " falling node(s)"))
+		core.chat_send_player(name, core.colorize("#00BD00", "Removed " .. counter .. " falling node(s)"))
 	end
 })
 
 -- Shutdown command
-minetest.register_chatcommand("sd", {
+core.register_chatcommand("sd", {
 	description = "Shuts the server down after a 10 seconds delay.",
 	privs = {staff = true},
 	func = function(name, delay)
 		if delay == "" or type(tonumber(delay)) ~= "number" then delay = 10 end
 		-- notify all
 		local logmsg = name .. " requested a server shutdown in " .. delay .. " seconds."
-		minetest.log("warning", logmsg)
+		core.log("warning", logmsg)
 		archtec_matterbridge.send(":anger: " .. logmsg)
-		minetest.chat_send_all(minetest.colorize("#FF0", S("@1 requested a server shutdown in @2 seconds.", name, delay)))
+		core.chat_send_all(core.colorize("#FF0", S("@1 requested a server shutdown in @2 seconds.", name, delay)))
 		-- shutdown, ask for reconnect
-		minetest.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, tonumber(delay))
+		core.request_shutdown("The server is rebooting, please reconnect in about a minute.", true, tonumber(delay))
 	end
 })
 
 -- Stairsplus support for ethereal:glostone (https://github.com/Archtec-io/bugtracker/issues/143)
-if minetest.get_modpath("stairsplus") and minetest.get_modpath("ethereal") then
-	local def = minetest.registered_nodes["ethereal:glostone"]
+if core.get_modpath("stairsplus") and core.get_modpath("ethereal") then
+	local def = core.registered_nodes["ethereal:glostone"]
 
 	stairsplus:register_all("ethereal", "glostone", "ethereal:glostone", {
 		description = def.description,
@@ -135,25 +135,25 @@ archtec.register_chatcommand_alias("p2", "area_pos2")
 local url = archtec.links.mapserver .. "#!/map/0/12/" -- layer/zoomlevel
 local help_str = C("#FF8800", S("Ctrl + Click the link to open your browser"))
 
-minetest.register_chatcommand("map", {
+core.register_chatcommand("map", {
 	description = "Gives you an URL to the Mapserver, pointing at your current position.",
 	privs = {interact = true},
 	func = function(name)
-		minetest.log("action", "[/thankyou] executed by '" .. name .. "'")
-		local player = minetest.get_player_by_name(name)
+		core.log("action", "[/thankyou] executed by '" .. name .. "'")
+		local player = core.get_player_by_name(name)
 		if player == nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
+			core.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
 			return
 		end
 
 		local pos = player:get_pos()
 		if pos == nil then
-			minetest.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
+			core.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
 			return
 		else
 			local x = math.floor(pos.x + 0.5)
 			local z = math.floor(pos.z + 0.5)
-			minetest.chat_send_player(name, S("[map] You are here: @1 (@2)", url .. tostring(x) .. "/" .. tostring(z), help_str))
+			core.chat_send_player(name, S("[map] You are here: @1 (@2)", url .. tostring(x) .. "/" .. tostring(z), help_str))
 		end
 	end
 })

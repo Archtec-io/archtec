@@ -1,5 +1,5 @@
 local function copy_drawer(name)
-	local def = table.copy(minetest.registered_nodes["drawers:" .. name])
+	local def = table.copy(core.registered_nodes["drawers:" .. name])
 	def.name = nil
 	def.description = def.description .. " (fake)"
 	def.groups.not_in_creative_inventory = 1
@@ -15,7 +15,7 @@ local function copy_drawer(name)
 	def.on_metadata_inventory_put = nil
 	def.on_metadata_inventory_take = nil
 
-	minetest.register_node("archtec:" .. name, def)
+	core.register_node("archtec:" .. name, def)
 end
 
 copy_drawer("acacia_wood1")

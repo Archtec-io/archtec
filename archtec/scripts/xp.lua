@@ -1,5 +1,5 @@
 local S = archtec.S
-local F = minetest.formspec_escape
+local F = core.formspec_escape
 local FS = function(...) return F(S(...)) end
 
 local xp_rank = {
@@ -90,14 +90,14 @@ local function rank_formspec(name)
 		"table[0.3,4.5;9.4,5.2;list;" .. table.concat(xp_rank.list, ",") .. ";0]",
 	}
 
-	minetest.show_formspec(name, "archtec_playerdata:ranking", table.concat(formspec))
+	core.show_formspec(name, "archtec_playerdata:ranking", table.concat(formspec))
 end
 
-minetest.register_chatcommand("rank", {
+core.register_chatcommand("rank", {
 	description = S("Show the most active players"),
 	privs = {interact = true},
 	func = function(name)
-		minetest.log("action", "[/rank] executed by '" .. name .. "'")
+		core.log("action", "[/rank] executed by '" .. name .. "'")
 		rank_formspec(name)
 	end
 })

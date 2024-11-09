@@ -20,14 +20,14 @@ local function render_huds(name, player)
 	for _, def in ipairs(state.huds) do
 		if next(def) then -- check for empty table
 			table.insert(state.hud_ids, player:hud_add({ -- Background
-				[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
+				[core.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
 				position = {x = 1, y = 1},
 				scale = {x = 1, y = 1},
 				offset = {x = x_offset, y = -30},
 				text = "ui_formbg_9_sliced.png^[colorize:" .. def.bg_color .. ":60",
 			}))
 			table.insert(state.hud_ids, player:hud_add({ -- Icon
-				[minetest.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
+				[core.features.hud_def_type_field and "type" or "hud_elem_type"] = "image",
 				position = {x = 1, y = 1},
 				scale = {x = def.icon_scale, y = def.icon_scale},
 				offset = {x = x_offset, y = -30},
@@ -39,7 +39,7 @@ local function render_huds(name, player)
 end
 
 function archtec.modify_hud(name, slot, def)
-	local player = minetest.get_player_by_name(name)
+	local player = core.get_player_by_name(name)
 	if states[name] == nil then
 		states[name] = {hud_ids = {}, huds = {}}
 	end

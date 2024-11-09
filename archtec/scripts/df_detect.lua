@@ -208,12 +208,12 @@ local df = {
 }
 
 --[[
-To update commit list: save commit logs for master branches of minetest in mt.log and dragonfire in df.log
+To update commit list: save commit logs for master branches of luanti in lt.log and dragonfire in df.log
 For example (assuming you have added dragonfire remote, adapt if not):
-$ git log --oneline origin/master > mt.log; git log --oneline dragonfire/master > df.log
+$ git log --oneline origin/master > lt.log; git log --oneline dragonfire/master > df.log
 
 Find and drop commits that seems to exist in both remotes, print rest of it:
-$ sort -k3 <(awk '{print NR" "$0}' df.log mt.log mt.log) | uniq -uf2 | sort -nk1 | sed -r 's/^[^ ]+ ([^ ]+) (.*)$/\t"\1", -- \2/'
+$ sort -k3 <(awk '{print NR" "$0}' df.log lt.log lt.log) | uniq -uf2 | sort -nk1 | sed -r 's/^[^ ]+ ([^ ]+) (.*)$/\t"\1", -- \2/'
 
 Replace above entries with output
 ]]--
@@ -228,9 +228,9 @@ end
 
 local ip_list = {}
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	local info = minetest.get_player_information(name)
+	local info = core.get_player_information(name)
 
 	-- Check for bad client
 	if not info.version_string then
@@ -241,7 +241,7 @@ minetest.register_on_joinplayer(function(player)
 		local dfv = dfver(info.version_string)
 		if dfv then
 			archtec.notify_team("[archtec] Detected use of Dragonfireclient (" .. dfv .. ") by '" .. name .. "' auto ban in 30 seconds.")
-			minetest.after(30.0, function()
+			core.after(30.0, function()
 				xban.ban_player(name, "Server", nil, "Cheating")
 				archtec.notify_team("[archtec] Auto banned '" .. name .. "'.")
 			end)
@@ -264,6 +264,6 @@ minetest.register_on_joinplayer(function(player)
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	ip_list[player:get_player_name()] = nil
 end)

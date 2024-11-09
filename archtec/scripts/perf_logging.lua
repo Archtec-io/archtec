@@ -1,5 +1,5 @@
 -- Slow ABM/NodeTimer/LBM logger
-local get_us_time, P2S = minetest.get_us_time, minetest.pos_to_string
+local get_us_time, P2S = core.get_us_time, core.pos_to_string
 
 local abm_max_time = 5000 -- 5 ms
 local nt_max_time = 10000 -- 10 ms
@@ -19,25 +19,25 @@ end
 
 local function inc_abm(label, diff, pos, nn)
 	if diff > abm_max_time then
-		minetest.log("action", "[archtec] ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		core.log("action", "[archtec] ABM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
 	end
 end
 
 local function inc_nt(diff, pos)
 	if diff > nt_max_time then
-		local nn = minetest.get_node(pos).name
-		minetest.log("action", "[archtec] NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		local nn = core.get_node(pos).name
+		core.log("action", "[archtec] NodeTimer took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
 	end
 end
 
 local function inc_lbm(label, diff, pos, nn)
 	if diff > lbm_max_time then
-		minetest.log("action", "[archtec] LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
+		core.log("action", "[archtec] LBM '" .. label .. "', took '" .. diff .. "' us, pos '" .. P2S(pos) .. "', node '" .. nn .. "'")
 	end
 end
 
-minetest.register_on_mods_loaded(function()
-	for _, abm in ipairs(minetest.registered_abms) do
+core.register_on_mods_loaded(function()
+	for _, abm in ipairs(core.registered_abms) do
 		local old_action = abm.action
 		abm.action = function(pos, node, active_object_count, active_object_count_wider)
 			local t0 = get_us_time()
@@ -47,7 +47,7 @@ minetest.register_on_mods_loaded(function()
 		end
 	end
 
-	for _, def in pairs(minetest.registered_nodes) do
+	for _, def in pairs(core.registered_nodes) do
 		if def.on_timer then
 			local old_action = def.on_timer
 			def.on_timer = function(pos, elapsed)
@@ -60,7 +60,7 @@ minetest.register_on_mods_loaded(function()
 		end
 	end
 
-	for _, lbm in ipairs(minetest.registered_lbms) do
+	for _, lbm in ipairs(core.registered_lbms) do
 		local old_action = lbm.action
 		lbm.action = function(pos, node, dtime_s)
 			local t0 = get_us_time()

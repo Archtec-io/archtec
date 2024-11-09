@@ -7,21 +7,21 @@ local function fix_craft(node, recipedef, amount)
 		amount = 1
 	end
 
-	if not minetest.registered_nodes[node] and not minetest.registered_items[node] then
-		minetest.log("warning", "[archtec] tried to override recipe of non exist item '" .. node .. "'")
+	if not core.registered_nodes[node] and not core.registered_items[node] then
+		core.log("warning", "[archtec] tried to override recipe of non exist item '" .. node .. "'")
 		return
 	end
 
-	minetest.clear_craft({
+	core.clear_craft({
 		output = node
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = node .. " " .. amount,
 		recipe = recipedef
 	})
 
-	minetest.log("action", "[archtec] changed recipe of '" .. node .. "'")
+	core.log("action", "[archtec] changed recipe of '" .. node .. "'")
 end
 
 -- pride_flags:lower_mast/bridger:bridges_steel_rod
@@ -60,14 +60,14 @@ fix_craft("xdecor:bowl", {
 	{"", "xdecor:wood_tile", ""}
 })
 
-if minetest.get_modpath("ethereal") then
-	minetest.register_craft({
+if core.get_modpath("ethereal") then
+	core.register_craft({
 		output = "ethereal:bowl",
 		type = "shapeless",
 		recipe = {"farming:bowl"}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "farming:bowl",
 		type = "shapeless",
 		recipe = {"ethereal:bowl"}
@@ -75,8 +75,8 @@ if minetest.get_modpath("ethereal") then
 end
 
 -- table_lamp and standing_lamp crafts are broken with UI https://github.com/mt-mods/homedecor_modpack/issues/39 *This is a hack
-if minetest.get_modpath("homedecor_lighting") then
-	minetest.register_craft({
+if core.get_modpath("homedecor_lighting") then
+	core.register_craft({
 		output = "homedecor:table_lamp_14",
 		recipe = {
 			{"wool:white", "default:torch", "wool:white"},
@@ -96,7 +96,7 @@ if minetest.get_modpath("homedecor_lighting") then
 		}
 	})
 
-	minetest.register_craft({
+	core.register_craft({
 		output = "homedecor:standing_lamp_14",
 		recipe = {
 			{"homedecor:table_lamp_14"},
@@ -118,19 +118,19 @@ if minetest.get_modpath("homedecor_lighting") then
 end
 
 -- https://github.com/Archtec-io/bugtracker/issues/58 (small hack)
-minetest.register_craft({
+core.register_craft({
 	output = "farming:wheat 3",
 	recipe = {{"farming:straw"}}
 })
 
 -- https://github.com/Archtec-io/bugtracker/issues/181 (next straw hack)
-minetest.register_craft({
+core.register_craft({
 	output = "farming:straw",
 	recipe = {{"castle_farming:bound_straw"}}
 })
 
 -- default:dry_dirt + group:water_bucket -> default:dirt (https://github.com/Archtec-io/bugtracker/issues/139)
-minetest.register_craft({
+core.register_craft({
 	output = "default:dirt",
 	type = "shapeless",
 	recipe = {

@@ -2,9 +2,9 @@ local http = assert(...)
 local geoip = {}
 archtec.geoip_enabled = true
 
-if not minetest.get_player_ip then
+if not core.get_player_ip then
 	archtec.geoip_enabled = false
-	minetest.log("error", "[geoip] minetest.get_player_ip not available!")
+	core.log("error", "[geoip] core.get_player_ip not available!")
 	return
 end
 
@@ -14,21 +14,21 @@ local cache = {}
 
 -- Execute cache cleanup every cache_ttl seconds
 local function cache_cleanup()
-	local expire = minetest.get_us_time() - (cache_ttl * 1000 * 1000)
+	local expire = core.get_us_time() - (cache_ttl * 1000 * 1000)
 	for ip, data in pairs(cache) do
 		if expire > data.timestamp then
 			cache[ip] = nil
 		end
 	end
-	minetest.after(cache_ttl, cache_cleanup)
+	core.after(cache_ttl, cache_cleanup)
 end
-minetest.after(cache_ttl, cache_cleanup)
+core.after(cache_ttl, cache_cleanup)
 
 -- Main geoip lookup function, callback function gets result table as first argument
 function geoip.lookup(ip, callback, playername)
 	if cache[ip] then
 		if playername and not cache[ip].players[playername] then
-			cache[ip].players[playername] = minetest.get_us_time()
+			cache[ip].players[playername] = core.get_us_time()
 		end
 		callback(cache[ip])
 		return
@@ -41,9 +41,9 @@ function geoip.lookup(ip, callback, playername)
 		timeout = 1,
 	}, function(res)
 		if res.code == 200 and callback then
-			local data = minetest.parse_json(res.data)
+			local data = core.parse_json(res.data)
 			if type(data) == "table" then
-				local timestamp = minetest.get_us_time()
+				local timestamp = core.get_us_time()
 				local result = type(data.data) == "table" and type(data.data.geo) == "table" and data.data.geo or {}
 				result.success = data.status == "success"
 				result.status = data.status
@@ -55,7 +55,7 @@ function geoip.lookup(ip, callback, playername)
 				return
 			end
 		end
-		minetest.log("warning", "[geoip] http request returned status: " .. res.code)
+		core.log("warning", "[geoip] http request returned status: " .. res.code)
 	end)
 end
 
@@ -87,13 +87,13 @@ local function format_result(result)
 end
 
 -- query ip on join, record in logs and execute callback
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	if not archtec.geoip_enabled then return end -- Kill switch
 
 	local name = player:get_player_name()
-	local ip = minetest.get_player_ip(name)
+	local ip = core.get_player_ip(name)
 	if not ip then
-		minetest.log("warning", "[geoip] get player IP address failed: " .. name)
+		core.log("warning", "[geoip] get player IP address failed: " .. name)
 		return
 	end
 
@@ -114,13 +114,13 @@ local function format_message(name, result)
 	if not txt then
 		return "Geoip error: " .. (result.description or "unknown error")
 	end
-	minetest.log("action", "[geoip] result for player " .. name .. ": " .. txt)
+	core.log("action", "[geoip] result for player " .. name .. ": " .. txt)
 	return txt
 end
 
 local function format_matches_by_name(name)
 	local formatted_results = {}
-	local now = minetest.get_us_time()
+	local now = core.get_us_time()
 	local count = 0
 	for _, result in pairs(cache) do
 		if result.players[name] then
@@ -148,7 +148,7 @@ local function format_matches_by_name(name)
 end
 
 -- manual query
-minetest.register_chatcommand("geoip", {
+core.register_chatcommand("geoip", {
 	params = "<name>",
 	privs = {staff = true},
 	description = "Does a geoip lookup on the given player",
@@ -157,15 +157,15 @@ minetest.register_chatcommand("geoip", {
 			return true, "usage: /geoip <name>"
 		end
 
-		minetest.log("action", "[geoip] Player " .. name .. " queries the player: " .. param)
+		core.log("action", "[geoip] Player " .. name .. " queries the player: " .. param)
 
-		local ip = minetest.get_player_ip(param)
+		local ip = core.get_player_ip(param)
 
 		if ip then
 			-- go through lookup if ip is available, this might still return cached result
 			geoip.lookup(ip, function()
 				local msg = format_matches_by_name(param) or "No matching geoip results found."
-				minetest.chat_send_player(name, msg)
+				core.chat_send_player(name, msg)
 			end, param)
 		else
 			local msg = format_matches_by_name(param) or "No ip or cached result available."

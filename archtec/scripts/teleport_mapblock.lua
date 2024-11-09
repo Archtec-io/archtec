@@ -1,5 +1,5 @@
 -- Code based on builtin/game/chat.lua
-local S = minetest.get_translator("__builtin")
+local S = core.get_translator("__builtin")
 
 -- Teleports player <name> to <p> if possible
 local function teleport_to_pos(name, p)
@@ -13,7 +13,7 @@ local function teleport_to_pos(name, p)
 		return false, S("Cannot teleport out of map bounds!")
 	end
 
-	local teleportee = minetest.get_player_by_name(name)
+	local teleportee = core.get_player_by_name(name)
 	if not teleportee then
 		return false, S("Cannot get player with name @1.", name)
 	end
@@ -22,10 +22,10 @@ local function teleport_to_pos(name, p)
 			"is attached to an object!", name)
 	end
 	teleportee:set_pos(pos)
-	return true, S("Teleporting @1 to @2. (Mapblock @3)", name, minetest.pos_to_string(pos, 1), minetest.pos_to_string(p))
+	return true, S("Teleporting @1 to @2. (Mapblock @3)", name, core.pos_to_string(pos, 1), core.pos_to_string(p))
 end
 
-minetest.register_chatcommand("tp_mapblock", {
+core.register_chatcommand("tp_mapblock", {
 	params = S("<X>,<Y>,<Z> | <name> <X>,<Y>,<Z>"),
 	description = S("Teleport to position of mapblock"),
 	privs = {teleport=true},
@@ -37,7 +37,7 @@ minetest.register_chatcommand("tp_mapblock", {
 			return teleport_to_pos(name, p)
 		end
 
-		local has_bring_priv = minetest.check_player_privs(name, {bring=true})
+		local has_bring_priv = core.check_player_privs(name, {bring=true})
 		local missing_bring_msg = S("You don't have permission to teleport " ..
 			"other players (missing privilege: @1).", "bring")
 

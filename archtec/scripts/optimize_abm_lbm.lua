@@ -5,7 +5,7 @@ local function replace_groups(group)
 
 	local matches = {}
 	local groupname = group:sub(7, #group)
-	for name, def in pairs(minetest.registered_nodes) do
+	for name, def in pairs(core.registered_nodes) do
 		for g, _ in pairs(def.groups) do
 			if g == groupname then
 				table.insert(matches, name)
@@ -45,13 +45,13 @@ local function replace(input)
 end
 
 -- Override ABMs/LBMs
-minetest.register_on_mods_loaded(function()
-	for _, abm in ipairs(minetest.registered_abms) do
+core.register_on_mods_loaded(function()
+	for _, abm in ipairs(core.registered_abms) do
 		abm.nodenames = replace(abm.nodenames)
 		abm.neighbors = replace(abm.neighbors)
 	end
 
-	for _, lbm in ipairs(minetest.registered_lbms) do
+	for _, lbm in ipairs(core.registered_lbms) do
 		lbm.nodenames = replace(lbm.nodenames)
 	end
 end)

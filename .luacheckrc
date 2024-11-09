@@ -16,8 +16,8 @@ globals = {
 }
 
 read_globals = {
-	-- minetest/lua
-	"minetest",
+	-- core/lua
+	"core",
 	"dump",
 	"dump2",
 	"vector",
@@ -48,15 +48,15 @@ read_globals = {
 }
 
 files["archtec/scripts/status.lua"] = {
-	globals = {"minetest.get_server_status"},
+	globals = {"core.get_server_status"},
 }
 
 files["archtec/scripts/pvp.lua"] = {
-	globals = {"minetest.calculate_knockback"},
+	globals = {"core.calculate_knockback"},
 }
 
 files["archtec/scripts/privs_cache.lua"] = {
-	globals = {"minetest.set_player_privs", "minetest.get_player_privs"},
+	globals = {"core.set_player_privs", "core.get_player_privs"},
 }
 
 files["archtec/scripts/mvps_stopper.lua"] = {
@@ -64,19 +64,19 @@ files["archtec/scripts/mvps_stopper.lua"] = {
 }
 
 files["archtec_matterbridge/tx.lua"] = {
-	globals = {"minetest.send_join_message", "minetest.send_leave_message"},
+	globals = {"core.send_join_message", "core.send_leave_message"},
 }
 
 files["archtec_matterbridge/rx.lua"] = {
-	globals = {"minetest.chat_send_player"},
+	globals = {"core.chat_send_player"},
 }
 
 files["archtec/scripts/common.lua"] = {
-	globals = {"core.kick_player", "core.disconnect_player", "minetest.registered_chatcommands.?.mod_origin"},
+	globals = {"core.kick_player", "core.disconnect_player", "core.registered_chatcommands.?.mod_origin"},
 }
 
 files["archtec/scripts/overrides.lua"] = {
-	globals = {"minetest.registered_entities", "carts.speed_max", "signs_bot.MAX_CAPA"},
+	globals = {"core.registered_entities", "carts.speed_max", "signs_bot.MAX_CAPA"},
 }
 
 files["archtec/scripts/chainsaw.lua"] = {

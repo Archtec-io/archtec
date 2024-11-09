@@ -29,15 +29,15 @@ if os.date("%m") == "12" then
 end
 
 local function show_random_message()
-	local message = minetest.colorize("#999", S("[Info]:") .. " " .. random_messages[math.random(1, #random_messages)])
-	for _, player in ipairs(minetest.get_connected_players()) do
+	local message = core.colorize("#999", S("[Info]:") .. " " .. random_messages[math.random(1, #random_messages)])
+	for _, player in ipairs(core.get_connected_players()) do
 		local name = player:get_player_name()
 		if archtec_playerdata.get(name, "s_help_msg") then
-			minetest.chat_send_player(name, message)
+			core.chat_send_player(name, message)
 		end
 	end
-	minetest.after(MESSAGE_INTERVAL, show_random_message)
+	core.after(MESSAGE_INTERVAL, show_random_message)
 end
 
 -- start function
-minetest.after(MESSAGE_INTERVAL, show_random_message)
+core.after(MESSAGE_INTERVAL, show_random_message)

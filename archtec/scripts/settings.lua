@@ -1,7 +1,7 @@
 archtec.settings = {}
 local S = archtec.S
-local F = minetest.formspec_escape
-local C = minetest.colorize
+local F = core.formspec_escape
+local C = core.colorize
 local space = "  "
 
 local callbacks = {}
@@ -24,7 +24,7 @@ local function tobool(v)
 end
 
 local function set(name, setting, val)
-	minetest.log("action", "[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. dump(val) .. "'")
+	core.log("action", "[archtec_settings] set '" .. setting .. "' of player '" .. name .. "' to '" .. dump(val) .. "'")
 	return archtec_playerdata.set(name, "s_" .. setting, val)
 end
 
@@ -101,10 +101,10 @@ local function show_settings(name)
 		end
 	end
 	fs = "formspec_version[4]" .. "size[11," .. y .. "]" .. fs
-	minetest.show_formspec(name, "archtec:settings", fs)
+	core.show_formspec(name, "archtec:settings", fs)
 end
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:settings" then return end
 	local name = player:get_player_name()
 	for f, v in pairs(fields) do
@@ -133,12 +133,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if def ~= nil and def.id ~= curr_val then -- validity check
 			archtec_playerdata.set(name, "s_ncolor", def.id)
 			show_settings(name)
-			minetest.chat_send_player(name, S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name)))
+			core.chat_send_player(name, S("[archtec] Your new namecolor looks like this: @1.", C(archtec.namecolor.get(name), name)))
 		end
 	end
 end)
 
-if minetest.get_modpath("unified_inventory") then
+if core.get_modpath("unified_inventory") then
 	unified_inventory.register_button("settings", {
 		type = "image",
 		image = "archtec_settings_icon.png",

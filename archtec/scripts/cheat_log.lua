@@ -16,7 +16,7 @@ local function get_pd(name)
 	if pd_cache[name] and times[name] and times[name] > t - 2 then -- get info all 2 sec
 		return pd_cache[name]
 	else
-		local info = minetest.get_player_information(name)
+		local info = core.get_player_information(name)
 		times[name] = t
 		pd_cache[name] = info
 		return info
@@ -26,7 +26,7 @@ end
 local function handle_cheat(player, cheat)
 	local name = player:get_player_name()
 	local speed = player:get_velocity()
-	local lag = short(minetest.get_server_max_lag(), 2)
+	local lag = short(core.get_server_max_lag(), 2)
 	local pos = player:get_pos()
 	for i, x in pairs(speed) do
 		speed[i] = round(x)
@@ -38,7 +38,7 @@ local function handle_cheat(player, cheat)
 	archtec.notify_team("[archtec] Anticheat: player '" .. name .. "' ('" .. cheat.type .. "') speed: " .. tostring(speed) .. " pos: " .. tostring(pos) .. " lag: " .. lag .. " jitter: " .. short(info.avg_jitter, 7) .. " rtt: " .. short(info.avg_rtt, 5), false)
 end
 
-minetest.register_on_cheat(function(player, cheat)
+core.register_on_cheat(function(player, cheat)
 	if not player:is_player() then return end
 	if cheat.type == "dug_unbreakable" or cheat.type == "finished_unknown_dig" then return end
 	if cheat.type == "moved_too_fast" then
@@ -48,7 +48,7 @@ minetest.register_on_cheat(function(player, cheat)
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	times[name] = nil
 	pd_cache[name] = nil

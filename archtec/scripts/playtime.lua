@@ -12,7 +12,7 @@ local function string_to_timestamp(s)
 	return(os.time({day = day, month = month, year = year, hour = hour, min = min, sec = sec}) + offset)
 end
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	current_playtime[name] = os.time()
 
@@ -25,14 +25,14 @@ minetest.register_on_joinplayer(function(player)
 			local int = string_to_timestamp(str)
 			archtec_playerdata.set(name, "first_join", int)
 			player:get_meta():set_string("archtec:joined", "")
-			minetest.log("action", "[archtec] removed 'archtec:joined' meta of '" .. name .. "' (moved to archtec_playerdata)")
+			core.log("action", "[archtec] removed 'archtec:joined' meta of '" .. name .. "' (moved to archtec_playerdata)")
 		else
 			archtec_playerdata.set(name, "first_join", os.time())
 		end
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	local playtime = os.time() - current_playtime[name]
 	archtec_playerdata.mod(name, "playtime", playtime)

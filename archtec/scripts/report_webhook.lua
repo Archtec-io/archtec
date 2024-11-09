@@ -1,11 +1,11 @@
 local http = assert(...)
 local S = archtec.S
-local F = minetest.formspec_escape
+local F = core.formspec_escape
 local FS = function(...) return F(S(...)) end
-local C = minetest.colorize
+local C = core.colorize
 
-local webhook_url = minetest.settings:get("archtec.webhook_url")
-local report_gpg_key = minetest.settings:get("archtec.report_gpg_key")
+local webhook_url = core.settings:get("archtec.webhook_url")
+local report_gpg_key = core.settings:get("archtec.report_gpg_key")
 local report_max_length = 500
 
 if not report_gpg_key or not webhook_url then
@@ -37,7 +37,7 @@ end
 
 -- GitHub issue creator
 local function send_report(name, report)
-	local player = minetest.get_player_by_name(name)
+	local player = core.get_player_by_name(name)
 	local data = {pos = "unknown", pos_string = "unknown", meta = "unknown"}
 
 	if player then
@@ -56,18 +56,18 @@ local function send_report(name, report)
 		"**Meta:**",
 		"```\n" .. data.meta .. "\n```",
 		"**Server status:**",
-		"```\n" .. minetest.get_server_status() .. "\n```",
+		"```\n" .. core.get_server_status() .. "\n```",
 		"**Teleport command:**",
 		"```\n" .. "/teleport " .. data.pos_string .. "\n```",
 	}
 
-	local json = minetest.write_json({
+	local json = core.write_json({
 		title = "Report by " .. name .. ": " .. create_title(report),
 		body = table.concat(body, "\n"),
 	})
 
 	if json == nil then
-		minetest.log("error", "[archtec] Failed to create json for report '" .. table.concat(body, "\n") .. "'")
+		core.log("error", "[archtec] Failed to create json for report '" .. table.concat(body, "\n") .. "'")
 		return false
 	end
 
@@ -81,7 +81,7 @@ local function send_report(name, report)
 		},
 		data = json,
 	}, function(res)
-		local parse = minetest.parse_json(res.data)
+		local parse = core.parse_json(res.data)
 		if parse.html_url then
 			archtec.notify_team("[archtec] " .. name .. " reported an Issue: " .. report .. " URL: " .. parse.html_url)
 		else
@@ -91,7 +91,7 @@ local function send_report(name, report)
 		if not parse.html_url then
 			parse.html_url = "Unknown URL"
 		end
-		minetest.chat_send_player(name, C("#00BD00", S("[report] Report successfully created. GitHub URL: @1", parse.html_url)))
+		core.chat_send_player(name, C("#00BD00", S("[report] Report successfully created. GitHub URL: @1", parse.html_url)))
 
 		-- Discord webhook
 		local body_dc = {
@@ -102,7 +102,7 @@ local function send_report(name, report)
 			parse.html_url,
 		}
 
-		local json_dc = minetest.write_json({
+		local json_dc = core.write_json({
 			embeds = {{
 				title = "Report by " .. name .. ":",
 				description = table.concat(body_dc, "\n"),
@@ -140,29 +140,29 @@ local function report_formspec(name)
 		"button[7.7,7.1;3,0.8;report_send;" .. FS("Send report") .. "]",
 	}
 
-	minetest.show_formspec(name, "archtec:report", table.concat(formspec))
+	core.show_formspec(name, "archtec:report", table.concat(formspec))
 end
 
 local function check_text(text)
 	if #text > report_max_length then
 		return false
 	end
-	local json = minetest.write_json({title = text})
+	local json = core.write_json({title = text})
 	if json == nil then
 		return false
 	end
 	return true
 end
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:report" or fields.quit then
 		return
 	end
 	local name = player:get_player_name()
 
 	if not check_text(fields.report_text) then
-		minetest.close_formspec(name, "archtec:report")
-		minetest.chat_send_player(name, C("#FF0000", S("[report] Your text is too long and/or contains disallowed characters!")))
+		core.close_formspec(name, "archtec:report")
+		core.chat_send_player(name, C("#FF0000", S("[report] Your text is too long and/or contains disallowed characters!")))
 		return true
 	end
 
@@ -177,7 +177,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if fields.report_send then
 		send_report(name, fields.report_text)
 		archtec_playerdata.set(name, "report_draft", "")
-		minetest.close_formspec(name, "archtec:report")
+		core.close_formspec(name, "archtec:report")
 		return true
 	end
 
@@ -185,12 +185,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	return true
 end)
 
-minetest.register_chatcommand("report", {
+core.register_chatcommand("report", {
 	params = "",
 	description = "Report a bug/feature request",
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/report] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/report] executed by '" .. name .. "' with param '" .. param .. "'")
 		local text = archtec.get_and_trim(param)
 		if text ~= "" and archtec_playerdata.get(name, "report_draft") == "" and check_text(text) then
 			archtec_playerdata.set(name, "report_draft", text)

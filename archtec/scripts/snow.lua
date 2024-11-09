@@ -8,7 +8,7 @@ end
 -- Spawns snow particles around player
 local function spawn_particles(player)
 	if archtec_playerdata.get(player:get_player_name(), "s_snow") == true then
-		minetest.add_particlespawner({
+		core.add_particlespawner({
 			amount = 2000,
 			minpos = vector.new(-25, 10, -25),
 			maxpos = vector.new( 25, 25,  25),
@@ -32,12 +32,12 @@ local function spawn_particles(player)
 end
 
 local spawner_step = 8
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	if spawner_step >= 10 then
 		spawner_step = 0
 
 		if spawn_snow then
-			for _, player in ipairs(minetest.get_connected_players()) do
+			for _, player in ipairs(core.get_connected_players()) do
 				spawn_particles(player)
 			end
 		end
@@ -46,25 +46,25 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	if spawn_snow == true then
 		spawn_particles(player)
 	end
 end)
 
-minetest.register_chatcommand("snow", {
+core.register_chatcommand("snow", {
 	params = "",
 	description = "Toggles the snow mode state",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/snow] executed by '" .. name .. "'")
+		core.log("action", "[/snow] executed by '" .. name .. "'")
 
 		if spawn_snow == true then
 			spawn_snow = false
-			minetest.chat_send_player(name, "Snow mode disabled.")
+			core.chat_send_player(name, "Snow mode disabled.")
 		elseif spawn_snow == false then
 			spawn_snow = true
-			minetest.chat_send_player(name, "Snow mode enabled.")
+			core.chat_send_player(name, "Snow mode enabled.")
 		end
 	end
 })

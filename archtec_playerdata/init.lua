@@ -8,15 +8,15 @@ archtec_playerdata = {
 }
 
 -- Init some basic stuff
-local storage = minetest.get_mod_storage()
-local datadir = minetest.get_worldpath() .. "/archtec_playerdata/"
+local storage = core.get_mod_storage()
+local datadir = core.get_worldpath() .. "/archtec_playerdata/"
 local type = type
 
 -- Config stuff
-local debug_mode = minetest.settings:get_bool("archtec_playerdata.debug_mode", false)
-local save_interval = minetest.settings:get("archtec_playerdata.save_interval") or 180 -- 3min
-local unload_data_after = minetest.settings:get("archtec_playerdata.unload_data_after") or 3600 -- 1h
-local auto_backup_interval = minetest.settings:get("archtec_playerdata.auto_backup_interval") or 86400 -- 1d
+local debug_mode = core.settings:get_bool("archtec_playerdata.debug_mode", false)
+local save_interval = core.settings:get("archtec_playerdata.save_interval") or 180 -- 3min
+local unload_data_after = core.settings:get("archtec_playerdata.unload_data_after") or 3600 -- 1h
+local auto_backup_interval = core.settings:get("archtec_playerdata.auto_backup_interval") or 86400 -- 1d
 
 -- System structure
 local data = {}
@@ -39,16 +39,16 @@ local system = {
 -- Logging and error helpers
 local function log_debug(func, str)
 	if debug_mode then
-		minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
+		core.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
 	end
 end
 
 local function log_action(func, str)
-	minetest.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
+	core.log("action", "[archtec_playerdata] " .. func .. "() ".. str)
 end
 
 local function log_error(func, str)
-	minetest.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
+	core.log("warning", "[archtec_playerdata] " .. func .. "() ".. str)
 	archtec.notify_team("[archtec_playerdata] Something went wrong, error message: " .. "[archtec_playerdata] " .. func .. "() ".. str .. ".")
 end
 
@@ -124,7 +124,7 @@ local function data_load(name, keep, create)
 		return false
 	end
 
-	local data_table = minetest.parse_json(raw)
+	local data_table = core.parse_json(raw)
 	if data_table == nil then
 		log_error("data_load", "failed to parse data of '" .. name .. "'; raw json '" .. raw .. "'")
 		return false
@@ -169,7 +169,7 @@ local function data_save(name, unload_now)
 		end
 	end
 
-	local raw = minetest.write_json(data_copy)
+	local raw = core.write_json(data_copy)
 	if raw == nil then
 		log_error("data_save", "failed to generate json for '" .. name .. "'; lua table " .. dump(data_copy))
 		return false
@@ -202,7 +202,7 @@ local function backup_create()
 	-- Convert stored data back to lua tables
 	for k, v in pairs(storage_copy) do
 		if k:sub(1, 7) == "player_" then
-			data_copy[k] = minetest.parse_json(v)
+			data_copy[k] = core.parse_json(v)
 			if data_copy[k] == nil then
 				log_error("backup_create", "failed to parse json of '" .. k .. "'")
 			end
@@ -211,14 +211,14 @@ local function backup_create()
 		end
 	end
 
-	local json_dump = minetest.write_json(data_copy)
+	local json_dump = core.write_json(data_copy)
 	if json_dump == nil then
 		log_error("backup_create", "failed to create json string from table")
 		return false
 	end
 
 	local filename = "archtec_playerdata_" .. os.date("!%Y-%m-%d_%H:%M:%S", os.time()) .. ".txt" -- 2024-01-01_20:00:00
-	local success = minetest.safe_file_write(datadir .. filename, json_dump)
+	local success = core.safe_file_write(datadir .. filename, json_dump)
 	if not success then
 		log_error("backup_create", "failed to write backup file - unknown engine error")
 		return false
@@ -249,7 +249,7 @@ local function backup_restore(filename)
 		return false
 	end
 
-	local data_copy = minetest.parse_json(raw)
+	local data_copy = core.parse_json(raw)
 	if data_copy == nil then
 		log_error("backup_restore", "failed to parse json from backup file '" .. filename .. "'")
 		return false
@@ -258,7 +258,7 @@ local function backup_restore(filename)
 	-- Convert data back to json strings
 	for k, v in pairs(data_copy) do
 		if k:sub(1, 7) == "player_" then
-			data_copy[k] = minetest.write_json(v)
+			data_copy[k] = core.write_json(v)
 			if data_copy[k] == nil then
 				log_error("backup_restore", "failed to write json of '" .. k .. "'")
 			end
@@ -274,33 +274,33 @@ local function backup_restore(filename)
 end
 archtec_playerdata.backup_restore = backup_restore
 
-minetest.register_chatcommand("playerdata_backup", {
+core.register_chatcommand("playerdata_backup", {
 	description = "Backup playerdata to world directory",
 	privs = {server = true},
 	func = function(name)
-		minetest.log("action", "[/playerdata_backup] executed by '" .. name .. "'")
+		core.log("action", "[/playerdata_backup] executed by '" .. name .. "'")
 		if backup_create() then
-			minetest.chat_send_player(name, "Backed-up playerdata.")
+			core.chat_send_player(name, "Backed-up playerdata.")
 		else
-			minetest.chat_send_player(name, "Backup failed, please check the logs!")
+			core.chat_send_player(name, "Backup failed, please check the logs!")
 		end
 	end
 })
 
 -- Callbacks to engine
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	data_load(name, true, true)
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	archtec_playerdata.set(name, "system_data_unload", get_unload_timestamp())
 end)
 
 local time_save = 0
 local time_backup = 0
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	time_save = time_save + dtime
 	time_backup = time_backup + dtime
 
@@ -308,13 +308,13 @@ minetest.register_globalstep(function(dtime)
 		time_save = 0
 		local users = get_loaded_user_list()
 		local saved = {}
-		local t0 = minetest.get_us_time()
+		local t0 = core.get_us_time()
 		for _, name in ipairs(users) do
 			if data_save(name) then
 				saved[#saved + 1] = name
 			end
 		end
-		local t1 = minetest.get_us_time()
+		local t1 = core.get_us_time()
 
 		if #users > 0 then
 			log_action("save_step", "saved data of " .. #saved .. " player(s) in " .. (t1 - t0) / 1000 .. " ms; data of " .. #users .. " player(s) is loaded")
@@ -327,15 +327,15 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.register_on_shutdown(function()
+core.register_on_shutdown(function()
 	system.mode = "shutdown"
 
 	local users = get_loaded_user_list()
-	local t0 = minetest.get_us_time()
+	local t0 = core.get_us_time()
 	for _, name in ipairs(users) do
 		data_save(name, true)
 	end
-	local t1 = minetest.get_us_time()
+	local t1 = core.get_us_time()
 
 	if #users > 0 then
 		log_action("on_shutdown", "saved data of " .. #users .. " player(s) in " .. (t1 - t0) / 1000 .. " ms")
@@ -421,8 +421,8 @@ local function run_actions()
 	end
 end
 
-minetest.register_on_mods_loaded(function()
-	if not minetest.mkdir(datadir) then
+core.register_on_mods_loaded(function()
+	if not core.mkdir(datadir) then
 		error("[archtec_playerdata] Failed to create datadir directory '" .. datadir .. "'")
 	end
 
@@ -606,7 +606,7 @@ function archtec_playerdata.get_db()
 	-- Convert stored data back to lua tables
 	for k, v in pairs(storage_copy) do
 		if k:sub(1, 7) == "player_" then
-			data_copy[k] = minetest.parse_json(v)
+			data_copy[k] = core.parse_json(v)
 			if data_copy[k] == nil then
 				log_error("get_db", "failed to parse json of '" .. k .. "'")
 			end
@@ -693,16 +693,16 @@ function archtec_playerdata.mod(name, key_name, value)
 	return true
 end
 
-minetest.register_chatcommand("playerdata_debug", {
+core.register_chatcommand("playerdata_debug", {
 	description = "Turn on/off API debug mode",
 	privs = {server = true},
 	func = function(name)
-		minetest.log("action", "[/playerdata_debug] executed by '" .. name .. "'")
+		core.log("action", "[/playerdata_debug] executed by '" .. name .. "'")
 		debug_mode = not debug_mode
 		if debug_mode then
-			minetest.chat_send_player(name, "[archtec_playerdata] Enabled debug mode.")
+			core.chat_send_player(name, "[archtec_playerdata] Enabled debug mode.")
 		else
-			minetest.chat_send_player(name, "[archtec_playerdata] Disabled debug mode.")
+			core.chat_send_player(name, "[archtec_playerdata] Disabled debug mode.")
 		end
 	end
 })

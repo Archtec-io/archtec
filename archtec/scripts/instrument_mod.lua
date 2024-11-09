@@ -1,6 +1,6 @@
-local get_us_time = minetest.get_us_time
-local log = minetest.log
-local log_level = minetest.settings:get("debug_log_level") or "action"
+local get_us_time = core.get_us_time
+local log = core.log
+local log_level = core.settings:get("debug_log_level") or "action"
 
 local pairs_by_key = futil.table.pairs_by_key
 
@@ -48,13 +48,13 @@ local function instrument(name, value, _cache)
 	end
 end
 
-minetest.register_chatcommand("instrument_mod", {
+core.register_chatcommand("instrument_mod", {
 	params = "<global_name>",
 	description = "Toggles recording timing data for all functions declared in a particular global",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/instrument_mod] executed by '" .. name .. "' with param '" .. param .. "'")
-		if not (minetest.global_exists(param) and _G[param]) then
+		core.log("action", "[/instrument_mod] executed by '" .. name .. "' with param '" .. param .. "'")
+		if not (core.global_exists(param) and _G[param]) then
 			return false, ("unknown global %s"):format(param)
 		end
 
@@ -76,7 +76,7 @@ minetest.register_chatcommand("instrument_mod", {
 local report_interval = 1
 local elapsed = 0
 
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	if num_instrumented == 0 then
 		return
 	end

@@ -5,7 +5,7 @@ local ladders = {
 }
 
 for l, def in pairs(ladders) do
-	minetest.override_item("default:" .. def[1], {
+	core.override_item("default:" .. def[1], {
 		tiles = {def[2], def[2], def[3], def[3], def[3], def[3]},
 		use_texture_alpha = "clip",
 		drawtype = "nodebox",
@@ -49,9 +49,9 @@ local grass_nodes = {
 }
 
 for _, grass in pairs(grass_nodes) do
-	local current_box = minetest.registered_nodes[grass].selection_box.fixed
+	local current_box = core.registered_nodes[grass].selection_box.fixed
 	if (current_box[5] > target) then
-		minetest.override_item(grass, {
+		core.override_item(grass, {
 			selection_box = {
 				type = "fixed",
 				fixed = {

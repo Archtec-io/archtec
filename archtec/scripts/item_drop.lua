@@ -4,7 +4,7 @@ local pickup_age = 0.5
 
 -- adds the item to the inventory and removes the object
 local function collect_item(ent, pos, player)
-	minetest.sound_play("item_drop_pickup", {
+	core.sound_play("item_drop_pickup", {
 		pos = pos,
 		gain = pickup_gain,
 	}, true)
@@ -33,7 +33,7 @@ local function pickupfunc(player)
 	pos.y = pos.y+0.5
 	local inv = player:get_inventory()
 
-	local objectlist = minetest.get_objects_inside_radius(pos, pickup_radius)
+	local objectlist = core.get_objects_inside_radius(pos, pickup_radius)
 
 	for i = 1, #objectlist do
 		local object = objectlist[i]
@@ -52,7 +52,7 @@ end
 
 local function pickup_step()
 	local got_item
-	for _, player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(core.get_connected_players()) do
 		local name = player:get_player_name()
 		if archtec_playerdata.get(name, "s_r_id") == true then
 			got_item = got_item or pickupfunc(player)
@@ -65,6 +65,6 @@ local function pickup_step()
 	else
 		time = 0.4
 	end
-	minetest.after(time, pickup_step)
+	core.after(time, pickup_step)
 end
-minetest.after(3.0, pickup_step)
+core.after(3.0, pickup_step)

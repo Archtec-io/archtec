@@ -1,7 +1,7 @@
-local S = minetest.get_translator("techage_addon")
+local S = core.get_translator("techage_addon")
 
 -- Register items
-minetest.register_node("techage_addon:dry_ice", {
+core.register_node("techage_addon:dry_ice", {
 	description = S("Dry ice"),
 	tiles = {"default_ice.png"},
 	is_ground_content = false,
@@ -11,27 +11,27 @@ minetest.register_node("techage_addon:dry_ice", {
 	damage_per_second = 3,
 	drop = "techage_addon:dry_ice_cri"
 })
-minetest.register_alias("techage_cobble_generator:dry_ice", "techage_addon:dry_ice")
+core.register_alias("techage_cobble_generator:dry_ice", "techage_addon:dry_ice")
 
-minetest.register_craftitem("techage_addon:dry_ice_cri", {
+core.register_craftitem("techage_addon:dry_ice_cri", {
 	description = S("Dry ice"),
-	inventory_image = minetest.inventorycube("default_ice.png", "default_ice.png", "default_ice.png"),
+	inventory_image = core.inventorycube("default_ice.png", "default_ice.png", "default_ice.png"),
 	groups = {powder = 1},
 	on_place = function(itemstack, placer, pointed_thing)
 		itemstack:set_name("techage_addon:dry_ice")
-		local leftover = minetest.item_place(itemstack, placer, pointed_thing)
+		local leftover = core.item_place(itemstack, placer, pointed_thing)
 		leftover:set_name("techage_addon:dry_ice_cri")
 		return leftover
 	end
 })
-minetest.register_alias("techage_cobble_generator:dry_ice_cri", "techage_addon:dry_ice_cri")
+core.register_alias("techage_cobble_generator:dry_ice_cri", "techage_addon:dry_ice_cri")
 
-minetest.register_craftitem("techage_addon:diamond_powder", {
+core.register_craftitem("techage_addon:diamond_powder", {
 	description = S("Diamond Powder"),
 	inventory_image = "techage_powder_inv.png^[colorize:#00FFFF:120",
 	groups = {powder = 1},
 })
-minetest.register_alias("techage_cobble_generator:diamond_powder", "techage_addon:diamond_powder")
+core.register_alias("techage_cobble_generator:diamond_powder", "techage_addon:diamond_powder")
 
 -- Add to techage
 techage.add_rinser_recipe({input = "techage:sieved_gravel", output = "techage_addon:diamond_powder", probability = 300})
@@ -45,7 +45,7 @@ techage.recipes.add("ta4_doser", {
 })
 
 -- Cool lava ABM
-minetest.register_abm({
+core.register_abm({
 	label = "Lava cooling (real cobble gen)",
 	nodenames = {"default:lava_source", "default:lava_flowing"},
 	neighbors = {"techage_addon:dry_ice"},
@@ -54,12 +54,12 @@ minetest.register_abm({
 	catch_up = false,
 	action = function(pos, node)
 		if node.name == "default:lava_source" then
-			minetest.set_node(pos, {name = "default:obsidian"})
+			core.set_node(pos, {name = "default:obsidian"})
 		else
-			minetest.set_node(pos, {name = "default:stone"})
+			core.set_node(pos, {name = "default:stone"})
 		end
 		if math.random(1, 4) == 1 then
-			minetest.sound_play("default_cool_lava", {pos = pos, max_hear_distance = 16, gain = 0.2}, true)
+			core.sound_play("default_cool_lava", {pos = pos, max_hear_distance = 16, gain = 0.2}, true)
 		end
 	end
 })

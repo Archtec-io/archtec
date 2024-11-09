@@ -372,7 +372,7 @@ archtec.faq.register("Node placement limits", {
 	pos = 1,
 	text = [[
 Drawers:
-Minetest has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
+Luanti has a fixed limit on the number of static entities supported per mapblock (16x16x16 nodes).
 Each drawer adds 1-4 entities, resulting in the number of drawers per mapblock having to be restricted.
 You can't place new drawers when the mapblock contains more than 70 entities.
 
@@ -421,7 +421,7 @@ Archtec behavior:
 - Flowing lava that comes into contact with water, ice, or thin ice turns into basalt stone.
 - Flowing lava that comes into contact with dry ice turns into cobblestone
 
-This differs significantly from the default minetest behavior, where all flowing lava turns into cobblestone when it comes into contact with water or ice.
+This differs significantly from the default Luanti behavior, where all flowing lava turns into cobblestone when it comes into contact with water or ice.
 
 For players building cobblestone generators, you must use dry ice instead of water or ice for your generator to yield regular cobblestone.
 

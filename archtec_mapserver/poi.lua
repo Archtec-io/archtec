@@ -26,7 +26,7 @@ local on_receive_fields = function(pos, formname, fields, sender)
 		return
 	end
 
-	local meta = minetest.get_meta(pos)
+	local meta = core.get_meta(pos)
 
 	if fields.save then
 		meta:set_string("name", fields.name)
@@ -38,7 +38,7 @@ local on_receive_fields = function(pos, formname, fields, sender)
 end
 
 local register_poi = function(color, dye)
-	minetest.register_node(":mapserver:poi_" .. color, {
+	core.register_node(":mapserver:poi_" .. color, {
 		description = "Mapserver POI (" .. color .. ")",
 		tiles = {
 			"[combine:16x16:0,0=default_gold_block.png:3,2=mapserver_poi_" .. color .. ".png"
@@ -50,7 +50,7 @@ local register_poi = function(color, dye)
 		after_place_node = mapserver.after_place_node,
 
 		on_construct = function(pos)
-			local meta = minetest.get_meta(pos)
+			local meta = core.get_meta(pos)
 
 			meta:set_string("name", "<unconfigured>")
 			meta:set_string("icon", "home")

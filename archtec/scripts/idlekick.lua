@@ -3,7 +3,7 @@ local cache = {}
 local timeout = archtec.time.hours(1) -- Kick after 1h
 
 local function now()
-	return minetest.get_us_time() / 1000000
+	return core.get_us_time() / 1000000
 end
 
 local function bump_name(name)
@@ -25,13 +25,13 @@ local function get_nametag(name, player)
 	return att.text
 end
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	-- Can happen when player was dead and got kicked
 	local hp = player:get_hp()
 	if hp == 0 then
-		minetest.log("action", "[archtec] Respawned dead player '" .. name .. "' on join")
-		minetest.chat_send_player(name, minetest.colorize("#00BD00", S("Server respawned you.")))
+		core.log("action", "[archtec] Respawned dead player '" .. name .. "' on join")
+		core.chat_send_player(name, core.colorize("#00BD00", S("Server respawned you.")))
 		player:respawn()
 	end
 	-- Create data structure
@@ -43,15 +43,15 @@ minetest.register_on_joinplayer(function(player)
 end)
 
 -- Un-idle events
-minetest.register_on_placenode(function(_, _, player) bump(player) end)
-minetest.register_on_dignode(function(_, _, player) bump(player) end)
-minetest.register_on_punchnode(function(_, _, player) bump(player) end)
-minetest.register_on_craft(function(_, player) bump(player) end)
-minetest.register_on_player_inventory_action(function(player) bump(player) end)
-minetest.register_on_chat_message(function(name) bump_name(name) end)
+core.register_on_placenode(function(_, _, player) bump(player) end)
+core.register_on_dignode(function(_, _, player) bump(player) end)
+core.register_on_punchnode(function(_, _, player) bump(player) end)
+core.register_on_craft(function(_, player) bump(player) end)
+core.register_on_player_inventory_action(function(player) bump(player) end)
+core.register_on_chat_message(function(name) bump_name(name) end)
 
 local timer = 0
-minetest.register_globalstep(function(dtime)
+core.register_globalstep(function(dtime)
 	timer = timer + dtime
 	if timer < 6 then
 		return
@@ -60,7 +60,7 @@ minetest.register_globalstep(function(dtime)
 
 	local time = now()
 
-	for _, player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(core.get_connected_players()) do
 		local name = player:get_player_name()
 		local pos = player:get_pos()
 
@@ -70,7 +70,7 @@ minetest.register_globalstep(function(dtime)
 		end
 
 		if cache[name].last_active < time - timeout then
-			if not minetest.get_player_privs(name).staff then
+			if not core.get_player_privs(name).staff then
 				archtec.kick_inactive_player(name)
 			end
 		end
@@ -96,7 +96,7 @@ minetest.register_globalstep(function(dtime)
 	end
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	cache[name] = nil
 end)

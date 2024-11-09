@@ -1,6 +1,6 @@
 local channel = {}
-local C = minetest.colorize
-local S = minetest.get_translator(minetest.get_current_modname())
+local C = core.colorize
+local S = core.get_translator(core.get_current_modname())
 
 local max_channel_lenght = 15
 local max_user_channels = 10
@@ -26,7 +26,7 @@ local function is_channel_owner(cdef, name)
 	if cdef.owner == name then
 		return true
 	end
-	if minetest.get_player_privs(name).staff then
+	if core.get_player_privs(name).staff then
 		return true
 	end
 	return false
@@ -52,7 +52,7 @@ channel.get_cname = get_cname
 
 archtec_playerdata.register_key("channels", "table", {})
 archtec_playerdata.register_upgrade("channels", "archtec_chat:channel_str_to_list", false, function(name, value)
-	return minetest.deserialize(value)
+	return core.deserialize(value)
 end)
 
 function archtec_chat.user.open(name)
@@ -101,23 +101,23 @@ function archtec_chat.user.save(name)
 end
 
 function channel.send(cname, message, sender)
-	-- minetest.log("action", "[archtec_chat] Send message '" .. message .. "' into channel '" .. cname .. "'")
+	-- core.log("action", "[archtec_chat] Send message '" .. message .. "' into channel '" .. cname .. "'")
 	if message == "" then return end
 	local cdef = get_cdef(cname)
 	local msg = C("#FF8800", "#" .. cname .. " | " .. message)
 	for name, _ in pairs(cdef.users) do
 		if sender then
 			if not archtec.ignore_check(sender, name) then -- don't send if ignored
-				minetest.chat_send_player(name, msg)
+				core.chat_send_player(name, msg)
 			end
 		else
-			minetest.chat_send_player(name, msg)
+			core.chat_send_player(name, msg)
 		end
 	end
 end
 
 function channel.create(cname, params)
-	minetest.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. (params.owner or "") .. "'")
+	core.log("action", "[archtec_chat] Create channel '" .. cname .. "' for '" .. (params.owner or "") .. "'")
 	local def = {
 		owner = params.owner or "",
 		public = params.public or false,
@@ -129,7 +129,7 @@ function channel.create(cname, params)
 end
 
 function channel.delete(cname, name)
-	minetest.log("action", "[archtec_chat] Delete channel '" .. cname .. "' by '" .. name .. "'")
+	core.log("action", "[archtec_chat] Delete channel '" .. cname .. "' by '" .. name .. "'")
 	channel.send(cname, name .. " deleted the channel.")
 	archtec_chat.channels[cname] = nil
 end
@@ -163,9 +163,9 @@ end
 function channel.invite_delete(cname, target, timed_out)
 	local cdef = get_cdef(cname)
 	if cdef.invites[target] then -- invite might already be deleted
-		minetest.log("action", "[archtec_chat] Delete '" .. cname .. "' invite for '" .. target .. "'")
+		core.log("action", "[archtec_chat] Delete '" .. cname .. "' invite for '" .. target .. "'")
 		if timed_out then
-			minetest.chat_send_player(target, C("#FF8800", S("Invite timed-out.")))
+			core.chat_send_player(target, C("#FF8800", S("Invite timed-out.")))
 		end
 		cdef.invites[target] = nil
 	end
@@ -173,10 +173,10 @@ end
 
 function channel.invite(cname, target, inviter)
 	local cdef = get_cdef(cname)
-	minetest.log("action", "[archtec_chat] '" .. inviter .. "' invited '" .. target .. "' to channel '" .. cname .. "'")
-	minetest.chat_send_player(target, C("#FF8800", S("@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.", inviter, cname, cname)))
+	core.log("action", "[archtec_chat] '" .. inviter .. "' invited '" .. target .. "' to channel '" .. cname .. "'")
+	core.chat_send_player(target, C("#FF8800", S("@1 invited you to join #@2. '/c j @3' to join. It will timeout in 60 seconds. Type '/c l main' to leave the main channel.", inviter, cname, cname)))
 	cdef.invites[target] = os.time()
-	minetest.after(60, function(cname_new, target_new)
+	core.after(60, function(cname_new, target_new)
 		local cdef_new = get_cdef(cname_new)
 		if cdef_new and cdef_new.invites[target_new] then
 			channel.invite_delete(cname_new, target_new, true)
@@ -185,7 +185,7 @@ function channel.invite(cname, target, inviter)
 end
 
 function channel.invite_accept(cname, target)
-	minetest.log("action", "[archtec_chat] Invite in '" .. cname .. "' accepted by '" .. target .. "'")
+	core.log("action", "[archtec_chat] Invite in '" .. cname .. "' accepted by '" .. target .. "'")
 	channel.invite_delete(cname, target, false)
 	channel.join(cname, target)
 end
@@ -270,13 +270,13 @@ local function help_all()
 	return C("#00BD00", s)
 end
 
-minetest.register_chatcommand("c", {
+core.register_chatcommand("c", {
 	description = "Run '/c help' to get the command help",
 	privs = {interact = true, shout = true},
 	func = function(name, param)
-		minetest.log("action", "[/c] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/c] executed by '" .. name .. "' with param '" .. param .. "'")
 		if archtec.get_and_trim(param) == "" then
-			minetest.chat_send_player(name, help_all())
+			core.chat_send_player(name, help_all())
 			return
 		end
 		local params = archtec.parse_params(param)
@@ -284,7 +284,7 @@ minetest.register_chatcommand("c", {
 		if action == "join" or action == "j" then
 			local c = archtec.get_and_trim(p1)
 			if c == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/join] No channelname provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/join] No channelname provided!")))
 				return
 			end
 			c = get_cname(c) -- remove channel prefix
@@ -292,12 +292,12 @@ minetest.register_chatcommand("c", {
 			-- join if main
 			if c == "main" then
 				channel.join(c, name, "")
-				minetest.chat_send_player(name, C("#00BD00", S("[c/join] Joined #main.")))
+				core.chat_send_player(name, C("#00BD00", S("[c/join] Joined #main.")))
 				return
 			end
 			-- limit channels per user
 			if #archtec_chat.users[name].channels >= max_user_channels then
-				minetest.chat_send_player(name, C("#00BD00", S("[c/join] You can't be in more than @1 channels!", max_user_channels)))
+				core.chat_send_player(name, C("#00BD00", S("[c/join] You can't be in more than @1 channels!", max_user_channels)))
 				return
 			end
 			-- create if not registered
@@ -318,13 +318,13 @@ minetest.register_chatcommand("c", {
 					end
 					return
 				else
-					minetest.chat_send_player(name, C("#FF0000", S("[c/join] Channelname contains forbidden characters or is too long!")))
+					core.chat_send_player(name, C("#FF0000", S("[c/join] Channelname contains forbidden characters or is too long!")))
 					return
 				end
 			end
 			-- check if player is already in channel
 			if cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/join] You are already in this channel!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/join] You are already in this channel!")))
 				return
 			end
 			-- is player invited?
@@ -336,13 +336,13 @@ minetest.register_chatcommand("c", {
 					channel.join(c, name)
 				end
 			else
-				minetest.chat_send_player(name, C("#FF0000", S("[c/join] You aren't invited!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/join] You aren't invited!")))
 				return
 			end
 		elseif action == "leave" or action == "l" then
 			local c = archtec.get_and_trim(p1)
 			if c == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/leave] No channelname provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/leave] No channelname provided!")))
 				return
 			end
 			c = get_cname(c) -- remove channel prefix
@@ -350,19 +350,19 @@ minetest.register_chatcommand("c", {
 			-- leave if main
 			if c == "main" then
 				channel.leave(c, name, "")
-				minetest.chat_send_player(name, C("#00BD00", S("[c/leave] Left #main.")))
+				core.chat_send_player(name, C("#00BD00", S("[c/leave] Left #main.")))
 				return
 			end
 			-- check if player is in channel
 			if not cdef or not cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/leave] You are not in this channel!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/leave] You are not in this channel!")))
 				return
 			end
 			channel.leave(c, name)
 		elseif action == "list" or action == "li" then
 			local channels = archtec_chat.channels
 			if next(channels) == nil then
-				minetest.chat_send_player(name, C("#FF0000", S("No channels registered!")))
+				core.chat_send_player(name, C("#FF0000", S("No channels registered!")))
 				return
 			end
 			local list = S("[c/list] Active channels:") .. "\n"
@@ -370,42 +370,42 @@ minetest.register_chatcommand("c", {
 				list = list .. cname .. " - " .. list_table(cdef.users or {}) .. "\n"
 			end
 			list = list:sub(1, #list - 1)
-			minetest.chat_send_player(name, C("#00BD00", list))
+			core.chat_send_player(name, C("#00BD00", list))
 		elseif action == "invite" or action == "i" then
 			local c = archtec.get_and_trim(p1)
 			local target = archtec.get_and_trim(p2)
 			if c == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] No channelname provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] No channelname provided!")))
 				return
 			end
 			if target == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] No target provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] No target provided!")))
 				return
 			end
 			if name == target then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite yourself!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite yourself!")))
 				return
 			end
 			if not archtec.is_online(target) then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] @1 is not online!", target)))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] @1 is not online!", target)))
 				return
 			end
 			c = get_cname(c) -- remove channel prefix
 			local cdef = get_cdef(c)
 			if not cdef then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] Channel #@1 does not exist!", c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] Channel #@1 does not exist!", c)))
 				return
 			end
 			if not is_channel_owner(cdef, name) then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You aren't authorized to invite someone to join @1!", c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] You aren't authorized to invite someone to join @1!", c)))
 				return
 			end
 			if not cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2!", target, c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] You can't invite @1 since you aren't in #@2!", target, c)))
 				return
 			end
 			if cdef.users[target] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/invite] @1 is already a member of #@2!", target, c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/invite] @1 is already a member of #@2!", target, c)))
 				return
 			end
 			if archtec.ignore_check(name, target) then
@@ -413,82 +413,82 @@ minetest.register_chatcommand("c", {
 				return
 			end
 			channel.invite(c, target, name)
-			minetest.chat_send_player(name, C("#00BD00", S("[c/invite] Invited @1 to join #@2.", target, c)))
+			core.chat_send_player(name, C("#00BD00", S("[c/invite] Invited @1 to join #@2.", target, c)))
 		elseif action == "kick" or action == "k" then
 			local c = archtec.get_and_trim(p1)
 			local target = archtec.get_and_trim(p2)
 			if c == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/kick] No channelname provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/kick] No channelname provided!")))
 				return
 			end
 			if target == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/kick] No target provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/kick] No target provided!")))
 				return
 			end
 			c = get_cname(c) -- remove channel prefix
 			local cdef = get_cdef(c)
 			if not cdef then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/kick] Channel #@1 does not exist!", c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/kick] Channel #@1 does not exist!", c)))
 				return
 			end
 			if not is_channel_owner(cdef, name) then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/kick] You aren't authorized to kick someone!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/kick] You aren't authorized to kick someone!")))
 				return
 			end
 			if not cdef.users[target] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/kick] @1 is not in #@2!", target, c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/kick] @1 is not in #@2!", target, c)))
 				return
 			end
 			channel.leave(c, target, name .. " kicked " .. target .. ".")
 		elseif action == "find" or action == "f" then
 			local target = archtec.get_and_trim(p1)
 			if target == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/find] No target provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/find] No target provided!")))
 				return
 			end
 			if not archtec.is_online(target) then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/find] @1 is not online!", target)))
+				core.chat_send_player(name, C("#FF0000", S("[c/find] @1 is not online!", target)))
 				return
 			end
 			local channels = archtec_chat.users[target].channels
 			if next(channels) == nil then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/find] @1 is in no channels!", target)))
+				core.chat_send_player(name, C("#FF0000", S("[c/find] @1 is in no channels!", target)))
 				return
 			end
-			minetest.chat_send_player(name, C("#00BD00", S("[c/find] @1 is in the following channels: @2", target, list_table(channels or {}))))
+			core.chat_send_player(name, C("#00BD00", S("[c/find] @1 is in the following channels: @2", target, list_table(channels or {}))))
 		elseif action == "help" or action == "h" then
 			local help = archtec.get_and_trim(p1)
 			if help == "" then
-				minetest.chat_send_player(name, help_all())
+				core.chat_send_player(name, help_all())
 				return
 			end
 			local hd = help_list[help]
 			if not hd then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/help] No help for this sub-command available!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/help] No help for this sub-command available!")))
 				return
 			end
-			minetest.chat_send_player(name, C("#00BD00", parse_help(hd)))
+			core.chat_send_player(name, C("#00BD00", parse_help(hd)))
 		elseif action == "default" or action == "d" then
 			local c = archtec.get_and_trim(p1)
 			if c == "" then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/default] No channelname provided!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/default] No channelname provided!")))
 				return
 			end
 			c = get_cname(c) -- remove channel prefix
 			local cdef = get_cdef(c)
 			-- check if player is in channel
 			if not cdef or not cdef.users[name] then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/default] You are not in this channel!")))
+				core.chat_send_player(name, C("#FF0000", S("[c/default] You are not in this channel!")))
 				return
 			end
 			if archtec_chat.users[name].default == c then
-				minetest.chat_send_player(name, C("#FF0000", S("[c/default] #@1 is already your default channel!", c)))
+				core.chat_send_player(name, C("#FF0000", S("[c/default] #@1 is already your default channel!", c)))
 				return
 			end
 			archtec_chat.users[name].default = c
-			minetest.chat_send_player(name, C("#00BD00", S("[c/default] Set your default channel to #@1.", c)))
+			core.chat_send_player(name, C("#00BD00", S("[c/default] Set your default channel to #@1.", c)))
 		else
-			minetest.chat_send_player(name, C("#FF0000", S("[c] Unknown sub-command! (try '/c help')")))
+			core.chat_send_player(name, C("#FF0000", S("[c] Unknown sub-command! (try '/c help')")))
 		end
 	end
 })

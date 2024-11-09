@@ -1,5 +1,5 @@
 local S = archtec.S
-local C = minetest.colorize
+local C = core.colorize
 local enabled = {}
 
 local function pvp_enable(name, player, init)
@@ -7,7 +7,7 @@ local function pvp_enable(name, player, init)
 	archtec.modify_hud(name, 1, {bg_color = "#FF0000", icon = "archtec_pvp_on.png", icon_scale = 3})
 
 	if not init then
-		minetest.chat_send_player(name, S("Your PvP has been enabled."))
+		core.chat_send_player(name, S("Your PvP has been enabled."))
 	end
 end
 
@@ -16,20 +16,20 @@ local function pvp_disable(name, player, init)
 	archtec.modify_hud(name, 1, {bg_color = "#00BD00", icon = "archtec_pvp_off.png", icon_scale = 3})
 
 	if not init then
-		minetest.chat_send_player(name, S("Your PvP has been disabled."))
+		core.chat_send_player(name, S("Your PvP has been disabled."))
 	end
 end
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	pvp_disable(name, player, true)
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	enabled[player:get_player_name()] = nil
 end)
 
-minetest.register_on_punchplayer(function(player, hitter)
+core.register_on_punchplayer(function(player, hitter)
 	if not hitter or not hitter:is_player() then
 		return false
 	end
@@ -42,11 +42,11 @@ minetest.register_on_punchplayer(function(player, hitter)
 	end
 
 	if not enabled[name_hitter]then
-		minetest.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because your PvP is disabled!", name)))
+		core.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because your PvP is disabled!", name)))
 		return true
 	end
 	if not enabled[name] then
-		minetest.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because their PvP is disabled!", name)))
+		core.chat_send_player(name_hitter, C("#FF0000", S("You can't hit @1 because their PvP is disabled!", name)))
 		return true
 	end
 
@@ -58,8 +58,8 @@ minetest.register_on_punchplayer(function(player, hitter)
 	return false
 end)
 
-local old_calculate_knockback = minetest.calculate_knockback
-function minetest.calculate_knockback(player, hitter, ...)
+local old_calculate_knockback = core.calculate_knockback
+function core.calculate_knockback(player, hitter, ...)
 	if not enabled[player:get_player_name()] or not enabled[hitter:get_player_name()] then
 		return 0
 	end
@@ -67,7 +67,7 @@ function minetest.calculate_knockback(player, hitter, ...)
 end
 
 -- Integration for players
-if minetest.get_modpath("unified_inventory") then
+if core.get_modpath("unified_inventory") then
 	unified_inventory.register_button("pvp", {
 		type = "image",
 		image = "archtec_pvp_on.png",
@@ -83,47 +83,47 @@ if minetest.get_modpath("unified_inventory") then
 	})
 end
 
-minetest.register_chatcommand("pvp", {
+core.register_chatcommand("pvp", {
 	description = "Toggle PvP of other player",
 	params = "<name> <on/off>",
 	privs = {staff = true},
 	func = function(name, param)
-		minetest.log("action", "[/pvp] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/pvp] executed by '" .. name .. "' with param '" .. param .. "'")
 		local params = archtec.parse_params(param)
 		local target = archtec.get_and_trim(params[1])
 		local mode = archtec.get_and_trim(params[2])
 
 		if target == "" or mode == "" then
-			minetest.chat_send_player(name, C("#FF0000", "[pvp] No target or PvP mode provided!"))
+			core.chat_send_player(name, C("#FF0000", "[pvp] No target or PvP mode provided!"))
 			return
 		end
 
 		if not archtec.is_online(target) then
-			minetest.chat_send_player(name, C("#FF0000", "[pvp] Player '" .. target .. "' isn't online!"))
+			core.chat_send_player(name, C("#FF0000", "[pvp] Player '" .. target .. "' isn't online!"))
 			return
 		end
 
 		if mode ~= "on" and mode ~= "off" then
-			minetest.chat_send_player(name, C("#FF0000", "[pvp] Mode must be 'on' or 'off'!"))
+			core.chat_send_player(name, C("#FF0000", "[pvp] Mode must be 'on' or 'off'!"))
 			return
 		end
 
 		if mode == "on" then
 			if enabled[target] then
-				minetest.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already enabled!"))
+				core.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already enabled!"))
 				return
 			end
-			pvp_enable(target, minetest.get_player_by_name(target))
-			minetest.chat_send_player(name, C("#00BD00", "[pvp] Enabled PvP of " .. target))
+			pvp_enable(target, core.get_player_by_name(target))
+			core.chat_send_player(name, C("#00BD00", "[pvp] Enabled PvP of " .. target))
 		elseif mode == "off" then
 			if not enabled[target] then
-				minetest.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already disabled!"))
+				core.chat_send_player(name, C("#FF0000", "[pvp] PvP of " .. target .. " is already disabled!"))
 				return
 			end
-			pvp_disable(target, minetest.get_player_by_name(target))
-			minetest.chat_send_player(name, C("#00BD00", "[pvp] Disabled PvP of " .. target))
+			pvp_disable(target, core.get_player_by_name(target))
+			core.chat_send_player(name, C("#00BD00", "[pvp] Disabled PvP of " .. target))
 		else
-			minetest.chat_send_player(name, C("#FF0000", "[pvp] Unknown mode!"))
+			core.chat_send_player(name, C("#FF0000", "[pvp] Unknown mode!"))
 		end
 	end
 })

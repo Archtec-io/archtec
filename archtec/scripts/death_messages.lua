@@ -74,15 +74,15 @@ local function send_death_message(cause, player, killer)
 		death_message = S(random_message, name)
 	end
 
-	minetest.chat_send_all(minetest.colorize("#FF0000", death_message))
+	core.chat_send_all(core.colorize("#FF0000", death_message))
 	if cause == "pvp" then
-		archtec_matterbridge.send(":crossed_swords: " .. minetest.get_translated_string("en", death_message))
+		archtec_matterbridge.send(":crossed_swords: " .. core.get_translated_string("en", death_message))
 	else
-		archtec_matterbridge.send(":skull_and_crossbones: " .. minetest.get_translated_string("en", death_message))
+		archtec_matterbridge.send(":skull_and_crossbones: " .. core.get_translated_string("en", death_message))
 	end
 end
 
-minetest.register_on_dieplayer(function(player, reason)
+core.register_on_dieplayer(function(player, reason)
 	if reason.object then
 		if reason.object:is_player() then
 			-- Player was killed by player

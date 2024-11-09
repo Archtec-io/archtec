@@ -1,5 +1,5 @@
 archtec.faq = {}
-local F = minetest.formspec_escape
+local F = core.formspec_escape
 local S = archtec.S
 
 local searches = {}
@@ -63,17 +63,17 @@ local function faq_formspec(name, search, sel)
 	}
 
 	searches[name] = search
-	minetest.show_formspec(name, "archtec:faq", table.concat(formspec))
+	core.show_formspec(name, "archtec:faq", table.concat(formspec))
 end
 
-minetest.register_on_player_receive_fields(function(player, formname, fields)
+core.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "archtec:faq" or fields.quit then
 		return
 	end
 
 	local name = player:get_player_name()
 	local search = string.sub(fields.search_field or "", 1, 20)
-	local event = minetest.explode_table_event(fields.list)
+	local event = core.explode_table_event(fields.list)
 
 	if fields.search_button or (fields.search_field ~= searches[name]) then
 		faq_formspec(name, search, 0)
@@ -84,11 +84,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	return true
 end)
 
-minetest.register_chatcommand("faq", {
+core.register_chatcommand("faq", {
 	text = S("View ingame FAQ"),
 	privs = {interact = true},
 	func = function(name, param)
-		minetest.log("action", "[/faq] executed by '" .. name .. "' with param '" .. param .. "'")
+		core.log("action", "[/faq] executed by '" .. name .. "' with param '" .. param .. "'")
 		faq_formspec(name, param:sub(1, 20), 0)
 	end
 })
@@ -101,6 +101,6 @@ function archtec.faq.register_headers(def)
 	order_headers = def
 end
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	searches[player:get_player_name()] = nil
 end)
