@@ -27,7 +27,7 @@ local function send_stats()
 	end
 
 	http.fetch({
-		url = url .. "/api/core",
+		url = url .. "/api/minetest",
 		extra_headers = {"Content-Type: application/json", "Authorization: " .. key},
 		timeout = 5,
 		post_data = json
