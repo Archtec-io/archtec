@@ -40,3 +40,8 @@ end
 if core.get_modpath("prefab") then
 	core.unregister_item("prefab:boat")
 end
+
+if core.get_modpath("mobs") then
+	core.unregister_item("mobs:hearing_vines")
+	core.unregister_item("mobs:hearing_vines_active")
+end
