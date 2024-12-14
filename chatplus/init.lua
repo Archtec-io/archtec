@@ -125,15 +125,16 @@ end
 core.register_chatcommand("m", {
 	description = S("Send a private message to the same person you sent your last message to."),
 	func = function(name, param)
-		if last_msg_name[name] == nil then
+		local last_user = last_msg_name[name]
+		if last_user == nil then
 			core.chat_send_player(name, C("#FF0000", S("[msg] Can't use this command. Use '/msg <name> <msg>' first!")))
 			return
 		end
-		if not archtec.is_online(last_msg_name[name]) then
-			core.chat_send_player(name, C("#FF0000", S("[msg] @1 isn't online anymore!")))
+		if not archtec.is_online(last_user) then
+			core.chat_send_player(name, C("#FF0000", S("[msg] @1 isn't online anymore!", last_user)))
 			return
 		end
-		private_message(name, last_msg_name[name] .. " " .. param)
+		private_message(name, last_user .. " " .. param)
 	end
 })
 

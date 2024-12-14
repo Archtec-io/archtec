@@ -45,6 +45,7 @@ read_globals = {
 	"unified_inventory",
 	"unifieddyes",
 	"xban",
+	"xdecor",
 }
 
 files["archtec/scripts/status.lua"] = {
