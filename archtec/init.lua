@@ -93,6 +93,11 @@ core.register_on_mods_loaded(function()
 	end
 end)
 
+-- Make sure we don't accidentally break the world (https://github.com/Archtec-io/bugtracker/issues/211)
+if ethereal.version ~= "20240417" and not core.settings:get_bool("ethereal.old_biomes", false) then
+	error("\"ethereal.old_biomes = false\" not set")
+end
+
 local after = core.get_us_time()
 
 core.log("action", "Archtec: loaded. Loading took " .. (after - before) / 1000 .. " ms")

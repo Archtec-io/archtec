@@ -30,6 +30,7 @@ read_globals = {
 	"auroras",
 	"choppy",
 	"default",
+	"ethereal",
 	"font_api",
 	"futil",
 	"homedecor",
