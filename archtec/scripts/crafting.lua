@@ -137,5 +137,5 @@ core.register_craft({
 		"group:water_bucket",
 		"default:dry_dirt",
 	},
-	replacements = {{"group:water_bucket", "bucket:bucket_empty"}}
+	replacements = {{"group:water_bucket", "bucket:bucket_empty"}},
 })

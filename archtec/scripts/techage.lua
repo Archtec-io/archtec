@@ -52,3 +52,11 @@ techage.register_ore_for_gravelsieve("titanium:titanium", 99999)
 local ts = signs_bot.register_tree_saplings
 ts("cherrytree:sapling", "cherrytree:sapling", 2400, 4800)
 ts("mahogany:sapling", "mahogany:sapling", 2400, 4800)
+
+-- Make default:silver_sandstone easier craftable (https://github.com/Archtec-io/bugtracker/issues/215)
+local b = "bonemeal:bone"
+techage.furnace.register_recipe({
+	output = "default:silver_sandstone",
+	recipe = {b, b, b, b},
+	time = 2,
+})
