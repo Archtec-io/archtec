@@ -91,12 +91,12 @@ The following commands and chat formats are supported:
 })
 
 -- Player interaction
-archtec.faq.register("Interaction", {
+archtec.faq.register("Ignoring", {
 	header = "Player interaction",
 	pos = 1,
 	text = [[
 '/ignore' allows you to block other players from interacting and communicating with you.
-Ignore is currently not supported by all functions, but by most :).
+Ignore is currently not supported by all game mechanics, but by most :).
 
 Block/Ignore a player:
 '/ignore add <name>' or
@@ -320,6 +320,7 @@ Forceload ('forceload'):
 - The ability to place forceload blocks
 - Granted when a player reaches Techage Level 3 (places first TA3 Oil Drillbox)
 - Forceload blocks cause the mapblock (16x16x16 nodes) area they are placed in to be continuously loaded while a player is logged in regardless of where they are.
+- Further information on the "Mapblock Borders" page.
 
 Lava buckets ('adv_buckets'):
 - Requires 50 hours of playtime (player being logged in and playing on the server)
@@ -432,9 +433,20 @@ For more information, see the Techage manual or in-game guide.
 ]]
 })
 
-archtec.faq.register("Ores and Tools", {
+archtec.faq.register("Mapblock Borders", {
 	header = "Other",
 	pos = 4,
+	text = [[
+Mapblocks are 16³ (16x16x16) nodes in size. In modern clients (Luanti 5.5.0 and newer), you can display mapblock boundaries by pressing a key. This function is not bound to a key by default; users need to set it up themselves.
+
+To bind a key for this function, go to:
+Escape Menu -> Controls -> Block Bounds
+]]
+})
+
+archtec.faq.register("Ores and Tools", {
+	header = "Other",
+	pos = 5,
 	text = [[
 Special ores:
 - Bauxite can be found at depths between -50 and -500
@@ -449,7 +461,7 @@ Titanium tools are more durable than diamond or mithril tools, but Titanium tool
 
 archtec.faq.register("Useful chat commands", {
 	header = "Other",
-	pos = 5,
+	pos = 6,
 	text = [[
 General:
 - '/faq' shows this Frequently Asked Questions section
@@ -466,7 +478,7 @@ Techage:
 
 archtec.faq.register("TNT and explosions", {
 	header = "Other",
-	pos = 6,
+	pos = 7,
 	text = [[
 There is no way for players to use TNT on Archtec. If you want to clear large areas, you should use techage quarries instead.
 
@@ -478,7 +490,7 @@ The following mobs can cause explosions:
 
 archtec.faq.register("Biofuel", {
 	header = "Other",
-	pos = 7,
+	pos = 8,
 	text = [[
 Biofuel is produced in the Biofuel Refinery.
 
