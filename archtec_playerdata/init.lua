@@ -98,12 +98,12 @@ local function get_unload_timestamp()
 	return os.time() + unload_data_after
 end
 
-local function format_list(list)
+local function count_occurrences(list)
 	local str = ""
 	for k, v in pairs(list) do
-		str = str .. k .. "=" .. v .. "; "
+		str = str .. k .. ": " .. v .. " (occurrences); "
 	end
-	return str
+	return str:trim()
 end
 
 -- Basic system functions
@@ -410,14 +410,14 @@ local function run_actions()
 		log_action("run_actions", "executed upgrade '" .. identifier .. "'")
 	end
 
-	if #stats.keys_remove > 0 then
-		log_action("run_actions", "removed keys from database: " .. format_list(stats.keys_remove))
+	if next(stats.keys_remove) ~= nil then
+		log_action("run_actions", "removed keys from database: " .. count_occurrences(stats.keys_remove))
 	end
-	if #stats.unknown_keys > 0 then
-		log_error("run_actions", "found unknown keys in database: " .. format_list(stats.unknown_keys))
+	if next(stats.unknown_keys) ~= nil then
+		log_error("run_actions", "found unknown keys in database: " .. count_occurrences(stats.unknown_keys))
 	end
-	if #stats.wrong_type > 0 then
-		log_error("run_actions", "found keys with wrong value-types in database: " .. format_list(stats.wrong_type))
+	if next(stats.wrong_type) ~= nil then
+		log_error("run_actions", "found keys with wrong value-types in database: " .. count_occurrences(stats.wrong_type))
 	end
 end
 
