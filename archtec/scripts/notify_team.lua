@@ -2,9 +2,9 @@ local server_running = false
 local has_matterbridge = false
 
 function archtec.notify_team(message, discord)
-	core.log("action", message)
-
 	if server_running then
+		core.log("action", message)
+
 		local colored_message = core.colorize("#999", message)
 		for _, player in ipairs(core.get_connected_players()) do
 			local name = player:get_player_name()
