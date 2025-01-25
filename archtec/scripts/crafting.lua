@@ -123,10 +123,9 @@ core.register_craft({
 	recipe = {{"farming:straw"}}
 })
 
--- https://github.com/Archtec-io/bugtracker/issues/181 (next straw hack)
-core.register_craft({
-	output = "farming:straw",
-	recipe = {{"castle_farming:bound_straw"}}
+-- https://github.com/Archtec-io/bugtracker/issues/181 and https://github.com/Archtec-io/bugtracker/issues/224
+core.clear_craft({
+	recipe = {{"castle_farming:bound_straw"}},
 })
 
 -- default:dry_dirt + group:water_bucket -> default:dirt (https://github.com/Archtec-io/bugtracker/issues/139)
