@@ -360,6 +360,7 @@ local function run_actions()
 		for _, key in ipairs(system.keys_remove) do
 			if data[name][key] then
 				data[name][key] = nil
+				data[name].system_data_modified = true
 				stats.keys_remove[key] = (stats.keys_remove[key] or 0) + 1
 				log_debug("run_actions", "removed key '" .. key .. "' of player '" .. name .. "'")
 			end
