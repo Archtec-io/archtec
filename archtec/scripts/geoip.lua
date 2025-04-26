@@ -97,7 +97,7 @@ core.register_on_joinplayer(function(player)
 		return
 	end
 
-	if ip == "127.0.0.1" then return end
+	if ip == "::ffff:127.0.0.1" then return end
 
 	geoip.lookup(ip, function(data)
 		local txt = format_result(data)

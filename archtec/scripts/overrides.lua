@@ -183,3 +183,8 @@ if core.get_modpath("biofuel") then
 		stack_max = 1
 	})
 end
+
+-- Annoy cheaters
+core.override_item("default:stone", {
+	damage_per_second = 5
+})
