@@ -1,21 +1,27 @@
-local server_running = false
-local has_matterbridge = false
+local server_running, has_matterbridge = false, false
 
+-- discord might be both bool or a string
 function archtec.notify_team(message, discord)
-	if server_running then
-		core.log("action", message)
+	if not server_running then
+		return
+	end
 
-		local colored_message = core.colorize("#999", message)
-		for _, player in ipairs(core.get_connected_players()) do
-			local name = player:get_player_name()
-			if core.get_player_privs(name).staff then
-				core.chat_send_player(name, colored_message)
-			end
+	core.log("action", message)
+
+	local colored_message = core.colorize("#999", message)
+	for _, player in ipairs(core.get_connected_players()) do
+		local name = player:get_player_name()
+		if core.get_player_privs(name).staff then
+			core.chat_send_player(name, colored_message)
 		end
 	end
 
-	if discord ~= false and has_matterbridge then
-		archtec_matterbridge.send(message, "log")
+	if has_matterbridge then
+		if type(discord) == "string" then
+			archtec_matterbridge.send(discord, "log")
+		elseif discord ~= false then
+			archtec_matterbridge.send(message, "log")
+		end
 	end
 end
 

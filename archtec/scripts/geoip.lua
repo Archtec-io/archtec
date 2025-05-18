@@ -52,10 +52,11 @@ function geoip.lookup(ip, callback, playername)
 				result.players = playername and {[playername]=timestamp} or {}
 				cache[ip] = result
 				callback(result)
-				return
 			end
+		else
+			core.log("warning", "[geoip] HTTP request returned status: " .. res.code)
+			callback()
 		end
-		core.log("warning", "[geoip] http request returned status: " .. res.code)
 	end)
 end
 
@@ -93,11 +94,11 @@ core.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local ip = core.get_player_ip(name)
 	if not ip then
-		core.log("warning", "[geoip] get player IP address failed: " .. name)
+		core.log("error", "[geoip] Could not get IP address for '" .. name .. "'")
 		return
 	end
 
-	if ip == "::ffff:127.0.0.1" then return end
+	--if ip == "::ffff:127.0.0.1" then return end
 
 	geoip.lookup(ip, function(data)
 		local txt = format_result(data)

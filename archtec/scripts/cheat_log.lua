@@ -35,7 +35,7 @@ local function handle_cheat(player, cheat)
 		pos[i] = round(x)
 	end
 	local info = get_pd(name)
-	archtec.notify_team("[archtec] Anticheat: player '" .. name .. "' ('" .. cheat.type .. "') speed: " .. tostring(speed) .. " pos: " .. tostring(pos) .. " lag: " .. lag .. " jitter: " .. short(info.avg_jitter, 7) .. " rtt: " .. short(info.avg_rtt, 5), false)
+	archtec.notify_team("[anticheat] Player '" .. name .. "' ('" .. cheat.type .. "') speed: " .. tostring(speed) .. " pos: " .. tostring(pos) .. " lag: " .. lag .. " jitter: " .. short(info.avg_jitter, 7) .. " rtt: " .. short(info.avg_rtt, 5), false)
 end
 
 core.register_on_cheat(function(player, cheat)
@@ -44,7 +44,7 @@ core.register_on_cheat(function(player, cheat)
 	if cheat.type == "moved_too_fast" then
 		handle_cheat(player, cheat)
 	else
-		archtec.notify_team("[archtec] Anticheat: player '" .. player:get_player_name() .. "' ('" .. cheat.type .. "')", false)
+		archtec.notify_team("[anticheat] Player '" .. player:get_player_name() .. "' ('" .. cheat.type .. "')", false)
 	end
 end)
 

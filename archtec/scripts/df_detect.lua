@@ -28,16 +28,16 @@ core.register_on_joinplayer(function(player)
 	local version = info.version_string
 
 	if not version then
-		archtec.notify_team("[archtec] Cheatclient detection does not work.")
+		archtec.notify_team("[login] Client detection failed!")
 	else
-		archtec.notify_team("[archtec] Debug info for '" .. name .. "': Client: " .. version .. " FS-V: " .. info.formspec_version .. ".")
+		archtec.notify_team("[login] (3) Client info for '" .. name .. "': Client: " .. version .. " FS-V: " .. info.formspec_version)
 
 		local client_version = check_version_string(version)
 		if client_version then
-			archtec.notify_team("[archtec] Detected use of Cheatclient (" .. client_version .. ") by '" .. name .. "' auto ban in 30 seconds.")
+			archtec.notify_team("[login] Detected use of Cheatclient (" .. client_version .. ") by '" .. name .. "' auto ban in 30 seconds.")
 			core.after(30.0, function()
 				xban.ban_player(name, "Server", nil, "Cheating")
-				archtec.notify_team("[archtec] Auto banned '" .. name .. "'.")
+				archtec.notify_team("[archtec] Auto banned '" .. name .. "' for using a cheat client.")
 			end)
 		end
 	end

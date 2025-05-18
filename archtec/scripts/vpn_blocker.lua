@@ -27,15 +27,15 @@ core.after(ttl, cleanup)
 local function check_ip(name, ip)
 	if not cache[ip] then return end
 	if cache[ip].result == 0 then
-		core.log("action", "[archtec_vpn_blocker] Passing good-ip-player " .. name .. " [" .. ip .. "]")
+		core.log("action", "[vpn] Passing good-ip-player " .. name .. " [" .. ip .. "]")
 	else
 		if archtec.is_online(name) then
 			if archtec_playerdata.get(name, "vpn_allowed") then
-				core.log("action", "[archtec_vpn_blocker] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
-				archtec.notify_team("[archtec_vpn_blocker] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
+				core.log("action", "[vpn] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
+				archtec.notify_team("[vpn] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
 			else
-				core.log("action", "[archtec_vpn_blocker] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
-				archtec.notify_team("[archtec_vpn_blocker] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+				core.log("action", "[vpn] Kicking bad-ip-player " .. name .. " [" .. ip .. "]")
+				archtec.notify_team("[vpn] Kicking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
 				core.after(0.01, function()
 					if core.get_player_by_name(name) then
 						core.kick_player(name, "Please turn off your VPN.")
@@ -44,11 +44,11 @@ local function check_ip(name, ip)
 			end
 		else -- Player is joining right now
 			if archtec_playerdata.get(name, "vpn_allowed") then
-				core.log("action", "[archtec_vpn_blocker] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
-				archtec.notify_team("[archtec_vpn_blocker] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
+				core.log("action", "[vpn] Passing bad-ip-player " .. name .. " [" .. ip .. "] [VPN ALLOWED]")
+				archtec.notify_team("[vpn] Passing bad-ip-player '" .. name .. "' (IP: " .. ip .. ") [VPN ALLOWED]")
 			else
-				core.log("action", "[archtec_vpn_blocker] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
-				archtec.notify_team("[archtec_vpn_blocker] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
+				core.log("action", "[vpn] Blocking bad-ip-player " .. name .. " [" .. ip .. "]")
+				archtec.notify_team("[vpn] Blocking bad-ip-player '" .. name .. "' (IP: " .. ip .. ")")
 				return true -- For prejoinplayer callback
 			end
 		end
