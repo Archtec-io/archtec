@@ -459,10 +459,11 @@ Titanium tools are more durable than diamond or mithril tools, but Titanium tool
 ]]
 })
 
-archtec.faq.register("Useful chat commands", {
+archtec.faq.register("Useful information", {
 	header = "Other",
 	pos = 6,
 	text = [[
+Chatcommands
 General:
 - '/faq' shows this Frequently Asked Questions section
 - '/news' shows the news from join again
@@ -473,6 +474,10 @@ Techage:
 - '/my_expoints' show your TA 5 experience points
 - '/ta_color' shows a color palette for the controller
 - '/ta_limit' shows your TA command limit usage
+
+Tools for Builders
+- The "Replacer" lets you quickly alter many nodes in one step
+- The "Omnidriver" is an improved screwdriver that can apply programmed rotations to nodes
 ]]
 })
 
