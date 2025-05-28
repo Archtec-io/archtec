@@ -30,7 +30,7 @@ function geoip.lookup(ip, callback, playername)
 		if playername and not cache[ip].players[playername] then
 			cache[ip].players[playername] = core.get_us_time()
 		end
-		callback(cache[ip])
+		callback(0, cache[ip])
 		return
 	end
 	http.fetch({
@@ -51,11 +51,11 @@ function geoip.lookup(ip, callback, playername)
 				result.timestamp = timestamp
 				result.players = playername and {[playername]=timestamp} or {}
 				cache[ip] = result
-				callback(result)
+				callback(res.code, result)
 			end
 		else
 			core.log("warning", "[geoip] HTTP request returned status: " .. res.code)
-			callback()
+			callback(res.code)
 		end
 	end)
 end
@@ -98,14 +98,13 @@ core.register_on_joinplayer(function(player)
 		return
 	end
 
-	--if ip == "::ffff:127.0.0.1" then return end
-
-	geoip.lookup(ip, function(data)
+	geoip.lookup(ip, function(code, data)
 		local txt = format_result(data)
 		if txt then
 			archtec.notify_team("[geoip] Result for player '" .. name .. "': " .. txt)
 		else
-			archtec.notify_team("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(data.description))
+			local description = data and data.description or "" -- data does not exist when the request timed-out
+			archtec.notify_team("[geoip] Lookup failed for '" .. name .. "@" .. ip .. "' Reason: " .. tostring(description) .. " (Status code: " .. code .. ")")
 		end
 	end, name)
 end)
