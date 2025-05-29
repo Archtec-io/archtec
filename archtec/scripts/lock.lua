@@ -3,11 +3,11 @@ local can_join = true
 local function lock_server(mode, keep, locker)
 	if mode == "new" then
 		core.chat_send_all(core.colorize("#FF0000", locker .. " closed the server. Only staff members can join."))
-		archtec_matterbridge.send(":lock: " .. locker .. " closed the server. Only staff members can join.")
+		archtec_matterbridge.send(":lock: " .. archtec.escape_md(locker) .. " closed the server. Only staff members can join.")
 		can_join = false
 	elseif mode == "kick" then
 		core.chat_send_all(core.colorize("#FF0000", locker .. " closed the server. Only staff members can join."))
-		archtec_matterbridge.send(":lock: " .. locker .. " closed the server. Only staff members can join.")
+		archtec_matterbridge.send(":lock: " .. archtec.escape_md(locker) .. " closed the server. Only staff members can join.")
 		can_join = false
 		for _, player in ipairs(core.get_connected_players()) do
 			local name = player:get_player_name()
@@ -20,7 +20,7 @@ end
 
 local function open_server(opener)
 	core.chat_send_all(core.colorize("#00BD00", opener .. " opened the server. Everyone can join again, including new players."))
-	archtec_matterbridge.send(":unlock: " .. opener .. " opened the server. Everyone can join again, including new players.")
+	archtec_matterbridge.send(":unlock: " .. archtec.escape_md(opener) .. " opened the server. Everyone can join again, including new players.")
 	can_join = true
 end
 
@@ -28,7 +28,7 @@ core.register_on_prejoinplayer(function(name)
 	if name and not can_join then
 		if not core.get_player_privs(name).staff then
 			core.chat_send_all(core.colorize("#FF0000", name .. " tried to connect, but the server is closed for anyone except staff members."))
-			archtec_matterbridge.send(":no_entry: " .. name .. " tried to connect, but the server is closed for anyone except staff members.")
+			archtec_matterbridge.send(":no_entry: " .. archtec.escape_md(name) .. " tried to connect, but the server is closed for anyone except staff members.")
 			return "The server is closed. Only staff members can join."
 		end
 	end

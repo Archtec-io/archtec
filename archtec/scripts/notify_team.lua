@@ -18,9 +18,9 @@ function archtec.notify_team(message, discord)
 
 	if has_matterbridge then
 		if type(discord) == "string" then
-			archtec_matterbridge.send(discord, "log")
+			archtec_matterbridge.send(archtec.escape_md(discord), "log")
 		elseif discord ~= false then
-			archtec_matterbridge.send(message, "log")
+			archtec_matterbridge.send(archtec.escape_md(message), "log")
 		end
 	end
 end

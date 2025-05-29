@@ -27,7 +27,7 @@ core.override_chatcommand("me", {
 		local msg = archtec.get_and_trim(param)
 		if msg ~= "" then
 			core.chat_send_all("* " .. name .. " " .. param)
-			archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(name, param))
+			archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(archtec.escape_md(name), param))
 		else
 			core.chat_send_player(name, core.colorize("#FF0000", "[/me] No message provided!"))
 		end
@@ -38,7 +38,7 @@ core.override_chatcommand("me", {
 -- join player message
 local old_join = core.send_join_message
 function core.send_join_message(player_name)
-	archtec_matterbridge.send(":information_source: " .. player_name .. " joined the game.")
+	archtec_matterbridge.send(":information_source: " .. archtec.escape_md(player_name) .. " joined the game.")
 	old_join(player_name)
 end
 
@@ -51,9 +51,9 @@ function core.send_leave_message(player_name, timed_out)
 	end
 	if not is_shutdown then
 		if timed_out then
-			archtec_matterbridge.send(":information_source: " .. player_name .. " lost the connection.")
+			archtec_matterbridge.send(":information_source: " .. archtec.escape_md(player_name) .. " lost the connection.")
 		else
-			archtec_matterbridge.send(":information_source: " .. player_name .. " left the game.")
+			archtec_matterbridge.send(":information_source: " .. archtec.escape_md(player_name) .. " left the game.")
 		end
 	end
 	old_leave(player_name, timed_out)

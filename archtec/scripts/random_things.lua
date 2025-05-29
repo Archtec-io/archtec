@@ -52,7 +52,7 @@ core.register_chatcommand("thankyou", {
 		archtec_playerdata.mod(target, "thank_you", 1)
 		archtec_playerdata.set(name, "thank_you_last_used", os.time())
 		core.chat_send_all(core.colorize("#00BD00", S("@1 said thank you to @2.", name, target)))
-		archtec_matterbridge.send(":wave: **" .. name .. "** said thank you to **" .. target .. "**.")
+		archtec_matterbridge.send(":wave: **" .. archtec.escape_md(name) .. "** said thank you to **" .. target .. "**.")
 	end
 })
 

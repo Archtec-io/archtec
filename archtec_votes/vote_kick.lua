@@ -27,21 +27,21 @@ local function run_vote(name, param)
 
 			if result == "yes" then
 				core.chat_send_all("Vote passed, " .. core.colorize("#00BD00", #results.yes) .. " to " .. core.colorize("#FF0000", #results.no) .. ", " .. self.name .. " will be kicked.")
-				archtec_matterbridge.send(":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " will be kicked.")
+				archtec_matterbridge.send(":warning: Vote passed, " .. #results.yes .. " to " .. #results.no .. ", " .. archtec.escape_md(self.name) .. " will be kicked.")
 				xban.ban_player(self.name, "/vote_kick", os.time() + 3600, "vote-kicked")
 			else
 				core.chat_send_all("Vote failed, " .. core.colorize("#00BD00", #results.yes) .. " to " .. core.colorize("#FF0000", #results.no) .. ", " .. self.name .. " remains ingame.")
-				archtec_matterbridge.send(":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. self.name .. " remains ingame.")
+				archtec_matterbridge.send(":warning: Vote failed, " .. #results.yes .. " to " .. #results.no .. ", " .. archtec.escape_md(self.name) .. " remains ingame.")
 			end
 		end,
 
 		on_vote = function(self, name_voter, value)
 			if value == "yes" then
 				core.chat_send_all(name_voter .. " voted " .. core.colorize("#00BD00", "YES") .. " to " .. self.description .. ".")
-				archtec_matterbridge.send(":green_square: **" .. name_voter .. "** voted YES")
+				archtec_matterbridge.send(":green_square: **" .. archtec.escape_md(name_voter) .. "** voted YES")
 			else
 				core.chat_send_all(name_voter .. " voted " .. core.colorize("#FF0000", "NO") .. " to " .. self.description .. ".")
-				archtec_matterbridge.send(":red_square: **" .. name_voter .. "** voted NO")
+				archtec_matterbridge.send(":red_square: **" .. archtec.escape_md(name_voter) .. "** voted NO")
 			end
 		end
 	})

@@ -36,7 +36,7 @@ function core.kick_player(player_name, reason)
 	end
 	if archtec.is_online(player_name) then -- xban kicks also offline players
 		core.chat_send_all(core.colorize("#FF0000", player_name .. " got kicked! Reason: " .. reason))
-		archtec_matterbridge.send(":bangbang: " .. player_name .. " got kicked! Reason: " .. reason)
+		archtec_matterbridge.send(":bangbang: " .. archtec.escape_md(player_name) .. " got kicked! Reason: " .. reason)
 		archtec.silent_leave[player_name] = true
 	end
 	return core.disconnect_player(player_name, reason)
@@ -44,7 +44,7 @@ end
 
 function archtec.kick_inactive_player(player_name)
 	core.chat_send_all(core.colorize("#FF0000", player_name .. " got kicked due to inactivity."))
-	archtec_matterbridge.send(":zzz: " .. player_name .. " got kicked due to inactivity.")
+	archtec_matterbridge.send(":zzz: " .. archtec.escape_md(player_name) .. " got kicked due to inactivity.")
 	archtec.silent_leave[player_name] = true
 	return core.disconnect_player(player_name, "Too long inactive")
 end
@@ -155,4 +155,9 @@ function archtec.format_int(number)
 	local _, _, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
 	int = int:reverse():gsub("(%d%d%d)", "%1,")
 	return minus .. int:reverse():gsub("^,", "") .. fraction
+end
+
+-- Undescores are used for markdown formatting (mostly meant for player names)
+function archtec.escape_md(str)
+	return str:gsub("_", "\\_")
 end

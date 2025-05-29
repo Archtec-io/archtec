@@ -84,7 +84,7 @@ core.register_on_chat_message(function(name, message)
 				core.chat_send_player(uname, msg)
 			end
 		end
-		archtec_matterbridge.send(("**%s**: %s"):format(name, message))
+		archtec_matterbridge.send(("**%s**: %s"):format(archtec.escape_md(name), message))
 
 	-- Handle custom channel
 	else

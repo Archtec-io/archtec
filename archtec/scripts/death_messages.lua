@@ -76,9 +76,9 @@ local function send_death_message(cause, player, killer)
 
 	core.chat_send_all(core.colorize("#FF0000", death_message))
 	if cause == "pvp" then
-		archtec_matterbridge.send(":crossed_swords: " .. core.get_translated_string("en", death_message))
+		archtec_matterbridge.send(":crossed_swords: " .. archtec.escape_md(core.get_translated_string("en", death_message)))
 	else
-		archtec_matterbridge.send(":skull_and_crossbones: " .. core.get_translated_string("en", death_message))
+		archtec_matterbridge.send(":skull_and_crossbones: " .. archtec.escape_md(core.get_translated_string("en", death_message)))
 	end
 end
 

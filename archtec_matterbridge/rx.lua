@@ -26,13 +26,13 @@ local function handle_data(data)
 	if data.event == "user_action" then
 		core.log("action", "[archtec_matterbridge] User action '" .. data.text .. "' by '" .. data.username)
 		core.chat_send_all("* " .. data.username .. " " .. data.text)
-		archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(data.username, data.text))
+		archtec_matterbridge.send(":speech_left: " .. ('%s *%s*'):format(archtec.escape_md(data.username), data.text))
 	else
 		-- regular text
 		if data.text:sub(1, 7) == "!status" then
 			core.log("action", "[archtec_matterbridge] '" .. data.username .. "' requested the server status")
 			core.chat_send_all(C("#FF8800", data.username) .. C("#999", " requested the server status via " .. bridge .. "."))
-			archtec_matterbridge.send(core.get_server_status(nil, false))
+			archtec_matterbridge.send(archtec.escape_md(core.get_server_status(nil, false)))
 		elseif data.text:sub(1, 4) == "!cmd" then
 			-- user command
 			if not archtec_matterbridge.staff_user(data.username, data.userid) then
