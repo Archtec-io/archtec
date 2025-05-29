@@ -1,4 +1,4 @@
-local server_running, has_matterbridge = false, false
+local server_running = false
 
 -- discord might be both bool or a string
 function archtec.notify_team(message, discord)
@@ -16,18 +16,13 @@ function archtec.notify_team(message, discord)
 		end
 	end
 
-	if has_matterbridge then
-		if type(discord) == "string" then
-			archtec_matterbridge.send(archtec.escape_md(discord), "log")
-		elseif discord ~= false then
-			archtec_matterbridge.send(archtec.escape_md(message), "log")
-		end
+	if type(discord) == "string" then
+		archtec_matterbridge.send(archtec.escape_md(discord), "log")
+	elseif discord ~= false then
+		archtec_matterbridge.send(archtec.escape_md(message), "log")
 	end
 end
 
 core.after(0, function()
 	server_running = true
-	if core.global_exists("archtec_matterbridge") then
-		has_matterbridge = true
-	end
 end)
