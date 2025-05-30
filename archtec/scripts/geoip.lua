@@ -38,7 +38,7 @@ function geoip.lookup(ip, callback, playername)
 		extra_headers = {
 			"User-Agent: keycdn-tools:https://archtec.niklp.net"
 		},
-		timeout = 1,
+		timeout = 10,
 	}, function(res)
 		if res.code == 200 and callback then
 			local data = core.parse_json(res.data)

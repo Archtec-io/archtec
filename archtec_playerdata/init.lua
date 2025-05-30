@@ -317,7 +317,7 @@ core.register_globalstep(function(dtime)
 		local t1 = core.get_us_time()
 
 		if #users > 0 then
-			log_action("save_step", "saved data of " .. #saved .. " player(s) in " .. (t1 - t0) / 1000 .. " ms; data of " .. #users .. " player(s) is loaded")
+			log_debug("save_step", "saved data of " .. #saved .. " player(s) in " .. (t1 - t0) / 1000 .. " ms; data of " .. #users .. " player(s) is loaded")
 		end
 	end
 
