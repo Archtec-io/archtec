@@ -159,5 +159,6 @@ end
 
 -- Undescores are used for markdown formatting (mostly meant for player names)
 function archtec.escape_md(str)
-	return str:gsub("_", "\\_")
+	local str_escaped, _ = str:gsub("_", "\\_")
+	return str_escaped
 end
