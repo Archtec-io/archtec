@@ -136,7 +136,7 @@ local function stats_formspec(name, target)
 		"formspec_version[3]",
 		"size[10,6]",
 		"box[0.3,0.3;9.4,0.5;#c6e8ff]",
-		"label[0.4,0.55;" .. FS("Stats of: @1 - @2 XP @3", target, archtec.format_int(xp), tags) .. "]",
+		"label[0.4,0.55;" .. FS("Stats of: @1 — @2 XP @3", target, archtec.format_int(xp), tags) .. "]",
 
 		"label[0.4,1.2;" .. FS("Nodes dug: @1", archtec.format_int(data.nodes_dug)) .. "]",
 		"label[0.4,1.8;" .. FS("Nodes placed: @1", archtec.format_int(data.nodes_placed)) .. "]",
@@ -157,7 +157,7 @@ local function stats_formspec(name, target)
 		"label[5.0,5.4;" .. FS("Can create big areas: @1", privs_color.areas) .. "]",
 	}
 
-	core.show_formspec(name, "archtec_playerdata:stats", table.concat(formspec))
+	core.show_formspec(name, "archtec:stats", table.concat(formspec))
 end
 
 core.register_chatcommand("stats", {

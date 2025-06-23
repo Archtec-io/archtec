@@ -79,7 +79,7 @@ local function rank_formspec(name)
 		"formspec_version[3]",
 		"size[10,10]",
 		"box[0.3,0.3;9.4,0.5;#c6e8ff]",
-		"label[0.4,0.55;" .. FS("Player ranking - @1 players earned @2 XP", xp_rank.user_count, archtec.format_int(xp_rank.all)) .. "]",
+		"label[0.4,0.55;" .. FS("Player ranking — @1 players earned @2 XP", xp_rank.user_count, archtec.format_int(xp_rank.all)) .. "]",
 		"hypertext[3.5,1.2;3,1;;<center><mono>1st " .. F(xp_rank.names[1]) .. "</mono></center>]",
 		"item_image[4,1.4;2,2;cups:cup_gold]",
 		"hypertext[0,1.8;3,1;;<center><mono>2nd " .. F(xp_rank.names[2]) .. "</mono></center>]",
@@ -90,7 +90,7 @@ local function rank_formspec(name)
 		"table[0.3,4.5;9.4,5.2;list;" .. table.concat(xp_rank.list, ",") .. ";0]",
 	}
 
-	core.show_formspec(name, "archtec_playerdata:ranking", table.concat(formspec))
+	core.show_formspec(name, "archtec:ranking", table.concat(formspec))
 end
 
 core.register_chatcommand("rank", {

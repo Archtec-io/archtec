@@ -1,6 +1,7 @@
 archtec.faq = {}
-local F = core.formspec_escape
 local S = archtec.S
+local F = core.formspec_escape
+local FS = function(...) return F(S(...)) end
 
 local searches = {}
 local defs = {}
@@ -51,7 +52,7 @@ local function faq_formspec(name, search, sel)
 		"formspec_version[3]",
 		"size[17.5,10]",
 		"box[0.3,0.3;16.9,0.5;#c6e8ff]",
-		"label[0.4,0.55;" .. F("Archtec FAQ (/faq)") .. "]",
+		"label[0.4,0.55;" .. FS("Archtec FAQ (/faq) — @1 pages — ∞ questions answered", archtec.count_keys(defs)) .. "]",
 		"field_close_on_enter[search_field;false]",
 		"field[0.3,1.1;4.2,0.9;search_field;;" .. F(search) .. "]",
 		"image_button[4.5,1.1;0.9,0.9;search.png;search_button;]",
