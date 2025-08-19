@@ -2,7 +2,7 @@ local S = archtec.S
 local C = core.colorize
 
 local max_messages = 3
-local max_message_length = 200
+local max_message_length = 500
 local delete_message_after = archtec.time.days(90)
 
 --[[
