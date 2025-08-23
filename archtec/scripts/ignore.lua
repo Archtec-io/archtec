@@ -4,7 +4,9 @@ local max_ignored = 10
 archtec_playerdata.register_key("ignores", "table", {})
 
 archtec_playerdata.register_upgrade("ignores", "archtec:ignore_str_to_list", false, function(name, value)
-	return core.deserialize(value)
+	if type(value) == "string" then
+		return core.deserialize(value)
+	end
 end)
 
 local function is_ignored(name, target)

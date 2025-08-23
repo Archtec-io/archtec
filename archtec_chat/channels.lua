@@ -52,7 +52,9 @@ channel.get_cname = get_cname
 
 archtec_playerdata.register_key("channels", "table", {})
 archtec_playerdata.register_upgrade("channels", "archtec_chat:channel_str_to_list", false, function(name, value)
-	return core.deserialize(value)
+	if type(value) == "string" then
+		return core.deserialize(value)
+	end
 end)
 
 function archtec_chat.user.open(name)
