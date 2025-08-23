@@ -12,7 +12,7 @@ archtec_matterbridge.send = function(message, channel, event)
 		},
 		timeout = 5,
 		data = core.write_json({
-			gateway = channel or "MT-POST",
+			gateway = channel or "luanti-post",
 			text = message,
 			event = event
 		})

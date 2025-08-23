@@ -75,22 +75,25 @@ local function rank_formspec(name)
 		generate_ranking()
 	end
 
-	local formspec = {
-		"formspec_version[3]",
-		"size[10,10]",
-		"box[0.3,0.3;9.4,0.5;#c6e8ff]",
-		"label[0.4,0.55;" .. FS("Player ranking — @1 players earned @2 XP", xp_rank.user_count, archtec.format_int(xp_rank.all)) .. "]",
-		"hypertext[3.5,1.2;3,1;;<center><mono>1st " .. F(xp_rank.names[1]) .. "</mono></center>]",
-		"item_image[4,1.4;2,2;cups:cup_gold]",
-		"hypertext[0,1.8;3,1;;<center><mono>2nd " .. F(xp_rank.names[2]) .. "</mono></center>]",
-		"item_image[0.5,2.0;2,2;cups:cup_silver]",
-		"hypertext[7,1.8;3,1;testid;<center><mono>3rd " .. F(xp_rank.names[3]) .. "</mono></center>]",
-		"item_image[7.5,2.0;2,2;cups:cup_bronze]",
-		"tablecolumns[color;tree;text]",
-		"table[0.3,4.5;9.4,5.2;list;" .. table.concat(xp_rank.list, ",") .. ";0]",
-	}
-
-	core.show_formspec(name, "archtec:ranking", table.concat(formspec))
+	if xp_rank.user_count >= 3 then
+		local formspec = {
+			"formspec_version[3]",
+			"size[10,10]",
+			"box[0.3,0.3;9.4,0.5;#c6e8ff]",
+			"label[0.4,0.55;" .. FS("Player ranking — @1 players earned @2 XP", xp_rank.user_count, archtec.format_int(xp_rank.all)) .. "]",
+			"hypertext[3.5,1.2;3,1;;<center><mono>1st " .. F(xp_rank.names[1]) .. "</mono></center>]",
+			"item_image[4,1.4;2,2;cups:cup_gold]",
+			"hypertext[0,1.8;3,1;;<center><mono>2nd " .. F(xp_rank.names[2]) .. "</mono></center>]",
+			"item_image[0.5,2.0;2,2;cups:cup_silver]",
+			"hypertext[7,1.8;3,1;testid;<center><mono>3rd " .. F(xp_rank.names[3]) .. "</mono></center>]",
+			"item_image[7.5,2.0;2,2;cups:cup_bronze]",
+			"tablecolumns[color;tree;text]",
+			"table[0.3,4.5;9.4,5.2;list;" .. table.concat(xp_rank.list, ",") .. ";0]",
+		}
+		core.show_formspec(name, "archtec:ranking", table.concat(formspec))
+	else
+		core.chat_send_player(name, "[/rank] At least 3 players required to show ranking!")
+	end
 end
 
 core.register_chatcommand("rank", {
