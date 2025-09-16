@@ -139,7 +139,7 @@ core.register_chatcommand("map", {
 	description = "Gives you an URL to the Mapserver, pointing at your current position.",
 	privs = {interact = true},
 	func = function(name)
-		core.log("action", "[/thankyou] executed by '" .. name .. "'")
+		core.log("action", "[/map] executed by '" .. name .. "'")
 		local player = core.get_player_by_name(name)
 		if player == nil then
 			core.chat_send_player(name, C("#FF0000", S("[map] You must be online to use this command!")))
