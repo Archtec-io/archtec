@@ -14,7 +14,7 @@ core.register_on_mods_loaded(function()
 			local diff = get_us_time() - t0
 
 			if diff > abm_max_time then
-				core.log("action", "[archtec] ABM '" .. abm.label or "??" .. "', took " .. diff .. " us, pos " .. P2S(pos) .. ", node '" .. node.name .. "'")
+				core.log("action", "[archtec] ABM '" .. (abm.label or "??") .. "', took " .. diff .. " us, pos " .. P2S(pos) .. ", node '" .. node.name .. "'")
 			end
 		end
 	end
@@ -45,7 +45,7 @@ core.register_on_mods_loaded(function()
 			local diff = get_us_time() - t0
 
 			if diff > lbm_max_time then
-				core.log("action", "[archtec] LBM '" .. lbm.label or "??" .. "', took " .. diff .. " us, pos " .. P2S(pos) .. ", node '" .. node.name .. "'")
+				core.log("action", "[archtec] LBM '" .. (lbm.label or "??") .. "', took " .. diff .. " us, pos " .. P2S(pos) .. ", node '" .. node.name .. "'")
 			end
 		end
 	end
