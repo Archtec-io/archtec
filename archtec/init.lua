@@ -74,6 +74,7 @@ dofile(path .. "mailbox.lua")
 dofile(path .. "playerstats.lua")
 dofile(path .. "teleport_mapblock.lua")
 dofile(path .. "xdecor_tools.lua")
+dofile(path .. "noclip_hurt.lua")
 
 local http = core.request_http_api()
 if http then
