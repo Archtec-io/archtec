@@ -20,8 +20,6 @@ local function fix_craft(node, recipedef, amount)
 		output = node .. " " .. amount,
 		recipe = recipedef
 	})
-
-	core.log("action", "[archtec] changed recipe of '" .. node .. "'")
 end
 
 -- pride_flags:lower_mast/bridger:bridges_steel_rod

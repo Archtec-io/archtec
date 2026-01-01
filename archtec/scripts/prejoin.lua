@@ -9,7 +9,7 @@ core.register_on_prejoinplayer(function(name, ip)
 end)
 
 core.register_on_authplayer(function(name, ip, is_success)
-	archtec.notify_team(f("[login] (2) Authentication for %s (IP: %s) %s", name, ip, is_success and "succesful" or "failed"))
+	archtec.notify_team(f("[login] (2) Authentication for %s (IP: %s) %s", name, ip, is_success and "successful" or "failed"))
 end)
 
 core.register_on_leaveplayer(function(player, timed_out)

@@ -1,6 +1,7 @@
 local S = archtec.S
 local C = core.colorize
 local state = {}
+local clear_color = {a = 0, r = 0, g = 0, b = 0}
 
 local function detach(name)
 	local player = core.get_player_by_name(name)
@@ -71,7 +72,7 @@ local function attach(name, target)
 		collisionbox = {0},
 		show_on_minimap = false,
 	})
-	player:set_nametag_attributes({color = {a = 0}, bgcolor = {a = 0}})
+	player:set_nametag_attributes({color = clear_color, bgcolor = clear_color})
 
 	-- Attach player
 	player_api.player_attached[name] = true

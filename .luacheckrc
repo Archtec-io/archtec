@@ -12,7 +12,6 @@ globals = {
 	"archtec_teleport",
 	"archtec_votes",
 	"mapserver",
-	"player_monoids",
 }
 
 read_globals = {
