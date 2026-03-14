@@ -86,21 +86,6 @@ if core.get_modpath("mobs_animal") then
 	core.registered_entities["mobs_animal:panda"] = def
 end
 
--- Higher spawn chance for mobs
-core.register_on_mods_loaded(function()
-	for _, abm in ipairs(core.registered_abms) do
-		local label = abm.label or ""
-
-		if label:sub(1, 12) == "mobs_animal:" then
-			abm.chance = abm.chance * 0.5
-		end
-
-		if label:sub(1, 13) == "mobs_monster:" then
-			abm.chance = abm.chance * 0.5
-		end
-	end
-end)
-
 -- Gates w/o movement
 if core.get_modpath("castle_gates") then
 	local gates = {"castle_gates:steel_portcullis_bars", "castle_gates:wood_portcullis_bars"}
